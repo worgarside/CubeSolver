@@ -1,8 +1,6 @@
-// Author: Will Garside
-//package
-
 public class Side{
-    private char[][] side = new char[3][3];
+//    private char[][] side = new char[3][3];
+    private char northWest;
     private char north;
     private char northEast;
     private char east;
@@ -10,10 +8,10 @@ public class Side{
     private char south;
     private char southWest;
     private char west;
-    private char northWest;
     private char centre;
 
     public Side(char n, char nE, char e, char sE, char s, char sW, char w, char nW, char c){
+        northWest = nW;
         north = n;
         northEast = nE;
         east = e;
@@ -21,11 +19,13 @@ public class Side{
         south = s;
         southWest = sW;
         west = w;
-        northWest = nW;
         centre = c;
     }
 
-    // Accessor Methods
+    // Getter Methods
+    public char getNorthWest(){
+        return northWest;
+    }
     public char getNorth(){
         return north;
     }
@@ -47,26 +47,51 @@ public class Side{
     public char getWest(){
         return west;
     }
-    public char getNorthWest(){
-        return northWest;
-    }
     public char getCentre(){
         return centre;
     }
-
-    public char[][] getSide(){
-        side[0][0] = northWest;
-        side[0][1] = north;
-        side[0][2] = northEast;
-
-        side[1][0] = west;
-        side[1][1] = centre;
-        side[1][2] = east;
-
-        side[2][0] = southWest;
-        side[2][1] = south;
-        side[2][2] = southEast;
-
-        return side;
+    public char getCell(int[] loc){
+        char[][] tempChar = {{northWest, north, northEast}, {west, centre, east}, {southWest, south, southEast}};
+        return tempChar[loc[0]][loc[1]];
     }
+
+    // Setter Methods
+    public void setNorthWest(char value){
+        this.northWest = value;
+    }
+    public void setNorth(char value){
+        this.north = value;
+    }
+    public void setNorthEast(char value){
+        this.northEast = value;
+    }
+    public void setEast(char value){
+        this.east = value;
+    }
+    public void setSouthEast(char value){
+        this.southEast = value;
+    }
+    public void setSouth(char value){
+        this.south = value;
+    }
+    public void setSouthWest(char value){
+        this.southWest = value;
+    }
+    public void setWest(char value){
+        this.west = value;
+    }
+    public void setCentre(char value){
+        this.centre = value;
+    }
+//    public char setCell(int[] loc, char value){
+//        char[][] tempChar = {{northWest, north, northEast}, {west, centre, east}, {southWest, south, southEast}};
+//        return tempChar[loc[0]][loc[1]];
+//    }
+
+    @Override
+    public String toString() {
+        String result = northWest + "  " + north + "  " + northEast + "\n" + west + "  " + centre + "  " + east + "\n" + southWest + "  " + south + "  " + southEast;
+        return result;
+    }
+
 }
