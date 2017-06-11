@@ -1,4 +1,5 @@
-import java.io.Console;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 public class Solver {
     enum Direction{TOP, BOTTOM, LEFT, RIGHT, FRONT, BACK};
 
@@ -9,6 +10,12 @@ public class Solver {
 //        String[] moveChain2 = {"F", "U", "D2", "NotR", "F", "L", "L", "L", "L"};
 //        String[] moveChain3 = {"NotF", "NotU", "D2", "R", "NotF", "NotL", "NotL", "NotL", "NotL"};
 //        rubiksCube.followMoveChain(moveChain3);
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Dimension screen = toolkit.getScreenSize();
+        CubeGUI inputWindow = new CubeGUI();
+        inputWindow.setLocation((screen.width - inputWindow.getWidth()) / 2,
+                (screen.height - inputWindow.getHeight()) / 2);
+
     }
 
     public static Cube solvedCube() {
