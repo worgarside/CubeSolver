@@ -746,6 +746,30 @@ public class CubeGUI extends JFrame {
 
         btnSolve.setBounds(WIDTH-100, HEIGHT-70, 80, 30);
 
+        JButton btnRandomize = new JButton("Randomize");
+        btnRandomize.setBounds(WIDTH-220, HEIGHT-70, 100, 30);
+        btnRandomize.addActionListener(new ActionListener() {
+           public void actionPerformed(ActionEvent e) {
+               Solver.rubiksCube.randomize();
+//               Solver.rubiksCube.testMoveValidity();
+               System.out.println(Solver.rubiksCube);
+               updateCubeNet();
+           }
+        });
+        contentPane.add(btnRandomize);
+
+        JButton btnMoveChain = new JButton("Move Chain");
+        btnMoveChain.setBounds(WIDTH-340, HEIGHT-70, 100, 30);
+        btnMoveChain.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String[] moveChain = {"NotX", "S2", "D", "F", "F", "NotB", "NotZ", "R2", "NotB", "Y", "L2", "U2", "NotX", "B2", "NotS", "NotX"};
+                Solver.rubiksCube.followMoveChain(moveChain);
+                System.out.println(Solver.rubiksCube);
+                updateCubeNet();
+            }
+        });
+        contentPane.add(btnMoveChain);
+
         setVisible(true);
     }
 

@@ -1,7 +1,7 @@
 import java.util.Random;
 
 public class Cube {
-    private static final String[] MOVES = {"R", "NotR", "L", "NotL", "R2", "L2", "U", "NotU", "D", "NotD", "U2", "D2", "F", "NotF", "B", "NotB", "F2", "B2", "M", "NotM", "M2", "E", "NotE", "E2", "S", "NotS", "S2"/*, "X", "NotX", "Y", "NotY", "Z", "NotZ"*/};
+    private static final String[] MOVES = {"R", "NotR", "L", "NotL", "R2", "L2", "U", "NotU", "D", "NotD", "U2", "D2", "F", "NotF", "B", "NotB", "F2", "B2", "M", "NotM", "M2", "E", "NotE", "E2", "S", "NotS", "S2", "X", "NotX", "Y", "NotY", "Z", "NotZ"};
     private Side top;
     private Side left;
     private Side right;
@@ -108,9 +108,9 @@ public class Cube {
                 t.getBottom().getWest(), t.getBottom().getCentre(), t.getBottom().getEast(),
                 t.getBottom().getSouthWest(), t.getBottom().getSouth(), t.getBottom().getSouthEast());
 
-        this.setBack(t.getTop().getSouthWest(), t.getTop().getSouth(), t.getTop().getSouthEast(),
-                t.getTop().getWest(), t.getTop().getCentre(), t.getTop().getEast(),
-                t.getTop().getNorthWest(), t.getTop().getNorth(), t.getTop().getNorthEast());
+        this.setBack(t.getTop().getSouthEast(), t.getTop().getSouth(), t.getTop().getSouthWest(),
+                t.getTop().getEast(), t.getTop().getCentre(), t.getTop().getWest(),
+                t.getTop().getNorthEast(), t.getTop().getNorth(), t.getTop().getNorthWest());
     }
 
     public void moveNotX() {
@@ -138,7 +138,7 @@ public class Cube {
 
         this.setBack(t.getBottom().getSouthEast(), t.getBottom().getSouth(), t.getBottom().getSouthWest(),
                 t.getBottom().getEast(), t.getBottom().getCentre(), t.getBottom().getWest(),
-                t.getBottom().getSouthEast(), t.getBottom().getNorth(), t.getBottom().getNorthWest());
+                t.getBottom().getNorthEast(), t.getBottom().getNorth(), t.getBottom().getNorthWest());
     }
 
     public void moveY() {
@@ -237,9 +237,9 @@ public class Cube {
                 t.getLeft().getNorth(), t.getLeft().getCentre(), t.getLeft().getSouth(),
                 t.getLeft().getNorthWest(), t.getLeft().getWest(), t.getLeft().getSouthWest());
 
-        this.setLeft(t.getTop().getSouthWest(), t.getTop().getWest(), t.getTop().getNorthWest(),
-                t.getTop().getSouth(), t.getTop().getCentre(), t.getTop().getNorth(),
-                t.getTop().getSouthEast(), t.getTop().getEast(), t.getTop().getNorthEast());
+        this.setLeft(t.getTop().getNorthEast(), t.getTop().getEast(), t.getTop().getSouthEast(),
+                t.getTop().getNorth(), t.getTop().getCentre(), t.getTop().getSouth(),
+                t.getTop().getNorthWest(), t.getTop().getWest(), t.getTop().getSouthWest());
 
         this.setRight(t.getBottom().getNorthEast(), t.getBottom().getEast(), t.getBottom().getSouthEast(),
                 t.getBottom().getNorth(), t.getBottom().getCentre(), t.getBottom().getSouth(),
@@ -640,7 +640,7 @@ public class Cube {
     public void randomize(){
         int rnd = 10 + (int)(Math.random() * (11)); //Random int from 10-20
         System.out.print("Making " + rnd + " moves: ");
-        for(rnd = 0; rnd < 15; rnd++){
+        for(int i = 0; i < rnd; i++){
             int moveNum = new Random().nextInt(MOVES.length);
             String move = MOVES[moveNum];
             System.out.print(move + ", ");
@@ -728,6 +728,19 @@ public class Cube {
         }else{
             return false;
         }
+    }
+
+    public void testMoveValidity(){
+        int count = 0;
+        do{
+            count ++;
+            int moveNum = new Random().nextInt(MOVES.length);
+            String move = MOVES[moveNum];
+            System.out.println(move);
+            this.move(move);
+            System.out.println(Solver.rubiksCube);
+            System.out.println(count);
+        }while(this.checkColourQuantity());
     }
 
 
