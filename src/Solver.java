@@ -2,9 +2,10 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 public class Solver {
     enum Direction{TOP, BOTTOM, LEFT, RIGHT, FRONT, BACK};
+    public static  Cube rubiksCube = solvedCube();
 
     public static void main(String[] args) {
-        Cube rubiksCube = solvedCube();
+
 
 //        String[] moveChain = {"NotL", "F", "D", "S", "S", "L2", "D2", "M", "NotR", "F", "E2", "S", "NotB", "U", "B2"};
 //        String[] moveChain2 = {"F", "U", "D2", "NotR", "F", "L", "L", "L", "L"};
