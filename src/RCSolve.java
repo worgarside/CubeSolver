@@ -1,22 +1,14 @@
 import java.awt.Dimension;
 import java.awt.Toolkit;
-public class Solver {
+public class RCSolve {
     enum Direction{TOP, BOTTOM, LEFT, RIGHT, FRONT, BACK};
     public static  Cube rubiksCube = solvedCube();
 
     public static void main(String[] args) {
-
-
-//        String[] moveChain = {"NotL", "F", "D", "S", "S", "L2", "D2", "M", "NotR", "F", "E2", "S", "NotB", "U", "B2"};
-//        String[] moveChain2 = {"F", "U", "D2", "NotR", "F", "L", "L", "L", "L"};
-//        String[] moveChain3 = {"NotF", "NotU", "D2", "R", "NotF", "NotL", "NotL", "NotL", "NotL"};
-//        rubiksCube.followMoveChain(moveChain3);
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screen = toolkit.getScreenSize();
         CubeGUI inputWindow = new CubeGUI();
-        inputWindow.setLocation((screen.width - inputWindow.getWidth()) / 2,
-                (screen.height - inputWindow.getHeight()) / 2);
-
+        inputWindow.setLocation((screen.width - inputWindow.getWidth()) / 2, (screen.height - inputWindow.getHeight()) / 2);
     }
 
     public static Cube solvedCube() {

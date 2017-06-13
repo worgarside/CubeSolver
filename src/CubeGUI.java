@@ -380,8 +380,8 @@ public class CubeGUI extends JFrame {
         btnMoveL.setBounds(BTN_COL1, BTN_ROW1, 50, 30);
         btnMoveL.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveL();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveL();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -391,8 +391,8 @@ public class CubeGUI extends JFrame {
         btnMoveNotL.setBounds(BTN_COL2, BTN_ROW1, 50, 30);
         btnMoveNotL.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveNotL();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveNotL();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -402,8 +402,8 @@ public class CubeGUI extends JFrame {
         btnMoveL2.setBounds(BTN_COL3, BTN_ROW1, 50, 30);
         btnMoveL2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveL2();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveL2();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -413,8 +413,8 @@ public class CubeGUI extends JFrame {
         btnMoveR.setBounds(BTN_COL4, BTN_ROW1, 50, 30);
         btnMoveR.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveR();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveR();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -424,8 +424,8 @@ public class CubeGUI extends JFrame {
         btnMoveNotR.setBounds(BTN_COL5, BTN_ROW1, 50, 30);
         btnMoveNotR.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveNotR();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveNotR();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -435,8 +435,8 @@ public class CubeGUI extends JFrame {
         btnMoveR2.setBounds(BTN_COL6, BTN_ROW1, 50, 30);
         btnMoveR2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveR2();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveR2();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -446,8 +446,8 @@ public class CubeGUI extends JFrame {
         btnMoveU.setBounds(BTN_COL1, BTN_ROW2, 50, 30);
         btnMoveU.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveU();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveU();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -457,8 +457,8 @@ public class CubeGUI extends JFrame {
         btnMoveNotU.setBounds(BTN_COL2, BTN_ROW2, 50, 30);
         btnMoveNotU.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveNotU();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveNotU();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -468,8 +468,8 @@ public class CubeGUI extends JFrame {
         btnMoveU2.setBounds(BTN_COL3, BTN_ROW2, 50, 30);
         btnMoveU2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveU2();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveU2();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -479,8 +479,8 @@ public class CubeGUI extends JFrame {
         btnMoveD.setBounds(BTN_COL4, BTN_ROW2, 50, 30);
         btnMoveD.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveD();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveD();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -490,8 +490,8 @@ public class CubeGUI extends JFrame {
         btnMoveNotD.setBounds(BTN_COL5, BTN_ROW2, 50, 30);
         btnMoveNotD.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveNotD();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveNotD();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -501,8 +501,8 @@ public class CubeGUI extends JFrame {
         btnMoveD2.setBounds(BTN_COL6, BTN_ROW2, 50, 30);
         btnMoveD2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveD2();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveD2();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -512,8 +512,8 @@ public class CubeGUI extends JFrame {
         btnMoveF.setBounds(BTN_COL1, BTN_ROW3, 50, 30);
         btnMoveF.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveF();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveF();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -523,8 +523,8 @@ public class CubeGUI extends JFrame {
         btnMoveNotF.setBounds(BTN_COL2, BTN_ROW3, 50, 30);
         btnMoveNotF.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveNotF();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveNotF();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -534,8 +534,8 @@ public class CubeGUI extends JFrame {
         btnMoveF2.setBounds(BTN_COL3, BTN_ROW3, 50, 30);
         btnMoveF2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveF2();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveF2();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -545,8 +545,8 @@ public class CubeGUI extends JFrame {
         btnMoveB.setBounds(BTN_COL4, BTN_ROW3, 50, 30);
         btnMoveB.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveB();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveB();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -556,8 +556,8 @@ public class CubeGUI extends JFrame {
         btnMoveNotB.setBounds(BTN_COL5, BTN_ROW3, 50, 30);
         btnMoveNotB.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveNotB();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveNotB();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -567,8 +567,8 @@ public class CubeGUI extends JFrame {
         btnMoveB2.setBounds(BTN_COL6, BTN_ROW3, 50, 30);
         btnMoveB2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveB2();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveB2();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -578,8 +578,8 @@ public class CubeGUI extends JFrame {
         btnMoveM.setBounds(BTN_COL1, BTN_ROW4, 50, 30);
         btnMoveM.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveM();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveM();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -589,8 +589,8 @@ public class CubeGUI extends JFrame {
         btnMoveNotM.setBounds(BTN_COL2, BTN_ROW4, 50, 30);
         btnMoveNotM.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveNotM();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveNotM();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -601,8 +601,8 @@ public class CubeGUI extends JFrame {
         btnMoveM2.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 11));
         btnMoveM2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveM2();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveM2();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -612,8 +612,8 @@ public class CubeGUI extends JFrame {
         btnMoveE.setBounds(BTN_COL4, BTN_ROW4, 50, 30);
         btnMoveE.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveE();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveE();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -623,8 +623,8 @@ public class CubeGUI extends JFrame {
         btnMoveNotE.setBounds(BTN_COL5, BTN_ROW4, 50, 30);
         btnMoveNotE.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveNotE();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveNotE();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -634,8 +634,8 @@ public class CubeGUI extends JFrame {
         btnMoveE2.setBounds(BTN_COL6, BTN_ROW4, 50, 30);
         btnMoveE2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveE2();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveE2();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -645,8 +645,8 @@ public class CubeGUI extends JFrame {
         btnMoveS.setBounds(BTN_COL1, BTN_ROW5, 50, 30);
         btnMoveS.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveS();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveS();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -656,8 +656,8 @@ public class CubeGUI extends JFrame {
         btnMoveNotS.setBounds(BTN_COL2, BTN_ROW5, 50, 30);
         btnMoveNotS.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveNotS();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveNotS();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -667,8 +667,8 @@ public class CubeGUI extends JFrame {
         btnMoveS2.setBounds(BTN_COL3, BTN_ROW5, 50, 30);
         btnMoveS2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveS2();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveS2();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -678,8 +678,8 @@ public class CubeGUI extends JFrame {
         btnMoveX.setBounds(BTN_COL1, BTN_ROW6, 50, 30);
         btnMoveX.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveX();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveX();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -689,8 +689,8 @@ public class CubeGUI extends JFrame {
         btnMoveNotX.setBounds(BTN_COL2, BTN_ROW6, 50, 30);
         btnMoveNotX.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveNotX();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveNotX();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -700,8 +700,8 @@ public class CubeGUI extends JFrame {
         btnMoveY.setBounds(BTN_COL3, BTN_ROW6, 50, 30);
         btnMoveY.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveY();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveY();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -711,8 +711,8 @@ public class CubeGUI extends JFrame {
         btnMoveNotY.setBounds(BTN_COL4, BTN_ROW6, 50, 30);
         btnMoveNotY.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveNotY();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveNotY();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -722,8 +722,8 @@ public class CubeGUI extends JFrame {
         btnMoveZ.setBounds(BTN_COL5, BTN_ROW6, 50, 30);
         btnMoveZ.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveZ();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveZ();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -733,8 +733,8 @@ public class CubeGUI extends JFrame {
         btnMoveNotZ.setBounds(BTN_COL6, BTN_ROW6, 50, 30);
         btnMoveNotZ.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Solver.rubiksCube.moveNotZ();
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.moveNotZ();
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -750,9 +750,9 @@ public class CubeGUI extends JFrame {
         btnRandomize.setBounds(WIDTH-220, HEIGHT-70, 100, 30);
         btnRandomize.addActionListener(new ActionListener() {
            public void actionPerformed(ActionEvent e) {
-               Solver.rubiksCube.randomize();
-//               Solver.rubiksCube.testMoveValidity();
-               System.out.println(Solver.rubiksCube);
+               RCSolve.rubiksCube.randomize();
+//               RCSolve.rubiksCube.testMoveValidity();
+               System.out.println(RCSolve.rubiksCube);
                updateCubeNet();
            }
         });
@@ -763,8 +763,8 @@ public class CubeGUI extends JFrame {
         btnMoveChain.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String[] moveChain = {"NotX", "S2", "D", "F", "F", "NotB", "NotZ", "R2", "NotB", "Y", "L2", "U2", "NotX", "B2", "NotS", "NotX"};
-                Solver.rubiksCube.followMoveChain(moveChain);
-                System.out.println(Solver.rubiksCube);
+                RCSolve.rubiksCube.followMoveChain(moveChain);
+                System.out.println(RCSolve.rubiksCube);
                 updateCubeNet();
             }
         });
@@ -782,67 +782,67 @@ public class CubeGUI extends JFrame {
         colors[22] = Color.white;
         colors[24] = Color.yellow;
 
-        topNorthWest.setBackground(colors[((int) Solver.rubiksCube.getTop().getNorthWest()) - 65]);
+        topNorthWest.setBackground(colors[((int) RCSolve.rubiksCube.getTop().getNorthWest()) - 65]);
 
-        topNorthWest.setBackground(colors[((int) Solver.rubiksCube.getTop().getNorthWest() - 65)]);
-        topNorth.setBackground(colors[((int) Solver.rubiksCube.getTop().getNorth() - 65)]);
-        topNorthEast.setBackground(colors[((int) Solver.rubiksCube.getTop().getNorthEast() - 65)]);
-        topWest.setBackground(colors[((int) Solver.rubiksCube.getTop().getWest() - 65)]);
-        topCentre.setBackground(colors[((int) Solver.rubiksCube.getTop().getCentre() - 65)]);
-        topEast.setBackground(colors[((int) Solver.rubiksCube.getTop().getEast() - 65)]);
-        topSouthWest.setBackground(colors[((int) Solver.rubiksCube.getTop().getSouthWest() - 65)]);
-        topSouth.setBackground(colors[((int) Solver.rubiksCube.getTop().getSouth() - 65)]);
-        topSouthEast.setBackground(colors[((int) Solver.rubiksCube.getTop().getSouthEast() - 65)]);
+        topNorthWest.setBackground(colors[((int) RCSolve.rubiksCube.getTop().getNorthWest() - 65)]);
+        topNorth.setBackground(colors[((int) RCSolve.rubiksCube.getTop().getNorth() - 65)]);
+        topNorthEast.setBackground(colors[((int) RCSolve.rubiksCube.getTop().getNorthEast() - 65)]);
+        topWest.setBackground(colors[((int) RCSolve.rubiksCube.getTop().getWest() - 65)]);
+        topCentre.setBackground(colors[((int) RCSolve.rubiksCube.getTop().getCentre() - 65)]);
+        topEast.setBackground(colors[((int) RCSolve.rubiksCube.getTop().getEast() - 65)]);
+        topSouthWest.setBackground(colors[((int) RCSolve.rubiksCube.getTop().getSouthWest() - 65)]);
+        topSouth.setBackground(colors[((int) RCSolve.rubiksCube.getTop().getSouth() - 65)]);
+        topSouthEast.setBackground(colors[((int) RCSolve.rubiksCube.getTop().getSouthEast() - 65)]);
 
-        bottomNorthWest.setBackground(colors[((int) Solver.rubiksCube.getBottom().getNorthWest() - 65)]);
-        bottomNorth.setBackground(colors[((int) Solver.rubiksCube.getBottom().getNorth() - 65)]);
-        bottomNorthEast.setBackground(colors[((int) Solver.rubiksCube.getBottom().getNorthEast() - 65)]);
-        bottomWest.setBackground(colors[((int) Solver.rubiksCube.getBottom().getWest() - 65)]);
-        bottomCentre.setBackground(colors[((int) Solver.rubiksCube.getBottom().getCentre() - 65)]);
-        bottomEast.setBackground(colors[((int) Solver.rubiksCube.getBottom().getEast() - 65)]);
-        bottomSouthWest.setBackground(colors[((int) Solver.rubiksCube.getBottom().getSouthWest() - 65)]);
-        bottomSouth.setBackground(colors[((int) Solver.rubiksCube.getBottom().getSouth() - 65)]);
-        bottomSouthEast.setBackground(colors[((int) Solver.rubiksCube.getBottom().getSouthEast() - 65)]);
+        bottomNorthWest.setBackground(colors[((int) RCSolve.rubiksCube.getBottom().getNorthWest() - 65)]);
+        bottomNorth.setBackground(colors[((int) RCSolve.rubiksCube.getBottom().getNorth() - 65)]);
+        bottomNorthEast.setBackground(colors[((int) RCSolve.rubiksCube.getBottom().getNorthEast() - 65)]);
+        bottomWest.setBackground(colors[((int) RCSolve.rubiksCube.getBottom().getWest() - 65)]);
+        bottomCentre.setBackground(colors[((int) RCSolve.rubiksCube.getBottom().getCentre() - 65)]);
+        bottomEast.setBackground(colors[((int) RCSolve.rubiksCube.getBottom().getEast() - 65)]);
+        bottomSouthWest.setBackground(colors[((int) RCSolve.rubiksCube.getBottom().getSouthWest() - 65)]);
+        bottomSouth.setBackground(colors[((int) RCSolve.rubiksCube.getBottom().getSouth() - 65)]);
+        bottomSouthEast.setBackground(colors[((int) RCSolve.rubiksCube.getBottom().getSouthEast() - 65)]);
 
-        leftNorthWest.setBackground(colors[((int) Solver.rubiksCube.getLeft().getNorthWest() - 65)]);
-        leftNorth.setBackground(colors[((int) Solver.rubiksCube.getLeft().getNorth() - 65)]);
-        leftNorthEast.setBackground(colors[((int) Solver.rubiksCube.getLeft().getNorthEast() - 65)]);
-        leftWest.setBackground(colors[((int) Solver.rubiksCube.getLeft().getWest() - 65)]);
-        leftCentre.setBackground(colors[((int) Solver.rubiksCube.getLeft().getCentre() - 65)]);
-        leftEast.setBackground(colors[((int) Solver.rubiksCube.getLeft().getEast() - 65)]);
-        leftSouthWest.setBackground(colors[((int) Solver.rubiksCube.getLeft().getSouthWest() - 65)]);
-        leftSouth.setBackground(colors[((int) Solver.rubiksCube.getLeft().getSouth() - 65)]);
-        leftSouthEast.setBackground(colors[((int) Solver.rubiksCube.getLeft().getSouthEast() - 65)]);
+        leftNorthWest.setBackground(colors[((int) RCSolve.rubiksCube.getLeft().getNorthWest() - 65)]);
+        leftNorth.setBackground(colors[((int) RCSolve.rubiksCube.getLeft().getNorth() - 65)]);
+        leftNorthEast.setBackground(colors[((int) RCSolve.rubiksCube.getLeft().getNorthEast() - 65)]);
+        leftWest.setBackground(colors[((int) RCSolve.rubiksCube.getLeft().getWest() - 65)]);
+        leftCentre.setBackground(colors[((int) RCSolve.rubiksCube.getLeft().getCentre() - 65)]);
+        leftEast.setBackground(colors[((int) RCSolve.rubiksCube.getLeft().getEast() - 65)]);
+        leftSouthWest.setBackground(colors[((int) RCSolve.rubiksCube.getLeft().getSouthWest() - 65)]);
+        leftSouth.setBackground(colors[((int) RCSolve.rubiksCube.getLeft().getSouth() - 65)]);
+        leftSouthEast.setBackground(colors[((int) RCSolve.rubiksCube.getLeft().getSouthEast() - 65)]);
 
-        rightNorthWest.setBackground(colors[((int) Solver.rubiksCube.getRight().getNorthWest() - 65)]);
-        rightNorth.setBackground(colors[((int) Solver.rubiksCube.getRight().getNorth() - 65)]);
-        rightNorthEast.setBackground(colors[((int) Solver.rubiksCube.getRight().getNorthEast() - 65)]);
-        rightWest.setBackground(colors[((int) Solver.rubiksCube.getRight().getWest() - 65)]);
-        rightCentre.setBackground(colors[((int) Solver.rubiksCube.getRight().getCentre() - 65)]);
-        rightEast.setBackground(colors[((int) Solver.rubiksCube.getRight().getEast() - 65)]);
-        rightSouthWest.setBackground(colors[((int) Solver.rubiksCube.getRight().getSouthWest() - 65)]);
-        rightSouth.setBackground(colors[((int) Solver.rubiksCube.getRight().getSouth() - 65)]);
-        rightSouthEast.setBackground(colors[((int) Solver.rubiksCube.getRight().getSouthEast() - 65)]);
+        rightNorthWest.setBackground(colors[((int) RCSolve.rubiksCube.getRight().getNorthWest() - 65)]);
+        rightNorth.setBackground(colors[((int) RCSolve.rubiksCube.getRight().getNorth() - 65)]);
+        rightNorthEast.setBackground(colors[((int) RCSolve.rubiksCube.getRight().getNorthEast() - 65)]);
+        rightWest.setBackground(colors[((int) RCSolve.rubiksCube.getRight().getWest() - 65)]);
+        rightCentre.setBackground(colors[((int) RCSolve.rubiksCube.getRight().getCentre() - 65)]);
+        rightEast.setBackground(colors[((int) RCSolve.rubiksCube.getRight().getEast() - 65)]);
+        rightSouthWest.setBackground(colors[((int) RCSolve.rubiksCube.getRight().getSouthWest() - 65)]);
+        rightSouth.setBackground(colors[((int) RCSolve.rubiksCube.getRight().getSouth() - 65)]);
+        rightSouthEast.setBackground(colors[((int) RCSolve.rubiksCube.getRight().getSouthEast() - 65)]);
 
-        frontNorthWest.setBackground(colors[((int) Solver.rubiksCube.getFront().getNorthWest() - 65)]);
-        frontNorth.setBackground(colors[((int) Solver.rubiksCube.getFront().getNorth() - 65)]);
-        frontNorthEast.setBackground(colors[((int) Solver.rubiksCube.getFront().getNorthEast() - 65)]);
-        frontWest.setBackground(colors[((int) Solver.rubiksCube.getFront().getWest() - 65)]);
-        frontCentre.setBackground(colors[((int) Solver.rubiksCube.getFront().getCentre() - 65)]);
-        frontEast.setBackground(colors[((int) Solver.rubiksCube.getFront().getEast() - 65)]);
-        frontSouthWest.setBackground(colors[((int) Solver.rubiksCube.getFront().getSouthWest() - 65)]);
-        frontSouth.setBackground(colors[((int) Solver.rubiksCube.getFront().getSouth() - 65)]);
-        frontSouthEast.setBackground(colors[((int) Solver.rubiksCube.getFront().getSouthEast() - 65)]);
+        frontNorthWest.setBackground(colors[((int) RCSolve.rubiksCube.getFront().getNorthWest() - 65)]);
+        frontNorth.setBackground(colors[((int) RCSolve.rubiksCube.getFront().getNorth() - 65)]);
+        frontNorthEast.setBackground(colors[((int) RCSolve.rubiksCube.getFront().getNorthEast() - 65)]);
+        frontWest.setBackground(colors[((int) RCSolve.rubiksCube.getFront().getWest() - 65)]);
+        frontCentre.setBackground(colors[((int) RCSolve.rubiksCube.getFront().getCentre() - 65)]);
+        frontEast.setBackground(colors[((int) RCSolve.rubiksCube.getFront().getEast() - 65)]);
+        frontSouthWest.setBackground(colors[((int) RCSolve.rubiksCube.getFront().getSouthWest() - 65)]);
+        frontSouth.setBackground(colors[((int) RCSolve.rubiksCube.getFront().getSouth() - 65)]);
+        frontSouthEast.setBackground(colors[((int) RCSolve.rubiksCube.getFront().getSouthEast() - 65)]);
 
-        backNorthWest.setBackground(colors[((int) Solver.rubiksCube.getBack().getNorthWest() - 65)]);
-        backNorth.setBackground(colors[((int) Solver.rubiksCube.getBack().getNorth() - 65)]);
-        backNorthEast.setBackground(colors[((int) Solver.rubiksCube.getBack().getNorthEast() - 65)]);
-        backWest.setBackground(colors[((int) Solver.rubiksCube.getBack().getWest() - 65)]);
-        backCentre.setBackground(colors[((int) Solver.rubiksCube.getBack().getCentre() - 65)]);
-        backEast.setBackground(colors[((int) Solver.rubiksCube.getBack().getEast() - 65)]);
-        backSouthWest.setBackground(colors[((int) Solver.rubiksCube.getBack().getSouthWest() - 65)]);
-        backSouth.setBackground(colors[((int) Solver.rubiksCube.getBack().getSouth() - 65)]);
-        backSouthEast.setBackground(colors[((int) Solver.rubiksCube.getBack().getSouthEast() - 65)]);
+        backNorthWest.setBackground(colors[((int) RCSolve.rubiksCube.getBack().getNorthWest() - 65)]);
+        backNorth.setBackground(colors[((int) RCSolve.rubiksCube.getBack().getNorth() - 65)]);
+        backNorthEast.setBackground(colors[((int) RCSolve.rubiksCube.getBack().getNorthEast() - 65)]);
+        backWest.setBackground(colors[((int) RCSolve.rubiksCube.getBack().getWest() - 65)]);
+        backCentre.setBackground(colors[((int) RCSolve.rubiksCube.getBack().getCentre() - 65)]);
+        backEast.setBackground(colors[((int) RCSolve.rubiksCube.getBack().getEast() - 65)]);
+        backSouthWest.setBackground(colors[((int) RCSolve.rubiksCube.getBack().getSouthWest() - 65)]);
+        backSouth.setBackground(colors[((int) RCSolve.rubiksCube.getBack().getSouth() - 65)]);
+        backSouthEast.setBackground(colors[((int) RCSolve.rubiksCube.getBack().getSouthEast() - 65)]);
 
 
     }
