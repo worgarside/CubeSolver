@@ -1,6 +1,6 @@
 import java.awt.Dimension;
 import java.awt.Toolkit;
-public class RCSolve {
+public class RCSolveMain {
     enum Direction{TOP, BOTTOM, LEFT, RIGHT, FRONT, BACK};
     public static  Cube rubiksCube = solvedCube();
 

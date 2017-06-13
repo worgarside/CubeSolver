@@ -57,20 +57,4 @@ public class Side{
     public Side copy(){
         return new Side(northWest, north, northEast, west, centre, east, southEast, south, southWest);
     }
-
-    public void chicken(){
-        Side side2 = this.copy();
-
-        System.out.println(this);
-        System.out.println();
-        System.out.println(side2);
-
-        System.out.println("\n");
-        this.setCentre('O');
-
-        System.out.println(this);
-        System.out.println();
-        System.out.println(side2);
-    }
-
 }
