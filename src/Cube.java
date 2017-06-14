@@ -1,7 +1,7 @@
 import java.util.Random;
 
 public class Cube {
-    private static final String[] MOVES = {"R", "NotR", "L", "NotL", "R2", "L2", "U", "NotU", "D", "NotD", "U2", "D2", "F", "NotF", "B", "NotB", "F2", "B2", "M", "NotM", "M2", "E", "NotE", "E2", "S", "NotS", "S2", "X", "NotX", "Y", "NotY", "Z", "NotZ"};
+    static final String[] MOVES = {"R", "NotR", "L", "NotL", "R2", "L2", "U", "NotU", "D", "NotD", "U2", "D2", "F", "NotF", "B", "NotB", "F2", "B2", "M", "NotM", "M2", "E", "NotE", "E2", "S", "NotS", "S2", "X", "NotX", "Y", "NotY", "Z", "NotZ"};
     private Side top;
     private Side left;
     private Side right;
@@ -33,6 +33,19 @@ public class Cube {
     }
     public Cube copy() {
         return new Cube(top, bottom, left, right, front, back);
+    }
+    
+    public String toWord(){
+        String result = String.valueOf(top.getNorthWest()) + top.getNorth() + top.getNorthEast() +
+                top.getWest() + top.getCentre() + top.getEast() +
+                top.getSouthWest() + top.getSouth() + top.getSouthEast() +
+                left.getNorthWest() + left.getNorth() + left.getNorthEast() + front.getNorthWest() + front.getNorth() + front.getNorthEast() + right.getNorthWest() + right.getNorth() + right.getNorthEast() + back.getNorthWest() + back.getNorth() + back.getNorthEast() +
+                left.getWest() + left.getCentre() + left.getEast() + front.getWest() + front.getCentre() + front.getEast() + right.getWest() + right.getCentre() + right.getEast() + back.getWest() + back.getCentre() + back.getEast() +
+                left.getSouthWest() + left.getSouth() + left.getSouthEast() + front.getSouthWest() + front.getSouth() + front.getSouthEast() + right.getSouthWest() + right.getSouth() + right.getSouthEast() + back.getSouthWest() + back.getSouth() + back.getSouthEast() +
+                bottom.getNorthWest() + bottom.getNorth() + bottom.getNorthEast() +
+                bottom.getWest() + bottom.getCentre() + bottom.getEast() +
+                bottom.getSouthWest() + bottom.getSouth() + bottom.getSouthEast();
+        return result;
     }
 
     // Getter Methods
@@ -111,6 +124,8 @@ public class Cube {
         this.setBack(t.getTop().getSouthEast(), t.getTop().getSouth(), t.getTop().getSouthWest(),
                 t.getTop().getEast(), t.getTop().getCentre(), t.getTop().getWest(),
                 t.getTop().getNorthEast(), t.getTop().getNorth(), t.getTop().getNorthWest());
+
+        RCSolveMain.display.updateCubeNet();
     }
 
     public void moveNotX() {
@@ -139,6 +154,13 @@ public class Cube {
         this.setBack(t.getBottom().getSouthEast(), t.getBottom().getSouth(), t.getBottom().getSouthWest(),
                 t.getBottom().getEast(), t.getBottom().getCentre(), t.getBottom().getWest(),
                 t.getBottom().getNorthEast(), t.getBottom().getNorth(), t.getBottom().getNorthWest());
+
+        RCSolveMain.display.updateCubeNet();
+    }
+
+    public void moveX2(){
+        this.moveX();
+        this.moveX();
     }
 
     public void moveY() {
@@ -167,6 +189,8 @@ public class Cube {
         this.setBack(t.getLeft().getNorthWest(), t.getLeft().getNorth(), t.getLeft().getNorthEast(),
                 t.getLeft().getWest(), t.getLeft().getCentre(), t.getLeft().getEast(),
                 t.getLeft().getSouthWest(), t.getLeft().getSouth(), t.getLeft().getSouthEast());
+
+        RCSolveMain.display.updateCubeNet();
     }
 
     public void moveNotY() {
@@ -195,6 +219,13 @@ public class Cube {
         this.setBack(t.getRight().getNorthWest(), t.getRight().getNorth(), t.getRight().getNorthEast(),
                 t.getRight().getWest(), t.getRight().getCentre(), t.getRight().getEast(),
                 t.getRight().getSouthWest(), t.getRight().getSouth(), t.getRight().getSouthEast());
+
+        RCSolveMain.display.updateCubeNet();
+    }
+
+    public void moveY2(){
+        this.moveY();
+        this.moveY();
     }
 
     public void moveZ() {
@@ -224,6 +255,7 @@ public class Cube {
                 t.getBack().getNorth(), t.getBack().getCentre(), t.getBack().getSouth(),
                 t.getBack().getNorthWest(), t.getBack().getWest(), t.getBack().getSouthWest());
 
+        RCSolveMain.display.updateCubeNet();
     }
 
     public void moveNotZ() {
@@ -252,6 +284,13 @@ public class Cube {
         this.setBack(t.getBack().getSouthWest(), t.getBack().getWest(), t.getBack().getNorthWest(),
                 t.getBack().getSouth(), t.getBack().getCentre(), t.getBack().getNorth(),
                 t.getBack().getSouthEast(), t.getBack().getEast(), t.getBack().getNorthEast());
+
+        RCSolveMain.display.updateCubeNet();
+    }
+
+    public void moveZ2(){
+        this.moveZ();
+        this.moveZ();
     }
 
     public void moveR() {
@@ -276,6 +315,8 @@ public class Cube {
         this.setRight(t.getRight().getSouthWest(), t.getRight().getWest(), t.getRight().getNorthWest(),
                 t.getRight().getSouth(), t.getRight().getCentre(), t.getRight().getNorth(),
                 t.getRight().getSouthEast(), t.getRight().getEast(), t.getRight().getNorthEast());
+
+        RCSolveMain.display.updateCubeNet();
     }
 
     public void moveNotR() {
@@ -300,6 +341,8 @@ public class Cube {
         this.setRight(t.getRight().getNorthEast(), t.getRight().getEast(), t.getRight().getSouthEast(),
                 t.getRight().getNorth(), t.getRight().getCentre(), t.getRight().getSouth(),
                 t.getRight().getNorthWest(), t.getRight().getWest(), t.getRight().getSouthWest());
+
+        RCSolveMain.display.updateCubeNet();
     }
 
     public void moveL() {
@@ -324,6 +367,8 @@ public class Cube {
         this.setLeft(t.getLeft().getSouthWest(), t.getLeft().getWest(), t.getLeft().getNorthWest(),
                 t.getLeft().getSouth(), t.getLeft().getCentre(), t.getLeft().getNorth(),
                 t.getLeft().getSouthEast(), t.getLeft().getEast(), t.getLeft().getNorthEast());
+
+        RCSolveMain.display.updateCubeNet();
     }
 
     public void moveNotL() {
@@ -348,6 +393,8 @@ public class Cube {
         this.setLeft(t.getLeft().getNorthEast(), t.getLeft().getEast(), t.getLeft().getSouthEast(),
                 t.getLeft().getNorth(), t.getLeft().getCentre(), t.getLeft().getSouth(),
                 t.getLeft().getNorthWest(), t.getLeft().getWest(), t.getLeft().getSouthWest());
+
+        RCSolveMain.display.updateCubeNet();
     }
 
     public void moveR2() {
@@ -382,6 +429,8 @@ public class Cube {
         this.setTop(t.getTop().getSouthWest(), t.getTop().getWest(), t.getTop().getNorthWest(),
                 t.getTop().getSouth(), t.getTop().getCentre(), t.getTop().getNorth(),
                 t.getTop().getSouthEast(), t.getTop().getEast(), t.getTop().getNorthEast());
+
+        RCSolveMain.display.updateCubeNet();
     }
 
     public void moveNotU() {
@@ -406,6 +455,8 @@ public class Cube {
         this.setTop(t.getTop().getNorthEast(), t.getTop().getEast(), t.getTop().getSouthEast(),
                 t.getTop().getNorth(), t.getTop().getCentre(), t.getTop().getSouth(),
                 t.getTop().getNorthWest(), t.getTop().getWest(), t.getTop().getSouthWest());
+
+        RCSolveMain.display.updateCubeNet();
     }
 
     public void moveD() {
@@ -430,6 +481,8 @@ public class Cube {
         this.setBottom(t.getBottom().getSouthWest(), t.getBottom().getWest(), t.getBottom().getNorthWest(),
                 t.getBottom().getSouth(), t.getBottom().getCentre(), t.getBottom().getNorth(),
                 t.getBottom().getSouthEast(), t.getBottom().getEast(), t.getBottom().getNorthEast());
+
+        RCSolveMain.display.updateCubeNet();
     }
 
     public void moveNotD() {
@@ -454,6 +507,8 @@ public class Cube {
         this.setBottom(t.getBottom().getNorthEast(), t.getBottom().getEast(), t.getBottom().getSouthEast(),
                 t.getBottom().getNorth(), t.getBottom().getCentre(), t.getBottom().getSouth(),
                 t.getBottom().getNorthWest(), t.getBottom().getWest(), t.getBottom().getSouthWest());
+
+        RCSolveMain.display.updateCubeNet();
     }
 
     public void moveU2() {
@@ -488,6 +543,8 @@ public class Cube {
         this.setFront(t.getFront().getSouthWest(), t.getFront().getWest(), t.getFront().getNorthWest(),
                 t.getFront().getSouth(), t.getFront().getCentre(), t.getFront().getNorth(),
                 t.getFront().getSouthEast(), t.getFront().getEast(), t.getFront().getNorthEast());
+
+        RCSolveMain.display.updateCubeNet();
     }
 
     public void moveNotF() {
@@ -512,6 +569,8 @@ public class Cube {
         this.setFront(t.getFront().getNorthEast(), t.getFront().getEast(), t.getFront().getSouthEast(),
                 t.getFront().getNorth(), t.getFront().getCentre(), t.getFront().getSouth(),
                 t.getFront().getNorthWest(), t.getFront().getWest(), t.getFront().getSouthWest());
+
+        RCSolveMain.display.updateCubeNet();
     }
 
     public void moveB() {
@@ -536,6 +595,8 @@ public class Cube {
         this.setBack(t.getBack().getSouthWest(), t.getBack().getWest(), t.getBack().getNorthWest(),
                 t.getBack().getSouth(), t.getBack().getCentre(), t.getBack().getNorth(),
                 t.getBack().getSouthEast(), t.getBack().getEast(), t.getBack().getNorthEast());
+
+        RCSolveMain.display.updateCubeNet();
     }
 
     public void moveNotB() {
@@ -560,6 +621,8 @@ public class Cube {
         this.setBack(t.getBack().getNorthEast(), t.getBack().getEast(), t.getBack().getSouthEast(),
                 t.getBack().getNorth(), t.getBack().getCentre(), t.getBack().getSouth(),
                 t.getBack().getNorthWest(), t.getBack().getWest(), t.getBack().getSouthWest());
+
+        RCSolveMain.display.updateCubeNet();
     }
 
     public void moveF2() {
@@ -640,12 +703,20 @@ public class Cube {
     public void randomize(){
         int rnd = 10 + (int)(Math.random() * (11)); //Random int from 10-20
         System.out.print("Making " + rnd + " moves: ");
+
         for(int i = 0; i < rnd; i++){
             int moveNum = new Random().nextInt(MOVES.length);
             String move = MOVES[moveNum];
             System.out.print(move + ", ");
             this.move(move);
+
+            try {
+                Thread.sleep(250);
+            } catch(InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
         }
+
         System.out.println("\n");
     }
 
@@ -657,7 +728,7 @@ public class Cube {
         }
     }
 
-    public void displaySide(Solver.Direction direction){
+    public void displaySide(RCSolveMain.Direction direction){
         switch (direction){
             case TOP:
                 System.out.println(top);
@@ -680,7 +751,7 @@ public class Cube {
         }
     }
 
-    public Side getSide(Solver.Direction direction){
+    public Side getSide(RCSolveMain.Direction direction){
         switch (direction){
             case TOP:
                 return top;
@@ -708,7 +779,7 @@ public class Cube {
     }
     public boolean checkColourQuantity(){
         int[] alphabet = new int[26];
-        for (Solver.Direction dir : Solver.Direction.values()) {
+        for (RCSolveMain.Direction dir : RCSolveMain.Direction.values()) {
             for(int i = 0; i < 3; i ++){
                 for(int j = 0; j < 3; j ++){
                     int[] coordArray = {i, j};
@@ -738,12 +809,24 @@ public class Cube {
             String move = MOVES[moveNum];
             System.out.println(move);
             this.move(move);
-            System.out.println(Solver.rubiksCube);
+            System.out.println(RCSolveMain.rubiksCube);
             System.out.println(count);
         }while(this.checkColourQuantity());
     }
 
+    public void reset(){
+        this.top = new Side('W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W');
+        this.bottom = new Side('Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y', 'Y');
+        this.left = new Side('O', 'O', 'O', 'O', 'O', 'O', 'O', 'O', 'O');
+        this.right = new Side('R', 'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R');
+        this.front = new Side('G', 'G', 'G', 'G', 'G', 'G', 'G', 'G', 'G');
+        this.back = new Side('B', 'B', 'B', 'B', 'B', 'B', 'B', 'B', 'B');
+    }
 
+    public void solve() {
+        Solver.whiteToTop(this);
+        Solver.whiteCrossYellowCentre(this);
+    }
 }
 
 

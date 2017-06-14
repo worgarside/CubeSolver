@@ -2,13 +2,13 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 public class RCSolveMain {
     enum Direction{TOP, BOTTOM, LEFT, RIGHT, FRONT, BACK};
-    public static  Cube rubiksCube = solvedCube();
+    public static CubeGUI display = new CubeGUI();
+    public static Cube rubiksCube = solvedCube();
 
     public static void main(String[] args) {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screen = toolkit.getScreenSize();
-        CubeGUI inputWindow = new CubeGUI();
-        inputWindow.setLocation((screen.width - inputWindow.getWidth()) / 2, (screen.height - inputWindow.getHeight()) / 2);
+        display.setLocation((screen.width - display.getWidth()) / 2, (screen.height - display.getHeight()) / 2);
     }
 
     public static Cube solvedCube() {
