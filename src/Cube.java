@@ -98,7 +98,7 @@ public class Cube {
         back = new Side(nW, n, nE, w, c, e, sE, s, sW);
     }
 
-    public void moveX() {
+    public void moveX(boolean printFlag) {
         Cube t = this.copy();
 
         this.setTop(t.getFront().getNorthWest(), t.getFront().getNorth(), t.getFront().getNorthEast(),
@@ -126,9 +126,14 @@ public class Cube {
                 t.getTop().getNorthEast(), t.getTop().getNorth(), t.getTop().getNorthWest());
 
         RCSolveMain.display.updateCubeNet();
+        System.out.print( printFlag ? "X " : "");
     }
 
-    public void moveNotX() {
+    public void moveX(){
+        moveX(true);
+    }
+
+    public void moveNotX(boolean printFlag) {
         Cube t = this.copy();
 
         this.setTop(t.getBack().getSouthEast(), t.getBack().getSouth(), t.getBack().getSouthWest(),
@@ -156,14 +161,20 @@ public class Cube {
                 t.getBottom().getNorthEast(), t.getBottom().getNorth(), t.getBottom().getNorthWest());
 
         RCSolveMain.display.updateCubeNet();
+        System.out.print( printFlag ? "X' " : "");
+    }
+
+    public void moveNotX(){
+        moveNotX(true);
     }
 
     public void moveX2(){
-        this.moveX();
-        this.moveX();
+        this.moveX(false);
+        this.moveX(false);
+        System.out.print("X2 ");
     }
 
-    public void moveY() {
+    public void moveY(boolean printFlag) {
         Cube t = this.copy();
 
         this.setTop(t.getTop().getSouthWest(), t.getTop().getWest(), t.getTop().getNorthWest(),
@@ -191,9 +202,14 @@ public class Cube {
                 t.getLeft().getSouthWest(), t.getLeft().getSouth(), t.getLeft().getSouthEast());
 
         RCSolveMain.display.updateCubeNet();
+        System.out.print( printFlag ? "Y " : "");
     }
 
-    public void moveNotY() {
+    public void moveY(){
+        moveY(true);
+    }
+
+    public void moveNotY(boolean printFlag) {
         Cube t = this.copy();
 
         this.setTop(t.getTop().getNorthEast(), t.getTop().getEast(), t.getTop().getSouthEast(),
@@ -221,14 +237,20 @@ public class Cube {
                 t.getRight().getSouthWest(), t.getRight().getSouth(), t.getRight().getSouthEast());
 
         RCSolveMain.display.updateCubeNet();
+        System.out.print( printFlag ? "Y' " : "");
+    }
+
+    public void moveNotY(){
+        moveNotY(true);
     }
 
     public void moveY2(){
-        this.moveY();
-        this.moveY();
+        this.moveY(false);
+        this.moveY(false);
+        System.out.print("Y2 ");
     }
 
-    public void moveZ() {
+    public void moveZ(boolean printFlag) {
         Cube t = this.copy();
 
         this.setTop(t.getLeft().getSouthWest(), t.getLeft().getWest(), t.getLeft().getNorthWest(),
@@ -256,9 +278,14 @@ public class Cube {
                 t.getBack().getNorthWest(), t.getBack().getWest(), t.getBack().getSouthWest());
 
         RCSolveMain.display.updateCubeNet();
+        System.out.print( printFlag ? "Z " : "");
     }
 
-    public void moveNotZ() {
+    public void moveZ(){
+        moveZ(true);
+    }
+
+    public void moveNotZ(boolean printFlag) {
         Cube t = this.copy();
 
         this.setTop(t.getRight().getNorthEast(), t.getRight().getEast(), t.getRight().getSouthEast(),
@@ -286,14 +313,20 @@ public class Cube {
                 t.getBack().getSouthEast(), t.getBack().getEast(), t.getBack().getNorthEast());
 
         RCSolveMain.display.updateCubeNet();
+        System.out.print( printFlag ? "Z' " : "");
+    }
+
+    public void moveNotZ(){
+        moveNotZ(true);
     }
 
     public void moveZ2(){
-        this.moveZ();
-        this.moveZ();
+        this.moveZ(false);
+        this.moveZ(false);
+        System.out.print("Z2 ");
     }
 
-    public void moveR() {
+    public void moveR(boolean printFlag) {
         Cube t = this.copy();
 
         this.setTop(t.getTop().getNorthWest(), t.getTop().getNorth(), t.getFront().getNorthEast(),
@@ -317,9 +350,14 @@ public class Cube {
                 t.getRight().getSouthEast(), t.getRight().getEast(), t.getRight().getNorthEast());
 
         RCSolveMain.display.updateCubeNet();
+        System.out.print( printFlag ? "R " : "");
     }
 
-    public void moveNotR() {
+    public void moveR(){
+        moveR(true);
+    }
+
+    public void moveNotR(boolean printFlag) {
         Cube t = this.copy();
 
         this.setTop(t.getTop().getNorthWest(), t.getTop().getNorth(), t.getBack().getSouthWest(),
@@ -343,9 +381,14 @@ public class Cube {
                 t.getRight().getNorthWest(), t.getRight().getWest(), t.getRight().getSouthWest());
 
         RCSolveMain.display.updateCubeNet();
+        System.out.print( printFlag ? "R' " : "");
     }
 
-    public void moveL() {
+    public void moveNotR(){
+        moveNotR(true);
+    }
+
+    public void moveL(boolean printFlag) {
         Cube t = this.copy();
 
         this.setTop(t.getBack().getSouthEast(), t.getTop().getNorth(), t.getTop().getNorthEast(),
@@ -369,9 +412,14 @@ public class Cube {
                 t.getLeft().getSouthEast(), t.getLeft().getEast(), t.getLeft().getNorthEast());
 
         RCSolveMain.display.updateCubeNet();
+        System.out.print( printFlag ? "L " : "");
     }
 
-    public void moveNotL() {
+    public void moveL(){
+        moveL(true);
+    }
+
+    public void moveNotL(boolean printFlag) {
         Cube t = this.copy();
 
         this.setTop(t.getFront().getNorthWest(), t.getTop().getNorth(), t.getTop().getNorthEast(),
@@ -395,19 +443,26 @@ public class Cube {
                 t.getLeft().getNorthWest(), t.getLeft().getWest(), t.getLeft().getSouthWest());
 
         RCSolveMain.display.updateCubeNet();
+        System.out.print( printFlag ? "L' " : "");
+    }
+
+    public void moveNotL(){
+        moveNotL(true);
     }
 
     public void moveR2() {
-        this.moveR();
-        this.moveR();
+        this.moveR(false);
+        this.moveR(false);
+        System.out.print("R2 ");
     }
 
     public void moveL2() {
-        this.moveL();
-        this.moveL();
+        this.moveL(false);
+        this.moveL(false);
+        System.out.print("L2 ");
     }
 
-    public void moveU() {
+    public void moveU(boolean printFlag) {
         Cube t = this.copy();
 
         this.setFront(t.getRight().getNorthWest(), t.getRight().getNorth(), t.getRight().getNorthEast(),
@@ -431,9 +486,14 @@ public class Cube {
                 t.getTop().getSouthEast(), t.getTop().getEast(), t.getTop().getNorthEast());
 
         RCSolveMain.display.updateCubeNet();
+        System.out.print( printFlag ? "U " : "");
     }
 
-    public void moveNotU() {
+    public void moveU(){
+        moveU(true);
+    }
+
+    public void moveNotU(boolean printFlag) {
         Cube t = this.copy();
 
         this.setFront(t.getLeft().getNorthWest(), t.getLeft().getNorth(), t.getLeft().getNorthEast(),
@@ -457,9 +517,14 @@ public class Cube {
                 t.getTop().getNorthWest(), t.getTop().getWest(), t.getTop().getSouthWest());
 
         RCSolveMain.display.updateCubeNet();
+        System.out.print( printFlag ? "U' " : "");
     }
 
-    public void moveD() {
+    public void moveNotU(){
+        moveNotU(true);
+    }
+
+    public void moveD(boolean printFlag) {
         Cube t = this.copy();
 
         this.setFront(t.getFront().getNorthWest(), t.getFront().getNorth(), t.getFront().getNorthEast(),
@@ -483,9 +548,14 @@ public class Cube {
                 t.getBottom().getSouthEast(), t.getBottom().getEast(), t.getBottom().getNorthEast());
 
         RCSolveMain.display.updateCubeNet();
+        System.out.print( printFlag ? "D " : "");
     }
 
-    public void moveNotD() {
+    public void moveD(){
+        moveD(true);
+    }
+
+    public void moveNotD(boolean printFlag) {
         Cube t = this.copy();
 
         this.setFront(t.getFront().getNorthWest(), t.getFront().getNorth(), t.getFront().getNorthEast(),
@@ -509,19 +579,26 @@ public class Cube {
                 t.getBottom().getNorthWest(), t.getBottom().getWest(), t.getBottom().getSouthWest());
 
         RCSolveMain.display.updateCubeNet();
+        System.out.print( printFlag ? "D' " : "");
+    }
+
+    public void moveNotD(){
+        moveNotD(true);
     }
 
     public void moveU2() {
-        this.moveU();
-        this.moveU();
+        this.moveU(false);
+        this.moveU(false);
+        System.out.print("U2 ");
     }
 
     public void moveD2() {
-        this.moveD();
-        this.moveD();
+        this.moveD(false);
+        this.moveD(false);
+        System.out.print("D2 ");
     }
 
-    public void moveF() {
+    public void moveF(boolean printFlag) {
         Cube t = this.copy();
 
         this.setTop(t.getTop().getNorthWest(), t.getTop().getNorth(), t.getTop().getNorthEast(),
@@ -545,9 +622,14 @@ public class Cube {
                 t.getFront().getSouthEast(), t.getFront().getEast(), t.getFront().getNorthEast());
 
         RCSolveMain.display.updateCubeNet();
+        System.out.print( printFlag ? "F " : "");
     }
 
-    public void moveNotF() {
+    public void moveF(){
+        moveF(true);
+    }
+
+    public void moveNotF(boolean printFlag) {
         Cube t = this.copy();
 
         this.setTop(t.getTop().getNorthWest(), t.getTop().getNorth(), t.getTop().getNorthEast(),
@@ -571,9 +653,14 @@ public class Cube {
                 t.getFront().getNorthWest(), t.getFront().getWest(), t.getFront().getSouthWest());
 
         RCSolveMain.display.updateCubeNet();
+        System.out.print( printFlag ? "F' " : "");
     }
 
-    public void moveB() {
+    public void moveNotF(){
+        moveNotF(true);
+    }
+
+    public void moveB(boolean printFlag) {
         Cube t = this.copy();
 
         this.setTop(t.getRight().getNorthEast(), t.getRight().getEast(), t.getRight().getSouthEast(),
@@ -597,9 +684,14 @@ public class Cube {
                 t.getBack().getSouthEast(), t.getBack().getEast(), t.getBack().getNorthEast());
 
         RCSolveMain.display.updateCubeNet();
+        System.out.print( printFlag ? "B " : "");
     }
 
-    public void moveNotB() {
+    public void moveB(){
+        moveB(true);
+    }
+
+    public void moveNotB(boolean printFlag) {
         Cube t = this.copy();
 
         this.setTop(t.getLeft().getSouthWest(), t.getLeft().getWest(), t.getLeft().getNorthWest(),
@@ -623,67 +715,107 @@ public class Cube {
                 t.getBack().getNorthWest(), t.getBack().getWest(), t.getBack().getSouthWest());
 
         RCSolveMain.display.updateCubeNet();
+        System.out.print( printFlag ? "B' " : "");
+    }
+
+    public void moveNotB(){
+        moveNotB(true);
     }
 
     public void moveF2() {
-        this.moveF();
-        this.moveF();
+        this.moveF(false);
+        this.moveF(false);
+        System.out.print("F2 ");
     }
 
     public void moveB2() {
-        this.moveB();
-        this.moveB();
+        this.moveB(false);
+        this.moveB(false);
+        System.out.print("B2 ");
     }
 
-    public void moveM() {
-        this.moveR();
-        this.moveNotL();
-        this.moveNotX();
+    public void moveM(boolean printFlag) {
+        this.moveR(false);
+        this.moveNotL(false);
+        this.moveNotX(false);
+        System.out.print( printFlag ? "M " : "");
     }
 
-    public void moveNotM() {
-        this.moveNotR();
-        this.moveL();
-        this.moveX();
+    public void moveM(){
+        moveM(true);
+    }
+
+    public void moveNotM(boolean printFlag) {
+        this.moveNotR(false);
+        this.moveL(false);
+        this.moveX(false);
+        System.out.print( printFlag ? "M' " : "");
+    }
+
+    public void moveNotM(){
+        moveNotM(true);
     }
 
     public void moveM2() {
-        this.moveM();
-        this.moveM();
+        this.moveM(false);
+        this.moveM(false);
+        System.out.print("M2 ");
     }
 
-    public void moveE() {
-        this.moveU();
-        this.moveNotD();
-        this.moveNotY();
+    public void moveE(boolean printFlag) {
+        this.moveU(false);
+        this.moveNotD(false);
+        this.moveNotY(false);
+        System.out.print( printFlag ? "E " : "");
     }
 
-    public void moveNotE() {
-        this.moveNotU();
-        this.moveD();
-        this.moveY();
+    public void moveE(){
+        moveE(true);
+    }
+
+    public void moveNotE(boolean printFlag) {
+        this.moveNotU(false);
+        this.moveD(false);
+        this.moveY(false);
+        System.out.print( printFlag ? "E' " : "");
+    }
+
+    public void moveNotE(){
+        moveNotE(true);
     }
 
     public void moveE2() {
-        this.moveE();
-        this.moveE();
+        this.moveE(false);
+        this.moveE(false);
+        System.out.print("E2 ");
     }
 
-    public void moveS() {
-        this.moveNotF();
-        this.moveB();
-        this.moveZ();
+    public void moveS(boolean printFlag) {
+        this.moveNotF(false);
+        this.moveB(false);
+        this.moveZ(false);
+        System.out.print( printFlag ? "S " : "");
     }
 
-    public void moveNotS() {
-        this.moveF();
-        this.moveNotB();
-        this.moveNotZ();
+    public void moveS(){
+        moveS(true);
+    }
+
+    public void moveNotS(boolean printFlag) {
+        this.moveF(false);
+        this.moveNotB(false);
+        this.moveNotZ(false);
+        System.out.print( printFlag ? "S' " : "");
+    }
+
+    public void moveNotS(){
+        moveNotS(true);
     }
 
     public void moveS2() {
-        this.moveS();
-        this.moveS();
+        this.moveS(false);
+        this.moveS(false);
+        System.out.print("S2 ");
     }
 
     public void move(String move){
@@ -700,31 +832,9 @@ public class Cube {
         }
     }
 
-    public void randomize(){
-        int rnd = 10 + (int)(Math.random() * (11)); //Random int from 10-20
-        System.out.print("Making " + rnd + " moves: ");
-
-        for(int i = 0; i < rnd; i++){
-            int moveNum = new Random().nextInt(MOVES.length);
-            String move = MOVES[moveNum];
-            System.out.print(move + ", ");
-            this.move(move);
-
-            try {
-                Thread.sleep(250);
-            } catch(InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-        }
-
-        System.out.println("\n");
-    }
-
     public void followMoveChain(String[] moves){
         for (String s: moves) {
             this.move(s);
-            System.out.println("---------------------------------- \n" + s);
-            System.out.println(this);
         }
     }
 

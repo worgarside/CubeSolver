@@ -92,13 +92,11 @@ public class CubeGUI extends JFrame {
                 if(moveCount < rnd){
                     int moveNum = new Random().nextInt(Cube.MOVES.length);
                     String move = Cube.MOVES[moveNum];
-                    System.out.print(move + ", ");
                     RCSolveMain.rubiksCube.move(move);
                     updateCubeNet();
                     moveCount ++;
                 }else{
                     randomMoveTimer.stop();
-                    System.out.println("\n");
                 }
 
             }
@@ -405,7 +403,7 @@ public class CubeGUI extends JFrame {
         btnMoveL.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveL();
-                System.out.print("L, ");
+                //System.out.print("L, ");
 
             }
         });
@@ -416,7 +414,7 @@ public class CubeGUI extends JFrame {
         btnMoveNotL.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveNotL();
-                System.out.print("NotL, ");
+                //System.out.print("NotL, ");
 
             }
         });
@@ -427,8 +425,6 @@ public class CubeGUI extends JFrame {
         btnMoveL2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveL2();
-                System.out.print("L2, ");
-
             }
         });
         contentPane.add(btnMoveL2);
@@ -438,8 +434,6 @@ public class CubeGUI extends JFrame {
         btnMoveR.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveR();
-                System.out.print("R, ");
-
             }
         });
         contentPane.add(btnMoveR);
@@ -449,8 +443,6 @@ public class CubeGUI extends JFrame {
         btnMoveNotR.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveNotR();
-                System.out.print("NotR, ");
-
             }
         });
         contentPane.add(btnMoveNotR);
@@ -460,8 +452,6 @@ public class CubeGUI extends JFrame {
         btnMoveR2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveR2();
-                System.out.print("R2, ");
-
             }
         });
         contentPane.add(btnMoveR2);
@@ -471,8 +461,6 @@ public class CubeGUI extends JFrame {
         btnMoveU.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveU();
-                System.out.print("U, ");
-
             }
         });
         contentPane.add(btnMoveU);
@@ -482,8 +470,6 @@ public class CubeGUI extends JFrame {
         btnMoveNotU.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveNotU();
-                System.out.print("NotU, ");
-
             }
         });
         contentPane.add(btnMoveNotU);
@@ -493,8 +479,6 @@ public class CubeGUI extends JFrame {
         btnMoveU2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveU2();
-                System.out.print("U2, ");
-
             }
         });
         contentPane.add(btnMoveU2);
@@ -504,8 +488,6 @@ public class CubeGUI extends JFrame {
         btnMoveD.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveD();
-                System.out.print("D, ");
-
             }
         });
         contentPane.add(btnMoveD);
@@ -515,8 +497,6 @@ public class CubeGUI extends JFrame {
         btnMoveNotD.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveNotD();
-                System.out.print("NotD, ");
-                updateCubeNet();
             }
         });
         contentPane.add(btnMoveNotD);
@@ -526,8 +506,6 @@ public class CubeGUI extends JFrame {
         btnMoveD2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveD2();
-                System.out.print("D2, ");
-                updateCubeNet();
             }
         });
         contentPane.add(btnMoveD2);
@@ -537,8 +515,6 @@ public class CubeGUI extends JFrame {
         btnMoveF.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveF();
-                System.out.print("F, ");
-                updateCubeNet();
             }
         });
         contentPane.add(btnMoveF);
@@ -548,8 +524,6 @@ public class CubeGUI extends JFrame {
         btnMoveNotF.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveNotF();
-                System.out.print("NotF, ");
-                updateCubeNet();
             }
         });
         contentPane.add(btnMoveNotF);
@@ -559,8 +533,6 @@ public class CubeGUI extends JFrame {
         btnMoveF2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveF2();
-                System.out.print("F2, ");
-                updateCubeNet();
             }
         });
         contentPane.add(btnMoveF2);
@@ -570,8 +542,6 @@ public class CubeGUI extends JFrame {
         btnMoveB.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveB();
-                System.out.print("B, ");
-                updateCubeNet();
             }
         });
         contentPane.add(btnMoveB);
@@ -581,8 +551,6 @@ public class CubeGUI extends JFrame {
         btnMoveNotB.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveNotB();
-                System.out.print("NotB, ");
-                updateCubeNet();
             }
         });
         contentPane.add(btnMoveNotB);
@@ -592,8 +560,6 @@ public class CubeGUI extends JFrame {
         btnMoveB2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveB2();
-                System.out.print("B2, ");
-                updateCubeNet();
             }
         });
         contentPane.add(btnMoveB2);
@@ -603,8 +569,6 @@ public class CubeGUI extends JFrame {
         btnMoveM.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveM();
-                System.out.print("M, ");
-                updateCubeNet();
             }
         });
         contentPane.add(btnMoveM);
@@ -614,8 +578,6 @@ public class CubeGUI extends JFrame {
         btnMoveNotM.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveNotM();
-                System.out.print("NotM, ");
-                updateCubeNet();
             }
         });
         contentPane.add(btnMoveNotM);
@@ -626,8 +588,6 @@ public class CubeGUI extends JFrame {
         btnMoveM2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveM2();
-                System.out.print("M2, ");
-                updateCubeNet();
             }
         });
         contentPane.add(btnMoveM2);
@@ -637,8 +597,6 @@ public class CubeGUI extends JFrame {
         btnMoveE.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveE();
-                System.out.print("E, ");
-                updateCubeNet();
             }
         });
         contentPane.add(btnMoveE);
@@ -648,8 +606,6 @@ public class CubeGUI extends JFrame {
         btnMoveNotE.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveNotE();
-                System.out.print("NotE, ");
-                updateCubeNet();
             }
         });
         contentPane.add(btnMoveNotE);
@@ -659,8 +615,6 @@ public class CubeGUI extends JFrame {
         btnMoveE2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveE2();
-                System.out.print("E2, ");
-                updateCubeNet();
             }
         });
         contentPane.add(btnMoveE2);
@@ -670,8 +624,6 @@ public class CubeGUI extends JFrame {
         btnMoveS.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveS();
-                System.out.print("S, ");
-                updateCubeNet();
             }
         });
         contentPane.add(btnMoveS);
@@ -681,8 +633,6 @@ public class CubeGUI extends JFrame {
         btnMoveNotS.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveNotS();
-                System.out.print("NotS, ");
-                updateCubeNet();
             }
         });
         contentPane.add(btnMoveNotS);
@@ -692,8 +642,6 @@ public class CubeGUI extends JFrame {
         btnMoveS2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveS2();
-                System.out.print("S2, ");
-
             }
         });
         contentPane.add(btnMoveS2);
@@ -703,7 +651,6 @@ public class CubeGUI extends JFrame {
         btnMoveX.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveX();
-                System.out.print("X, ");
             }
         });
         contentPane.add(btnMoveX);
@@ -713,7 +660,6 @@ public class CubeGUI extends JFrame {
         btnMoveNotX.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveNotX();
-                System.out.print("NotX, ");
             }
         });
         contentPane.add(btnMoveNotX);
@@ -723,7 +669,6 @@ public class CubeGUI extends JFrame {
         btnMoveX2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveX2();
-                System.out.print("X2, ");
             }
         });
         contentPane.add(btnMoveX2);
@@ -733,7 +678,6 @@ public class CubeGUI extends JFrame {
         btnMoveY.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveY();
-                System.out.print("Y, ");
             }
         });
         contentPane.add(btnMoveY);
@@ -743,7 +687,6 @@ public class CubeGUI extends JFrame {
         btnMoveNotY.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveNotY();
-                System.out.print("NotY, ");
             }
         });
         contentPane.add(btnMoveNotY);
@@ -753,19 +696,15 @@ public class CubeGUI extends JFrame {
         btnMoveY2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveY2();
-                System.out.print("Y2, ");
             }
         });
         contentPane.add(btnMoveY2);
-
-
 
         JButton btnMoveZ = new JButton("Z");
         btnMoveZ.setBounds(BTN_COL1, BTN_ROW7, 50, 30);
         btnMoveZ.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveZ();
-                System.out.print("Z, ");
             }
         });
         contentPane.add(btnMoveZ);
@@ -775,7 +714,6 @@ public class CubeGUI extends JFrame {
         btnMoveNotZ.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveNotZ();
-                System.out.print("NotZ, ");
             }
         });
         contentPane.add(btnMoveNotZ);
@@ -785,7 +723,6 @@ public class CubeGUI extends JFrame {
         btnMoveZ2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.moveZ2();
-                System.out.print("Z2, ");
             }
         });
         contentPane.add(btnMoveZ2);
@@ -817,10 +754,10 @@ public class CubeGUI extends JFrame {
         btnMoveChain.setBounds(WIDTH-340, HEIGHT-70, 100, 30);
         btnMoveChain.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String[] moveChain = {"NotX", "S2", "D", "F", "F", "NotB", "NotZ", "R2", "NotB", "Y", "L2", "U2", "NotX", "B2", "NotS", "NotX"};
+                String[] moveChain = {"M", "S2", "E", "F2", "R", "NotL", "R", "NotR", "L", "S", "NotU", "NotX", "NotU", "NotR", "E", "F", "NotU", "E", "NotR", "NotL", "NotB", "NotL", "S2", "X", "M", "S2", "E", "F2", "R", "NotL", "R", "NotR", "L", "S", "NotU", "NotX", "NotU", "NotR", "E", "F", "NotU", "E", "NotR", "NotL", "NotB", "NotL", "S2", "X"};
+//                String[] moveChain = {"NotU", "NotR", "E", "F", "NotU", "E", "NotR", "NotL", "NotB", "NotL", "S2", "X", "M", "S2", "E", "F2", "R", "NotL", "R", "NotR", "L", "S", "NotU"};
+//                String[] moveChain = {"NotE", "D2", "D2", "NotX", "X", "D2", "E2", "M", "B2", "R2", "NotD", "D2", "U2", "NotS", "NotR", "R2", "L", "NotY", "F2", "NotE"};
                 RCSolveMain.rubiksCube.followMoveChain(moveChain);
-                System.out.println(RCSolveMain.rubiksCube);
-
             }
         });
         contentPane.add(btnMoveChain);
