@@ -97,8 +97,8 @@ public class CubeGUI extends JFrame {
                     moveCount ++;
                 }else{
                     randomMoveTimer.stop();
+                    System.out.println();
                 }
-
             }
         });
 
@@ -754,9 +754,9 @@ public class CubeGUI extends JFrame {
         btnMoveChain.setBounds(WIDTH-340, HEIGHT-70, 100, 30);
         btnMoveChain.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String[] moveChain = {"M", "S2", "E", "F2", "R", "NotL", "R", "NotR", "L", "S", "NotU", "NotX", "NotU", "NotR", "E", "F", "NotU", "E", "NotR", "NotL", "NotB", "NotL", "S2", "X", "M", "S2", "E", "F2", "R", "NotL", "R", "NotR", "L", "S", "NotU", "NotX", "NotU", "NotR", "E", "F", "NotU", "E", "NotR", "NotL", "NotB", "NotL", "S2", "X"};
+//                String[] moveChain = {"M", "S2", "E", "F2", "R", "NotL", "R", "NotR", "L", "S", "NotU", "NotX", "NotU", "NotR", "E", "F", "NotU", "E", "NotR", "NotL", "NotB", "NotL", "S2", "X", "M", "S2", "E", "F2", "R", "NotL", "R", "NotR", "L", "S", "NotU", "NotX", "NotU", "NotR", "E", "F", "NotU", "E", "NotR", "NotL", "NotB", "NotL", "S2", "X"};
 //                String[] moveChain = {"NotU", "NotR", "E", "F", "NotU", "E", "NotR", "NotL", "NotB", "NotL", "S2", "X", "M", "S2", "E", "F2", "R", "NotL", "R", "NotR", "L", "S", "NotU"};
-//                String[] moveChain = {"NotE", "D2", "D2", "NotX", "X", "D2", "E2", "M", "B2", "R2", "NotD", "D2", "U2", "NotS", "NotR", "R2", "L", "NotY", "F2", "NotE"};
+                String[] moveChain = {"NotE", "D2", "D2", "NotX", "X", "D2", "E2", "M", "B2", "R2", "NotD", "D2", "U2", "NotS", "NotR", "R2", "L", "NotY", "F2", "NotE"};
                 RCSolveMain.rubiksCube.followMoveChain(moveChain);
             }
         });
