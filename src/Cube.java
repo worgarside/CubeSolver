@@ -934,9 +934,13 @@ public class Cube {
     }
 
     public void solve() {
+        System.out.print("  |  ");
         Solver.whiteToTop(this);
+        System.out.print("  |  ");
         Solver.whiteCrossYellowCentre(this);
+        System.out.print("  |  ");
         Solver.whiteCross(this);
+        System.out.print("  |  ");
     }
 
     public void action1(){

@@ -3,6 +3,7 @@ public class Solver{
     private static final int[] EDGE_MIDDLES = {1, 3, 5, 7, 10, 13, 16, 19, 21, 23, 24, 26, 27, 29, 30, 32, 34, 37, 40, 43, 46, 48, 50, 52};
     private static final int[] CORNERS = {0, 2, 6, 8, 9, 11, 12, 14, 15, 17, 18, 20, 33, 35, 36, 38, 39, 41, 42, 44, 45, 47, 51, 53};
     private static final int[] ORDERED_CORNERS =  {0, 2, 6, 8, 35, 38, 41, 44, 33, 36, 39, 42, 45, 47, 51, 53, 11, 14, 17, 20, 9, 12, 15, 18};
+    private static final int[] REVERSE_ORDERED_CORNERS =  {18, 15, 12, 9, 20, 17, 14, 11, 53, 51, 47, 45, 42, 39, 36, 33, 44, 41, 38, 35, 8, 6, 2, 0};
 
     public static void whiteToTop(Cube cube){
         if(cube.getTop().getCentre() != 'W'){
@@ -41,7 +42,6 @@ public class Solver{
     public static void whiteCrossYellowCentre(Cube cube){
         ArrayList<Integer> whiteMiddles = new ArrayList<Integer>();
         whiteMiddles = updateWhiteMiddles(cube.toWord());
-        System.out.println(whiteMiddles);
         while(!(whiteMiddles.get(0) == 46 || whiteMiddles.get(0) == 48 || whiteMiddles.get(0) == 50 || whiteMiddles.get(0) == 52 )){
             switch (whiteMiddles.get(0)) {
                 case 1:
@@ -327,8 +327,6 @@ public class Solver{
                     break;
             }
             whiteMiddles = updateWhiteMiddles(cube.toWord());
-            System.out.println();
-            System.out.print(whiteMiddles);
         }
     }
 
@@ -367,15 +365,18 @@ public class Solver{
     public static void completeWhiteFace(Cube cube){
         ArrayList<Integer> whiteCorners = new ArrayList<Integer>();
         whiteCorners = updateWhiteCorners(cube.toWord());
-        System.out.println(whiteCorners);
-        for (int i = 0; i < whiteCorners.size(); i++) {
+        int currentCorner = 0;
+
+        while(!(whiteCorners.contains(0) && whiteCorners.contains(2) && whiteCorners.contains(6) && whiteCorners.contains(8))){
             String cubeWord = cube.toWord();
-            switch (whiteCorners.get(i)) {
+            switch (whiteCorners.get(currentCorner)) {
                 case 0:
                     if(!(cubeWord.charAt(9) == cubeWord.charAt(10) && cubeWord.charAt(20) == cubeWord.charAt(19))){
                         cube.moveNotL();
                         cube.moveNotD();
                         cube.moveL();
+                    }else{
+                        currentCorner ++;
                     }
                     break;
                 case 2:
@@ -383,6 +384,8 @@ public class Solver{
                         cube.moveR();
                         cube.moveD();
                         cube.moveNotR();
+                    }else{
+                        currentCorner ++;
                     }
                     break;
                 case 6:
@@ -390,6 +393,9 @@ public class Solver{
                         cube.moveL();
                         cube.moveD();
                         cube.moveNotL();
+
+                    }else{
+                        currentCorner ++;
                     }
                     break;
                 case 8:
@@ -397,6 +403,8 @@ public class Solver{
                         cube.moveNotR();
                         cube.moveNotD();
                         cube.moveR();
+                    }else{
+                        currentCorner ++;
                     }
                     break;
                 case 9:
@@ -443,6 +451,7 @@ public class Solver{
                     while(cubeWord.charAt(44) != cubeWord.charAt(31)) {
                         cube.moveU();
                         cube.moveNotE();
+                        cubeWord = cube.toWord();
                     }
                     cube.moveD();
                     cube.moveB();
@@ -453,6 +462,7 @@ public class Solver{
                     while(cubeWord.charAt(36) != cubeWord.charAt(25)) {
                         cube.moveU();
                         cube.moveNotE();
+                        cubeWord = cube.toWord();
                     }
                     cube.moveNotD();
                     cube.moveNotF();
@@ -463,6 +473,7 @@ public class Solver{
                     while(cubeWord.charAt(35) != cubeWord.charAt(22)) {
                         cube.moveU();
                         cube.moveNotE();
+                        cubeWord = cube.toWord();
                     }
                     cube.moveD();
                     cube.moveL();
@@ -473,6 +484,7 @@ public class Solver{
                     while(cubeWord.charAt(39) != cubeWord.charAt(28)) {
                         cube.moveU();
                         cube.moveNotE();
+                        cubeWord = cube.toWord();
                     }
                     cube.moveNotD();
                     cube.moveNotR();
@@ -483,6 +495,7 @@ public class Solver{
                     while(cubeWord.charAt(38) != cubeWord.charAt(25)) {
                         cube.moveU();
                         cube.moveNotE();
+                        cubeWord = cube.toWord();
                     }
                     cube.moveD();
                     cube.moveF();
@@ -493,6 +506,7 @@ public class Solver{
                     while(cubeWord.charAt(42) != cubeWord.charAt(31)) {
                         cube.moveU();
                         cube.moveNotE();
+                        cubeWord = cube.toWord();
                     }
                     cube.moveNotD();
                     cube.moveNotB();
@@ -503,6 +517,7 @@ public class Solver{
                     while(cubeWord.charAt(41) != cubeWord.charAt(28)) {
                         cube.moveU();
                         cube.moveNotE();
+                        cubeWord = cube.toWord();
                     }
                     cube.moveD();
                     cube.moveR();
@@ -513,6 +528,7 @@ public class Solver{
                     while(cubeWord.charAt(33) != cubeWord.charAt(22)) {
                         cube.moveU();
                         cube.moveNotE();
+                        cubeWord = cube.toWord();
                     }
                     cube.moveNotD();
                     cube.moveNotL();
@@ -540,8 +556,7 @@ public class Solver{
                     cube.moveNotR();
                     break;
             }
-
+            whiteCorners = updateWhiteCorners(cube.toWord());
         }
-
     }
 }
