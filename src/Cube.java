@@ -939,7 +939,19 @@ public class Cube {
         Solver.whiteCross(this);
     }
 
-    public void action(){
+    public void action1(){
+        Solver.whiteToTop(this);
+    }
+
+    public void action2(){
+        Solver.whiteCrossYellowCentre(this);
+    }
+
+    public void action3(){
+        Solver.whiteCross(this);
+    }
+
+    public void action4(){
         Solver.completeWhiteFace(this);
     }
 }

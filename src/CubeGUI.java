@@ -756,7 +756,9 @@ public class CubeGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
 //                String[] moveChain = {"M", "S2", "E", "F2", "R", "NotL", "R", "NotR", "L", "S", "NotU", "NotX", "NotU", "NotR", "E", "F", "NotU", "E", "NotR", "NotL", "NotB", "NotL", "S2", "X", "M", "S2", "E", "F2", "R", "NotL", "R", "NotR", "L", "S", "NotU", "NotX", "NotU", "NotR", "E", "F", "NotU", "E", "NotR", "NotL", "NotB", "NotL", "S2", "X"};
 //                String[] moveChain = {"NotU", "NotR", "E", "F", "NotU", "E", "NotR", "NotL", "NotB", "NotL", "S2", "X", "M", "S2", "E", "F2", "R", "NotL", "R", "NotR", "L", "S", "NotU"};
-                String[] moveChain = {"NotE", "D2", "D2", "NotX", "X", "D2", "E2", "M", "B2", "R2", "NotD", "D2", "U2", "NotS", "NotR", "R2", "L", "NotY", "F2", "NotE"};
+//                String[] moveChain = {"NotE", "D2", "D2", "NotX", "X", "D2", "E2", "M", "B2", "R2", "NotD", "D2", "U2", "NotS", "NotR", "R2", "L", "NotY", "F2", "NotE"};
+                String[] moveChain = {"NotE", "D2", "E2", "M", "B2", "R2", "D", "U2", "NotS", "NotR", "R2", "L", "NotY", "F2", "NotE"};
+
                 RCSolveMain.rubiksCube.followMoveChain(moveChain);
             }
         });
@@ -773,14 +775,41 @@ public class CubeGUI extends JFrame {
         });
         contentPane.add(btnReset);
 
-        JButton btnAction = new JButton("Action");
-        btnAction.setBounds(30, HEIGHT-70, 100, 30);
-        btnAction.addActionListener(new ActionListener() {
+        JButton btnAction1 = new JButton("whiteToTop");
+        btnAction1.setBounds(30, 10, 200, 30);
+        btnAction1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                RCSolveMain.rubiksCube.action();
+                RCSolveMain.rubiksCube.action1();
             }
         });
-        contentPane.add(btnAction);
+        contentPane.add(btnAction1);
+
+        JButton btnAction2 = new JButton("whiteCrossYellowCentre");
+        btnAction2.setBounds(240, 10, 200, 30);
+        btnAction2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                RCSolveMain.rubiksCube.action2();
+            }
+        });
+        contentPane.add(btnAction2);
+
+        JButton btnAction3 = new JButton("whiteCross");
+        btnAction3.setBounds(450, 10, 200, 30);
+        btnAction3.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                RCSolveMain.rubiksCube.action3();
+            }
+        });
+        contentPane.add(btnAction3);
+
+        JButton btnAction4 = new JButton("completeWhiteFace");
+        btnAction4.setBounds(660, 10, 200, 30);
+        btnAction4.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                RCSolveMain.rubiksCube.action4();
+            }
+        });
+        contentPane.add(btnAction4);
 
         setVisible(true);
     }
