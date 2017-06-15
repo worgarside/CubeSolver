@@ -936,6 +936,11 @@ public class Cube {
     public void solve() {
         Solver.whiteToTop(this);
         Solver.whiteCrossYellowCentre(this);
+        Solver.whiteCross(this);
+    }
+
+    public void action(){
+        Solver.completeWhiteFace(this);
     }
 }
 

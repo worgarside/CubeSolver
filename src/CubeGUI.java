@@ -773,6 +773,15 @@ public class CubeGUI extends JFrame {
         });
         contentPane.add(btnReset);
 
+        JButton btnAction = new JButton("Action");
+        btnAction.setBounds(30, HEIGHT-70, 100, 30);
+        btnAction.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                RCSolveMain.rubiksCube.action();
+            }
+        });
+        contentPane.add(btnAction);
+
         setVisible(true);
     }
 

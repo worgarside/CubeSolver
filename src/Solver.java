@@ -329,4 +329,30 @@ public class Solver{
             }
         }while(!(whiteMiddles.contains(46) && whiteMiddles.contains(48) && whiteMiddles.contains(50) && whiteMiddles.contains(52)));
     }
+
+    public static void whiteCross(Cube cube){
+        while(!(cube.getFront().getCentre() == cube.getFront().getSouth() && cube.getBottom().getNorth() == 'W')){
+            cube.moveD();
+        }
+        cube.moveF2();
+
+        while(!(cube.getLeft().getCentre() == cube.getLeft().getSouth() && cube.getBottom().getWest() == 'W')){
+            cube.moveD();
+        }
+        cube.moveL2();
+
+        while(!(cube.getRight().getCentre() == cube.getRight().getSouth() && cube.getBottom().getEast() == 'W')){
+            cube.moveD();
+        }
+        cube.moveR2();
+
+        while(!(cube.getBack().getCentre() == cube.getBack().getSouth() && cube.getBottom().getSouth() == 'W')){
+            cube.moveD();
+        }
+        cube.moveB2();
+    }
+
+    public static void completeWhiteFace(Cube cube){
+
+    }
 }
