@@ -559,6 +559,7 @@ public class Solver{
             }
             whiteCorners = updateWhiteCorners(cube.toWord());
         }
+        cube.moveZ2();
     }
 
     public static void secondRow(Cube cube){
@@ -566,7 +567,6 @@ public class Solver{
 
         if((cubeWord.charAt(1) == 'W' || cubeWord.charAt(19) == 'W') && (cubeWord.charAt(3) == 'W' || cubeWord.charAt(10) == 'W')
                 && (cubeWord.charAt(5) == 'W' || cubeWord.charAt(16) == 'W') && (cubeWord.charAt(7) == 'W' || cubeWord.charAt(13) == 'W')){
-
 
             cube.moveU();
             cube.moveR();
@@ -803,10 +803,6 @@ public class Solver{
                         }
                         cubeWord = cube.toWord();
                     }
-//                }
-                }else{
-                    System.out.print("ERROR #3");
-                    System.exit(1);
                 }
             }
         }

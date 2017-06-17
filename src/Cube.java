@@ -985,8 +985,7 @@ public class Cube {
         System.out.print("  |  ");
         Solver.completeWhiteFace(this);
         System.out.print("  |  ");
-        this.moveZ2();
-        System.out.print("  |  ");
+        Solver.secondRow(this);
     }
 
     public void action1(){
