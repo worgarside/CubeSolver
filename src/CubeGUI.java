@@ -757,7 +757,7 @@ public class CubeGUI extends JFrame {
 //                String[] moveChain = {"M", "S2", "E", "F2", "R", "NotL", "R", "NotR", "L", "S", "NotU", "NotX", "NotU", "NotR", "E", "F", "NotU", "E", "NotR", "NotL", "NotB", "NotL", "S2", "X", "M", "S2", "E", "F2", "R", "NotL", "R", "NotR", "L", "S", "NotU", "NotX", "NotU", "NotR", "E", "F", "NotU", "E", "NotR", "NotL", "NotB", "NotL", "S2", "X"};
 //                String[] moveChain = {"NotU", "NotR", "E", "F", "NotU", "E", "NotR", "NotL", "NotB", "NotL", "S2", "X", "M", "S2", "E", "F2", "R", "NotL", "R", "NotR", "L", "S", "NotU"};
 //                String[] moveChain = {"NotE", "D2", "D2", "NotX", "X", "D2", "E2", "M", "B2", "R2", "NotD", "D2", "U2", "NotS", "NotR", "R2", "L", "NotY", "F2", "NotE"};
-                String[] moveChain = {"NotE", "D2", "E2", "M", "B2", "R2", "D", "U2", "NotS", "NotR", "R2", "L", "NotY", "F2", "NotE"};
+                String[] moveChain = {"D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE"};
 
                 RCSolveMain.rubiksCube.followMoveChain(moveChain);
             }
@@ -810,6 +810,15 @@ public class CubeGUI extends JFrame {
             }
         });
         contentPane.add(btnAction4);
+
+        JButton btnAction5 = new JButton("secondRow");
+        btnAction5.setBounds(870, 10, 200, 30);
+        btnAction5.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                RCSolveMain.rubiksCube.action5();
+            }
+        });
+        contentPane.add(btnAction5);
 
         setVisible(true);
     }

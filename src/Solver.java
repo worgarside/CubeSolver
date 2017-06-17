@@ -3,7 +3,8 @@ public class Solver{
     private static final int[] EDGE_MIDDLES = {1, 3, 5, 7, 10, 13, 16, 19, 21, 23, 24, 26, 27, 29, 30, 32, 34, 37, 40, 43, 46, 48, 50, 52};
     private static final int[] CORNERS = {0, 2, 6, 8, 9, 11, 12, 14, 15, 17, 18, 20, 33, 35, 36, 38, 39, 41, 42, 44, 45, 47, 51, 53};
     private static final int[] ORDERED_CORNERS =  {0, 2, 6, 8, 35, 38, 41, 44, 33, 36, 39, 42, 45, 47, 51, 53, 11, 14, 17, 20, 9, 12, 15, 18};
-    private static final int[] REVERSE_ORDERED_CORNERS =  {18, 15, 12, 9, 20, 17, 14, 11, 53, 51, 47, 45, 42, 39, 36, 33, 44, 41, 38, 35, 8, 6, 2, 0};
+    private static final int[][] TOP_ROW_MIDDLES = {{10, 3}, {13, 7}, {16, 5}, {19, 1}};
+    private static final int[][] MIDDLE_ROW= {{21, 22}, {22, 23}, {24, 25}, {25, 26}, {27, 28}, {28, 29}, {30, 31}, {31, 32}};
 
     public static void whiteToTop(Cube cube){
         if(cube.getTop().getCentre() != 'W'){
@@ -557,6 +558,265 @@ public class Solver{
                     break;
             }
             whiteCorners = updateWhiteCorners(cube.toWord());
+        }
+    }
+
+    public static void secondRow(Cube cube){
+        System.out.println("\nsecondRow");
+        String cubeWord = cube.toWord();
+
+        if((cubeWord.charAt(1) == 'W' || cubeWord.charAt(19) == 'W') && (cubeWord.charAt(3) == 'W' || cubeWord.charAt(10) == 'W')
+                && (cubeWord.charAt(5) == 'W' || cubeWord.charAt(16) == 'W') && (cubeWord.charAt(7) == 'W' || cubeWord.charAt(13) == 'W')){
+
+            System.out.println("Invalid cubies, moving topToRight");
+
+            cube.moveU();
+            cube.moveR();
+            cube.moveNotU();
+            cube.moveNotR();
+            cube.moveF();
+            cube.moveNotR();
+            cube.moveNotF();
+            cube.moveR();
+
+            cubeWord = cube.toWord();
+        }
+
+        int invalidCubieCount = 0;
+        while(!((cubeWord.charAt(21) == cubeWord.charAt(22) && cubeWord.charAt(22) == cubeWord.charAt(23)) &&
+                (cubeWord.charAt(24) == cubeWord.charAt(25) && cubeWord.charAt(25) == cubeWord.charAt(26)) &&
+                (cubeWord.charAt(27) == cubeWord.charAt(28) && cubeWord.charAt(28) == cubeWord.charAt(29)) &&
+                (cubeWord.charAt(30) == cubeWord.charAt(31) && cubeWord.charAt(31) == cubeWord.charAt(32)))){
+
+            invalidCubieCount++;
+            if(invalidCubieCount > 4){ //If there are more than 4 invalid cubies on the top face (impossible!), then the corner middles are correct, but inverted
+
+                for(int i = 0; i < MIDDLE_ROW.length; i++){ //For each middle cubie...
+                    if(!(cubeWord.charAt(MIDDLE_ROW[i][0]) == cubeWord.charAt(MIDDLE_ROW[i][1]))){ //...if it's inverted...
+                        switch(MIDDLE_ROW[i][0]){ //...fix it!
+                            case 21:
+                                cube.moveNotU();
+                                cube.moveNotB();
+                                cube.moveU();
+                                cube.moveB();
+                                cube.moveNotL();
+                                cube.moveB();
+                                cube.moveL();
+                                cube.moveNotB();
+                                break;
+                            case 22:
+                                cube.moveU();
+                                cube.moveF();
+                                cube.moveNotU();
+                                cube.moveNotF();
+                                cube.moveL();
+                                cube.moveNotF();
+                                cube.moveNotL();
+                                cube.moveF();
+                                break;
+                            case 24:
+                                cube.moveNotU();
+                                cube.moveNotL();
+                                cube.moveU();
+                                cube.moveL();
+                                cube.moveNotF();
+                                cube.moveL();
+                                cube.moveF();
+                                cube.moveNotL();
+                                break;
+                            case 25:
+                                cube.moveU();
+                                cube.moveR();
+                                cube.moveNotU();
+                                cube.moveNotR();
+                                cube.moveF();
+                                cube.moveNotR();
+                                cube.moveNotF();
+                                cube.moveR();
+                                break;
+                            case 27:
+                                cube.moveNotU();
+                                cube.moveNotF();
+                                cube.moveU();
+                                cube.moveF();
+                                cube.moveNotR();
+                                cube.moveF();
+                                cube.moveR();
+                                cube.moveNotF();
+                                break;
+                            case 28:
+                                cube.moveU();
+                                cube.moveB();
+                                cube.moveNotU();
+                                cube.moveNotB();
+                                cube.moveR();
+                                cube.moveNotB();
+                                cube.moveNotR();
+                                cube.moveB();
+                                break;
+                            case 30:
+                                cube.moveNotU();
+                                cube.moveNotR();
+                                cube.moveU();
+                                cube.moveR();
+                                cube.moveNotB();
+                                cube.moveR();
+                                cube.moveB();
+                                cube.moveNotR();
+                                break;
+                            case 31:
+                                cube.moveU();
+                                cube.moveL();
+                                cube.moveNotU();
+                                cube.moveNotL();
+                                cube.moveB();
+                                cube.moveNotL();
+                                cube.moveNotB();
+                                cube.moveL();
+                                break;
+                            default:
+                                System.out.println("ERROR #4");
+                                System.exit(1);
+                        }
+                    }
+                }
+            }
+
+            for(int i = 0; i < TOP_ROW_MIDDLES.length; i++) {//For each top cubie...
+
+                System.out.print("\nChecking cubie #" + i + "(" + TOP_ROW_MIDDLES[i][0] + " "+ TOP_ROW_MIDDLES[i][1] + ")... ");
+
+                cubeWord = cube.toWord();
+
+                if(cubeWord.charAt(TOP_ROW_MIDDLES[i][0]) != 'Y' && cubeWord.charAt(TOP_ROW_MIDDLES[i][1]) != 'Y' ){ //...if it is a valid cubie (i.e. not part yellow)
+
+                    System.out.print("Valid cubie! ");
+
+                    int correctionCount = 0;
+                    while(!(cubeWord.charAt(TOP_ROW_MIDDLES[i][0]) == cubeWord.charAt(TOP_ROW_MIDDLES[i][0] + 12))){//If current cubie is not on correct face
+                        System.out.print("Incorrect face, moving. ");
+                        cube.moveD();
+                        cube.moveE();
+
+                        cubeWord = cube.toWord();
+                        correctionCount ++;
+                        if(correctionCount > 4){
+                            System.exit(1);
+                        }
+                    }
+
+                    System.out.print("Correct face! ");
+
+                    int relLeftCentre = TOP_ROW_MIDDLES[i][0]+9;
+                    if(relLeftCentre < 21){ relLeftCentre += 12; }
+
+                    int relRightCentre = TOP_ROW_MIDDLES[i][0]+15;
+                    if(relRightCentre > 32){ relRightCentre -= 12; }
+
+                    if(cubeWord.charAt(relLeftCentre) == cubeWord.charAt(TOP_ROW_MIDDLES[i][1])){ //If top matches relLeft face...
+                        System.out.print("topToLeft: ");
+                        switch(TOP_ROW_MIDDLES[i][0]){ //... then depending on which face we're currently on, moveTopToLeft...
+                            case 10:
+                                cube.moveNotU();
+                                cube.moveNotB();
+                                cube.moveU();
+                                cube.moveB();
+                                cube.moveNotL();
+                                cube.moveB();
+                                cube.moveL();
+                                cube.moveNotB();
+                                break;
+                            case 13:
+                                cube.moveNotU();
+                                cube.moveNotL();
+                                cube.moveU();
+                                cube.moveL();
+                                cube.moveNotF();
+                                cube.moveL();
+                                cube.moveF();
+                                cube.moveNotL();
+                                break;
+                            case 16:
+                                cube.moveNotU();
+                                cube.moveNotF();
+                                cube.moveU();
+                                cube.moveF();
+                                cube.moveNotR();
+                                cube.moveF();
+                                cube.moveR();
+                                cube.moveNotF();
+                                break;
+                            case 19:
+                                cube.moveNotU();
+                                cube.moveNotR();
+                                cube.moveU();
+                                cube.moveR();
+                                cube.moveNotB();
+                                cube.moveR();
+                                cube.moveB();
+                                cube.moveNotR();
+                                break;
+                            default:
+                                System.out.println("ERROR #1");
+                                System.exit(1);
+                        }
+                        cubeWord = cube.toWord();
+
+                    }else if(cubeWord.charAt(relRightCentre) == cubeWord.charAt(TOP_ROW_MIDDLES[i][1])){
+                        System.out.print("topToRight: ");
+                        switch(TOP_ROW_MIDDLES[i][0]){ //...or moveTopToRight
+                            case 10:
+                                cube.moveU();
+                                cube.moveF();
+                                cube.moveNotU();
+                                cube.moveNotF();
+                                cube.moveL();
+                                cube.moveNotF();
+                                cube.moveNotL();
+                                cube.moveF();
+                                break;
+                            case 13:
+                                cube.moveU();
+                                cube.moveR();
+                                cube.moveNotU();
+                                cube.moveNotR();
+                                cube.moveF();
+                                cube.moveNotR();
+                                cube.moveNotF();
+                                cube.moveR();
+                                break;
+                            case 16:
+                                cube.moveU();
+                                cube.moveB();
+                                cube.moveNotU();
+                                cube.moveNotB();
+                                cube.moveR();
+                                cube.moveNotB();
+                                cube.moveNotR();
+                                cube.moveB();
+                                break;
+                            case 19:
+                                cube.moveU();
+                                cube.moveL();
+                                cube.moveNotU();
+                                cube.moveNotL();
+                                cube.moveB();
+                                cube.moveNotL();
+                                cube.moveNotB();
+                                cube.moveL();
+                                break;
+                            default:
+                                System.out.println("ERROR #2");
+                                System.exit(1);
+                        }
+                        cubeWord = cube.toWord();
+                    }
+//                }
+                }else{
+                    System.out.print("ERROR #3");
+                    System.exit(1);
+                }
+            }
         }
     }
 }

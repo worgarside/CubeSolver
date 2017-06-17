@@ -818,6 +818,48 @@ public class Cube {
         System.out.print("S2 ");
     }
 
+//    public void moveTopToRight(){
+//        this.moveU();
+//        this.moveR();
+//        this.moveNotU();
+//        this.moveNotR();
+//        this.moveF();
+//        this.moveNotR();
+//        this.moveNotF();
+//        this.moveR();
+//    }
+//
+//    public void moveTopToLeft(){
+//        this.NotU();
+//        this.NotL();
+//        this.U();
+//        this.L();
+//        this.NotF();
+//        this.L();
+//        this.F();
+//        this.NotL();
+//    }
+//
+//    public void moveRightSune(){
+//        this.moveR();
+//        this.moveU();
+//        this.moveNotR();
+//        this.moveU();
+//        this.moveR();
+//        this.moveU2();
+//        this.moveNotR();
+//    }
+//
+//    public void moveLeftSune(){
+//        this.moveR();
+//        this.moveU2();
+//        this.moveNotR();
+//        this.moveNotU();
+//        this.moveR();
+//        this.moveNotU();
+//        this.moveNotR();
+//    }
+
     public void move(String move){
         java.lang.reflect.Method method = null;
         try {
@@ -941,6 +983,10 @@ public class Cube {
         System.out.print("  |  ");
         Solver.whiteCross(this);
         System.out.print("  |  ");
+        Solver.completeWhiteFace(this);
+        System.out.print("  |  ");
+        this.moveZ2();
+        System.out.print("  |  ");
     }
 
     public void action1(){
@@ -957,6 +1003,10 @@ public class Cube {
 
     public void action4(){
         Solver.completeWhiteFace(this);
+    }
+
+    public void action5(){
+        Solver.secondRow(this);
     }
 }
 
