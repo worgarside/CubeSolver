@@ -562,13 +562,11 @@ public class Solver{
     }
 
     public static void secondRow(Cube cube){
-        System.out.println("\nsecondRow");
         String cubeWord = cube.toWord();
 
         if((cubeWord.charAt(1) == 'W' || cubeWord.charAt(19) == 'W') && (cubeWord.charAt(3) == 'W' || cubeWord.charAt(10) == 'W')
                 && (cubeWord.charAt(5) == 'W' || cubeWord.charAt(16) == 'W') && (cubeWord.charAt(7) == 'W' || cubeWord.charAt(13) == 'W')){
 
-            System.out.println("Invalid cubies, moving topToRight");
 
             cube.moveU();
             cube.moveR();
@@ -684,17 +682,14 @@ public class Solver{
 
             for(int i = 0; i < TOP_ROW_MIDDLES.length; i++) {//For each top cubie...
 
-                System.out.print("\nChecking cubie #" + i + "(" + TOP_ROW_MIDDLES[i][0] + " "+ TOP_ROW_MIDDLES[i][1] + ")... ");
 
                 cubeWord = cube.toWord();
 
                 if(cubeWord.charAt(TOP_ROW_MIDDLES[i][0]) != 'Y' && cubeWord.charAt(TOP_ROW_MIDDLES[i][1]) != 'Y' ){ //...if it is a valid cubie (i.e. not part yellow)
 
-                    System.out.print("Valid cubie! ");
 
                     int correctionCount = 0;
                     while(!(cubeWord.charAt(TOP_ROW_MIDDLES[i][0]) == cubeWord.charAt(TOP_ROW_MIDDLES[i][0] + 12))){//If current cubie is not on correct face
-                        System.out.print("Incorrect face, moving. ");
                         cube.moveD();
                         cube.moveE();
 
@@ -705,7 +700,6 @@ public class Solver{
                         }
                     }
 
-                    System.out.print("Correct face! ");
 
                     int relLeftCentre = TOP_ROW_MIDDLES[i][0]+9;
                     if(relLeftCentre < 21){ relLeftCentre += 12; }
@@ -714,7 +708,6 @@ public class Solver{
                     if(relRightCentre > 32){ relRightCentre -= 12; }
 
                     if(cubeWord.charAt(relLeftCentre) == cubeWord.charAt(TOP_ROW_MIDDLES[i][1])){ //If top matches relLeft face...
-                        System.out.print("topToLeft: ");
                         switch(TOP_ROW_MIDDLES[i][0]){ //... then depending on which face we're currently on, moveTopToLeft...
                             case 10:
                                 cube.moveNotU();
@@ -763,7 +756,6 @@ public class Solver{
                         cubeWord = cube.toWord();
 
                     }else if(cubeWord.charAt(relRightCentre) == cubeWord.charAt(TOP_ROW_MIDDLES[i][1])){
-                        System.out.print("topToRight: ");
                         switch(TOP_ROW_MIDDLES[i][0]){ //...or moveTopToRight
                             case 10:
                                 cube.moveU();
