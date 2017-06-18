@@ -673,7 +673,7 @@ public class Solver{
                                 cube.moveL();
                                 break;
                             default:
-                                System.out.println("ERROR #4");
+                                System.out.println("SOLVER ERROR #4");
                                 System.exit(1);
                         }
                     }
@@ -696,6 +696,7 @@ public class Solver{
                         cubeWord = cube.toWord();
                         correctionCount ++;
                         if(correctionCount > 4){
+                            System.out.println("SOLVER ERROR #5");
                             System.exit(1);
                         }
                     }
@@ -750,7 +751,7 @@ public class Solver{
                                 cube.moveNotR();
                                 break;
                             default:
-                                System.out.println("ERROR #1");
+                                System.out.println("SOLVER ERROR #1");
                                 System.exit(1);
                         }
                         cubeWord = cube.toWord();
@@ -798,7 +799,7 @@ public class Solver{
                                 cube.moveL();
                                 break;
                             default:
-                                System.out.println("ERROR #2");
+                                System.out.println("SOLVER ERROR #2");
                                 System.exit(1);
                         }
                         cubeWord = cube.toWord();
@@ -809,30 +810,13 @@ public class Solver{
     }
 
     public static void yellowFace(Cube cube){
-        System.out.println("\nyellowFace");
         String cubeWord = cube.toWord();
 
-        /*
-        String cubeWordTop = "";
-        for(int i = 0; i < 9; i++){
-            if(cubeWord.charAt(i) == 'Y'){
-                cubeWordTop += '1';
-            }else{
-                cubeWordTop += '0';
-            }
-            cubeWordTop += cubeWord.charAt(i);
-        }
-
-        switch(cubeWordTop){
-            case ""
-        }
-        */
         while(!(cubeWord.charAt(0) == 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) == 'Y' &&
                 cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
-                cubeWord.charAt(6) == 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) == 'Y')){
+                cubeWord.charAt(6) == 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) == 'Y')){ //While yellow face not solved
 
-            if(cubeWord.charAt(1) != 'Y' && cubeWord.charAt(3) != 'Y' && cubeWord.charAt(5) != 'Y' && cubeWord.charAt(7) != 'Y'){
-                System.out.println("single yellow");
+            if(cubeWord.charAt(1) != 'Y' && cubeWord.charAt(3) != 'Y' && cubeWord.charAt(5) != 'Y' && cubeWord.charAt(7) != 'Y'){ //If single yellow, do a move
                 cube.moveF();
                 cube.moveR();
                 cube.moveU();
@@ -843,7 +827,6 @@ public class Solver{
             }
 
             if((cubeWord.charAt(1) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(7) == 'Y') && (cubeWord.charAt(3) != 'Y' || cubeWord.charAt(5) != 'Y')){ //Vertical bar
-                System.out.println("vertical bar");
                 cube.moveR();
                 cube.moveB();
                 cube.moveU();
@@ -853,8 +836,7 @@ public class Solver{
                 cubeWord = cube.toWord();
             }
 
-            if((cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y') && (cubeWord.charAt(1) != 'Y' || cubeWord.charAt(7) != 'Y')){
-                System.out.println("horizontal bar");
+            if((cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y') && (cubeWord.charAt(1) != 'Y' || cubeWord.charAt(7) != 'Y')){ // Horizontal bar
                 cube.moveF();
                 cube.moveR();
                 cube.moveU();
@@ -864,8 +846,7 @@ public class Solver{
                 cubeWord = cube.toWord();
             }
 
-            if((cubeWord.charAt(1) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y') && (cubeWord.charAt(3) != 'Y' && cubeWord.charAt(7) != 'Y')){
-                System.out.println("top right hook");
+            if((cubeWord.charAt(1) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y') && (cubeWord.charAt(3) != 'Y' && cubeWord.charAt(7) != 'Y')){ // Top right hook
                 cube.moveL();
                 cube.moveU();
                 cube.moveF();
@@ -875,8 +856,7 @@ public class Solver{
                 cubeWord = cube.toWord();
             }
 
-            if((cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' && cubeWord.charAt(7) == 'Y') && (cubeWord.charAt(1) != 'Y' && cubeWord.charAt(3) != 'Y')){
-                System.out.println("bottom right hook");
+            if((cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' && cubeWord.charAt(7) == 'Y') && (cubeWord.charAt(1) != 'Y' && cubeWord.charAt(3) != 'Y')){ // Bottom right hook
                 cube.moveB();
                 cube.moveU();
                 cube.moveL();
@@ -886,8 +866,7 @@ public class Solver{
                 cubeWord = cube.toWord();
             }
 
-            if((cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(7) == 'Y') && (cubeWord.charAt(1) != 'Y' && cubeWord.charAt(5) != 'Y')){
-                System.out.println("bottom left hook");
+            if((cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(7) == 'Y') && (cubeWord.charAt(1) != 'Y' && cubeWord.charAt(5) != 'Y')){ // Bottom left hook
                 cube.moveR();
                 cube.moveU();
                 cube.moveB();
@@ -897,8 +876,7 @@ public class Solver{
                 cubeWord = cube.toWord();
             }
 
-            if((cubeWord.charAt(1) == 'Y' && cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y') && (cubeWord.charAt(5) != 'Y' && cubeWord.charAt(7) != 'Y')){
-                System.out.println("top left hook");
+            if((cubeWord.charAt(1) == 'Y' && cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y') && (cubeWord.charAt(5) != 'Y' && cubeWord.charAt(7) != 'Y')){ // Top left hook
                 cube.moveF();
                 cube.moveU();
                 cube.moveR();
@@ -909,14 +887,13 @@ public class Solver{
             }
 
             if(!(cubeWord.charAt(1) == 'Y' && cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' && cubeWord.charAt(7) == 'Y')){
-                System.out.println("ERROR #3");
+                System.out.println("SOLVER ERROR #3");
                 System.exit(1);
             }
 
             if(cubeWord.charAt(0) == 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) != 'Y' &&
                     cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
-                    cubeWord.charAt(6) == 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) != 'Y'){
-                System.out.println("right sign");
+                    cubeWord.charAt(6) == 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) != 'Y'){ // Right sign
                 cube.moveB();
                 cube.moveU();
                 cube.moveNotB();
@@ -929,8 +906,7 @@ public class Solver{
 
             if(cubeWord.charAt(0) != 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) != 'Y' &&
                     cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
-                    cubeWord.charAt(6) == 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) == 'Y'){
-                System.out.println("top sign");
+                    cubeWord.charAt(6) == 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) == 'Y'){ // Top sign
                 cube.moveL();
                 cube.moveU();
                 cube.moveNotL();
@@ -943,8 +919,7 @@ public class Solver{
 
             if(cubeWord.charAt(0) != 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) == 'Y' &&
                     cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
-                    cubeWord.charAt(6) != 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) == 'Y'){
-                System.out.println("left sign");
+                    cubeWord.charAt(6) != 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) == 'Y'){ // Left sign
                 cube.moveF();
                 cube.moveU();
                 cube.moveNotF();
@@ -957,8 +932,7 @@ public class Solver{
 
             if(cubeWord.charAt(0) == 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) == 'Y' &&
                     cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
-                    cubeWord.charAt(6) != 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) != 'Y'){
-                System.out.println("down sign");
+                    cubeWord.charAt(6) != 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) != 'Y'){ // Down sign
                 cube.moveR();
                 cube.moveU();
                 cube.moveNotR();
@@ -971,9 +945,9 @@ public class Solver{
 
             if(cubeWord.charAt(0) != 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) != 'Y' &&
                     cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
-                    cubeWord.charAt(6) != 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) != 'Y'){
-                System.out.println("cross");
+                    cubeWord.charAt(6) != 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) != 'Y'){ // Cross
 
+                // Get two yellows on same face at the back
                 if(cubeWord.charAt(18) == 'Y' && cubeWord.charAt(20) == 'Y'){
                     cube.moveR();
                     cube.moveU();
@@ -1026,8 +1000,7 @@ public class Solver{
 
             if(cubeWord.charAt(0) == 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) != 'Y' &&
                     cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
-                    cubeWord.charAt(6) != 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) != 'Y'){
-                System.out.print("top left fish");
+                    cubeWord.charAt(6) != 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) != 'Y'){ // Top left fish
                 cube.moveF();
                 cube.moveU();
                 cube.moveNotF();
@@ -1040,8 +1013,7 @@ public class Solver{
 
             if(cubeWord.charAt(0) != 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) == 'Y' &&
                     cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
-                    cubeWord.charAt(6) != 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) != 'Y'){
-                System.out.print("top right fish");
+                    cubeWord.charAt(6) != 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) != 'Y'){ // Top right fish
                 cube.moveL();
                 cube.moveU();
                 cube.moveNotL();
@@ -1054,8 +1026,7 @@ public class Solver{
 
             if(cubeWord.charAt(0) != 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) != 'Y' &&
                     cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
-                    cubeWord.charAt(6) != 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) == 'Y'){
-                System.out.print("bottom right fish");
+                    cubeWord.charAt(6) != 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) == 'Y'){ // Bottom right fish
                 cube.moveB();
                 cube.moveU();
                 cube.moveNotB();
@@ -1068,8 +1039,7 @@ public class Solver{
 
             if(cubeWord.charAt(0) != 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) != 'Y' &&
                     cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
-                    cubeWord.charAt(6) == 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) != 'Y'){
-                System.out.print("bottom left fish");
+                    cubeWord.charAt(6) == 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) != 'Y'){ // Bottom left fish
                 cube.moveR();
                 cube.moveU();
                 cube.moveNotR();
@@ -1082,8 +1052,7 @@ public class Solver{
 
             if(cubeWord.charAt(0) != 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) == 'Y' &&
                     cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
-                    cubeWord.charAt(6) == 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) != 'Y'){
-                System.out.print("BL-TR diag squares");
+                    cubeWord.charAt(6) == 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) != 'Y'){ // Bottom left - top right diagonal squares
                 cube.moveR();
                 cube.moveU();
                 cube.moveNotR();
@@ -1097,9 +1066,7 @@ public class Solver{
 
             if(cubeWord.charAt(0) == 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) != 'Y' &&
                     cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
-                    cubeWord.charAt(6) != 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) == 'Y'){
-                System.out.print("TL-BR diag squares");
-
+                    cubeWord.charAt(6) != 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) == 'Y'){ // Top left - bottom right diagonal squares
                 cube.moveR();
                 cube.moveU();
                 cube.moveNotR();
@@ -1108,10 +1075,7 @@ public class Solver{
                 cube.moveU2();
                 cube.moveNotR();
                 cubeWord = cube.toWord();
-//                yellowFace(cube);
             }
-            System.out.println("Yellow complete?");
         }
-
     }
 }
