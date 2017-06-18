@@ -976,16 +976,17 @@ public class Cube {
     }
 
     public void solve() {
-        System.out.print("  |  ");
         Solver.whiteToTop(this);
-        System.out.print("  |  ");
+        System.out.print(" |  ");
         Solver.whiteCrossYellowCentre(this);
-        System.out.print("  |  ");
+        System.out.print(" |  ");
         Solver.whiteCross(this);
-        System.out.print("  |  ");
+        System.out.print(" |  ");
         Solver.completeWhiteFace(this);
-        System.out.print("  |  ");
+        System.out.print(" |  ");
         Solver.secondRow(this);
+        System.out.print(" |  ");
+        Solver.yellowFace(this);
     }
 
     public void action1(){
@@ -1006,6 +1007,10 @@ public class Cube {
 
     public void action5(){
         Solver.secondRow(this);
+    }
+
+    public void action6(){
+        Solver.yellowFace(this);
     }
 }
 

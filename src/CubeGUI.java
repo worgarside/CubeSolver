@@ -85,7 +85,8 @@ public class CubeGUI extends JFrame {
     JPanel backSouthEast = new JPanel();
 
     public CubeGUI() {
-        randomMoveTimer = new Timer(250, new ActionListener() {
+//        randomMoveTimer = new Timer(250, new ActionListener() {
+        randomMoveTimer = new Timer(1, new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -757,7 +758,12 @@ public class CubeGUI extends JFrame {
 //                String[] moveChain = {"M", "S2", "E", "F2", "R", "NotL", "R", "NotR", "L", "S", "NotU", "NotX", "NotU", "NotR", "E", "F", "NotU", "E", "NotR", "NotL", "NotB", "NotL", "S2", "X", "M", "S2", "E", "F2", "R", "NotL", "R", "NotR", "L", "S", "NotU", "NotX", "NotU", "NotR", "E", "F", "NotU", "E", "NotR", "NotL", "NotB", "NotL", "S2", "X"};
 //                String[] moveChain = {"NotU", "NotR", "E", "F", "NotU", "E", "NotR", "NotL", "NotB", "NotL", "S2", "X", "M", "S2", "E", "F2", "R", "NotL", "R", "NotR", "L", "S", "NotU"};
 //                String[] moveChain = {"NotE", "D2", "D2", "NotX", "X", "D2", "E2", "M", "B2", "R2", "NotD", "D2", "U2", "NotS", "NotR", "R2", "L", "NotY", "F2", "NotE"};
-                String[] moveChain = {"D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE"};
+//                String[] moveChain = {"D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE"};
+//                String[] moveChain = {"D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "Y", "X", "NotX", "NotY", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE", "D2", "E", "M", "B2", "R2", "D", "U2", "NotS", "R", "L", "NotY", "F2", "NotE"};
+//                String[] moveChain = {"L", "R2", "NotX", "Z", "NotL", "NotE", "NotU", "NotF", "NotM", "B"};
+//                String[] moveChain = {"NotF", "NotS", "NotM", "Y", "NotL", "NotD", "S2", "D", "X", "NotE", "NotL", "X", "NotF", "Y"};
+//                String[] moveChain = {"NotZ", "X", "Z", "B2", "D", "NotF", "D2", "B", "S2", "NotZ", "L"};
+                String[] moveChain = {"E2", "S", "D", "L", "NotD", "M", "NotE", "R2", "F2", "NotF"};
 
                 RCSolveMain.rubiksCube.followMoveChain(moveChain);
             }
@@ -776,7 +782,7 @@ public class CubeGUI extends JFrame {
         contentPane.add(btnReset);
 
         JButton btnAction1 = new JButton("whiteToTop");
-        btnAction1.setBounds(30, 10, 200, 30);
+        btnAction1.setBounds(30, 10, 100, 30);
         btnAction1.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.action1();
@@ -785,7 +791,7 @@ public class CubeGUI extends JFrame {
         contentPane.add(btnAction1);
 
         JButton btnAction2 = new JButton("whiteCrossYellowCentre");
-        btnAction2.setBounds(240, 10, 200, 30);
+        btnAction2.setBounds(140, 10, 200, 30);
         btnAction2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.action2();
@@ -794,7 +800,7 @@ public class CubeGUI extends JFrame {
         contentPane.add(btnAction2);
 
         JButton btnAction3 = new JButton("whiteCross");
-        btnAction3.setBounds(450, 10, 200, 30);
+        btnAction3.setBounds(350, 10, 100, 30);
         btnAction3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.action3();
@@ -803,7 +809,7 @@ public class CubeGUI extends JFrame {
         contentPane.add(btnAction3);
 
         JButton btnAction4 = new JButton("completeWhiteFace");
-        btnAction4.setBounds(660, 10, 200, 30);
+        btnAction4.setBounds(460, 10, 150, 30);
         btnAction4.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.action4();
@@ -812,13 +818,22 @@ public class CubeGUI extends JFrame {
         contentPane.add(btnAction4);
 
         JButton btnAction5 = new JButton("secondRow");
-        btnAction5.setBounds(870, 10, 200, 30);
+        btnAction5.setBounds(620, 10, 120, 30);
         btnAction5.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.action5();
             }
         });
         contentPane.add(btnAction5);
+
+        JButton btnAction6 = new JButton("yellowFace");
+        btnAction6.setBounds(750, 10, 100, 30);
+        btnAction6.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                RCSolveMain.rubiksCube.action6();
+            }
+        });
+        contentPane.add(btnAction6);
 
         setVisible(true);
     }

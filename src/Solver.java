@@ -565,8 +565,8 @@ public class Solver{
     public static void secondRow(Cube cube){
         String cubeWord = cube.toWord();
 
-        if((cubeWord.charAt(1) == 'W' || cubeWord.charAt(19) == 'W') && (cubeWord.charAt(3) == 'W' || cubeWord.charAt(10) == 'W')
-                && (cubeWord.charAt(5) == 'W' || cubeWord.charAt(16) == 'W') && (cubeWord.charAt(7) == 'W' || cubeWord.charAt(13) == 'W')){
+        if((cubeWord.charAt(1) == 'Y' || cubeWord.charAt(19) == 'Y') && (cubeWord.charAt(3) == 'Y' || cubeWord.charAt(10) == 'Y')
+                && (cubeWord.charAt(5) == 'Y' || cubeWord.charAt(16) == 'Y') && (cubeWord.charAt(7) == 'Y' || cubeWord.charAt(13) == 'Y')){ //If all cubies on top are invalid (have yellow)
 
             cube.moveU();
             cube.moveR();
@@ -806,5 +806,313 @@ public class Solver{
                 }
             }
         }
+    }
+
+    public static void yellowFace(Cube cube){
+        System.out.println("\nyellowFace");
+        String cubeWord = cube.toWord();
+
+        /*
+        String cubeWordTop = "";
+        for(int i = 0; i < 9; i++){
+            if(cubeWord.charAt(i) == 'Y'){
+                cubeWordTop += '1';
+            }else{
+                cubeWordTop += '0';
+            }
+            cubeWordTop += cubeWord.charAt(i);
+        }
+
+        switch(cubeWordTop){
+            case ""
+        }
+        */
+
+        if(cubeWord.charAt(1) != 'Y' && cubeWord.charAt(3) != 'Y' && cubeWord.charAt(5) != 'Y' && cubeWord.charAt(7) != 'Y'){
+            System.out.println("single yellow");
+            cube.moveF();
+            cube.moveR();
+            cube.moveU();
+            cube.moveNotR();
+            cube.moveNotU();
+            cube.moveNotF();
+            cubeWord = cube.toWord();
+        }
+
+        if((cubeWord.charAt(1) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(7) == 'Y') && (cubeWord.charAt(3) != 'Y' || cubeWord.charAt(5) != 'Y')){ //Vertical bar
+            System.out.println("vertical bar");
+            cube.moveR();
+            cube.moveB();
+            cube.moveU();
+            cube.moveNotB();
+            cube.moveNotU();
+            cube.moveNotR();
+            cubeWord = cube.toWord();
+        }
+
+        if((cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y') && (cubeWord.charAt(1) != 'Y' || cubeWord.charAt(7) != 'Y')){
+            System.out.println("horizontal bar");
+            cube.moveF();
+            cube.moveR();
+            cube.moveU();
+            cube.moveNotR();
+            cube.moveNotU();
+            cube.moveNotF();
+            cubeWord = cube.toWord();
+        }
+
+        if((cubeWord.charAt(1) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y') && (cubeWord.charAt(3) != 'Y' && cubeWord.charAt(7) != 'Y')){
+            System.out.println("top right hook");
+            cube.moveL();
+            cube.moveU();
+            cube.moveF();
+            cube.moveNotU();
+            cube.moveNotF();
+            cube.moveNotL();
+            cubeWord = cube.toWord();
+        }
+
+        if((cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' && cubeWord.charAt(7) == 'Y') && (cubeWord.charAt(1) != 'Y' && cubeWord.charAt(3) != 'Y')){
+            System.out.println("bottom right hook");
+            cube.moveB();
+            cube.moveU();
+            cube.moveL();
+            cube.moveNotU();
+            cube.moveNotL();
+            cube.moveNotB();
+            cubeWord = cube.toWord();
+        }
+
+        if((cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(7) == 'Y') && (cubeWord.charAt(1) != 'Y' && cubeWord.charAt(5) != 'Y')){
+            System.out.println("bottom left hook");
+            cube.moveR();
+            cube.moveU();
+            cube.moveB();
+            cube.moveNotU();
+            cube.moveNotB();
+            cube.moveNotR();
+            cubeWord = cube.toWord();
+        }
+
+        if((cubeWord.charAt(1) == 'Y' && cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y') && (cubeWord.charAt(5) != 'Y' && cubeWord.charAt(7) != 'Y')){
+            System.out.println("top left hook");
+            cube.moveF();
+            cube.moveU();
+            cube.moveR();
+            cube.moveNotU();
+            cube.moveNotR();
+            cube.moveNotF();
+            cubeWord = cube.toWord();
+        }
+
+        if(!(cubeWord.charAt(1) == 'Y' && cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' && cubeWord.charAt(7) == 'Y')){
+            System.out.println("ERROR #3");
+            System.exit(1);
+        }
+
+        if(cubeWord.charAt(0) == 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) != 'Y' &&
+                cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
+                cubeWord.charAt(6) == 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) != 'Y'){
+            System.out.println("right sign");
+            cube.moveB();
+            cube.moveU();
+            cube.moveNotB();
+            cube.moveU();
+            cube.moveB();
+            cube.moveU2();
+            cube.moveNotB();
+            cubeWord = cube.toWord();
+        }
+
+        if(cubeWord.charAt(0) != 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) != 'Y' &&
+                cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
+                cubeWord.charAt(6) == 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) == 'Y'){
+            System.out.println("top sign");
+            cube.moveL();
+            cube.moveU();
+            cube.moveNotL();
+            cube.moveU();
+            cube.moveL();
+            cube.moveU2();
+            cube.moveNotL();
+            cubeWord = cube.toWord();
+        }
+
+        if(cubeWord.charAt(0) != 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) == 'Y' &&
+                cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
+                cubeWord.charAt(6) != 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) == 'Y'){
+            System.out.println("left sign");
+            cube.moveF();
+            cube.moveU();
+            cube.moveNotF();
+            cube.moveU();
+            cube.moveF();
+            cube.moveU2();
+            cube.moveNotF();
+            cubeWord = cube.toWord();
+        }
+
+        if(cubeWord.charAt(0) == 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) == 'Y' &&
+                cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
+                cubeWord.charAt(6) != 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) != 'Y'){
+            System.out.println("down sign");
+            cube.moveR();
+            cube.moveU();
+            cube.moveNotR();
+            cube.moveU();
+            cube.moveR();
+            cube.moveU2();
+            cube.moveNotR();
+            cubeWord = cube.toWord();
+        }
+
+        if(cubeWord.charAt(0) != 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) != 'Y' &&
+                cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
+                cubeWord.charAt(6) != 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) != 'Y'){
+            System.out.println("cross");
+
+            if(cubeWord.charAt(18) == 'Y' && cubeWord.charAt(20) == 'Y'){
+                cube.moveR();
+                cube.moveU();
+                cube.moveNotR();
+                cube.moveU();
+                cube.moveR();
+                cube.moveU2();
+                cube.moveNotR();
+                cubeWord = cube.toWord();
+            }else if(cubeWord.charAt(15) == 'Y' && cubeWord.charAt(17) == 'Y'){
+                cube.moveF();
+                cube.moveU();
+                cube.moveNotF();
+                cube.moveU();
+                cube.moveF();
+                cube.moveU2();
+                cube.moveNotF();
+                cubeWord = cube.toWord();
+            }else if(cubeWord.charAt(12) == 'Y' && cubeWord.charAt(14) == 'Y'){
+                cube.moveL();
+                cube.moveU();
+                cube.moveNotL();
+                cube.moveU();
+                cube.moveL();
+                cube.moveU2();
+                cube.moveNotL();
+                cubeWord = cube.toWord();
+            }else if(cubeWord.charAt(9) == 'Y' && cubeWord.charAt(11) == 'Y'){
+                cube.moveB();
+                cube.moveU();
+                cube.moveNotB();
+                cube.moveU();
+                cube.moveB();
+                cube.moveU2();
+                cube.moveNotB();
+                cubeWord = cube.toWord();
+            }else{
+                cube.moveR();
+                cube.moveU();
+                cube.moveNotR();
+                cube.moveU();
+                cube.moveR();
+                cube.moveU2();
+                cube.moveNotR();
+                cubeWord = cube.toWord();
+            }
+        }
+
+        while(!(cubeWord.charAt(0) == 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) == 'Y' &&
+                cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
+                cubeWord.charAt(6) == 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) == 'Y')){
+
+            if(cubeWord.charAt(0) == 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) != 'Y' &&
+                    cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
+                    cubeWord.charAt(6) != 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) != 'Y'){
+                System.out.print("top left fish");
+                cube.moveF();
+                cube.moveU();
+                cube.moveNotF();
+                cube.moveU();
+                cube.moveF();
+                cube.moveU2();
+                cube.moveNotF();
+                cubeWord = cube.toWord();
+            }
+
+            if(cubeWord.charAt(0) != 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) == 'Y' &&
+                    cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
+                    cubeWord.charAt(6) != 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) != 'Y'){
+                System.out.print("top right fish");
+                cube.moveL();
+                cube.moveU();
+                cube.moveNotL();
+                cube.moveU();
+                cube.moveL();
+                cube.moveU2();
+                cube.moveNotL();
+                cubeWord = cube.toWord();
+            }
+
+            if(cubeWord.charAt(0) != 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) != 'Y' &&
+                    cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
+                    cubeWord.charAt(6) != 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) == 'Y'){
+                System.out.print("bottom right fish");
+                cube.moveB();
+                cube.moveU();
+                cube.moveNotB();
+                cube.moveU();
+                cube.moveB();
+                cube.moveU2();
+                cube.moveNotB();
+                cubeWord = cube.toWord();
+            }
+
+            if(cubeWord.charAt(0) != 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) != 'Y' &&
+                    cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
+                    cubeWord.charAt(6) == 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) != 'Y'){
+                System.out.print("bottom left fish");
+                cube.moveR();
+                cube.moveU();
+                cube.moveNotR();
+                cube.moveU();
+                cube.moveR();
+                cube.moveU2();
+                cube.moveNotR();
+                cubeWord = cube.toWord();
+            }
+
+            if(cubeWord.charAt(0) != 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) == 'Y' &&
+                    cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
+                    cubeWord.charAt(6) == 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) != 'Y'){
+                System.out.print("BL-TR diag squares");
+                cube.moveR();
+                cube.moveU();
+                cube.moveNotR();
+                cube.moveU();
+                cube.moveR();
+                cube.moveU2();
+                cube.moveNotR();
+                cubeWord = cube.toWord();
+            }
+
+            if(cubeWord.charAt(0) == 'Y' && cubeWord.charAt(1) == 'Y' && cubeWord.charAt(2) != 'Y' &&
+                    cubeWord.charAt(3) == 'Y' && cubeWord.charAt(4) == 'Y' && cubeWord.charAt(5) == 'Y' &&
+                    cubeWord.charAt(6) != 'Y' && cubeWord.charAt(7) == 'Y' && cubeWord.charAt(8) == 'Y'){
+                System.out.print("TL-BR diag squares");
+
+                cube.moveR();
+                cube.moveU();
+                cube.moveNotR();
+                cube.moveU();
+                cube.moveR();
+                cube.moveU2();
+                cube.moveNotR();
+                cubeWord = cube.toWord();
+            }
+
+
+        }
+
+
+        
+        
     }
 }
