@@ -763,7 +763,8 @@ public class CubeGUI extends JFrame {
 //                String[] moveChain = {"L", "R2", "NotX", "Z", "NotL", "NotE", "NotU", "NotF", "NotM", "B"};
 //                String[] moveChain = {"NotF", "NotS", "NotM", "Y", "NotL", "NotD", "S2", "D", "X", "NotE", "NotL", "X", "NotF", "Y"};
 //                String[] moveChain = {"NotZ", "X", "Z", "B2", "D", "NotF", "D2", "B", "S2", "NotZ", "L"};
-                String[] moveChain = {"E2", "S", "D", "L", "NotD", "M", "NotE", "R2", "F2", "NotF"};
+//                String[] moveChain = {"E2", "S", "D", "L", "NotD", "M", "NotE", "R2", "F2", "NotF"};
+                String[] moveChain = {"NotD", "NotR", "B2", "F", "NotS", "NotX", "D"};
 
                 RCSolveMain.rubiksCube.followMoveChain(moveChain);
             }
