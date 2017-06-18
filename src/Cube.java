@@ -987,6 +987,8 @@ public class Cube {
         Solver.secondRow(this);
         System.out.print(" |  ");
         Solver.yellowFace(this);
+        System.out.print(" |  ");
+        Solver.matchNormalCorners(this);
     }
 
     public void action1(){
@@ -1011,6 +1013,10 @@ public class Cube {
 
     public void action6(){
         Solver.yellowFace(this);
+    }
+
+    public void action7(){
+        Solver.matchNormalCorners(this);
     }
 }
 

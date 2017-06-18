@@ -5,6 +5,7 @@ public class Solver{
     private static final int[] ORDERED_CORNERS =  {0, 2, 6, 8, 35, 38, 41, 44, 33, 36, 39, 42, 45, 47, 51, 53, 11, 14, 17, 20, 9, 12, 15, 18};
     private static final int[][] TOP_ROW_MIDDLES = {{10, 3}, {13, 7}, {16, 5}, {19, 1}};
     private static final int[][] MIDDLE_ROW= {{21, 22}, {22, 23}, {24, 25}, {25, 26}, {27, 28}, {28, 29}, {30, 31}, {31, 32}};
+    private static final int[][] TOP_CORNERS = {{9, 11}, {12, 14}, {15, 17}, {18, 20}};
 
     public static void whiteToTop(Cube cube){
         if(cube.getTop().getCentre() != 'W'){
@@ -1075,6 +1076,93 @@ public class Solver{
                 cube.moveU2();
                 cube.moveNotR();
                 cubeWord = cube.toWord();
+            }
+        }
+    }
+
+    public static void matchNormalCorners(Cube cube){
+        String cubeWord = cube.toWord();
+
+        while(!(cubeWord.charAt(9) == cubeWord.charAt(11) && cubeWord.charAt(12) == cubeWord.charAt(14) &&
+                cubeWord.charAt(15) == cubeWord.charAt(17) && cubeWord.charAt(18) == cubeWord.charAt(20) &&
+                cubeWord.charAt(9) == cubeWord.charAt(21))){
+            int[] matchedCorners = {-1, -1};
+            for(int i = 0; i < TOP_CORNERS.length; i++){ // For every set of top corners
+                if(cubeWord.charAt(TOP_CORNERS[i][0]) == cubeWord.charAt(TOP_CORNERS[i][1])){ // If they match
+                    matchedCorners = TOP_CORNERS[i];
+                    while(!(cubeWord.charAt(TOP_CORNERS[i][0]) == cubeWord.charAt(TOP_CORNERS[i][0] + 13))) { // While they're not on the correct face
+                        cube.moveD();
+                        cube.moveE();
+                        cubeWord = cube.toWord();
+                    }
+                }
+            }
+
+            switch(matchedCorners[0]){
+                case 9:
+                    cube.moveNotB();
+                    cube.moveR();
+                    cube.moveNotB();
+                    cube.moveL2();
+                    cube.moveB();
+                    cube.moveNotR();
+                    cube.moveNotB();
+                    cube.moveL2();
+                    cube.moveB2();
+                    cube.moveNotU();
+                    cubeWord = cube.toWord();
+                    break;
+                case 12:
+                    cube.moveNotL();
+                    cube.moveB();
+                    cube.moveNotL();
+                    cube.moveF2();
+                    cube.moveL();
+                    cube.moveNotB();
+                    cube.moveNotL();
+                    cube.moveF2();
+                    cube.moveL2();
+                    cube.moveNotU();
+                    cubeWord = cube.toWord();
+                    break;
+                case 15:
+                    cube.moveNotF();
+                    cube.moveL();
+                    cube.moveNotF();
+                    cube.moveR2();
+                    cube.moveF();
+                    cube.moveNotL();
+                    cube.moveNotF();
+                    cube.moveR2();
+                    cube.moveF2();
+                    cube.moveNotU();
+                    cubeWord = cube.toWord();
+                    break;
+                case 18:
+                    cube.moveNotR();
+                    cube.moveF();
+                    cube.moveNotR();
+                    cube.moveB2();
+                    cube.moveR();
+                    cube.moveNotF();
+                    cube.moveNotR();
+                    cube.moveB2();
+                    cube.moveR2();
+                    cube.moveNotU();
+                    cubeWord = cube.toWord();
+                    break;
+                default: //No matched corners
+                    cube.moveNotR();
+                    cube.moveF();
+                    cube.moveNotR();
+                    cube.moveB2();
+                    cube.moveR();
+                    cube.moveNotF();
+                    cube.moveNotR();
+                    cube.moveB2();
+                    cube.moveR2();
+                    cube.moveNotU();
+                    cubeWord = cube.toWord();
             }
         }
     }

@@ -764,7 +764,8 @@ public class CubeGUI extends JFrame {
 //                String[] moveChain = {"NotF", "NotS", "NotM", "Y", "NotL", "NotD", "S2", "D", "X", "NotE", "NotL", "X", "NotF", "Y"};
 //                String[] moveChain = {"NotZ", "X", "Z", "B2", "D", "NotF", "D2", "B", "S2", "NotZ", "L"};
 //                String[] moveChain = {"E2", "S", "D", "L", "NotD", "M", "NotE", "R2", "F2", "NotF"};
-                String[] moveChain = {"NotD", "NotR", "B2", "F", "NotS", "NotX", "D"};
+//                String[] moveChain = {"NotD", "NotR", "B2", "F", "NotS", "NotX", "D"};
+                String[] moveChain = {"S2", "D", "X2", "Z", "M2", "F2", "Y", "Z", "B", "R2", "NotB"};
 
                 RCSolveMain.rubiksCube.followMoveChain(moveChain);
             }
@@ -835,6 +836,15 @@ public class CubeGUI extends JFrame {
             }
         });
         contentPane.add(btnAction6);
+
+        JButton btnAction7 = new JButton("matchNormalCorners");
+        btnAction7.setBounds(860, 10, 200, 30);
+        btnAction7.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                RCSolveMain.rubiksCube.action7();
+            }
+        });
+        contentPane.add(btnAction7);
 
         setVisible(true);
     }
