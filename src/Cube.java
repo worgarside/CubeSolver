@@ -1018,6 +1018,10 @@ public class Cube {
     public void action7(){
         Solver.matchNormalCorners(this);
     }
+
+    public void action8(){
+        Solver.normalCentres(this);
+    }
 }
 
 

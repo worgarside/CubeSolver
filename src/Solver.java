@@ -3,9 +3,10 @@ public class Solver{
     private static final int[] EDGE_MIDDLES = {1, 3, 5, 7, 10, 13, 16, 19, 21, 23, 24, 26, 27, 29, 30, 32, 34, 37, 40, 43, 46, 48, 50, 52};
     private static final int[] CORNERS = {0, 2, 6, 8, 9, 11, 12, 14, 15, 17, 18, 20, 33, 35, 36, 38, 39, 41, 42, 44, 45, 47, 51, 53};
     private static final int[] ORDERED_CORNERS =  {0, 2, 6, 8, 35, 38, 41, 44, 33, 36, 39, 42, 45, 47, 51, 53, 11, 14, 17, 20, 9, 12, 15, 18};
-    private static final int[][] TOP_ROW_MIDDLES = {{10, 3}, {13, 7}, {16, 5}, {19, 1}};
+    private static final int[][] TOP_ROW_CENTRES = {{10, 3}, {13, 7}, {16, 5}, {19, 1}};
     private static final int[][] MIDDLE_ROW= {{21, 22}, {22, 23}, {24, 25}, {25, 26}, {27, 28}, {28, 29}, {30, 31}, {31, 32}};
     private static final int[][] TOP_CORNERS = {{9, 11}, {12, 14}, {15, 17}, {18, 20}};
+    private static final int[] TOP_CENTRES = {10, 13, 16, 19};
 
     public static void whiteToTop(Cube cube){
         if(cube.getTop().getCentre() != 'W'){
@@ -681,16 +682,16 @@ public class Solver{
                 }
             }
 
-            for(int i = 0; i < TOP_ROW_MIDDLES.length; i++) {//For each top cubie...
+            for(int i = 0; i < TOP_ROW_CENTRES.length; i++) {//For each top cubie...
 
 
                 cubeWord = cube.toWord();
 
-                if(cubeWord.charAt(TOP_ROW_MIDDLES[i][0]) != 'Y' && cubeWord.charAt(TOP_ROW_MIDDLES[i][1]) != 'Y' ){ //...if it is a valid cubie (i.e. not part yellow)
+                if(cubeWord.charAt(TOP_ROW_CENTRES[i][0]) != 'Y' && cubeWord.charAt(TOP_ROW_CENTRES[i][1]) != 'Y' ){ //...if it is a valid cubie (i.e. not part yellow)
 
 
                     int correctionCount = 0;
-                    while(!(cubeWord.charAt(TOP_ROW_MIDDLES[i][0]) == cubeWord.charAt(TOP_ROW_MIDDLES[i][0] + 12))){//If current cubie is not on correct face
+                    while(!(cubeWord.charAt(TOP_ROW_CENTRES[i][0]) == cubeWord.charAt(TOP_ROW_CENTRES[i][0] + 12))){//If current cubie is not on correct face
                         cube.moveD();
                         cube.moveE();
 
@@ -703,14 +704,14 @@ public class Solver{
                     }
 
 
-                    int relLeftCentre = TOP_ROW_MIDDLES[i][0]+9;
+                    int relLeftCentre = TOP_ROW_CENTRES[i][0]+9;
                     if(relLeftCentre < 21){ relLeftCentre += 12; }
 
-                    int relRightCentre = TOP_ROW_MIDDLES[i][0]+15;
+                    int relRightCentre = TOP_ROW_CENTRES[i][0]+15;
                     if(relRightCentre > 32){ relRightCentre -= 12; }
 
-                    if(cubeWord.charAt(relLeftCentre) == cubeWord.charAt(TOP_ROW_MIDDLES[i][1])){ //If top matches relLeft face...
-                        switch(TOP_ROW_MIDDLES[i][0]){ //... then depending on which face we're currently on, moveTopToLeft...
+                    if(cubeWord.charAt(relLeftCentre) == cubeWord.charAt(TOP_ROW_CENTRES[i][1])){ //If top matches relLeft face...
+                        switch(TOP_ROW_CENTRES[i][0]){ //... then depending on which face we're currently on, moveTopToLeft...
                             case 10:
                                 cube.moveNotU();
                                 cube.moveNotB();
@@ -757,8 +758,8 @@ public class Solver{
                         }
                         cubeWord = cube.toWord();
 
-                    }else if(cubeWord.charAt(relRightCentre) == cubeWord.charAt(TOP_ROW_MIDDLES[i][1])){
-                        switch(TOP_ROW_MIDDLES[i][0]){ //...or moveTopToRight
+                    }else if(cubeWord.charAt(relRightCentre) == cubeWord.charAt(TOP_ROW_CENTRES[i][1])){
+                        switch(TOP_ROW_CENTRES[i][0]){ //...or moveTopToRight
                             case 10:
                                 cube.moveU();
                                 cube.moveF();
@@ -1164,6 +1165,220 @@ public class Solver{
                     cube.moveNotU();
                     cubeWord = cube.toWord();
             }
+        }
+    }
+
+    public static void normalCentres2(Cube cube){
+        String cubeWord = cube.toWord();
+
+        cube.moveR2();
+        cube.moveU();
+        cube.moveR();
+        cube.moveU();
+        cube.moveNotR();
+        cube.moveNotU();
+        cube.moveNotR();
+        cube.moveNotU();
+        cube.moveNotR();
+        cube.moveU();
+        cube.moveNotR();
+        cubeWord = cube.toWord();
+    }
+
+
+
+    public static void normalCentres(Cube cube){
+        System.out.println("\n");
+        String cubeWord = cube.toWord();
+
+        while(!(cubeWord.charAt(TOP_CENTRES[0]) == cubeWord.charAt(TOP_CENTRES[0]-1) && cubeWord.charAt(TOP_CENTRES[0]) == cubeWord.charAt(TOP_CENTRES[0]+1) &&
+                cubeWord.charAt(TOP_CENTRES[1]) == cubeWord.charAt(TOP_CENTRES[1]-1) && cubeWord.charAt(TOP_CENTRES[1]) == cubeWord.charAt(TOP_CENTRES[1]+1) &&
+                cubeWord.charAt(TOP_CENTRES[2]) == cubeWord.charAt(TOP_CENTRES[2]-1) && cubeWord.charAt(TOP_CENTRES[2]) == cubeWord.charAt(TOP_CENTRES[2]+1) &&
+                cubeWord.charAt(TOP_CENTRES[3]) == cubeWord.charAt(TOP_CENTRES[3]-1) && cubeWord.charAt(TOP_CENTRES[3]) == cubeWord.charAt(TOP_CENTRES[3]+1))){ //While middles aren't matched
+            cubeWord = cube.toWord();
+
+            if(cubeWord.charAt(10) == cubeWord.charAt(28) && cubeWord.charAt(16) == cubeWord.charAt(22) &&
+                    cubeWord.charAt(13) == cubeWord.charAt(31) && cubeWord.charAt(19) == cubeWord.charAt(25)){// If the middles are swapped
+                cube.moveM2();
+                cube.moveU();
+                cube.moveM2();
+                cube.moveU2();
+                cube.moveM2();
+                cube.moveU();
+                cube.moveM2();
+                cubeWord = cube.toWord();
+            }
+
+            int notMatchedCount = 0;
+            for(int i = 0; i < TOP_CENTRES.length; i++){ //For each top centre
+                if(cubeWord.charAt(TOP_CENTRES[i]) == cubeWord.charAt(TOP_CENTRES[i]-1) && cubeWord.charAt(TOP_CENTRES[i]) == cubeWord.charAt(TOP_CENTRES[i]+1)){ // If this row is all the same
+
+                    int oppSide = i + 2; // Get the opposite side
+                    if(oppSide > 3){
+                        oppSide -= 4;
+                    }
+
+//                    System.out.println("\n\noppSide:" + oppSide + "(" + TOP_CENTRES[oppSide] + ")");
+
+                    int relLeftCentre = TOP_CENTRES[oppSide]+9;
+                    if(relLeftCentre < 21){ relLeftCentre += 12; }
+
+                    int relRightCentre = TOP_CENTRES[oppSide]+15;
+                    if(relRightCentre > 32){ relRightCentre -= 12; }
+
+                    if(cubeWord.charAt(TOP_CENTRES[oppSide]) == cubeWord.charAt(relLeftCentre)) { //If the opposite top centre matches relLeft face...
+//                        System.out.println("relLeft matches!");
+                        switch(oppSide) { //... then depending on which face we're currently on, move counter clockwise...
+                            case 0: // cubeWord.charAt(10)
+//                                System.out.println("AAA");
+                                cube.moveF2();
+                                cube.moveU();
+                                cube.moveF();
+                                cube.moveU();
+                                cube.moveNotF();
+                                cube.moveNotU();
+                                cube.moveNotF();
+                                cube.moveNotU();
+                                cube.moveNotF();
+                                cube.moveU();
+                                cube.moveNotF();
+                                cubeWord = cube.toWord();
+                                break;
+                            case 1: // cubeWord.charAt(13)
+//                                System.out.println("BBB");
+                                cube.moveR2();
+                                cube.moveU();
+                                cube.moveR();
+                                cube.moveU();
+                                cube.moveNotR();
+                                cube.moveNotU();
+                                cube.moveNotR();
+                                cube.moveNotU();
+                                cube.moveNotR();
+                                cube.moveU();
+                                cube.moveNotR();
+                                cubeWord = cube.toWord();
+                                break;
+                            case 2: // cubeWord.charAt(16)
+//                                System.out.println("CCC");
+                                cube.moveB2();
+                                cube.moveU();
+                                cube.moveB();
+                                cube.moveU();
+                                cube.moveNotB();
+                                cube.moveNotU();
+                                cube.moveNotB();
+                                cube.moveNotU();
+                                cube.moveNotB();
+                                cube.moveU();
+                                cube.moveNotB();
+                                cubeWord = cube.toWord();
+                                break;
+                            case 3: // cubeWord.charAt(19)
+//                                System.out.println("DDD");
+                                cube.moveL2();
+                                cube.moveU();
+                                cube.moveL();
+                                cube.moveU();
+                                cube.moveNotL();
+                                cube.moveNotU();
+                                cube.moveNotL();
+                                cube.moveNotU();
+                                cube.moveNotL();
+                                cube.moveU();
+                                cube.moveNotL();
+                                cubeWord = cube.toWord();
+                                break;
+                        }
+                    }else if(cubeWord.charAt(TOP_CENTRES[oppSide]) == cubeWord.charAt(relRightCentre)){
+//                        System.out.println("relRight matches!");
+                        switch(oppSide) { //...or move clockwise
+                            case 0: // cubeWord.charAt(10)
+//                                System.out.println("EEE");
+                                cube.moveF();
+                                cube.moveNotU();
+                                cube.moveF();
+                                cube.moveU();
+                                cube.moveF();
+                                cube.moveU();
+                                cube.moveF();
+                                cube.moveNotU();
+                                cube.moveNotF();
+                                cube.moveNotU();
+                                cube.moveF2();
+                                cubeWord = cube.toWord();
+                                break;
+                            case 1: // cubeWord.charAt(13)
+//                                System.out.println("FFF");
+                                cube.moveR();
+                                cube.moveNotU();
+                                cube.moveR();
+                                cube.moveU();
+                                cube.moveR();
+                                cube.moveU();
+                                cube.moveR();
+                                cube.moveNotU();
+                                cube.moveNotR();
+                                cube.moveNotU();
+                                cube.moveR2();
+                                cubeWord = cube.toWord();
+                                break;
+                            case 2: // cubeWord.charAt(16)
+//                                System.out.println("GGG");
+
+                                cube.moveB();
+                                cube.moveNotU();
+                                cube.moveB();
+                                cube.moveU();
+                                cube.moveB();
+                                cube.moveU();
+                                cube.moveB();
+                                cube.moveNotU();
+                                cube.moveNotB();
+                                cube.moveNotU();
+                                cube.moveB2();
+                                cubeWord = cube.toWord();
+                                break;
+                            case 3: // cubeWord.charAt(19)
+//                                System.out.println("HHH");
+                                cube.moveL();
+                                cube.moveNotU();
+                                cube.moveL();
+                                cube.moveU();
+                                cube.moveL();
+                                cube.moveU();
+                                cube.moveL();
+                                cube.moveNotU();
+                                cube.moveNotL();
+                                cube.moveNotU();
+                                cube.moveL2();
+                                cubeWord = cube.toWord();
+                                break;
+                        }
+                    }
+
+                }else{
+                    notMatchedCount++;
+//                    System.out.println(notMatchedCount);
+                }
+            }
+            if(notMatchedCount > 3){
+//                System.out.println("III");
+                cube.moveR2();
+                cube.moveU();
+                cube.moveR();
+                cube.moveU();
+                cube.moveNotR();
+                cube.moveNotU();
+                cube.moveNotR();
+                cube.moveNotU();
+                cube.moveNotR();
+                cube.moveU();
+                cube.moveNotR();
+                cubeWord = cube.toWord();
+            }
+
+//            System.out.println("\n" + cube);
         }
     }
 }

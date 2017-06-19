@@ -765,7 +765,9 @@ public class CubeGUI extends JFrame {
 //                String[] moveChain = {"NotZ", "X", "Z", "B2", "D", "NotF", "D2", "B", "S2", "NotZ", "L"};
 //                String[] moveChain = {"E2", "S", "D", "L", "NotD", "M", "NotE", "R2", "F2", "NotF"};
 //                String[] moveChain = {"NotD", "NotR", "B2", "F", "NotS", "NotX", "D"};
-                String[] moveChain = {"S2", "D", "X2", "Z", "M2", "F2", "Y", "Z", "B", "R2", "NotB"};
+//                String[] moveChain = {"S2", "D", "X2", "Z", "M2", "F2", "Y", "Z", "B", "R2", "NotB"};
+                String[] moveChain = {"NotZ", "E2", "S2", "D2", "S", "NotD", "S2", "NotB", "NotL", "NotE", "Y", "D2", "NotR", "F2", "R", "U2", "E"};
+
 
                 RCSolveMain.rubiksCube.followMoveChain(moveChain);
             }
@@ -792,8 +794,8 @@ public class CubeGUI extends JFrame {
         });
         contentPane.add(btnAction1);
 
-        JButton btnAction2 = new JButton("whiteCrossYellowCentre");
-        btnAction2.setBounds(140, 10, 200, 30);
+        JButton btnAction2 = new JButton("whiteCrossInv");
+        btnAction2.setBounds(140, 10, 120, 30);
         btnAction2.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.action2();
@@ -802,7 +804,7 @@ public class CubeGUI extends JFrame {
         contentPane.add(btnAction2);
 
         JButton btnAction3 = new JButton("whiteCross");
-        btnAction3.setBounds(350, 10, 100, 30);
+        btnAction3.setBounds(270, 10, 100, 30);
         btnAction3.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.action3();
@@ -810,8 +812,8 @@ public class CubeGUI extends JFrame {
         });
         contentPane.add(btnAction3);
 
-        JButton btnAction4 = new JButton("completeWhiteFace");
-        btnAction4.setBounds(460, 10, 150, 30);
+        JButton btnAction4 = new JButton("whiteFace");
+        btnAction4.setBounds(380, 10, 100, 30);
         btnAction4.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.action4();
@@ -820,7 +822,7 @@ public class CubeGUI extends JFrame {
         contentPane.add(btnAction4);
 
         JButton btnAction5 = new JButton("secondRow");
-        btnAction5.setBounds(620, 10, 120, 30);
+        btnAction5.setBounds(490, 10, 120, 30);
         btnAction5.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.action5();
@@ -829,7 +831,7 @@ public class CubeGUI extends JFrame {
         contentPane.add(btnAction5);
 
         JButton btnAction6 = new JButton("yellowFace");
-        btnAction6.setBounds(750, 10, 100, 30);
+        btnAction6.setBounds(620, 10, 100, 30);
         btnAction6.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.action6();
@@ -837,14 +839,23 @@ public class CubeGUI extends JFrame {
         });
         contentPane.add(btnAction6);
 
-        JButton btnAction7 = new JButton("matchNormalCorners");
-        btnAction7.setBounds(860, 10, 200, 30);
+        JButton btnAction7 = new JButton("normalCorners");
+        btnAction7.setBounds(730, 10, 120, 30);
         btnAction7.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 RCSolveMain.rubiksCube.action7();
             }
         });
         contentPane.add(btnAction7);
+
+        JButton btnAction8 = new JButton("normalCentres");
+        btnAction8.setBounds(860, 10, 120, 30);
+        btnAction8.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                RCSolveMain.rubiksCube.action8();
+            }
+        });
+        contentPane.add(btnAction8);
 
         setVisible(true);
     }
