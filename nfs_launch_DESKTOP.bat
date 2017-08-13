@@ -1,1 +1,0 @@
-winnfsd.exe -id 0 0 -log off D:\Users\Will Garside\Documents\Projects\RubiksSolver
