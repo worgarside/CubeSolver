@@ -10,7 +10,7 @@ class Side(Enum):
     FRONT = 4
     BACK = 5
 
-class Dir(Enum):
+class Rot(Enum):
     CLOCKWISE = 0
     COUNTER_CLOCKWISE = 1
 
@@ -113,7 +113,7 @@ class Cube:
     def rotate_side(self, direction, side):
         c = Cube(self._pos)
 
-        if direction == Dir.CLOCKWISE:
+        if direction == Rot.CLOCKWISE:
             if side == Side.LEFT:
                 self.set_left(c.left[6] + c.left[3] + c.left[0] + c.left[7] + c.left[4]
                               + c.left[1] + c.left[8] + c.left[5] + c.left[2])
@@ -135,7 +135,7 @@ class Cube:
             else:
                 print("\nrotate_side_cw: invalid side")
                 exit()
-        elif direction == Dir.COUNTER_CLOCKWISE:
+        elif direction == Rot.COUNTER_CLOCKWISE:
 
             if side == Side.LEFT:
                 self.set_left(c.left[2] + c.left[5] + c.left[8] + c.left[1] + c.left[4]
@@ -170,7 +170,7 @@ class Cube:
         self.set_down(c.front[0] + c.down[1:3] + c.front[3] + c.down[4:6] + c.front[6] + c.down[7:])
         self.set_front(c.up[0] + c.front[1:3] + c.up[3] + c.front[4:6] + c.up[6] + c.front[7:])
         self.set_back(c.back[0:2] + c.down[6] + c.back[3:5] + c.down[3] + c.back[6:8] + c.down[0])
-        self.rotate_side(Dir.CLOCKWISE, Side.LEFT)
+        self.rotate_side(Rot.CLOCKWISE, Side.LEFT)
         print("l") if print_flag else 0
 
     def move_not_l(self, print_flag=False):
@@ -179,7 +179,7 @@ class Cube:
         self.set_down(c.back[8] + c.down[1:3] + c.back[5] + c.down[4:6] + c.back[2] + c.down[7:])
         self.set_front(c.down[0] + c.front[1:3] + c.down[3] + c.front[4:6] + c.down[6] + c.front[7:])
         self.set_back(c.back[0:2] + c.up[6] + c.back[3:5] + c.up[3] + c.back[6:8] + c.up[0])
-        self.rotate_side(Dir.COUNTER_CLOCKWISE, Side.LEFT)
+        self.rotate_side(Rot.COUNTER_CLOCKWISE, Side.LEFT)
         print("l'") if print_flag else 0
 
     def move_l2(self, print_flag=False):
@@ -193,7 +193,7 @@ class Cube:
         self.set_down(c.down[:2] + c.back[6] + c.down[3:5] + c.back[3] + c.down[6:8] + c.back[0])
         self.set_front(c.front[:2] + c.down[2] + c.front[3:5] + c.down[5] + c.front[6:8] + c.down[8])
         self.set_back(c.up[2] + c.back[1:3] + c.up[5] + c.back[4:6] + c.up[8] + c.back[7:])
-        self.rotate_side(Dir.CLOCKWISE, Side.RIGHT)
+        self.rotate_side(Rot.CLOCKWISE, Side.RIGHT)
         print("r") if print_flag else 0
 
     def move_not_r(self, print_flag=False):
@@ -202,7 +202,7 @@ class Cube:
         self.set_down(c.down[:2] + c.front[2] + c.down[3:5] + c.front[5] + c.down[6:8] + c.front[8])
         self.set_front(c.front[:2] + c.up[2] + c.front[3:5] + c.up[5] + c.front[6:8] + c.up[8])
         self.set_back(c.down[8] + c.back[1:3] + c.down[5] + c.back[4:6] + c.down[2] + c.back[7:])
-        self.rotate_side(Dir.COUNTER_CLOCKWISE, Side.RIGHT)
+        self.rotate_side(Rot.COUNTER_CLOCKWISE, Side.RIGHT)
         print("r'") if print_flag else 0
 
     def move_r2(self, print_flag=False):
@@ -216,7 +216,7 @@ class Cube:
         self.set_right(c.back[:3] + c.right[3:])
         self.set_front(c.right[:3] + c.front[3:])
         self.set_back(c.left[:3] + c.back[3:])
-        self.rotate_side(Dir.CLOCKWISE, Side.UP)
+        self.rotate_side(Rot.CLOCKWISE, Side.UP)
         print("u") if print_flag else 0
 
     def move_not_u(self, print_flag=False):
@@ -225,7 +225,7 @@ class Cube:
         self.set_right(c.front[:3] + c.right[3:])
         self.set_front(c.left[:3] + c.front[3:])
         self.set_back(c.right[:3] + c.back[3:])
-        self.rotate_side(Dir.COUNTER_CLOCKWISE, Side.UP)
+        self.rotate_side(Rot.COUNTER_CLOCKWISE, Side.UP)
         print("u'") if print_flag else 0
 
     def move_u2(self, print_flag=False):
@@ -239,7 +239,7 @@ class Cube:
         self.set_right(c.right[:6] + c.front[6:])
         self.set_front(c.front[:6] + c.left[6:])
         self.set_back(c.back[:6] + c.right[6:])
-        self.rotate_side(Dir.CLOCKWISE, Side.DOWN)
+        self.rotate_side(Rot.CLOCKWISE, Side.DOWN)
         print("d") if print_flag else 0
 
     def move_not_d(self, print_flag=False):
@@ -248,7 +248,7 @@ class Cube:
         self.set_right(c.right[:6] + c.back[6:])
         self.set_front(c.front[:6] + c.right[6:])
         self.set_back(c.back[:6] + c.left[6:])
-        self.rotate_side(Dir.COUNTER_CLOCKWISE, Side.DOWN)
+        self.rotate_side(Rot.COUNTER_CLOCKWISE, Side.DOWN)
         print("d'") if print_flag else 0
 
     def move_d2(self, print_flag=False):
@@ -262,7 +262,7 @@ class Cube:
         self.set_down(c.right[6] + c.right[3] + c.right[0] + c.down[3:])
         self.set_left(c.left[:2] + c.down[0] + c.left[3:5] + c.down[1] + c.left[6:8] + c.down[2])
         self.set_right(c.up[6] + c.right[1:3] + c.up[7] + c.right[4:6] + c.up[8] + c.right[7:])
-        self.rotate_side(Dir.CLOCKWISE, Side.FRONT)
+        self.rotate_side(Rot.CLOCKWISE, Side.FRONT)
         print("f") if print_flag else 0
 
     def move_not_f(self, print_flag=False):
@@ -271,7 +271,7 @@ class Cube:
         self.set_down(c.left[2] + c.left[5] + c.left[8] + c.down[3:])
         self.set_left(c.left[:2] + c.up[8] + c.left[3:5] + c.up[7] + c.left[6:8] + c.up[6])
         self.set_right(c.down[2] + c.right[1:3] + c.down[1] + c.right[4:6] + c.down[0] + c.right[7:])
-        self.rotate_side(Dir.COUNTER_CLOCKWISE, Side.FRONT)
+        self.rotate_side(Rot.COUNTER_CLOCKWISE, Side.FRONT)
         print("f'") if print_flag else 0
 
     def move_f2(self, print_flag=False):
@@ -285,7 +285,7 @@ class Cube:
         self.set_down(c.down[:6] + c.left[0] + c.left[3] + c.left[6])
         self.set_left(c.up[2] + c.left[1:3] + c.up[1] + c.left[4:6] + c.up[0] + c.left[7:])
         self.set_right(c.right[:2] + c.down[8] + c.right[3:5] + c.down[7] + c.right[6:8] + c.down[6])
-        self.rotate_side(Dir.CLOCKWISE, Side.BACK)
+        self.rotate_side(Rot.CLOCKWISE, Side.BACK)
         print("b") if print_flag else 0
 
     def move_not_b(self, print_flag=False):
@@ -294,7 +294,7 @@ class Cube:
         self.set_down(c.down[:6] + c.right[8] + c.right[5] + c.right[2])
         self.set_left(c.down[6] + c.left[1:3] + c.down[7] + c.left[4:6] + c.down[8] + c.left[7:])
         self.set_right(c.right[:2] + c.up[0] + c.right[3:5] + c.up[1] + c.right[6:8] + c.up[2])
-        self.rotate_side(Dir.COUNTER_CLOCKWISE, Side.BACK)
+        self.rotate_side(Rot.COUNTER_CLOCKWISE, Side.BACK)
         print("b'") if print_flag else 0
 
     def move_b2(self, print_flag=False):
@@ -359,8 +359,8 @@ class Cube:
         self.set_down(c.back[::-1])  # [::-1] reverses the string
         self.set_front(c.down)
         self.set_back(c.up[::-1])  # [::-1] reverses the string
-        self.rotate_side(Dir.COUNTER_CLOCKWISE, Side.LEFT)
-        self.rotate_side(Dir.CLOCKWISE, Side.RIGHT)
+        self.rotate_side(Rot.COUNTER_CLOCKWISE, Side.LEFT)
+        self.rotate_side(Rot.CLOCKWISE, Side.RIGHT)
         print("x") if print_flag else 0
 
     def move_not_x(self, print_flag=False):
@@ -369,8 +369,8 @@ class Cube:
         self.set_down(c.front)
         self.set_front(c.up)
         self.set_back(c.down[::-1])  # [::-1] reverses the string
-        self.rotate_side(Dir.CLOCKWISE, Side.LEFT)
-        self.rotate_side(Dir.COUNTER_CLOCKWISE, Side.RIGHT)
+        self.rotate_side(Rot.CLOCKWISE, Side.LEFT)
+        self.rotate_side(Rot.COUNTER_CLOCKWISE, Side.RIGHT)
         print("x'") if print_flag else 0
 
     def move_y(self, print_flag=False):
@@ -379,8 +379,8 @@ class Cube:
         self.set_right(c.back)
         self.set_front(c.right)
         self.set_back(c.left)
-        self.rotate_side(Dir.CLOCKWISE, Side.UP)
-        self.rotate_side(Dir.COUNTER_CLOCKWISE, Side.DOWN)
+        self.rotate_side(Rot.CLOCKWISE, Side.UP)
+        self.rotate_side(Rot.COUNTER_CLOCKWISE, Side.DOWN)
         print("y") if print_flag else 0
 
     def move_not_y(self, print_flag=False):
@@ -389,8 +389,8 @@ class Cube:
         self.set_right(c.front)
         self.set_front(c.left)
         self.set_back(c.right)
-        self.rotate_side(Dir.COUNTER_CLOCKWISE, Side.UP)
-        self.rotate_side(Dir.CLOCKWISE, Side.DOWN)
+        self.rotate_side(Rot.COUNTER_CLOCKWISE, Side.UP)
+        self.rotate_side(Rot.CLOCKWISE, Side.DOWN)
         print("y'") if print_flag else 0
 
     def move_z(self, print_flag=False):
@@ -402,8 +402,8 @@ class Cube:
         self.set_left(c.down[6] + c.down[3] + c.down[0] + c.down[7] + c.down[4]
                       + c.down[1] + c.down[8] + c.down[5] + c.down[2])
         self.set_right(c.up[6] + c.up[3] + c.up[0] + c.up[7] + c.up[4] + c.up[1] + c.up[8] + c.up[5] + c.up[2])
-        self.rotate_side(Dir.CLOCKWISE, Side.FRONT)
-        self.rotate_side(Dir.COUNTER_CLOCKWISE, Side.BACK)
+        self.rotate_side(Rot.CLOCKWISE, Side.FRONT)
+        self.rotate_side(Rot.COUNTER_CLOCKWISE, Side.BACK)
         print("z") if print_flag else 0
 
     def move_not_z(self, print_flag=False):
@@ -415,8 +415,8 @@ class Cube:
         self.set_left(c.up[2] + c.up[5] + c.up[8] + c.up[1] + c.up[4] + c.up[7] + c.up[0] + c.up[3] + c.up[6])
         self.set_right(c.down[2] + c.down[5] + c.down[8] + c.down[1]
                        + c.down[4] + c.down[7] + c.down[0] + c.down[3] + c.down[6])
-        self.rotate_side(Dir.COUNTER_CLOCKWISE, Side.FRONT)
-        self.rotate_side(Dir.CLOCKWISE, Side.BACK)
+        self.rotate_side(Rot.COUNTER_CLOCKWISE, Side.FRONT)
+        self.rotate_side(Rot.CLOCKWISE, Side.BACK)
         print("z'") if print_flag else 0
 
     # ######################## MOVE IMPLEMENTERS ######################## #
