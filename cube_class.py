@@ -10,9 +10,22 @@ class Side(Enum):
     FRONT = 4
     BACK = 5
 
+
 class Rot(Enum):
     CLOCKWISE = 0
     COUNTER_CLOCKWISE = 1
+
+
+class Color(Enum):
+    NONE = 0
+    BLACK = 1
+    BLUE = 2
+    GREEN = 3
+    YELLOW = 4
+    RED = 5
+    WHITE = 6
+    ORANGE = 7  # Color Sensor actually reads Brown
+
 
 class Cube:
     """A Rubik's Cube with 54 different coloured tiles"""
@@ -23,8 +36,10 @@ class Cube:
     MOVES = ["l", "not_l", "l2", "r", "not_r", "r2", "u", "not_u", "u2", "d", "not_d", "d2", "f", "not_f", "f2", "b",
              "not_b", "b2", "m", "not_m", "m2", "e", "not_e", "e2", "s", "not_s", "s2", "x", "not_x", "y", "not_y",
              "z", "not_z"]
-    MOVES2 = ["not_y", "l", "d2", "m", "not_d", "f", "x", "not_r", "m", "s2", "not_z", "d2", "e2", "not_z", "f2", "l", "not_x"]
-    MOVES3 = ["not_y", "l", "d2", "r", "not_l", "x", "not_d", "f", "x", "not_l", "not_x", "f2", "b2", "z", "d2", "e2", "not_z", "f2", "l", "not_x"]
+    MOVES2 = ["not_y", "l", "d2", "m", "not_d", "f", "x", "not_r", "m",
+              "s2", "not_z", "d2", "e2", "not_z", "f2", "l", "not_x"]
+    MOVES3 = ["not_y", "l", "d2", "r", "not_l", "x", "not_d", "f", "x",
+              "not_l", "not_x", "f2", "b2", "z", "d2", "e2", "not_z", "f2", "l", "not_x"]
 
     # constructor
     def __init__(self, curr_pos):
