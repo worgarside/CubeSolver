@@ -31,8 +31,15 @@ class Cube:
     """A Rubik's Cube with 54 different coloured tiles"""
 
     # Default cube position as a net, written as rows from up to down
-    SOLVED_POS = "WWWWWWWWWGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBOOOYYYYYYYYY"
-    DEBUG_POS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz12"
+    SOLVED_POS = [Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE,
+                  Color.WHITE, Color.WHITE, Color.GREEN, Color.GREEN, Color.GREEN, Color.RED, Color.RED, Color.RED,
+                  Color.BLUE, Color.BLUE, Color.BLUE, Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.GREEN,
+                  Color.GREEN, Color.GREEN, Color.RED, Color.RED, Color.RED, Color.BLUE, Color.BLUE, Color.BLUE,
+                  Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.GREEN, Color.GREEN, Color.GREEN, Color.RED, Color.RED,
+                  Color.RED, Color.BLUE, Color.BLUE, Color.BLUE, Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.YELLOW,
+                  Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW,
+                  Color.YELLOW]
+
     MOVES = ["l", "not_l", "l2", "r", "not_r", "r2", "u", "not_u", "u2", "d", "not_d", "d2", "f", "not_f", "f2", "b",
              "not_b", "b2", "m", "not_m", "m2", "e", "not_e", "e2", "s", "not_s", "s2", "x", "not_x", "y", "not_y",
              "z", "not_z"]
@@ -53,9 +60,13 @@ class Cube:
 
     # overrides print method to print net
     def __str__(self):
-        cube_net = "\n   " + self._pos[:3] + "\n   " + self._pos[3:6] + "\n   " + self._pos[6:9] +\
-                   "\n" + self._pos[9:21] + "\n" + self._pos[21:33] + "\n" + self._pos[33:45] +\
-                   "\n   " + self._pos[45:48] + "\n   " + self._pos[48:51] + "\n   " + self._pos[51:54]
+        char_net = ""
+        for i in self._pos:
+            char_net = char_net + i.name[0]
+
+        cube_net = "\n   " + char_net[:3] + "\n   " + char_net[3:6] + "\n   " + char_net[6:9] + \
+                   "\n" + char_net[9:21] + "\n" + char_net[21:33] + "\n" + char_net[33:45] + \
+                   "\n   " + char_net[45:48] + "\n   " + char_net[48:51] + "\n   " + char_net[51:54]
 
         cube_net_spaced = ""
         for letter in cube_net:
@@ -459,8 +470,8 @@ class Cube:
 def main():
     rubiks_cube = Cube(Cube.SOLVED_POS)
     print(rubiks_cube)
-    rubiks_cube.randomize()
-    print(rubiks_cube)
+    # rubiks_cube.randomize()
+    # print(rubiks_cube)
 
 
 if __name__ == '__main__':
