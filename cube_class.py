@@ -458,6 +458,7 @@ class Cube:
 
 def main():
     rubiks_cube = Cube(Cube.SOLVED_POS)
+    print(rubiks_cube)
     rubiks_cube.randomize()
     print(rubiks_cube)
 
