@@ -34,7 +34,7 @@ class Robot:
         self.cs_cor_pos = -1390
         self.cs_cen_pos = -2500
         self.cube_rot_speed = 30
-        self.cs_speed = 500
+        self.cs_speed = 1000
 
     def hold(self, message):
         print("\nHolding: '" + message + "'\n")
@@ -96,15 +96,21 @@ class Robot:
         self.cs_arm.wait_for_position(self.cs_cen_pos)
         centre = Color(self.cs.value())
 
-        # 1 1 0
-        # 2 C 0
-        # 2 3 3
+        """
+        The face is scanned in this order:
+            1 1 0
+            2 C 0
+            2 3 3
+        """
 
         return corner[1], middle[1], corner[0], middle[2], centre, middle[0], corner[2], middle[3], corner[3]
 
     def scan_cube(self, scan=True):
-        # Z Z Z Z Y Z Z Z
-        # U L D R - F - B
+        # - Z Z Z Y Z Z Z
+        # U L D R - F - B    <---- Initial State
+        # B R F L - D - U    <---- Final State!!
+
+        #
         sides = [[], [], [], [], [], []]
 
         if scan:
@@ -112,65 +118,30 @@ class Robot:
             self.swing_arm.run_to_abs_pos(position_sp=60, speed_sp=100)
             self.swing_arm.wait_for_stop()
 
-            # Side 0 - UP
-            sides[0] = self.scan_up_face()
+            for i in range(len(sides)):
+                print("reading face " + str(i))
 
-            self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=self.cs_speed * 2)
-            self.cs_arm.wait_for_position(0)
+                sides[i] = self.scan_up_face()
 
-            new_pos = self.swing_arm.position - 360
-            self.swing_arm.run_to_abs_pos(position_sp=new_pos, speed_sp=200)
-            self.swing_arm.wait_for_position(new_pos)
+                self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=self.cs_speed)
+                self.cs_arm.wait_for_position(0)
 
-            # Side 1 - LEFT
-            sides[1] = self.scan_up_face()
+                if i == 3:
+                    new_pos = self.cradle.position - 90
+                    self.cradle.run_to_abs_pos(position_sp=new_pos, speed_sp=200)
+                    self.cradle.wait_for_position(new_pos)
 
-            self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=self.cs_speed * 2)
-            self.cs_arm.wait_for_position(0)
+                if i < 5:
+                    new_pos = self.swing_arm.position - 360
+                    self.swing_arm.run_to_abs_pos(position_sp=new_pos, speed_sp=200)
+                    self.swing_arm.wait_for_position(new_pos)
 
-            new_pos = self.swing_arm.position - 360
-            self.swing_arm.run_to_abs_pos(position_sp=new_pos, speed_sp=200)
-            self.swing_arm.wait_for_position(new_pos)
+                if i == 4:
+                    new_pos = self.swing_arm.position - 360
+                    self.swing_arm.run_to_abs_pos(position_sp=new_pos, speed_sp=200)
+                    self.swing_arm.wait_for_position(new_pos)
 
-            # Side 2 - DOWN
-            sides[2] = self.scan_up_face()
-
-            self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=self.cs_speed * 2)
-            self.cs_arm.wait_for_position(0)
-
-            new_pos = self.swing_arm.position - 360
-            self.swing_arm.run_to_abs_pos(position_sp=new_pos, speed_sp=200)
-            self.swing_arm.wait_for_position(new_pos)
-
-            # Side 3 - RIGHT
-            sides[3] = self.scan_up_face()
-
-            self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=self.cs_speed * 2)
-            self.cs_arm.wait_for_position(0)
-
-            new_pos = self.cradle.position - 90
-            self.cradle.run_to_abs_pos(position_sp=new_pos, speed_sp=200)
-            self.cradle.wait_for_position(new_pos)
-
-            new_pos = self.swing_arm.position - 360
-            self.swing_arm.run_to_abs_pos(position_sp=new_pos, speed_sp=200)
-            self.swing_arm.wait_for_position(new_pos)
-
-            # Side 4 - FRONT
-            sides[4] = self.scan_up_face()
-
-            self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=self.cs_speed * 2)
-            self.cs_arm.wait_for_position(0)
-
-            new_pos = self.swing_arm.position - 720
-            self.swing_arm.run_to_abs_pos(position_sp=new_pos, speed_sp=200)
-            self.swing_arm.wait_for_position(new_pos)
-
-            # Side 5 - BACK
-            sides[5] = self.scan_up_face()
-
-            self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=self.cs_speed * 2)
-            self.cs_arm.wait_for_position(0)
+            self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=self.cs_speed)
         else:
             sides = [(Color.YELLOW, Color.BLUE, Color.WHITE, Color.RED, Color.GREEN, Color.ORANGE, Color.RED,
                       Color.GREEN, Color.GREEN), (
@@ -186,26 +157,19 @@ class Robot:
                          Color.GREEN, Color.WHITE, Color.GREEN, Color.ORANGE, Color.WHITE, Color.RED, Color.ORANGE,
                          Color.WHITE, Color.BLUE)]
 
-        # rotate LEFT ccw to match orientation
-        s = sides[1]
-        sides[1] = (s[2], s[5], s[8], s[1], s[4], s[7], s[0], s[3], s[6])
-
-        # rotate RIGHT cw to match orientation
-        s = sides[3]
-        sides[3] = (s[6], s[3], s[0], s[7], s[4], s[1], s[8], s[5], s[2])
-
-        # rotate DOWN 180deg to match orientation
-        sides[2] = sides[2][::-1]
+        # rotate DOWN 180deg to account for transformations
+        sides[4] = sides[4][::-1]
 
         cube_pos = []
         for side in sides:
             for i in side:
                 cube_pos.append(i)
 
-        corrected_cube_pos = cube_pos[:12] + cube_pos[36:39] + cube_pos[27:30] + cube_pos[45:48] + \
-            cube_pos[12:15] + cube_pos[39:42] + cube_pos[30:33] + cube_pos[48:51] + \
-            cube_pos[15:18] + cube_pos[42:45] + cube_pos[33:36] + cube_pos[51:] + \
-            cube_pos[18:27]
+        corrected_cube_pos = cube_pos[45:] +\
+                             cube_pos[27:30] + cube_pos[18:21] + cube_pos[9:12] + cube_pos[:3]+ \
+                             cube_pos[30:33] + cube_pos[21:24] + cube_pos[12:15] + cube_pos[3:6] + \
+                             cube_pos[33:36] + cube_pos[24:27] + cube_pos[15:18] + cube_pos[6:9] + \
+                             cube_pos[36:45]
 
         return corrected_cube_pos
 
@@ -220,7 +184,7 @@ class Robot:
         self.swing_arm.run_to_abs_pos(position_sp=0, speed_sp=100)
         self.swing_arm.wait_for_position(0)
 
-        sleep(2)
+        sleep(1)
 
         self.cradle.stop_action = "coast"
         self.cradle.run_timed(time_sp=1, speed_sp=1)
@@ -241,6 +205,8 @@ def main():
         print(rubiks_cube)
     except KeyboardInterrupt:
         pass  # Stops immediate sys.exit to run custom exit function
+    except TypeError as e:
+        print("TypeError: " + str(e))
     rubiks_bot.exit()
 
 if __name__ == "__main__":

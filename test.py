@@ -57,7 +57,15 @@ else:
        B B O
        W G Y
 
-
+       Y B W
+       R G O
+       R G G
+ O W Y B Y Y R Y O G W G
+ G O G O Y Y R R B O W R
+ R Y R G R B W W B O W B
+       W B O
+       B B O
+       W G Y
 
 RIGHT CLOCKWISE
 LEFT ccw
