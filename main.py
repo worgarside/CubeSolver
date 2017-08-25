@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 from time import sleep
+from sys import stdout
+from os import get_terminal_size
 from cube_class import Color, Cube
 import ev3dev.ev3 as ev3
 from ev3dev.ev3 import Sound
@@ -35,6 +37,8 @@ class Robot:
         self.cs_cen_pos = -2500
         self.cube_rot_speed = 30
         self.cs_speed = 1000
+        self.swing_arm_speed = 250
+        self._scanned_cubies = 0
 
     def hold(self, message):
         print("\nHolding: '" + message + "'\n")
@@ -67,6 +71,25 @@ class Robot:
 
         Sound.beep()
 
+    def increment_progressbar(self):
+        # Progressbar will change width depending on console size
+        dims = get_terminal_size()
+
+        if dims[0] > 64:
+            progressbar_width = 54
+        else:
+            progressbar_width = dims[0] - 10
+
+        # Increment number of scanned cubies, and scale it for sizing
+        self._scanned_cubies += 1
+        progress = int(self._scanned_cubies/(54/progressbar_width))
+
+        stdout.write("\r|")
+        stdout.write("#" * progress)
+        stdout.write("-" * (progressbar_width - progress))
+        stdout.write("| %.2f%%" % ((self._scanned_cubies/54)*100))
+        stdout.flush()
+
     def scan_up_face(self):
         middle = []
         corner = []
@@ -77,6 +100,8 @@ class Robot:
             self.cs_arm.wait_for_position(self.cs_mid_pos)
             middle.append(Color(self.cs.value()))
 
+            self.increment_progressbar()
+
             # Corner
             new_pos = self.cradle.position - 45
             self.cradle.run_to_abs_pos(position_sp=new_pos, speed_sp=self.cube_rot_speed)
@@ -85,6 +110,8 @@ class Robot:
             self.cs_arm.run_to_abs_pos(position_sp=self.cs_cor_pos, speed_sp=self.cs_speed)
             self.cs_arm.wait_for_position(self.cs_cor_pos)
             corner.append(Color(self.cs.value()))
+
+            self.increment_progressbar()
 
             # Prep for next middle
             new_pos = self.cradle.position - 45
@@ -95,6 +122,8 @@ class Robot:
         self.cs_arm.run_to_abs_pos(position_sp=self.cs_cen_pos, speed_sp=self.cs_speed)
         self.cs_arm.wait_for_position(self.cs_cen_pos)
         centre = Color(self.cs.value())
+
+        self.increment_progressbar()
 
         """
         The face is scanned in this order:
@@ -115,12 +144,10 @@ class Robot:
 
         if scan:
             # Move swing arm out of the way
-            self.swing_arm.run_to_abs_pos(position_sp=60, speed_sp=100)
+            self.swing_arm.run_to_abs_pos(position_sp=60, speed_sp=self.swing_arm_speed)
             self.swing_arm.wait_for_stop()
 
             for i in range(len(sides)):
-                print("reading face " + str(i))
-
                 sides[i] = self.scan_up_face()
 
                 self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=self.cs_speed)
@@ -128,21 +155,25 @@ class Robot:
 
                 if i == 3:
                     new_pos = self.cradle.position - 90
-                    self.cradle.run_to_abs_pos(position_sp=new_pos, speed_sp=200)
+                    self.cradle.run_to_abs_pos(position_sp=new_pos, speed_sp=self.swing_arm_speed)
                     self.cradle.wait_for_position(new_pos)
 
                 if i < 5:
                     new_pos = self.swing_arm.position - 360
-                    self.swing_arm.run_to_abs_pos(position_sp=new_pos, speed_sp=200)
+                    self.swing_arm.run_to_abs_pos(position_sp=new_pos, speed_sp=self.swing_arm_speed)
                     self.swing_arm.wait_for_position(new_pos)
 
                 if i == 4:
                     new_pos = self.swing_arm.position - 360
-                    self.swing_arm.run_to_abs_pos(position_sp=new_pos, speed_sp=200)
+                    self.swing_arm.run_to_abs_pos(position_sp=new_pos, speed_sp=self.swing_arm_speed)
                     self.swing_arm.wait_for_position(new_pos)
 
             self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=self.cs_speed)
         else:
+            for i in range(54):
+                sleep(0.1)
+                self.increment_progressbar()
+
             sides = [(Color.YELLOW, Color.BLUE, Color.WHITE, Color.RED, Color.GREEN, Color.ORANGE, Color.RED,
                       Color.GREEN, Color.GREEN), (
                          Color.RED, Color.GREEN, Color.ORANGE, Color.YELLOW, Color.ORANGE, Color.WHITE, Color.RED,
@@ -166,10 +197,16 @@ class Robot:
                 cube_pos.append(i)
 
         corrected_cube_pos = cube_pos[45:] +\
-                             cube_pos[27:30] + cube_pos[18:21] + cube_pos[9:12] + cube_pos[:3]+ \
-                             cube_pos[30:33] + cube_pos[21:24] + cube_pos[12:15] + cube_pos[3:6] + \
-                             cube_pos[33:36] + cube_pos[24:27] + cube_pos[15:18] + cube_pos[6:9] + \
-                             cube_pos[36:45]
+            cube_pos[27:30] + cube_pos[18:21] + cube_pos[9:12] + cube_pos[:3] + \
+            cube_pos[30:33] + cube_pos[21:24] + cube_pos[12:15] + cube_pos[3:6] + \
+            cube_pos[33:36] + cube_pos[24:27] + cube_pos[15:18] + cube_pos[6:9] + \
+            cube_pos[36:45]
+
+        self.cradle.reset()
+        self.swing_arm.reset()
+        print("\n\npositions")
+        print(self.cradle.position)
+        print(self.swing_arm.position)
 
         return corrected_cube_pos
 
@@ -192,16 +229,16 @@ class Robot:
         self.swing_arm.run_timed(time_sp=1, speed_sp=1)
         self.cs_arm.stop_action = "coast"
         self.cs_arm.run_timed(time_sp=1, speed_sp=1)
+        print("\n\n")
         Sound.tone([(800, 100, 0), (600, 150, 0), (400, 100, 0)]).wait()
-
 
 def main():
     Sound.beep()
     rubiks_bot = Robot()
     try:
         rubiks_bot.init_motors()
-        cube_scan = rubiks_bot.scan_cube()
-        rubiks_cube = Cube(cube_scan)
+        print("Scanning Rubik's Cube...")
+        rubiks_cube = Cube(rubiks_bot.scan_cube())
         print(rubiks_cube)
     except KeyboardInterrupt:
         pass  # Stops immediate sys.exit to run custom exit function

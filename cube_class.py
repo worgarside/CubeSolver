@@ -18,7 +18,7 @@ class Rot(Enum):
 
 class Color(Enum):
     NONE = 0
-    BLACK = 1
+    DARK = 1  # DARK (not 'BLACK') to show up with any color reading errors (differentiates it from BLUE)
     BLUE = 2
     GREEN = 3
     YELLOW = 4
