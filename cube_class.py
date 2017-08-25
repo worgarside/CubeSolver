@@ -141,46 +141,46 @@ class Cube:
 
         if direction == Rot.CLOCKWISE:
             if side == Side.LEFT:
-                self.set_left(c.left[6] + c.left[3] + c.left[0] + c.left[7] + c.left[4]
-                              + c.left[1] + c.left[8] + c.left[5] + c.left[2])
+                self.set_left(c.left[6:7] + c.left[3:4] + c.left[0:1] + c.left[7:8] + c.left[4:5]
+                              + c.left[1:2] + c.left[8:9] + c.left[5:6] + c.left[2:3])
             elif side == Side.RIGHT:
-                self.set_right(c.right[6] + c.right[3] + c.right[0] + c.right[7] + c.right[4]
-                               + c.right[1] + c.right[8] + c.right[5] + c.right[2])
+                self.set_right(c.right[6:7] + c.right[3:4] + c.right[0:1] + c.right[7:8] + c.right[4:5]
+                               + c.right[1:2] + c.right[8:9] + c.right[5:6] + c.right[2:3])
             elif side == Side.FRONT:
-                self.set_front(c.front[6] + c.front[3] + c.front[0] + c.front[7] + c.front[4]
-                               + c.front[1] + c.front[8] + c.front[5] + c.front[2])
+                self.set_front(c.front[6:7] + c.front[3:4] + c.front[0:1] + c.front[7:8] + c.front[4:5]
+                               + c.front[1:2] + c.front[8:9] + c.front[5:6] + c.front[2:3])
             elif side == Side.BACK:
-                self.set_back(c.back[6] + c.back[3] + c.back[0] + c.back[7] + c.back[4]
-                              + c.back[1] + c.back[8] + c.back[5] + c.back[2])
+                self.set_back(c.back[6:7] + c.back[3:4] + c.back[0:1] + c.back[7:8] + c.back[4:5]
+                              + c.back[1:2] + c.back[8:9] + c.back[5:6] + c.back[2:3])
             elif side == Side.UP:
-                self.set_up(c.up[6] + c.up[3] + c.up[0] + c.up[7] + c.up[4]
-                            + c.up[1] + c.up[8] + c.up[5] + c.up[2])
+                self.set_up(c.up[6:7] + c.up[3:4] + c.up[0:1] + c.up[7:8] + c.up[4:5]
+                            + c.up[1:2] + c.up[8:9] + c.up[5:6] + c.up[2:3])
             elif side == Side.DOWN:
-                self.set_down(c.down[6] + c.down[3] + c.down[0] + c.down[7] + c.down[4]
-                              + c.down[1] + c.down[8] + c.down[5] + c.down[2])
+                self.set_down(c.down[6:7] + c.down[3:4] + c.down[0:1] + c.down[7:8] + c.down[4:5]
+                              + c.down[1:2] + c.down[8:9] + c.down[5:6] + c.down[2:3])
             else:
                 print("\nrotate_side_cw: invalid side")
                 exit()
         elif direction == Rot.COUNTER_CLOCKWISE:
 
             if side == Side.LEFT:
-                self.set_left(c.left[2] + c.left[5] + c.left[8] + c.left[1] + c.left[4]
-                              + c.left[7] + c.left[0] + c.left[3] + c.left[6])
+                self.set_left(c.left[2:3] + c.left[5:6] + c.left[8:9] + c.left[1:2] + c.left[4:5]
+                              + c.left[7:8] + c.left[0:1] + c.left[3:4] + c.left[6:7])
             elif side == Side.RIGHT:
-                self.set_right(c.right[2] + c.right[5] + c.right[8] + c.right[1] + c.right[4]
-                               + c.right[7] + c.right[0] + c.right[3] + c.right[6])
+                self.set_right(c.right[2:3] + c.right[5:6] + c.right[8:9] + c.right[1:2] + c.right[4:5]
+                               + c.right[7:8] + c.right[0:1] + c.right[3:4] + c.right[6:7])
             elif side == Side.FRONT:
-                self.set_front(c.front[2] + c.front[5] + c.front[8] + c.front[1] + c.front[4]
-                               + c.front[7] + c.front[0] + c.front[3] + c.front[6])
+                self.set_front(c.front[2:3] + c.front[5:6] + c.front[8:9] + c.front[1:2] + c.front[4:5]
+                               + c.front[7:8] + c.front[0:1] + c.front[3:4] + c.front[6:7])
             elif side == Side.BACK:
-                self.set_back(c.back[2] + c.back[5] + c.back[8] + c.back[1] + c.back[4]
-                              + c.back[7] + c.back[0] + c.back[3] + c.back[6])
+                self.set_back(c.back[2:3] + c.back[5:6] + c.back[8:9] + c.back[1:2] + c.back[4:5]
+                              + c.back[7:8] + c.back[0:1] + c.back[3:4] + c.back[6:7])
             elif side == Side.UP:
-                self.set_up(c.up[2] + c.up[5] + c.up[8] + c.up[1] + c.up[4]
-                            + c.up[7] + c.up[0] + c.up[3] + c.up[6])
+                self.set_up(c.up[2:3] + c.up[5:6] + c.up[8:9] + c.up[1:2] + c.up[4:5]
+                            + c.up[7:8] + c.up[0:1] + c.up[3:4] + c.up[6:7])
             elif side == Side.DOWN:
-                self.set_down(c.down[2] + c.down[5] + c.down[8] + c.down[1] + c.down[4]
-                              + c.down[7] + c.down[0] + c.down[3] + c.down[6])
+                self.set_down(c.down[2:3] + c.down[5:6] + c.down[8:9] + c.down[1:2] + c.down[4:5]
+                              + c.down[7:8] + c.down[0:1] + c.down[3:4] + c.down[6:7])
             else:
                 print("\nrotate_side_ccw: invalid side")
                 exit()
@@ -470,8 +470,8 @@ class Cube:
 def main():
     rubiks_cube = Cube(Cube.SOLVED_POS)
     # print(rubiks_cube)
-    rubiks_cube.move_l()
-    # rubiks_cube.randomize()
+    # rubiks_cube.move_l()
+    rubiks_cube.randomize()
     print(rubiks_cube)
 
 
