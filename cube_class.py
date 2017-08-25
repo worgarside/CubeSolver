@@ -469,9 +469,10 @@ class Cube:
 
 def main():
     rubiks_cube = Cube(Cube.SOLVED_POS)
-    print(rubiks_cube)
-    # rubiks_cube.randomize()
     # print(rubiks_cube)
+    rubiks_cube.move_l()
+    # rubiks_cube.randomize()
+    print(rubiks_cube)
 
 
 if __name__ == '__main__':

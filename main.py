@@ -35,7 +35,7 @@ class Robot:
         self.cs_mid_pos = -1700
         self.cs_cor_pos = -1390
         self.cs_cen_pos = -2500
-        self.cube_rot_speed = 30
+        self.cube_rot_speed = 50
         self.cs_speed = 1000
         self.swing_arm_speed = 250
         self._scanned_cubies = 0
@@ -134,15 +134,16 @@ class Robot:
 
         return corner[1], middle[1], corner[0], middle[2], centre, middle[0], corner[2], middle[3], corner[3]
 
-    def scan_cube(self, scan=True):
+    def scan_cube(self, simulate=False):
         # - Z Z Z Y Z Z Z
         # U L D R - F - B    <---- Initial State
         # B R F L - D - U    <---- Final State!!
 
-        #
+        print("Scanning Rubik's Cube...")
+
         sides = [[], [], [], [], [], []]
 
-        if scan:
+        if not simulate:
             # Move swing arm out of the way
             self.swing_arm.run_to_abs_pos(position_sp=60, speed_sp=self.swing_arm_speed)
             self.swing_arm.wait_for_stop()
@@ -171,24 +172,23 @@ class Robot:
             self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=self.cs_speed)
         else:
             for i in range(54):
-                sleep(0.1)
+                sleep(0.005)
                 self.increment_progressbar()
 
-            sides = [(Color.YELLOW, Color.BLUE, Color.WHITE, Color.RED, Color.GREEN, Color.ORANGE, Color.RED,
-                      Color.GREEN, Color.GREEN), (
-                         Color.RED, Color.GREEN, Color.ORANGE, Color.YELLOW, Color.ORANGE, Color.WHITE, Color.RED,
-                         Color.GREEN, Color.YELLOW), (
-                         Color.YELLOW, Color.GREEN, Color.WHITE, Color.ORANGE, Color.BLUE, Color.BLUE, Color.ORANGE,
-                         Color.BLUE, Color.WHITE), (
-                         Color.ORANGE, Color.BLUE, Color.BLUE, Color.YELLOW, Color.RED, Color.WHITE, Color.RED,
-                         Color.RED,
-                         Color.WHITE), (
-                         Color.BLUE, Color.YELLOW, Color.YELLOW, Color.ORANGE, Color.YELLOW, Color.YELLOW, Color.GREEN,
-                         Color.RED, Color.BLUE), (
-                         Color.GREEN, Color.WHITE, Color.GREEN, Color.ORANGE, Color.WHITE, Color.RED, Color.ORANGE,
-                         Color.WHITE, Color.BLUE)]
+            sides = [(Color.BLUE, Color.WHITE, Color.ORANGE, Color.RED,
+                      Color.WHITE, Color.ORANGE, Color.GREEN, Color.WHITE, Color.GREEN),
+                     (Color.ORANGE, Color.YELLOW, Color.RED, Color.BLUE,
+                      Color.RED, Color.GREEN, Color.WHITE, Color.WHITE, Color.ORANGE),
+                     (Color.YELLOW, Color.YELLOW, Color.BLUE, Color.YELLOW,
+                      Color.YELLOW, Color.RED, Color.BLUE, Color.ORANGE, Color.GREEN),
+                     (Color.BLUE, Color.WHITE, Color.GREEN, Color.BLUE,
+                      Color.ORANGE, Color.GREEN, Color.ORANGE, Color.YELLOW, Color.RED),
+                     (Color.YELLOW, Color.GREEN, Color.RED, Color.BLUE,
+                      Color.BLUE, Color.ORANGE, Color.WHITE, Color.BLUE, Color.YELLOW),
+                     (Color.YELLOW, Color.GREEN, Color.WHITE, Color.RED,
+                      Color.GREEN, Color.ORANGE, Color.RED, Color.RED, Color.WHITE)]
 
-        # rotate DOWN 180deg to account for transformations
+        # rotate DOWN 180deg to account for physical transformations
         sides[4] = sides[4][::-1]
 
         cube_pos = []
@@ -204,10 +204,8 @@ class Robot:
 
         self.cradle.reset()
         self.swing_arm.reset()
-        print("\n\npositions")
-        print(self.cradle.position)
-        print(self.swing_arm.position)
 
+        print()
         return corrected_cube_pos
 
     def exit(self):
@@ -232,13 +230,16 @@ class Robot:
         print("\n\n")
         Sound.tone([(800, 100, 0), (600, 150, 0), (400, 100, 0)]).wait()
 
+
 def main():
+    simulate_bot = True
+
     Sound.beep()
     rubiks_bot = Robot()
     try:
-        rubiks_bot.init_motors()
-        print("Scanning Rubik's Cube...")
-        rubiks_cube = Cube(rubiks_bot.scan_cube())
+        if not simulate_bot:
+            rubiks_bot.init_motors()
+        rubiks_cube = Cube(rubiks_bot.scan_cube(simulate_bot))
         print(rubiks_cube)
     except KeyboardInterrupt:
         pass  # Stops immediate sys.exit to run custom exit function

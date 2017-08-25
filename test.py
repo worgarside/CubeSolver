@@ -38,14 +38,18 @@ if Side.TOP == 0:
     print(Side.TOP)
 else:
     print("fail")
-    
-    
-    
-    
-    
-    
-    
-    
+    if True:
+        if True:
+            print()
+
+
+
+
+
+
+
+
+
 """
        Y B W
        R G O
