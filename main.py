@@ -35,16 +35,10 @@ class Robot:
         self.cs_mid_pos = -1700
         self.cs_cor_pos = -1390
         self.cs_cen_pos = -2500
-        self.cube_rot_speed = 50
+        self.cube_rot_speed = 100
         self.cs_speed = 1000
-        self.swing_arm_speed = 250
+        self.swing_arm_speed = 200
         self._scanned_cubies = 0
-
-    def hold(self, message):
-        print("\nHolding: '" + message + "'\n")
-        Sound.tone([(800, 150, 0), (400, 150, 0), (800, 150, 0), (400, 150, 0)]).wait()
-        while self.ts.value() != 1:
-            pass
 
     def init_motors(self):
         self.cradle.stop_action = "coast"
@@ -70,6 +64,33 @@ class Robot:
         self.cs_arm.position = 0
 
         Sound.beep()
+
+    def rotate_cradle(self, angle, guarded=False):
+        if guarded:
+            print("g")
+            if angle > 0:
+                guard_over_rotation = 20
+                guard_return = 21
+            else:
+                guard_over_rotation = -20
+                guard_return = -21
+
+            new_pos = self.cradle.position + angle + guard_over_rotation
+            self.cradle.run_to_abs_pos(position_sp=new_pos, speed_sp=self.cube_rot_speed, ramp_down_sp=50)
+            self.cradle.wait_for_position(new_pos)
+            new_pos = self.cradle.position - guard_return
+            self.cradle.run_to_abs_pos(position_sp=new_pos, speed_sp=self.cube_rot_speed, ramp_down_sp=50)
+            self.cradle.wait_for_position(new_pos)
+        else:
+            new_pos = self.cradle.position + angle
+            self.cradle.run_to_abs_pos(position_sp=new_pos, speed_sp=self.cube_rot_speed, ramp_down_sp=50)
+            self.cradle.wait_for_position(new_pos)
+
+    def hold(self, message):
+        print("\nHolding: '" + message + "'\n")
+        Sound.tone([(800, 150, 0), (400, 150, 0), (800, 150, 0), (400, 150, 0)]).wait()
+        while self.ts.value() != 1:
+            pass
 
     def increment_progressbar(self):
         # Progressbar will change width depending on console size
@@ -103,9 +124,10 @@ class Robot:
             self.increment_progressbar()
 
             # Corner
-            new_pos = self.cradle.position - 45
-            self.cradle.run_to_abs_pos(position_sp=new_pos, speed_sp=self.cube_rot_speed)
-            self.cradle.wait_for_position(new_pos)
+            self.rotate_cradle(-45)
+            # new_pos = self.cradle.position - 45
+            # self.cradle.run_to_abs_pos(position_sp=new_pos, speed_sp=self.cube_rot_speed)
+            # self.cradle.wait_for_position(new_pos)
 
             self.cs_arm.run_to_abs_pos(position_sp=self.cs_cor_pos, speed_sp=self.cs_speed)
             self.cs_arm.wait_for_position(self.cs_cor_pos)
@@ -114,9 +136,10 @@ class Robot:
             self.increment_progressbar()
 
             # Prep for next middle
-            new_pos = self.cradle.position - 45
-            self.cradle.run_to_abs_pos(position_sp=new_pos, speed_sp=self.cube_rot_speed)
-            self.cradle.wait_for_position(new_pos)
+            self.rotate_cradle(-45)
+            # new_pos = self.cradle.position - 45
+            # self.cradle.run_to_abs_pos(position_sp=new_pos, speed_sp=self.cube_rot_speed)
+            # self.cradle.wait_for_position(new_pos)
 
         # Read centre cubie
         self.cs_arm.run_to_abs_pos(position_sp=self.cs_cen_pos, speed_sp=self.cs_speed)
@@ -143,11 +166,11 @@ class Robot:
 
         sides = [[], [], [], [], [], []]
 
-        if not simulate:
-            # Move swing arm out of the way
-            self.swing_arm.run_to_abs_pos(position_sp=60, speed_sp=self.swing_arm_speed)
-            self.swing_arm.wait_for_stop()
+        # Move swing arm out of the way
+        self.swing_arm.run_to_abs_pos(position_sp=60, speed_sp=self.swing_arm_speed)
+        self.swing_arm.wait_for_position(60)
 
+        if not simulate:
             for i in range(len(sides)):
                 sides[i] = self.scan_up_face()
 
@@ -156,7 +179,7 @@ class Robot:
 
                 if i == 3:
                     new_pos = self.cradle.position - 90
-                    self.cradle.run_to_abs_pos(position_sp=new_pos, speed_sp=self.swing_arm_speed)
+                    self.cradle.run_to_abs_pos(position_sp=new_pos, speed_sp=self.cube_rot_speed)
                     self.cradle.wait_for_position(new_pos)
 
                 if i < 5:
@@ -202,9 +225,6 @@ class Robot:
             cube_pos[33:36] + cube_pos[24:27] + cube_pos[15:18] + cube_pos[6:9] + \
             cube_pos[36:45]
 
-        self.cradle.reset()
-        self.swing_arm.reset()
-
         print()
         return corrected_cube_pos
 
@@ -214,9 +234,9 @@ class Robot:
 
         self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=1000)
         self.cs_arm.wait_for_position(0)
-        self.cradle.run_to_abs_pos(position_sp=0, speed_sp=500)
-        self.cradle.wait_for_position(0)
-        self.swing_arm.run_to_abs_pos(position_sp=0, speed_sp=100)
+        # self.cradle.run_to_abs_pos(position_sp=0, speed_sp=500)
+        # self.cradle.wait_for_position(0)
+        self.swing_arm.run_to_abs_pos(position_sp=0, speed_sp=1020, ramp_down_sp=500)
         self.swing_arm.wait_for_position(0)
 
         sleep(1)
@@ -235,33 +255,78 @@ class Robot:
         pass
 
     def move_d(self):
+        # print("SA: " + str(self.swing_arm.position))
         # Set guards to block position
-        # Rotate Cradle -90
-        pass
+        if not( 5 <= (self.swing_arm.position-60) % 360 <= 355):
+            guard_pos = self.swing_arm.position - 60
+            self.swing_arm.run_to_abs_pos(position_sp=guard_pos, speed_sp=self.swing_arm_speed)
+            self.swing_arm.wait_for_position(guard_pos)
+
+        # Rotate Cradle +90
+        self.rotate_cradle(90, True)
 
     def move_not_d(self):
         # Set guards to block position
-        # Rotate Cradle 90
-        pass
+        if not( 5 <= (self.swing_arm.position-60) % 360 <= 355):
+            guard_pos = self.swing_arm.position - 60
+            self.swing_arm.run_to_abs_pos(position_sp=guard_pos, speed_sp=self.swing_arm_speed)
+            self.swing_arm.wait_for_position(guard_pos)
+
+        # Rotate Cradle -90
+        self.rotate_cradle(-90, True)
 
     def move_y(self):
         # Remove guards
-        # Rotate Cradle -90
-        pass
+        if not( 5 <= self.swing_arm.position % 360 <= 355):
+            guard_pos = self.swing_arm.position + 60
+            self.swing_arm.run_to_abs_pos(position_sp=guard_pos, speed_sp=self.swing_arm_speed)
+            self.swing_arm.wait_for_position(guard_pos)
+
+        # Rotate Cradle +90
+        self.rotate_cradle(90)
 
     def move_not_y(self):
         # Remove guards
-        # Rotate Cradle 90
+        if not( 5 <= self.swing_arm.position % 360 <= 355):
+            guard_pos = self.swing_arm.position + 60
+            self.swing_arm.run_to_abs_pos(position_sp=guard_pos, speed_sp=self.swing_arm_speed)
+            self.swing_arm.wait_for_position(guard_pos)
+
+        # Rotate Cradle -90
+        self.rotate_cradle(-90)
         pass
 
     def move_z(self):
         # Rotate swing arm 360
-        pass
+        new_pos = self.swing_arm.position - 360
+        self.swing_arm.run_to_abs_pos(position_sp=new_pos, speed_sp=self.swing_arm_speed)
+        self.swing_arm.wait_for_position(new_pos)
 
     def run_move_chain(self, move_chain):
         # Check move_chain is 'robotified'
         # Run move_chain
         pass
+
+    def move_tester(self):
+        move_num = ''
+        while move_num != '0':
+            move_num = input("1: D   2: ~D   3: Y   4:~Y   5: Z   ?: ")
+            print(move_num)
+            if move_num == '1':
+                print("move_d")
+                self.move_d()
+            elif move_num == '2':
+                print("move_not_d")
+                self.move_not_d()
+            elif move_num == '3':
+                print("move_y")
+                self.move_y()
+            elif move_num == '4':
+                print("move_not_y")
+                self.move_not_y()
+            elif move_num == '5':
+                print("move_z")
+                self.move_z()
 
 
 def main():
@@ -270,10 +335,18 @@ def main():
     Sound.beep()
     rubiks_bot = Robot()
     try:
-        if not simulate_bot:
-            rubiks_bot.init_motors()
+        rubiks_bot.init_motors()
         rubiks_cube = Cube(rubiks_bot.scan_cube(simulate_bot))
-        # print(rubiks_cube)
+        print(rubiks_cube)
+
+        rubiks_bot.move_tester()
+        # rubiks_bot.move_d()
+        # Sound.beep()
+        # rubiks_bot.move_not_d()
+        # Sound.beep()
+        # rubiks_bot.move_not_d()
+        # Sound.beep()
+
         solve_chain = rubiks_cube.solve
         robot_moves = rubiks_bot.robotify_moves(solve_chain)
         rubiks_bot.run_move_chain(robot_moves)
