@@ -231,6 +231,36 @@ class Robot:
         Sound.tone([(800, 100, 0), (600, 150, 0), (400, 100, 0)]).wait()
 
     def robotify_moves(self, move_chain):
+        # Turn secondary/tertiary moves into primary moves
+        pass
+
+    def move_d(self):
+        # Set guards to block position
+        # Rotate Cradle -90
+        pass
+
+    def move_not_d(self):
+        # Set guards to block position
+        # Rotate Cradle 90
+        pass
+
+    def move_y(self):
+        # Remove guards
+        # Rotate Cradle -90
+        pass
+
+    def move_not_y(self):
+        # Remove guards
+        # Rotate Cradle 90
+        pass
+
+    def move_z(self):
+        # Rotate swing arm 360
+        pass
+
+    def run_move_chain(self, move_chain):
+        # Check move_chain is 'robotified'
+        # Run move_chain
         pass
 
 
@@ -246,6 +276,7 @@ def main():
         # print(rubiks_cube)
         solve_chain = rubiks_cube.solve
         robot_moves = rubiks_bot.robotify_moves(solve_chain)
+        rubiks_bot.run_move_chain(robot_moves)
     except KeyboardInterrupt:
         pass  # Stops immediate sys.exit to run custom exit function
     except TypeError as e:
