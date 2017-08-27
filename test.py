@@ -90,9 +90,40 @@ SOLVED_POS = [Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, C
  (Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.ORANGE)]
 
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+["x", "r", "u2", "d", "not_z", "not_b", "not_f", "not_f", "r2", "d", "not_x", "not_s", "l2", "y", "not_r", "not_f", "m"]
+
+ 
+       R W B 
+       Y W R 
+       W W B 
+ W R O G G G Y G Y O R B 
+ W B B R O G O G B Y R B 
+ R G R R Y O B B Y O W W 
+       G O W 
+       Y Y O 
+       Y O G
+       
+       R W B 
+       Y W R 
+       W W B 
+ W R O G G G Y G Y O R B 
+ W B B R O G O G B Y R B 
+ R G R R Y O B B Y O W W 
+       G O W 
+       Y Y O 
+       Y O G
 
 
-
+       R W B 
+       Y W R 
+       W W B 
+ W R O G G G Y G Y O R W 
+ W B B R O G O G B Y R B 
+ R G R R Y O B B Y O W B 
+       G O W 
+       Y Y O 
+       Y O G
 
 
 

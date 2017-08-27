@@ -230,6 +230,9 @@ class Robot:
         print("\n\n")
         Sound.tone([(800, 100, 0), (600, 150, 0), (400, 100, 0)]).wait()
 
+    def robotify_moves(self, move_chain):
+        pass
+
 
 def main():
     simulate_bot = True
@@ -240,7 +243,9 @@ def main():
         if not simulate_bot:
             rubiks_bot.init_motors()
         rubiks_cube = Cube(rubiks_bot.scan_cube(simulate_bot))
-        print(rubiks_cube)
+        # print(rubiks_cube)
+        solve_chain = rubiks_cube.solve
+        robot_moves = rubiks_bot.robotify_moves(solve_chain)
     except KeyboardInterrupt:
         pass  # Stops immediate sys.exit to run custom exit function
     except TypeError as e:

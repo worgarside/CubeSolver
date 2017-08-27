@@ -40,13 +40,11 @@ class Cube:
                   Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW, Color.YELLOW,
                   Color.YELLOW]
 
-    MOVES = ["l", "not_l", "l2", "r", "not_r", "r2", "u", "not_u", "u2", "d", "not_d", "d2", "f", "not_f", "f2", "b",
+    MOVES = ["u", "not_u", "u2", "d", "not_d", "d2", "l", "not_l", "l2", "r", "not_r", "r2", "f", "not_f", "f2", "b",
              "not_b", "b2", "m", "not_m", "m2", "e", "not_e", "e2", "s", "not_s", "s2", "x", "not_x", "y", "not_y",
              "z", "not_z"]
-    MOVES2 = ["not_y", "l", "d2", "m", "not_d", "f", "x", "not_r", "m",
-              "s2", "not_z", "d2", "e2", "not_z", "f2", "l", "not_x"]
-    MOVES3 = ["not_y", "l", "d2", "r", "not_l", "x", "not_d", "f", "x",
-              "not_l", "not_x", "f2", "b2", "z", "d2", "e2", "not_z", "f2", "l", "not_x"]
+    MOVES2 = ["x", "r", "u2", "d", "not_z", "not_b", "not_f", "not_f", "r2", "d", "not_x", "not_s", "l2", "y", "not_r", "not_f", "m"]
+
 
     # constructor
     def __init__(self, curr_pos):
@@ -189,52 +187,6 @@ class Cube:
             exit()
 
     # ######################## MOVES ######################## #
-    
-    def move_l(self, print_flag=False):
-        c = Cube(self._pos)
-        self.set_up(c.back[8:9] + c.up[1:3] + c.back[5:6] + c.up[4:6] + c.back[2:3] + c.up[7:])
-        self.set_down(c.front[0:1] + c.down[1:3] + c.front[3:4] + c.down[4:6] + c.front[6:7] + c.down[7:])
-        self.set_front(c.up[0:1] + c.front[1:3] + c.up[3:4] + c.front[4:6] + c.up[6:7] + c.front[7:])
-        self.set_back(c.back[0:2] + c.down[6:7] + c.back[3:5] + c.down[3:4] + c.back[6:8] + c.down[0:1])
-        self.rotate_side(Rot.CLOCKWISE, Side.LEFT)
-        print("l") if print_flag else 0
-
-    def move_not_l(self, print_flag=False):
-        c = Cube(self._pos)
-        self.set_up(c.front[0:1] + c.up[1:3] + c.front[3:4] + c.up[4:6] + c.front[6:7] + c.up[7:])
-        self.set_down(c.back[8:9] + c.down[1:3] + c.back[5:6] + c.down[4:6] + c.back[2:3] + c.down[7:])
-        self.set_front(c.down[0:1] + c.front[1:3] + c.down[3:4] + c.front[4:6] + c.down[6:7] + c.front[7:])
-        self.set_back(c.back[0:2] + c.up[6:7] + c.back[3:5] + c.up[3:4] + c.back[6:8] + c.up[0:1])
-        self.rotate_side(Rot.COUNTER_CLOCKWISE, Side.LEFT)
-        print("l'") if print_flag else 0
-
-    def move_l2(self, print_flag=False):
-        self.move_l()
-        self.move_l()
-        print("l2") if print_flag else 0
-        
-    def move_r(self, print_flag=False):
-        c = Cube(self._pos)
-        self.set_up(c.up[:2] + c.front[2:3] + c.up[3:5] + c.front[5:6] + c.up[6:8] + c.front[8:9])
-        self.set_down(c.down[:2] + c.back[6:7] + c.down[3:5] + c.back[3:4] + c.down[6:8] + c.back[0:1])
-        self.set_front(c.front[:2] + c.down[2:3] + c.front[3:5] + c.down[5:6] + c.front[6:8] + c.down[8:9])
-        self.set_back(c.up[2:3] + c.back[1:3] + c.up[5:6] + c.back[4:6] + c.up[8:9] + c.back[7:])
-        self.rotate_side(Rot.CLOCKWISE, Side.RIGHT)
-        print("r") if print_flag else 0
-
-    def move_not_r(self, print_flag=False):
-        c = Cube(self._pos)
-        self.set_up(c.up[:2] + c.back[6:7] + c.up[3:5] + c.back[3:4] + c.up[6:8] + c.back[0:1])
-        self.set_down(c.down[:2] + c.front[2:3] + c.down[3:5] + c.front[5:6] + c.down[6:8] + c.front[8:9])
-        self.set_front(c.front[:2] + c.up[2:3] + c.front[3:5] + c.up[5:6] + c.front[6:8] + c.up[8:9])
-        self.set_back(c.down[8:9] + c.back[1:3] + c.down[5:6] + c.back[4:6] + c.down[2:3] + c.back[7:])
-        self.rotate_side(Rot.COUNTER_CLOCKWISE, Side.RIGHT)
-        print("r'") if print_flag else 0
-
-    def move_r2(self, print_flag=False):
-        self.move_r()
-        self.move_r()
-        print("r2") if print_flag else 0
 
     def move_u(self, print_flag=False):
         c = Cube(self._pos)
@@ -281,6 +233,52 @@ class Cube:
         self.move_d()
         self.move_d()
         print("d2") if print_flag else 0
+
+    def move_l(self, print_flag=False):
+        c = Cube(self._pos)
+        self.set_up(c.back[8:9] + c.up[1:3] + c.back[5:6] + c.up[4:6] + c.back[2:3] + c.up[7:])
+        self.set_down(c.front[0:1] + c.down[1:3] + c.front[3:4] + c.down[4:6] + c.front[6:7] + c.down[7:])
+        self.set_front(c.up[0:1] + c.front[1:3] + c.up[3:4] + c.front[4:6] + c.up[6:7] + c.front[7:])
+        self.set_back(c.back[0:2] + c.down[6:7] + c.back[3:5] + c.down[3:4] + c.back[6:8] + c.down[0:1])
+        self.rotate_side(Rot.CLOCKWISE, Side.LEFT)
+        print("l") if print_flag else 0
+
+    def move_not_l(self, print_flag=False):
+        c = Cube(self._pos)
+        self.set_up(c.front[0:1] + c.up[1:3] + c.front[3:4] + c.up[4:6] + c.front[6:7] + c.up[7:])
+        self.set_down(c.back[8:9] + c.down[1:3] + c.back[5:6] + c.down[4:6] + c.back[2:3] + c.down[7:])
+        self.set_front(c.down[0:1] + c.front[1:3] + c.down[3:4] + c.front[4:6] + c.down[6:7] + c.front[7:])
+        self.set_back(c.back[0:2] + c.up[6:7] + c.back[3:5] + c.up[3:4] + c.back[6:8] + c.up[0:1])
+        self.rotate_side(Rot.COUNTER_CLOCKWISE, Side.LEFT)
+        print("l'") if print_flag else 0
+
+    def move_l2(self, print_flag=False):
+        self.move_l()
+        self.move_l()
+        print("l2") if print_flag else 0
+        
+    def move_r(self, print_flag=False):
+        c = Cube(self._pos)
+        self.set_up(c.up[:2] + c.front[2:3] + c.up[3:5] + c.front[5:6] + c.up[6:8] + c.front[8:9])
+        self.set_down(c.down[:2] + c.back[6:7] + c.down[3:5] + c.back[3:4] + c.down[6:8] + c.back[0:1])
+        self.set_front(c.front[:2] + c.down[2:3] + c.front[3:5] + c.down[5:6] + c.front[6:8] + c.down[8:9])
+        self.set_back(c.up[2:3] + c.back[1:3] + c.up[5:6] + c.back[4:6] + c.up[8:9] + c.back[7:])
+        self.rotate_side(Rot.CLOCKWISE, Side.RIGHT)
+        print("r") if print_flag else 0
+
+    def move_not_r(self, print_flag=False):
+        c = Cube(self._pos)
+        self.set_up(c.up[:2] + c.back[6:7] + c.up[3:5] + c.back[3:4] + c.up[6:8] + c.back[0:1])
+        self.set_down(c.down[:2] + c.front[2:3] + c.down[3:5] + c.front[5:6] + c.down[6:8] + c.front[8:9])
+        self.set_front(c.front[:2] + c.up[2:3] + c.front[3:5] + c.up[5:6] + c.front[6:8] + c.up[8:9])
+        self.set_back(c.down[8:9] + c.back[1:3] + c.down[5:6] + c.back[4:6] + c.down[2:3] + c.back[7:])
+        self.rotate_side(Rot.COUNTER_CLOCKWISE, Side.RIGHT)
+        print("r'") if print_flag else 0
+
+    def move_r2(self, print_flag=False):
+        self.move_r()
+        self.move_r()
+        print("r2") if print_flag else 0
 
     def move_f(self, print_flag=False):
         c = Cube(self._pos)
@@ -466,12 +464,19 @@ class Cube:
         for n in range(number_of_moves):
             self.move(random.choice(Cube.MOVES))
 
+    def solve(self):
+        pass
+
 
 def main():
     rubiks_cube = Cube(Cube.SOLVED_POS)
     # print(rubiks_cube)
     # rubiks_cube.move_l()
-    rubiks_cube.randomize()
+
+    rubiks_cube.follow_move_chain(Cube.MOVES2)
+
+    # for m in Cube.MOVES2:
+    #     rubiks_cube.move(m)
     print(rubiks_cube)
 
 
