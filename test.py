@@ -132,7 +132,38 @@ SOLVED_POS = [Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, C
 
 
 
+new_pos = rubiks_bot.grabber.position - 90
+        rubiks_bot.grabber.run_to_abs_pos(position_sp=new_pos, speed_sp=rubiks_bot.grabber_speed)
+        rubiks_bot.grabber.wait_for_position(new_pos)
 
+        rubiks_bot.grabber.run_to_abs_pos(position_sp=0, speed_sp=rubiks_bot.grabber_speed)
+        rubiks_bot.grabber.wait_for_position(0)
+
+        sleep(2)
+        new_pos = rubiks_bot.grabber.position - 90
+        rubiks_bot.grabber.run_to_abs_pos(position_sp=new_pos, speed_sp=rubiks_bot.grabber_speed)
+        rubiks_bot.grabber.wait_for_position(new_pos)
+
+        rubiks_bot.grabber.run_to_abs_pos(position_sp=0, speed_sp=rubiks_bot.grabber_speed)
+        rubiks_bot.grabber.wait_for_position(0)
+
+        sleep(2)
+        new_pos = rubiks_bot.grabber.position - 90
+        rubiks_bot.grabber.run_to_abs_pos(position_sp=new_pos, speed_sp=rubiks_bot.grabber_speed)
+        rubiks_bot.grabber.wait_for_position(new_pos)
+
+        rubiks_bot.grabber.run_to_abs_pos(position_sp=0, speed_sp=rubiks_bot.grabber_speed)
+        rubiks_bot.grabber.wait_for_position(0)
+
+        sleep(2)
+        new_pos = rubiks_bot.grabber.position - 90
+        rubiks_bot.grabber.run_to_abs_pos(position_sp=new_pos, speed_sp=rubiks_bot.grabber_speed)
+        rubiks_bot.grabber.wait_for_position(new_pos)
+
+        rubiks_bot.grabber.run_to_abs_pos(position_sp=0, speed_sp=rubiks_bot.grabber_speed)
+        rubiks_bot.grabber.wait_for_position(0)
+
+        sleep(2)
 """
 
 
