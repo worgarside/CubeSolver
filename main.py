@@ -16,7 +16,6 @@ class Robot:
         self.cradle = LargeMotor(OUTPUT_A)
         self.grabber = LargeMotor(OUTPUT_B)
         self.cs_arm = MediumMotor(OUTPUT_C)
-
         self.ts = ev3.TouchSensor()
         self.cs = ColorSensor()
         self.cs.mode = self.cs.MODE_COL_COLOR
@@ -33,20 +32,21 @@ class Robot:
         self.gbr_guard_pos = -35
         self.gbr_grab_pos = -90
 
-    def init_motors(self):
-        self.cradle.stop_action = "coast"
-        self.cradle.run_timed(time_sp=1, speed_sp=1)
-        self.grabber.stop_action = "coast"
-        self.grabber.run_timed(time_sp=1, speed_sp=1)
-        self.cs_arm.stop_action = "coast"
-        self.cs_arm.run_timed(time_sp=1, speed_sp=1)
+    def init_motors(self, simulate=False):
+        if not simulate:
+            self.cradle.stop_action = "coast"
+            self.cradle.run_timed(time_sp=1, speed_sp=1)
+            self.grabber.stop_action = "coast"
+            self.grabber.run_timed(time_sp=1, speed_sp=1)
+            self.cs_arm.stop_action = "coast"
+            self.cs_arm.run_timed(time_sp=1, speed_sp=1)
 
-        while self.ts.value() != 1:
-            ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.AMBER)
-            ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.AMBER)
+            while self.ts.value() != 1:
+                ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.AMBER)
+                ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.AMBER)
 
-        ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
-        ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.GREEN)
+            ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
+            ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.GREEN)
 
         self.cradle.stop_action = "hold"
         self.grabber.stop_action = "hold"
@@ -60,15 +60,10 @@ class Robot:
 
     def rotate_cradle(self, angle=90):
         # 1200 is 1/4 turn - 40/3:1 gear ratio
-
         mod_angle = angle*(40/3)
         pos = self.cradle.position + mod_angle
         self.cradle.run_to_abs_pos(position_sp=pos, speed_sp=self.cradle_speed, ramp_down_sp=100)
         self.cradle.wait_for_position(pos)
-
-        # pos = self.cradle.position - 90
-        # self.cradle.run_to_abs_pos(position_sp=pos, speed_sp=self.cradle_speed)
-        # self.cradle.wait_for_position(pos)
 
     def grab_cube(self, iters=1):
         for x in range(iters):
@@ -200,30 +195,28 @@ class Robot:
                       Color.WHITE, Color.GREEN, Color.RED)]
 
         sides[0] = sides[0][6:7] + sides[0][3:4] + sides[0][0:1] + sides[0][7:8] + sides[0][4:5] + sides[0][1:2] + \
-                   sides[0][8:9] + sides[0][5:6] + sides[0][2:3]
+            sides[0][8:9] + sides[0][5:6] + sides[0][2:3]
         
         sides[1] = sides[1][6:7] + sides[1][3:4] + sides[1][0:1] + sides[1][7:8] + sides[1][4:5] + sides[1][1:2] + \
-                   sides[1][8:9] + sides[1][5:6] + sides[1][2:3]
+            sides[1][8:9] + sides[1][5:6] + sides[1][2:3]
 
         sides[2] = sides[2][6:7] + sides[2][3:4] + sides[2][0:1] + sides[2][7:8] + sides[2][4:5] + sides[2][1:2] + \
-                   sides[2][8:9] + sides[2][5:6] + sides[2][2:3]
+            sides[2][8:9] + sides[2][5:6] + sides[2][2:3]
 
         sides[3] = sides[3][6:7] + sides[3][3:4] + sides[3][0:1] + sides[3][7:8] + sides[3][4:5] + sides[3][1:2] + \
-                   sides[3][8:9] + sides[3][5:6] + sides[3][2:3]
+            sides[3][8:9] + sides[3][5:6] + sides[3][2:3]
 
         cube_pos = []
         for side in sides:
             for i in side:
                 cube_pos.append(i)
 
-
         corrected_cube_pos = cube_pos[45:] +\
-                             cube_pos[0:3] + cube_pos[27:30] + cube_pos[18:21] + cube_pos[9:12] +\
-                             cube_pos[3:6] + cube_pos[30:33] + cube_pos[21:24] + cube_pos[12:15] +\
-                             cube_pos[6:9] + cube_pos[33:36] + cube_pos[24:27] + cube_pos[15:18] +\
-                             cube_pos[36:45]
+            cube_pos[0:3] + cube_pos[27:30] + cube_pos[18:21] + cube_pos[9:12] +\
+            cube_pos[3:6] + cube_pos[30:33] + cube_pos[21:24] + cube_pos[12:15] +\
+            cube_pos[6:9] + cube_pos[33:36] + cube_pos[24:27] + cube_pos[15:18] +\
+            cube_pos[36:45]
 
-        print()
         return corrected_cube_pos
 
     def exit(self):
@@ -232,8 +225,8 @@ class Robot:
 
         self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=self.cs_speed)
         self.cs_arm.wait_for_position(0)
-        self.cradle.run_to_abs_pos(position_sp=0, speed_sp=self.cradle_speed)
-        self.cradle.wait_for_position(0)
+        # self.cradle.run_to_abs_pos(position_sp=0, speed_sp=self.cradle_speed)
+        # self.cradle.wait_for_position(0)
         self.grabber.run_to_abs_pos(position_sp=0, speed_sp=self.grabber_speed, ramp_down_sp=50)
         self.grabber.wait_for_position(0)
 
@@ -245,6 +238,7 @@ class Robot:
         self.grabber.run_timed(time_sp=1, speed_sp=1)
         self.cs_arm.stop_action = "coast"
         self.cs_arm.run_timed(time_sp=1, speed_sp=1)
+        print()
         print()
         Sound.tone([(800, 100, 0), (600, 150, 0), (400, 100, 0)]).wait()
 
@@ -258,14 +252,21 @@ class Robot:
         self.grabber.wait_for_position(self.gbr_guard_pos)
 
         # Rotate Cradle +90
-        self.rotate_cradle(90)
+        self.rotate_cradle(96)
+        self.rotate_cradle(-6)
 
     def move_not_d(self):
         # Set guards to block position
         self.grabber.run_to_abs_pos(position_sp=self.gbr_guard_pos, speed_sp=self.grabber_speed)
         self.grabber.wait_for_position(self.gbr_guard_pos)
+
         # Rotate Cradle -90
-        self.rotate_cradle(-90)
+        self.rotate_cradle(-96)
+        self.rotate_cradle(6)
+
+    def move_x(self):
+        # Grab cube
+        self.grab_cube()
 
     def move_y(self):
         # Remove guards
@@ -280,11 +281,6 @@ class Robot:
         self.grabber.wait_for_position(self.gbr_no_guard_pos)
         # Rotate Cradle -90
         self.rotate_cradle(-90)
-        pass
-
-    def move_x(self):
-        # Grab cube
-        self.grab_cube()
 
     def run_move_chain(self, move_chain):
         # Check move_chain is 'robotified'
@@ -293,36 +289,38 @@ class Robot:
 
     def move_tester(self):
         move_num = ''
-        while move_num != '0':
-            move_num = input("1: D   2: ~D   3: Y   4:~Y   5: Z   ?: ")
+        while move_num != '-1':
+            move_num = input("0: D   1: ~D   2: X   3: Y   4: ~Y   :: ")
             print(move_num)
-            if move_num == '1':
+            if move_num == '0':
                 print("move_d")
                 self.move_d()
-            elif move_num == '2':
+            elif move_num == '1':
                 print("move_not_d")
                 self.move_not_d()
+            elif move_num == '2':
+                print("move_x")
+                self.move_x()
             elif move_num == '3':
                 print("move_y")
                 self.move_y()
             elif move_num == '4':
                 print("move_not_y")
                 self.move_not_y()
-            elif move_num == '5':
-                print("move_x")
-                self.move_x()
 
 
 def main():
-    simulate_bot = False
+    simulate_bot = True
 
     Sound.beep()
     rubiks_bot = Robot()
     try:
-        rubiks_bot.init_motors()
+        rubiks_bot.init_motors(simulate_bot)
 
         rubiks_cube = Cube(rubiks_bot.scan_cube(simulate_bot))
         print(rubiks_cube)
+
+        rubiks_bot.move_tester()
 
         # solve_chain = rubiks_cube.solve
         # robot_moves = rubiks_bot.robotify_moves(solve_chain)
