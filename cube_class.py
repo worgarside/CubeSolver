@@ -55,7 +55,7 @@ class Cube:
     MOVES = ["u", "not_u", "u2", "d", "not_d", "d2", "l", "not_l", "l2", "r", "not_r", "r2", "f", "not_f", "f2", "b",
              "not_b", "b2", "m", "not_m", "m2", "e", "not_e", "e2", "s", "not_s", "s2", "x", "not_x", "y", "not_y",
              "z", "not_z"]
-    MOVES2 = ["x", "r", "u2", "d", "not_z", "not_b", "not_f", "not_f", "r2", "d", "not_x", "not_s", "l2", "y", "not_r", "not_f", "m"]
+    MOVES2 = ["x", "r", "u2", "d", "not_z", "not_b", "not_f", "not_f", "r", "r", "d", "not_x", "not_s", "l2", "y", "not_r", "not_f", "m"]
 
 
     # constructor
@@ -274,7 +274,7 @@ class Cube:
         self.set_up(c.up[:2] + c.front[2:3] + c.up[3:5] + c.front[5:6] + c.up[6:8] + c.front[8:9])
         self.set_down(c.down[:2] + c.back[6:7] + c.down[3:5] + c.back[3:4] + c.down[6:8] + c.back[0:1])
         self.set_front(c.front[:2] + c.down[2:3] + c.front[3:5] + c.down[5:6] + c.front[6:8] + c.down[8:9])
-        self.set_back(c.up[2:3] + c.back[1:3] + c.up[5:6] + c.back[4:6] + c.up[8:9] + c.back[7:])
+        self.set_back(c.up[8:9] + c.back[1:3] + c.up[5:6] + c.back[4:6] + c.up[2:3] + c.back[7:])
         self.rotate_side(Rot.CLOCKWISE, Side.RIGHT)
         print("r") if print_flag else 0
 
@@ -477,13 +477,16 @@ class Cube:
             self.move(random.choice(Cube.MOVES))
 
     def solve(self):
-        pass
+        # return solve chain
+        return ["x", "r", "u2", "d", "not_z", "not_b", "not_f", "not_f", "r2", "d", "not_x", "not_s", "l2", "y", "not_r", "not_f", "m"]
 
 
 def main():
     rubiks_cube = Cube(Cube.SOLVED_POS)
     # print(rubiks_cube)
     # rubiks_cube.move_l()
+
+    print(Cube.MOVES2)
 
     rubiks_cube.follow_move_chain(Cube.MOVES2)
 

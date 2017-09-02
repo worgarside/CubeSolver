@@ -25,7 +25,7 @@ class Robot:
         self.cs_cen_pos = -2500
         self.cradle_speed = 1020
         self.cs_speed = 1020
-        self.grabber_speed = 350
+        self.grabber_speed = 380
         self._scanned_cubies = 0
 
         self.gbr_no_guard_pos = 65
@@ -58,6 +58,29 @@ class Robot:
 
         Sound.beep()
 
+    def exit(self):
+        ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
+        ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.GREEN)
+
+        self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=self.cs_speed)
+        self.cs_arm.wait_for_position(0)
+        # self.cradle.run_to_abs_pos(position_sp=0, speed_sp=self.cradle_speed)
+        # self.cradle.wait_for_position(0)
+        self.grabber.run_to_abs_pos(position_sp=0, speed_sp=self.grabber_speed, ramp_down_sp=50)
+        self.grabber.wait_for_position(0)
+
+        sleep(1)
+
+        self.cradle.stop_action = "coast"
+        self.cradle.run_timed(time_sp=1, speed_sp=1)
+        self.grabber.stop_action = "coast"
+        self.grabber.run_timed(time_sp=1, speed_sp=1)
+        self.cs_arm.stop_action = "coast"
+        self.cs_arm.run_timed(time_sp=1, speed_sp=1)
+        print()
+        print()
+        Sound.tone([(800, 100, 0), (600, 150, 0), (400, 100, 0)]).wait()
+
     def rotate_cradle(self, angle=90):
         # 1200 is 1/4 turn - 40/3:1 gear ratio
         mod_angle = angle*(40/3)
@@ -67,10 +90,13 @@ class Robot:
 
     def grab_cube(self, iters=1):
         for x in range(iters):
-            self.grabber.run_to_abs_pos(position_sp=self.gbr_grab_pos, speed_sp=self.grabber_speed)
+            self.grabber.run_to_abs_pos(position_sp=self.gbr_grab_pos, speed_sp=self.grabber_speed, ramp_down_sp=100)
             self.grabber.wait_for_position(self.gbr_grab_pos)
 
-            self.grabber.run_to_abs_pos(position_sp=self.gbr_guard_pos, speed_sp=self.grabber_speed)
+            self.grabber.run_to_abs_pos(position_sp=-5, speed_sp=self.grabber_speed, ramp_down_sp=100)
+            self.grabber.wait_for_position(-5)
+
+            self.grabber.run_to_abs_pos(position_sp=self.gbr_guard_pos, speed_sp=self.grabber_speed, ramp_down_sp=100)
             self.grabber.wait_for_position(self.gbr_guard_pos)
 
     def increment_progressbar(self):
@@ -219,43 +245,7 @@ class Robot:
 
         return corrected_cube_pos
 
-    def exit(self):
-        ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
-        ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.GREEN)
-
-        self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=self.cs_speed)
-        self.cs_arm.wait_for_position(0)
-        # self.cradle.run_to_abs_pos(position_sp=0, speed_sp=self.cradle_speed)
-        # self.cradle.wait_for_position(0)
-        self.grabber.run_to_abs_pos(position_sp=0, speed_sp=self.grabber_speed, ramp_down_sp=50)
-        self.grabber.wait_for_position(0)
-
-        sleep(1)
-
-        self.cradle.stop_action = "coast"
-        self.cradle.run_timed(time_sp=1, speed_sp=1)
-        self.grabber.stop_action = "coast"
-        self.grabber.run_timed(time_sp=1, speed_sp=1)
-        self.cs_arm.stop_action = "coast"
-        self.cs_arm.run_timed(time_sp=1, speed_sp=1)
-        print()
-        print()
-        Sound.tone([(800, 100, 0), (600, 150, 0), (400, 100, 0)]).wait()
-
-    def robotify_moves(self, move_chain):
-        # Turn secondary/tertiary moves into primary moves
-        pass
-
-    def move_d(self):
-        # Set guards to block position
-        self.grabber.run_to_abs_pos(position_sp=self.gbr_guard_pos, speed_sp=self.grabber_speed)
-        self.grabber.wait_for_position(self.gbr_guard_pos)
-
-        # Rotate Cradle +90
-        self.rotate_cradle(96)
-        self.rotate_cradle(-6)
-
-    def move_not_d(self):
+    def r_move_d(self):
         # Set guards to block position
         self.grabber.run_to_abs_pos(position_sp=self.gbr_guard_pos, speed_sp=self.grabber_speed)
         self.grabber.wait_for_position(self.gbr_guard_pos)
@@ -264,53 +254,110 @@ class Robot:
         self.rotate_cradle(-96)
         self.rotate_cradle(6)
 
-    def move_x(self):
+    def r_move_not_d(self):
+        # Set guards to block position
+        self.grabber.run_to_abs_pos(position_sp=self.gbr_guard_pos, speed_sp=self.grabber_speed)
+        self.grabber.wait_for_position(self.gbr_guard_pos)
+
+        # Rotate Cradle 90
+        self.rotate_cradle(96)
+        self.rotate_cradle(-6)
+
+    def r_move_x(self):
         # Grab cube
         self.grab_cube()
 
-    def move_y(self):
+    def r_move_y(self):
         # Remove guards
         self.grabber.run_to_abs_pos(position_sp=self.gbr_no_guard_pos, speed_sp=self.grabber_speed)
         self.grabber.wait_for_position(self.gbr_no_guard_pos)
         # Rotate Cradle +90
         self.rotate_cradle(90)
 
-    def move_not_y(self):
+    def r_move_not_y(self):
         # Remove guards
         self.grabber.run_to_abs_pos(position_sp=self.gbr_no_guard_pos, speed_sp=self.grabber_speed)
         self.grabber.wait_for_position(self.gbr_no_guard_pos)
         # Rotate Cradle -90
         self.rotate_cradle(-90)
 
+    def move(self, move_string):
+        try:
+            move_func = self.__getattribute__("r_move_" + move_string)
+            move_func()
+        except AttributeError:
+            print("\nr_move(" + move_string + "): invalid move_string")
+            self.exit()
+
     def run_move_chain(self, move_chain):
         # Check move_chain is 'robotified'
-        # Run move_chain
-        pass
+        for move in move_chain:
+            self.move(move)
+
+    def robotify_move(self, move):
+        # Turn secondary/tertiary moves into primary moves
+        robot_move_dict = {
+            "u": ["x", "x", "d"],
+            "not_u": ["x", "x", "not_d"],
+            "u2": ["x", "x", "d", "d"],
+            "d": ["d"],
+            "not_d": ["not_d"],
+            "d2": ["d", "d"],
+            "l": ["y", "x", "d"],
+            "not_l": ["y", "x", "not_d"],
+            "l2": ["y", "x", "d", "d"],
+            "r": ["not_y", "x", "d"],
+            "not_r": ["not_y", "x", "not_d"],
+            "r2": ["not_y", "x", "d", "d"],
+            "f": ["x", "x", "x", "d"],
+            "not_f": ["x", "x", "x", "not_d"],
+            "f2": ["x", "x", "x", "d", "d"],
+            "b": ["x", "d"],
+            "not_b": ["x", "not_d"],
+            "b2": ["x", "d", "d"],
+            "m": ["y", "x", "not_d", "x", "x", "d"],
+            "not_m": ["y", "x", "d", "x", "x", "not_d"],
+            "m2": ["y", "x", "d", "d", "x", "x", "not_d", "not_d"],
+            "e": ["not_d", "x", "x", "d"],
+            "not_e": ["d", "x", "x", "not_d"],
+            "e2": ["d", "d", "x", "x", "not_d", "not_d"],
+            "s": ["y", "y", "x", "not_d", "x", "x", "d"],
+            "not_s": ["y", "y", "x", "d", "x", "x", "not_d"],
+            "s2": ["y", "y", "x", "d", "d", "x", "x", "not_d", "not_d"],
+            "x": ["x"],
+            "not_x": ["x", "x", "x"],
+            "x2": ["x", "x"],
+            "y": ["y"],
+            "not_y": ["not_y"],
+            "y2": ["y", "y"],
+            "z": ["not_y", "x"],
+            "not_z": ["y", "x"],
+            "z2": ["y", "x", "x", "not_y"]
+        }
+
+        robotified_move = robot_move_dict.get(move, "!")
+        if robotified_move == "!":
+            print("Move not found in dictionary: " + move)
+
+        return robotified_move
+
+    def robotify_move_chain(self, move_chain):
+        robot_moves = []
+        for m in move_chain:
+            robot_moves.append(self.robotify_move(m))
 
     def move_tester(self):
-        move_num = ''
-        while move_num != '-1':
-            move_num = input("0: D   1: ~D   2: X   3: Y   4: ~Y   :: ")
-            print(move_num)
-            if move_num == '0':
-                print("move_d")
-                self.move_d()
-            elif move_num == '1':
-                print("move_not_d")
-                self.move_not_d()
-            elif move_num == '2':
-                print("move_x")
-                self.move_x()
-            elif move_num == '3':
-                print("move_y")
-                self.move_y()
-            elif move_num == '4':
-                print("move_not_y")
-                self.move_not_y()
+        move_char = ''
+        while move_char != '-1':
+            move_char = input("Choose a move: ")
+            robot_move = self.robotify_move(move_char)
+            print(robot_move)
+            for m in robot_move:
+                self.move(m)
 
 
 def main():
-    simulate_bot = True
+    simulate_bot = False
 
     Sound.beep()
     rubiks_bot = Robot()
@@ -320,11 +367,14 @@ def main():
         rubiks_cube = Cube(rubiks_bot.scan_cube(simulate_bot))
         print(rubiks_cube)
 
-        rubiks_bot.move_tester()
-
-        # solve_chain = rubiks_cube.solve
+        # solve_chain = rubiks_cube.solve()
         # robot_moves = rubiks_bot.robotify_moves(solve_chain)
         # rubiks_bot.run_move_chain(robot_moves)
+
+        rubiks_bot.move_tester()
+
+        # print()
+        # print(robot_moves)
     except KeyboardInterrupt:
         pass  # Stops immediate sys.exit to run custom exit function
     except TypeError as e:

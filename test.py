@@ -164,6 +164,49 @@ new_pos = rubiks_bot.grabber.position - 90
         rubiks_bot.grabber.wait_for_position(0)
 
         sleep(2)
+        
+        ##############################################################
+        
+"u": ["x x d"],
+"not_u": ["x x not_d"],
+"u2": ["x x d d"],
+"d": ["d"],
+"not_d": ["not_d"],
+"d2": ["d d"],
+"l": ["y x d"],
+"not_l": ["y x not_d"],
+"l2": ["y x d d"],
+"r": ["not_y x d"],
+"not_r": ["not_y x not_d"],
+"r2": ["not_y x d d"],
+"f": ["x x x d"],
+"not_f": ["x x x not_d"],
+"f2": ["x x x d d"],
+"b": ["x d"],
+"not_b": ["x not_d"],
+"b2": ["x d d"],
+"m": ["y x not_d x x d"],
+"not_m": ["y x d x x not_d"],
+"m2": ["y x d d x x not_d not_d"],
+"e": ["not_d x x d"],
+"not_e": ["d x x not_d"],
+"e2": ["d d x x not_d not_d"],
+"s": ["y y x not_d x x d"],
+"not_s": ["y y x d x x not_d"],
+"s2": ["y y x d d x x not_d not_d"],
+"x": ["x"],
+"not_x": ["x x x"],
+"x2": ["x x"],
+"y": ["y"],
+"not_y": ["not_y"],
+"y2": ["y y"],
+"z": ["not_y x"],
+"not_z": ["y x"],
+"z2": ["y x x not_y"]
+        
+        
+        
+        
 """
 
 
