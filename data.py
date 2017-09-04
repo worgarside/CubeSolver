@@ -22,11 +22,17 @@ SOLVED_SIDES = [(Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE
                 (Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.ORANGE,
                  Color.ORANGE, Color.ORANGE)]
 
-MOVES = ["u", "not_u", "u2", "d", "not_d", "d2", "l", "not_l", "l2", "r", "not_r", "r2", "f", "not_f", "f2", "b",
-         "not_b", "b2", "m", "not_m", "m2", "e", "not_e", "e2", "s", "not_s", "s2", "x", "not_x", "y", "not_y",
-         "z", "not_z"]
-MOVES2 = ["x", "r", "u2", "d", "not_z", "not_b", "f2", "r2", "d",
-          "not_x", "not_s", "l2", "y", "not_r", "not_f", "m"]
+MOVES = ['u', 'not_u', 'u2', 'd', 'not_d', 'd2', 'l', 'not_l', 'l2', 'r', 'not_r', 'r2', 'f', 'not_f', 'f2', 'b',
+         'not_b', 'b2', 'm', 'not_m', 'm2', 'e', 'not_e', 'e2', 's', 'not_s', 's2', 'x', 'not_x', 'y', 'not_y',
+         'z', 'not_z']
+MOVES2 = ['x', 'r', 'u2', 'd', 'not_z', 'not_b', 'f2', 'r2', 'd',
+          'not_x', 'not_s', 'l2', 'y', 'not_r', 'not_f', 'm']
 
-MOVES3 = ["r", "u", "not_r", "u", "r", "u2", "not_r"]
-MOVES4 = ["blue", "white", "not_blue", "white", "blue", "white2", "not_blue"]
+MOVES3 = ['r', 'u', 'not_r', 'u', 'r', 'u2', 'not_r']
+
+MOVES4 = ['blue', 'white', 'not_blue', 'white', 'blue', 'white2', 'not_blue']
+
+SUPERFLIP = ['r', 'l', 'u2', 'f', 'not_u', 'd', 'f2', 'r2', 'b2', 'l', 'u2',
+             'not_f', 'not_b', 'u', 'r2', 'd','f2', 'u', 'r2', 'u']
+
+MOVES5 = ['m2', 'u', 'm2', 'u2', 'm2', 'u', 'm2']

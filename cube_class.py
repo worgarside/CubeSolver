@@ -1,5 +1,7 @@
 from side_class import Side
 from rotation_class import Rotation
+import data
+
 
 class Cube:
     """A Rubik's Cube with 54 different coloured tiles"""
@@ -171,10 +173,10 @@ class Cube:
 
     def solve(self):
         # runs solve functions to produce sequence of digital moves to solve
-        self.digital_solve_sequence = ["r", "u", "not_r", "u", "r", "u2", "not_r"]
-        self.convert_digital_to_robot()
+        self.digital_solve_sequence = data.MOVES5
+        self.convert_digital_to_colors()
 
-    def convert_digital_to_robot(self):
+    def convert_digital_to_colors(self):
         move_to_color_dict = {
             'u': [self.color_side_dict['UP']],
             'not_u': ['not_' + self.color_side_dict['UP']],

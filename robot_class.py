@@ -56,16 +56,17 @@ class Robot:
 
         Sound.beep()
 
-    def exit(self):
+    def exit(self, stall_flag=False):
         ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
         ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.GREEN)
 
-        self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=self.cs_speed)
-        self.cs_arm.wait_for_position(0)
-        # self.cradle.run_to_abs_pos(position_sp=0, speed_sp=self.cradle_speed)
-        # self.cradle.wait_for_position(0)
-        self.grabber.run_to_abs_pos(position_sp=0, speed_sp=self.grabber_speed, ramp_down_sp=50)
-        self.grabber.wait_for_position(0)
+        if not stall_flag:
+            self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=self.cs_speed)
+            self.cs_arm.wait_for_position(0)
+            # self.cradle.run_to_abs_pos(position_sp=0, speed_sp=self.cradle_speed)
+            # self.cradle.wait_for_position(0)
+            self.grabber.run_to_abs_pos(position_sp=0, speed_sp=self.grabber_speed, ramp_down_sp=50)
+            self.grabber.wait_for_position(0)
 
         sleep(1)
 
@@ -78,6 +79,7 @@ class Robot:
         print()
         print()
         Sound.tone([(800, 100, 0), (600, 150, 0), (400, 100, 0)]).wait()
+        exit()
 
     def rotate_cradle(self, angle=90):
         # 1200 is 1/4 turn - 40/3:1 gear ratio
@@ -88,13 +90,13 @@ class Robot:
 
     def grab_cube(self, iters=1):
         for x in range(iters):
-            self.grabber.run_to_abs_pos(position_sp=self.gbr_grab_pos, speed_sp=self.grabber_speed, ramp_down_sp=100)
+            self.grabber.run_to_abs_pos(position_sp=self.gbr_grab_pos, speed_sp=self.grabber_speed)
             self.grabber.wait_for_position(self.gbr_grab_pos)
 
-            self.grabber.run_to_abs_pos(position_sp=-5, speed_sp=self.grabber_speed, ramp_down_sp=100)
-            self.grabber.wait_for_position(-5)
+            self.grabber.run_to_abs_pos(position_sp=-10, speed_sp=self.grabber_speed)
+            self.grabber.wait_for_position(-10)
 
-            self.grabber.run_to_abs_pos(position_sp=self.gbr_guard_pos, speed_sp=self.grabber_speed, ramp_down_sp=100)
+            self.grabber.run_to_abs_pos(position_sp=self.gbr_guard_pos, speed_sp=self.grabber_speed)
             self.grabber.wait_for_position(self.gbr_guard_pos)
 
     def increment_progressbar(self):
@@ -241,12 +243,8 @@ class Robot:
 
     def r_move_d2(self):
         # Set guards to block position
-        self.grabber.run_to_abs_pos(position_sp=self.gbr_guard_pos, speed_sp=self.grabber_speed)
-        self.grabber.wait_for_position(self.gbr_guard_pos)
-
-        # Rotate Cradle -90
-        self.rotate_cradle(-186)
-        self.rotate_cradle(6)
+        self.r_move_d()
+        self.r_move_d()
 
     def r_move_x(self):
         # Grab cube
