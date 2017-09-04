@@ -206,7 +206,42 @@ new_pos = rubiks_bot.grabber.position - 90
 "not_z": ["y x"],
 "z2": ["y x x not_y"]
         
-        
+'u':
+'not_u':
+'u2':
+'d':
+'not_d':
+'d2':
+'l':
+'not_l':
+'l2':
+'r':
+'not_r':
+'r2':
+'f':
+'not_f':
+'f2':
+'b':
+'not_b':
+'b2':
+'m':
+'not_m':
+'m2':
+'e':
+'not_e':
+'e2':
+'s':
+'not_s':
+'s2':
+'x':
+'not_x':
+'x2':
+'y':
+'not_y':
+'y2':
+'z':
+'not_z':
+'z2':
         
         
 """
