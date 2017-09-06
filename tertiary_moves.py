@@ -1,10 +1,11 @@
-from cube_class import Cube
 from rotation_class import Rotation
 from side_class import Side
+from copy import deepcopy
 
 
-def d(self, append_flag = True):
-    c = Cube(self._pos)
+def d(self, append_flag=True):
+    # c = Cube(self._pos)
+    c = deepcopy(self)
     self.set_left(c.left[:6] + c.back[6:])
     self.set_right(c.right[:6] + c.front[6:])
     self.set_front(c.front[:6] + c.left[6:])
@@ -14,7 +15,8 @@ def d(self, append_flag = True):
 
 
 def not_d(self, append_flag=True):
-    c = Cube(self._pos)
+    # c = Cube(self._pos)
+    c = deepcopy(self)
     self.set_left(c.left[:6] + c.front[6:])
     self.set_right(c.right[:6] + c.back[6:])
     self.set_front(c.front[:6] + c.right[6:])
@@ -30,7 +32,8 @@ def d2(self, append_flag=True):
 
 
 def x(self, append_flag=True):
-    c = Cube(self._pos)
+    # c = Cube(self._pos)
+    c = deepcopy(self)
     self.set_up(c.front)
     self.set_down(c.back[::-1])  # [::-1] reverses the string
     self.set_front(c.down)
@@ -47,7 +50,8 @@ def x2(self, append_flag=True):
 
 
 def y(self, append_flag=True):
-    c = Cube(self._pos)
+    # c = Cube(self._pos)
+    c = deepcopy(self)
     self.set_left(c.front)
     self.set_right(c.back)
     self.set_front(c.right)
@@ -58,7 +62,8 @@ def y(self, append_flag=True):
 
 
 def not_y(self, append_flag=True):
-    c = Cube(self._pos)
+    # c = Cube(self._pos)
+    c = deepcopy(self)
     self.set_left(c.back)
     self.set_right(c.front)
     self.set_front(c.left)
@@ -69,6 +74,6 @@ def not_y(self, append_flag=True):
 
 
 def y2(self, append_flag=True):
-    y(self)
-    y(self)
+    y(self, False)
+    y(self, False)
     self.robot_solve_sequence.append('y2') if append_flag else 0

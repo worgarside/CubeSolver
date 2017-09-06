@@ -115,3 +115,23 @@ def not_orange(self):
 def orange2(self):
     method = get_tertiary_method(self, Color.ORANGE, True, True)
     run_smove_method(self, Color.ORANGE, method)
+
+
+def x(self):
+    run_smove_method(self, Color.NONE, 'x')
+
+
+def x2(self):
+    run_smove_method(self, Color.NONE, 'x2')
+
+
+def y(self):
+    run_smove_method(self, Color.NONE, 'y')
+
+
+def y2(self):
+    run_smove_method(self, Color.NONE, 'y2')
+
+
+def not_y(self):
+    run_smove_method(self, Color.NONE, 'not_y')

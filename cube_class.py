@@ -1,6 +1,8 @@
 from side_class import Side
 from rotation_class import Rotation
 import data
+import primary_moves as pmove
+from copy import deepcopy
 
 
 class Cube:
@@ -171,10 +173,40 @@ class Cube:
             print('\nrotate_side: invalid direction')
             exit()
 
-    def solve(self):
-        # runs solve functions to produce sequence of digital moves to solve
-        self.digital_solve_sequence = data.MOVES5
+    def generate_solve_sequences(self):
+        # runs solve functions to produce sequence of digital moves to generate_solve_sequences
+        self.digital_solve_sequence = data.MOVES8[:6]
+        print('\n')
+        self.normalize_digital_move_sequence()
         self.convert_digital_to_colors()
+        self.create_robot_solve_sequence()
+
+    def normalize_digital_move_sequence(self):
+        temp_sequence = self.digital_solve_sequence
+        print(temp_sequence)
+        for index, move in enumerate(temp_sequence):
+            norm_dict = {
+                'm': self.norm_m,
+                'not_m': self.norm_not_m,
+                'm2': self.norm_m2,
+                'e': self.norm_e,
+                'not_e': self.norm_not_e,
+                'e2': self.norm_e2,
+                's': self.norm_s,
+                'not_s': self.norm_not_s,
+                's2': self.norm_s2,
+            }
+
+            temp_sequence = temp_sequence[:index+1] + norm_dict.get(move, self.norm_default)(temp_sequence[index+1:])
+        print(temp_sequence)
+        self.digital_solve_sequence = temp_sequence
+
+
+        
+    def optimize_digital_move_sequence(self):
+        # combine repeated moves
+        # eliminate consecutive opposite moves
+        pass
 
     def convert_digital_to_colors(self):
         move_to_color_dict = {
@@ -207,6 +239,322 @@ class Cube:
             's2': [self.color_side_dict['FRONT'] + '2', self.color_side_dict['BACK'] + '2']
         }
 
-        for m in self.digital_solve_sequence:
-            for c in move_to_color_dict[m]:
-                self.color_solve_sequence.append(c.lower())
+        for move in self.digital_solve_sequence:
+            for color in move_to_color_dict[move]:
+                self.color_solve_sequence.append(color.lower())
+
+    def create_robot_solve_sequence(self):
+        c = deepcopy(self)
+        for pm in c.color_solve_sequence:
+            method = getattr(pmove, pm)
+            method(c)
+            self.robot_solve_sequence = c.robot_solve_sequence
+
+    def norm_default(selfself, temp_sequence):
+        return temp_sequence
+
+    def norm_m(self, temp_sequence):
+        move_m_dict = {
+            'u': 'b',
+            'not_u': 'not_b',
+            'u2': 'b2',
+            'd': 'f',
+            'not_d': 'not_f',
+            'd2': 'f2',
+            'l': 'l',
+            'not_l': 'not_l',
+            'l2': 'l2',
+            'r': 'r',
+            'not_r': 'not_r',
+            'r2': 'r2',
+            'f': 'u',
+            'not_f': 'not_u',
+            'f2': 'u2',
+            'b': 'd',
+            'not_b': 'not_d',
+            'b2': 'd2',
+            'm': 'm',
+            'not_m': 'not_m',
+            'm2': 'm2',
+            'e': 's',
+            'not_e': 'not_s',
+            'e2': 's2',
+            's': 'not_e',
+            'not_s': 'e',
+            's2': 'e2'
+        }
+        for i in range(len(temp_sequence)):
+            temp_sequence[i] = move_m_dict[temp_sequence[i]]
+        return temp_sequence
+
+    def norm_not_m(self, temp_sequence):
+        move_not_m_dict = {
+            'u': 'f',
+            'not_u': 'not_f',
+            'u2': 'f2',
+            'd': 'b',
+            'not_d': 'not_b',
+            'd2': 'b2',
+            'l': 'l',
+            'not_l': 'not_l',
+            'l2': 'l2',
+            'r': 'r',
+            'not_r': 'not_r',
+            'r2': 'r2',
+            'f': 'd',
+            'not_f': 'not_d',
+            'f2': 'd2',
+            'b': 'u',
+            'not_b': 'not_u',
+            'b2': 'u2',
+            'm': 'm',
+            'not_m': 'not_m',
+            'm2': 'm2',
+            'e': 'not_s',
+            'not_e': 's',
+            'e2': 's2',
+            's': 'not_e',
+            'not_s': 'e',
+            's2': 'e2'
+        }
+        for i in range(len(temp_sequence)):
+            temp_sequence[i] = move_not_m_dict[temp_sequence[i]]
+        return temp_sequence
+
+    def norm_m2(self, temp_sequence):
+        move_m2_dict = {
+            'u': 'd',
+            'not_u': 'not_d',
+            'u2': 'd2',
+            'd': 'u',
+            'not_d': 'not_u',
+            'd2': 'u2',
+            'l': 'l',
+            'not_l': 'not_l',
+            'l2': 'l2',
+            'r': 'r',
+            'not_r': 'not_r',
+            'r2': 'r2',
+            'f': 'b',
+            'not_f': 'not_b',
+            'f2': 'b2',
+            'b': 'f',
+            'not_b': 'not_f',
+            'b2': 'f2',
+            'm': 'm',
+            'not_m': 'not_m',
+            'm2': 'm2',
+            'e': 'not_e',
+            'not_e': 'e',
+            'e2': 'e2',
+            's': 'not_s',
+            'not_s': 's',
+            's2': 's2'
+        }
+        for i in range(len(temp_sequence)):
+            temp_sequence[i] = move_m2_dict[temp_sequence[i]]
+        return temp_sequence
+
+    def norm_e(self, temp_sequence):
+        move_e_dict = {
+            'u': 'u',
+            'not_u': 'not_u',
+            'u2': 'u2',
+            'd': 'd',
+            'not_d': 'not_d',
+            'd2': 'd2',
+            'l': 'b',
+            'not_l': 'not_b',
+            'l2': 'b2',
+            'r': 'f',
+            'not_r': 'not_f',
+            'r2': 'f2',
+            'f': 'l',
+            'not_f': 'not_l',
+            'f2': 'l2',
+            'b': 'r',
+            'not_b': 'not_r',
+            'b2': 'r2',
+            'm': 'not_s',
+            'not_m': 's',
+            'm2': 's2',
+            'e': 'e',
+            'not_e': 'not_e',
+            'e2': 'e2',
+            's': 'm',
+            'not_s': 'not_m',
+            's2': 's2'
+        }
+        for i in range(len(temp_sequence)):
+            temp_sequence[i] = move_e_dict[temp_sequence[i]]
+        return temp_sequence
+
+    def norm_not_e(self, temp_sequence):
+        move_not_e_dict = {
+            'u': 'f',
+            'not_u': 'not_f',
+            'u2': 'f2',
+            'd': 'b',
+            'not_d': 'not_b',
+            'd2': 'b2',
+            'l': 'l',
+            'not_l': 'not_l',
+            'l2': 'l2',
+            'r': 'r',
+            'not_r': 'not_r',
+            'r2': 'r2',
+            'f': 'd',
+            'not_f': 'not_d',
+            'f2': 'd2',
+            'b': 'u',
+            'not_b': 'not_u',
+            'b2': 'u2',
+            'm': 'not_s',
+            'not_m': 's',
+            'm2': 'm2',
+            'e': 'e',
+            'not_e': 'not_e',
+            'e2': 'e2',
+            's': 'm',
+            'not_s': 'not_m',
+            's2': 's2'
+        }
+        for i in range(len(temp_sequence)):
+            temp_sequence[i] = move_not_e_dict[temp_sequence[i]]
+        return temp_sequence
+
+    def norm_e2(self, temp_sequence):
+        move_e2_dict = {
+            'u': 'd',
+            'not_u': 'not_d',
+            'u2': 'd2',
+            'd': 'u',
+            'not_d': 'not_u',
+            'd2': 'u2',
+            'l': 'l',
+            'not_l': 'not_l',
+            'l2': 'l2',
+            'r': 'r',
+            'not_r': 'not_r',
+            'r2': 'r2',
+            'f': 'b',
+            'not_f': 'not_b',
+            'f2': 'b2',
+            'b': 'f',
+            'not_b': 'not_f',
+            'b2': 'f2',
+            'm': 'not_m',
+            'not_m': 'm',
+            'm2': 'm2',
+            'e': 'e',
+            'not_e': 'not_e',
+            'e2': 'e2',
+            's': 'not_s',
+            'not_s': 's',
+            's2': 's2'
+        }
+        for i in range(len(temp_sequence)):
+            temp_sequence[i] = move_e2_dict[temp_sequence[i]]
+        return temp_sequence
+
+    def norm_s(self, temp_sequence):
+        move_s_dict = {
+            'u': 'l',
+            'not_u': 'not_l',
+            'u2': 'l2',
+            'd': 'r',
+            'not_d': 'not_r',
+            'd2': 'r2',
+            'l': 'd',
+            'not_l': 'not_d',
+            'l2': 'd2',
+            'r': 'u',
+            'not_r': 'not_u',
+            'r2': 'u2',
+            'f': 'f',
+            'not_f': 'not_f',
+            'f2': 'f2',
+            'b': 'b',
+            'not_b': 'not_b',
+            'b2': 'b2',
+            'm': 'e',
+            'not_m': 'not_e',
+            'm2': 'e2',
+            'e': 'not_m',
+            'not_e': 'm',
+            'e2': 'e2',
+            's': 's',
+            'not_s': 'not_s',
+            's2': 's2'
+        }
+        for i in range(len(temp_sequence)):
+            temp_sequence[i] = move_s_dict[temp_sequence[i]]
+        return temp_sequence
+
+    def norm_not_s(self, temp_sequence):
+        move_not_s_dict = {
+            'u': 'r',
+            'not_u': 'not_r',
+            'u2': 'r2',
+            'd': 'l',
+            'not_d': 'not_l',
+            'd2': 'l2',
+            'l': 'u',
+            'not_l': 'not_u',
+            'l2': 'u2',
+            'r': 'd',
+            'not_r': 'not_d',
+            'r2': 'd2',
+            'f': 'f',
+            'not_f': 'not_f',
+            'f2': 'f2',
+            'b': 'b',
+            'not_b': 'not_b',
+            'b2': 'b2',
+            'm': 'not_e',
+            'not_m': 'e',
+            'm2': 'e2',
+            'e': 'm',
+            'not_e': 'not_m',
+            'e2': 'e2',
+            's': 's',
+            'not_s': 'not_s',
+            's2': 's2'
+        }
+        for i in range(len(temp_sequence)):
+            temp_sequence[i] = move_not_s_dict[temp_sequence[i]]
+        return temp_sequence
+
+    def norm_s2(self, temp_sequence):
+        move_s2_dict = {
+            'u': 'd',
+            'not_u': 'not_d',
+            'u2': 'd2',
+            'd': 'u',
+            'not_d': 'not_u',
+            'd2': 'u2',
+            'l': 'r',
+            'not_l': 'not_r',
+            'l2': 'r2',
+            'r': 'l',
+            'not_r': 'not_l',
+            'r2': 'l2',
+            'f': 'f',
+            'not_f': 'not_f',
+            'f2': 'f2',
+            'b': 'b',
+            'not_b': 'not_b',
+            'b2': 'b2',
+            'm': 'not_m',
+            'not_m': 'm',
+            'm2': 'm2',
+            'e': 'not_e',
+            'not_e': 'e',
+            'e2': 'e2',
+            's': 's',
+            'not_s': 'not_s',
+            's2': 's2'
+        }
+        for i in range(len(temp_sequence)):
+            temp_sequence[i] = move_s2_dict[temp_sequence[i]]
+        return temp_sequence

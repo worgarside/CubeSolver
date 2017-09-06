@@ -23,7 +23,7 @@ class Robot:
         self.cs_cen_pos = -2500
         self.cradle_speed = 1020
         self.cs_speed = 1020
-        self.grabber_speed = 380
+        self.grabber_speed = 350
         self._scanned_cubies = 0
 
         self.gbr_no_guard_pos = 65

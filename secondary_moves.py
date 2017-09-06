@@ -104,7 +104,6 @@ def m(self):
     tmove.x2(self)
     tmove.d(self)
 
-
 def not_m(self):
     tmove.y(self)
     tmove.x(self)
@@ -170,8 +169,6 @@ def x(self):
 def not_x(self):
     tmove.x2(self)
     tmove.x(self)
-
-
 
 def x2(self):
     tmove.x2(self)
