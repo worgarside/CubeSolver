@@ -4,7 +4,6 @@ from copy import deepcopy
 
 
 def d(self, append_flag=True):
-    # c = Cube(self._pos)
     c = deepcopy(self)
     self.set_left(c.left[:6] + c.back[6:])
     self.set_right(c.right[:6] + c.front[6:])
@@ -15,7 +14,6 @@ def d(self, append_flag=True):
 
 
 def not_d(self, append_flag=True):
-    # c = Cube(self._pos)
     c = deepcopy(self)
     self.set_left(c.left[:6] + c.front[6:])
     self.set_right(c.right[:6] + c.back[6:])
@@ -32,7 +30,6 @@ def d2(self, append_flag=True):
 
 
 def x(self, append_flag=True):
-    # c = Cube(self._pos)
     c = deepcopy(self)
     self.set_up(c.front)
     self.set_down(c.back[::-1])  # [::-1] reverses the string
@@ -50,7 +47,6 @@ def x2(self, append_flag=True):
 
 
 def y(self, append_flag=True):
-    # c = Cube(self._pos)
     c = deepcopy(self)
     self.set_left(c.front)
     self.set_right(c.back)
@@ -62,7 +58,6 @@ def y(self, append_flag=True):
 
 
 def not_y(self, append_flag=True):
-    # c = Cube(self._pos)
     c = deepcopy(self)
     self.set_left(c.back)
     self.set_right(c.front)

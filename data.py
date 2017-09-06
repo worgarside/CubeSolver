@@ -45,6 +45,5 @@ MOVES6 = ['m', 'u', 'm', 'u', 'm', 'u']
 
 MOVES7 = ['m', 'e2', 'not_f', 'not_m', 'e2', 'l2', 'l', 'not_s', 'l2', 'd2', 'u', 'u2', 'not_e', 'l2', 'f']
 
-MOVES8 = ['m', 'e2', 'not_f', 'not_m', 'e2', 'l2', 'l', 'not_s', 'l2', 'd2', 'u', 'u2', 'not_e', 'l2', 'f', 'b2', 'u2', 'f', 'not_d', 'l', 'u', 'u', 'e2', 'd', 'b', 'b', 'r2', 'f', 'd2', 's']
-
-MOVES9 = ['m', 'e2', 'not_f']#, 'not_m', 'e2', 'l2']
+MOVES8 = ['m', 'e2', 'not_f', 'not_m', 'e2', 'l2', 'l', 'not_s', 'l2', 'd2', 'u', 'u2', 'not_e', 'l2', 'f', 'b2',
+          'u2', 'f', 'not_d', 'l', 'u', 'u', 'e2', 'd', 'b', 'b', 'r2', 'f', 'd2', 's']
