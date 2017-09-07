@@ -1,5 +1,11 @@
 import tertiary_moves as tmove
 
+"""
+These methods all split down the human-readable moves into moves that the robot can perform.
+This entire file is an alternative to using a really big, complicated dictionary. This is a move 'active'
+ solution than a 'passive' dictionary
+"""
+
 
 def u(self):
     tmove.x2(self)

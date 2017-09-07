@@ -14,16 +14,17 @@ from ev3dev.ev3 import Sound
 
 def main():
     if robot_env:
-        simulate_bot = True
+        simulate_init = False
+        simulate_scan = True
         Sound.beep()
         rubiks_bot = Robot()
         try:
-            rubiks_bot.init_motors(simulate_bot)
-            rubiks_cube = Cube(rubiks_bot.scan_cube(simulate_bot))
-            print(rubiks_cube)
+            rubiks_bot.init_motors(simulate_init)
+            rubiks_cube = Cube(rubiks_bot.scan_cube(simulate_scan))
 
+            print(rubiks_cube)
             rubiks_cube.generate_solve_sequences()
-            # print(rubiks_cube.robot_solve_sequence)
+            print(rubiks_cube.robot_solve_sequence)
             rubiks_bot.run_move_sequence(rubiks_cube.robot_solve_sequence)
 
         except KeyboardInterrupt:

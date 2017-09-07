@@ -44,7 +44,7 @@ class Cube:
 
         return cube_net_spaced
 
-    # Updates the sides of the cube to ensure they all match up
+    # Updates the sides of the cube from the main position variable
     def update_sides(self):
         self.up = self._pos[:9]
         self.down = self._pos[45:54]
@@ -55,6 +55,7 @@ class Cube:
 
         self.set_color_sides()
 
+    # Sets the colored face variables for use in move conversion
     def set_color_sides(self):
         self.color_side_dict = {
             'UP': self.up[4].name,
@@ -173,17 +174,18 @@ class Cube:
             print('\nrotate_side: invalid direction')
             exit()
 
+    # Generates main solves sequence then processes it from human to robot
     def generate_solve_sequences(self):
         # runs solve functions to produce sequence of digital moves to generate_solve_sequences
-        self.digital_solve_sequence = data.MOVES8[:6]
+        self.digital_solve_sequence = data.MOVES9
         print('\n')
         self.normalize_digital_move_sequence()
         self.convert_digital_to_colors()
         self.create_robot_solve_sequence()
 
+    # Changes digital/human moves to account for frame of reference changes with M/E/S robot style moves
     def normalize_digital_move_sequence(self):
         temp_sequence = self.digital_solve_sequence
-        print(temp_sequence)
         for index, move in enumerate(temp_sequence):
             norm_dict = {
                 'm': self.norm_m,
@@ -198,7 +200,6 @@ class Cube:
             }
 
             temp_sequence = temp_sequence[:index+1] + norm_dict.get(move, self.norm_default)(temp_sequence[index+1:])
-        print(temp_sequence)
         self.digital_solve_sequence = temp_sequence
 
     def optimize_digital_move_sequence(self):
@@ -206,6 +207,11 @@ class Cube:
         # eliminate consecutive opposite moves
         pass
 
+    """
+    Converts each of the SIDE based moves into COLOR based moves
+    This means that even though the robot rotates the cube in order to perform 
+    certain moves, the frame of reference remains unchanged
+    """
     def convert_digital_to_colors(self):
         move_to_color_dict = {
             'u': [self.color_side_dict['UP']],
@@ -241,13 +247,16 @@ class Cube:
             for color in move_to_color_dict[move]:
                 self.color_solve_sequence.append(color.lower())
 
+    # Uses the primary, secondary and tertiary move levels to create a robot-usable move sequence
     def create_robot_solve_sequence(self):
-        c = deepcopy(self)
-        for pm in c.color_solve_sequence:
+        temp_cube = deepcopy(self)
+        for index, pm in enumerate(temp_cube.color_solve_sequence):
+            print(temp_cube.robot_solve_sequence)
             method = getattr(pmove, pm)
-            method(c)
-            self.robot_solve_sequence = c.robot_solve_sequence
+            method(temp_cube)
+            self.robot_solve_sequence = temp_cube.robot_solve_sequence
 
+    # Static methods to normalize a sequence passed to it from the main normalize method
     @staticmethod
     def norm_default(sequence):
         return sequence

@@ -1,5 +1,9 @@
 from color_class import Color
 
+"""
+A file to hold constants for testing purposes, mainly to avoid cluttering up other classes
+"""
+
 # Default cube position as a net, written as rows from up to down
 SOLVED_POS = [Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE,
               Color.WHITE, Color.WHITE, Color.GREEN, Color.GREEN, Color.GREEN, Color.RED, Color.RED, Color.RED,
@@ -47,3 +51,5 @@ MOVES7 = ['m', 'e2', 'not_f', 'not_m', 'e2', 'l2', 'l', 'not_s', 'l2', 'd2', 'u'
 
 MOVES8 = ['m', 'e2', 'not_f', 'not_m', 'e2', 'l2', 'l', 'not_s', 'l2', 'd2', 'u', 'u2', 'not_e', 'l2', 'f', 'b2',
           'u2', 'f', 'not_d', 'l', 'u', 'u', 'e2', 'd', 'b', 'b', 'r2', 'f', 'd2', 's']
+
+MOVES9 = ['b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd', 'b', 'u', 'f', 'd']

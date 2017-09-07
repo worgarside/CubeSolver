@@ -10,6 +10,8 @@ from ev3dev.helper import LargeMotor, MediumMotor, ColorSensor
 
 
 class Robot:
+    """A LEGO EV3 Robot with 3 motors, a colour sensor, and a touch sensor"""
+
     def __init__(self):
         self.cradle = LargeMotor(OUTPUT_A)
         self.grabber = LargeMotor(OUTPUT_B)
@@ -30,6 +32,7 @@ class Robot:
         self.gbr_guard_pos = -35
         self.gbr_grab_pos = -90
 
+    # Allows user to manually position the motors at their starting position
     def init_motors(self, simulate=False):
         if not simulate:
             self.cradle.stop_action = "coast"
@@ -56,6 +59,7 @@ class Robot:
 
         Sound.beep()
 
+    # Custom exit method to reposition motors back to starting position and ensure safe shutdown
     def exit(self, stall_flag=False):
         ev3.Leds.set_color(ev3.Leds.LEFT, ev3.Leds.GREEN)
         ev3.Leds.set_color(ev3.Leds.RIGHT, ev3.Leds.GREEN)
@@ -81,6 +85,7 @@ class Robot:
         Sound.tone([(800, 100, 0), (600, 150, 0), (400, 100, 0)]).wait()
         exit()
 
+    # Rotates the cradle by the provided angle
     def rotate_cradle(self, angle=90):
         # 1200 is 1/4 turn - 40/3:1 gear ratio
         mod_angle = angle * (40 / 3)
@@ -88,17 +93,18 @@ class Robot:
         self.cradle.run_to_abs_pos(position_sp=pos, speed_sp=self.cradle_speed, ramp_down_sp=100)
         self.cradle.wait_for_position(pos)
 
-    def grab_cube(self, iters=1):
-        for x in range(iters):
-            self.grabber.run_to_abs_pos(position_sp=self.gbr_grab_pos, speed_sp=self.grabber_speed)
-            self.grabber.wait_for_position(self.gbr_grab_pos)
+    # Rotates the cube in the x direction
+    def grab_cube(self):
+        self.grabber.run_to_abs_pos(position_sp=self.gbr_grab_pos, speed_sp=self.grabber_speed)
+        self.grabber.wait_for_position(self.gbr_grab_pos)
 
-            self.grabber.run_to_abs_pos(position_sp=-10, speed_sp=self.grabber_speed)
-            self.grabber.wait_for_position(-10)
+        self.grabber.run_to_abs_pos(position_sp=-10, speed_sp=self.grabber_speed)
+        self.grabber.wait_for_position(-10)
 
-            self.grabber.run_to_abs_pos(position_sp=self.gbr_guard_pos, speed_sp=self.grabber_speed)
-            self.grabber.wait_for_position(self.gbr_guard_pos)
+        self.grabber.run_to_abs_pos(position_sp=self.gbr_guard_pos, speed_sp=self.grabber_speed)
+        self.grabber.wait_for_position(self.gbr_guard_pos)
 
+    # Increments the progressbar when scanning the cube to display progress to the user
     def increment_progressbar(self):
         # Progressbar will change width depending on console size
         dims = get_terminal_size()
@@ -118,10 +124,12 @@ class Robot:
         stdout.write("| %.2f%%" % ((self._scanned_cubies / 54) * 100))
         stdout.flush()
 
+    # Scans the top face of the cube
     def scan_up_face(self):
         middle = []
         corner = []
 
+        # Moves the grabber out of the way
         self.grabber.run_to_abs_pos(position_sp=self.gbr_no_guard_pos, speed_sp=self.grabber_speed)
         self.grabber.wait_for_position(self.gbr_no_guard_pos)
 
@@ -138,8 +146,16 @@ class Robot:
 
             self.cs_arm.run_to_abs_pos(position_sp=self.cs_cor_pos, speed_sp=self.cs_speed)
             self.cs_arm.wait_for_position(self.cs_cor_pos)
-            corner.append(Color(self.cs.value()))
 
+            # Checks that the color sensor is not reading no color or too dark a value
+            if self.cs.value() != (0 or 1):
+                corner.append(Color(self.cs.value()))
+            else:
+                # Currently just exits the program if an extreme value is read
+                print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+                print(str(Color(self.cs.value())))
+                print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+                exit()
             self.increment_progressbar()
 
             # Prep for next middle
@@ -161,19 +177,23 @@ class Robot:
 
         return corner[1], middle[1], corner[0], middle[2], centre, middle[0], corner[2], middle[3], corner[3]
 
+    # Scans all 6 faces and returns the cube's position
     def scan_cube(self, simulate=False):
-        # - X X X Y X X X
-        # U F D B - R - L    <---- Initial State
-        # L B R F - D - U   <---- Final State!!
+        """
+        - X X X Y X X X
+        U F D B - R - L    <---- Initial State
+        L B R F - D - U   <---- Final State!!
+        """
 
         print("Scanning Rubik's Cube...")
 
         sides = [[], [], [], [], [], []]
 
-        # Move swing arm out of the way
+        # Move grabber out of the way
         self.grabber.run_to_abs_pos(position_sp=self.gbr_no_guard_pos, speed_sp=self.grabber_speed / 2)
         self.grabber.wait_for_position(self.gbr_no_guard_pos)
 
+        # The scanning process can be simulated for testing purposes
         if not simulate:
             for i in range(len(sides)):
                 sides[i] = self.scan_up_face()
@@ -198,6 +218,7 @@ class Robot:
 
             sides = data.SOLVED_SIDES
 
+        # These transformations align the cubes faces correctly, as they are inherently rotated when scanning the cube
         sides[0] = sides[0][6:7] + sides[0][3:4] + sides[0][0:1] + sides[0][7:8] + sides[0][4:5] + sides[0][1:2] + \
             sides[0][8:9] + sides[0][5:6] + sides[0][2:3]
 
@@ -210,11 +231,13 @@ class Robot:
         sides[3] = sides[3][6:7] + sides[3][3:4] + sides[3][0:1] + sides[3][7:8] + sides[3][4:5] + sides[3][1:2] + \
             sides[3][8:9] + sides[3][5:6] + sides[3][2:3]
 
+        # Makes sure all the lists of colors are split down to form one list (Cube._pos)
         cube_pos = []
         for side in sides:
             for i in side:
                 cube_pos.append(i)
 
+        # Re-orders the cube sides to match the ordering of the cube position variable
         corrected_cube_pos = cube_pos[45:] + \
             cube_pos[0:3] + cube_pos[27:30] + cube_pos[18:21] + cube_pos[9:12] + \
             cube_pos[3:6] + cube_pos[30:33] + cube_pos[21:24] + cube_pos[12:15] + \
@@ -223,6 +246,7 @@ class Robot:
 
         return corrected_cube_pos
 
+    # Robot moves
     def r_move_d(self):
         # Set guards to block position
         self.grabber.run_to_abs_pos(position_sp=self.gbr_guard_pos, speed_sp=self.grabber_speed)
@@ -276,15 +300,16 @@ class Robot:
         # Rotate Cradle +90
         self.rotate_cradle(180)
 
+    # Allows any valid move to be actuated by passing a string in
     def run_move_method(self, move):
         try:
             method = getattr(Robot, 'r_move_' + move)
             method(self)
         except AttributeError as e:
-            print('rmove failed: \'' + move + '\' | ' + str(e))
+            print('r_move failed: \'' + move + '\' | ' + str(e))
             exit()
 
+    # Allows valid lists of moves to be passed in and actuated
     def run_move_sequence(self, move_chain):
-        # Check move_chain is 'robotified'
         for move in move_chain:
             self.run_move_method(move)

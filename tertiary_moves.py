@@ -2,6 +2,12 @@ from rotation_class import Rotation
 from side_class import Side
 from copy import deepcopy
 
+"""
+These are the lowest level moves, and are the only ones the robot is capable of actuating.
+They are run on a virtual cube, then appended to it's robot_solve_sequence for running through 
+the robot upon completion
+"""
+
 
 def d(self, append_flag=True):
     c = deepcopy(self)

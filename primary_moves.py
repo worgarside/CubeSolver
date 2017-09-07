@@ -2,6 +2,7 @@ from color_class import Color
 import secondary_moves as smove
 
 
+# Returns a tertiary method mainly based on color
 def get_tertiary_method(self, color, negative_flag=False, double_flag=False):
     values = self.color_side_dict.values()
     color_pos = list(values).index(color.name)
@@ -18,6 +19,7 @@ def get_tertiary_method(self, color, negative_flag=False, double_flag=False):
     return method
 
 
+# Runs a secondary move on a virtual cube to splits it down into its composite tertiary moves
 def run_smove_method(self, color, method):
     try:
         move_method = getattr(smove, method)
@@ -26,6 +28,11 @@ def run_smove_method(self, color, method):
         print('smove.' + color.name.lower() + ' failed: \'' + method + '\' | ' + str(e))
         exit()
 
+
+"""
+The following methods are for moving a side nominated by its color, regardless of that sides current location.
+This allows the cube to be roated to match the robot's needs but still have the correct sequence performed on it.
+"""
 
 def white(self):
     method = get_tertiary_method(self, Color.WHITE)
