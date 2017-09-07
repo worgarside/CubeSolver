@@ -95,7 +95,7 @@ class Robot:
 
     # Rotates the cube in the x direction
     def grab_cube(self):
-        self.grabber.run_to_abs_pos(position_sp=self.gbr_grab_pos, speed_sp=self.grabber_speed)
+        self.grabber.run_to_abs_pos(position_sp=self.gbr_grab_pos, speed_sp=self.grabber_speed*0.75)
         self.grabber.wait_for_position(self.gbr_grab_pos)
 
         self.grabber.run_to_abs_pos(position_sp=-10, speed_sp=self.grabber_speed)

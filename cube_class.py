@@ -3,6 +3,7 @@ from rotation_class import Rotation
 import data
 import primary_moves as pmove
 from copy import deepcopy
+import solver
 
 
 class Cube:
@@ -177,7 +178,8 @@ class Cube:
     # Generates main solves sequence then processes it from human to robot
     def generate_solve_sequences(self):
         # runs solve functions to produce sequence of digital moves to generate_solve_sequences
-        self.digital_solve_sequence = data.MOVES9
+        solver.solve(self)
+        self.digital_solve_sequence = data.MOVES10
         print('\n')
         self.normalize_digital_move_sequence()
         self.convert_digital_to_colors()
@@ -251,7 +253,6 @@ class Cube:
     def create_robot_solve_sequence(self):
         temp_cube = deepcopy(self)
         for index, pm in enumerate(temp_cube.color_solve_sequence):
-            print(temp_cube.robot_solve_sequence)
             method = getattr(pmove, pm)
             method(temp_cube)
             self.robot_solve_sequence = temp_cube.robot_solve_sequence
