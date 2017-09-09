@@ -25,7 +25,7 @@ class Robot:
         self.cs_cen_pos = -2500
         self.cradle_speed = 1020
         self.cs_speed = 1020
-        self.grabber_speed = 350
+        self.grabber_speed = 300
         self._scanned_cubies = 0
 
         self.gbr_no_guard_pos = 65
@@ -95,10 +95,10 @@ class Robot:
 
     # Rotates the cube in the x direction
     def grab_cube(self):
-        self.grabber.run_to_abs_pos(position_sp=self.gbr_grab_pos, speed_sp=self.grabber_speed*0.75)
+        self.grabber.run_to_abs_pos(position_sp=self.gbr_grab_pos, speed_sp=self.grabber_speed*1.5)
         self.grabber.wait_for_position(self.gbr_grab_pos)
 
-        self.grabber.run_to_abs_pos(position_sp=-10, speed_sp=self.grabber_speed)
+        self.grabber.run_to_abs_pos(position_sp=-10, speed_sp=self.grabber_speed*1.5)
         self.grabber.wait_for_position(-10)
 
         self.grabber.run_to_abs_pos(position_sp=self.gbr_guard_pos, speed_sp=self.grabber_speed)

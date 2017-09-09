@@ -18,12 +18,12 @@ class Cube:
         self.right = self._pos[15:18] + self._pos[27:30] + self._pos[39:42]
         self.front = self._pos[12:15] + self._pos[24:27] + self._pos[36:39]
         self.back = self._pos[18:21] + self._pos[30:33] + self._pos[42:45]
-        self._white_face = None
-        self._yellow_face = None
-        self._green_face = None
-        self._blue_face = None
-        self._red_face = None
-        self._orange_face = None
+        self._white_side = None
+        self._yellow_side = None
+        self._green_side = None
+        self._blue_side = None
+        self._red_side = None
+        self._orange_side = None
         self.color_side_dict = {}
         self.digital_solve_sequence = []
         self.color_solve_sequence = []
@@ -56,7 +56,7 @@ class Cube:
 
         self.set_color_sides()
 
-    # Sets the colored face variables for use in move conversion
+    # Sets the colored side variables for use in move conversion
     def set_color_sides(self):
         self.color_side_dict = {
             'UP': self.up[4].name,
@@ -68,7 +68,7 @@ class Cube:
         }
 
         for key, value in self.color_side_dict.items():
-            setattr(self, str(value.lower()) + '_face', Side[key])
+            setattr(self, '_' + str(value.lower()) + '_side', Side[key])
 
     # Setter methods
     def set_up(self, pos):
@@ -178,8 +178,7 @@ class Cube:
     # Generates main solves sequence then processes it from human to robot
     def generate_solve_sequences(self):
         # runs solve functions to produce sequence of digital moves to generate_solve_sequences
-        solver.solve(self)
-        self.digital_solve_sequence = data.MOVES10
+        self.digital_solve_sequence = solver.solve(self)
         print('\n')
         self.normalize_digital_move_sequence()
         self.convert_digital_to_colors()

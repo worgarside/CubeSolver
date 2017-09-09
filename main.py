@@ -15,13 +15,8 @@ import random
 
 def solve_cube(rubiks_cube):
     print(str(rubiks_cube) + '\n')
-    # print('[', end='')
-    # for p in rubiks_cube._pos:
-    #     print(str(p) + ', ', end='')
-    # print(']\n')
-
     rubiks_cube.generate_solve_sequences()
-    print(rubiks_cube.robot_solve_sequence)
+    # print(rubiks_cube.robot_solve_sequence)
     print()
 
 
@@ -34,15 +29,16 @@ def randomize():
 
 def main():
     if robot_env:
-        simulate_init = True
-        simulate_scan = True
+        simulate_init = False
+        simulate_scan = False
         Sound.beep()
         rubiks_bot = Robot()
         try:
             rubiks_bot.init_motors(simulate_init)
-            # rubiks_cube = Cube(rubiks_bot.scan_cube(simulate_scan))
-            rubiks_cube = Cube(data.MOVES10POS)
-            print(rubiks_cube.digital_solve_sequence)
+            if simulate_scan:
+                rubiks_cube = Cube(data.MOVES10POS)
+            else:
+                rubiks_cube = Cube(rubiks_bot.scan_cube(simulate_scan))
             solve_cube(rubiks_cube)
             rubiks_bot.run_move_sequence(rubiks_cube.robot_solve_sequence)
 
@@ -55,7 +51,8 @@ def main():
             rubiks_bot.exit(True)
         rubiks_bot.exit()
     else:
-        rubiks_cube = Cube(data.SOLVED_POS)
+        # rubiks_cube = Cube(data.SOLVED_POS)
+        rubiks_cube = Cube(data.MOVES10POS)
         solve_cube(rubiks_cube)
 
 
