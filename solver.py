@@ -19,7 +19,7 @@ class CubieType(Enum):
 def solve(self):
     white_cross(self)
 
-    return data.MOVES10
+    return ['d2', 'e', 'r2', 'e2', 's2', 'u', 'm']
 
 
 def get_color_by_cubie_type(self, color, cubie_type=None):

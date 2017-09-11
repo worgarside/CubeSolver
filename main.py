@@ -29,14 +29,15 @@ def randomize():
 
 def main():
     if robot_env:
-        simulate_init = False
-        simulate_scan = False
+        simulate_init = True
+        simulate_scan = True
         Sound.beep()
         rubiks_bot = Robot()
         try:
             rubiks_bot.init_motors(simulate_init)
             if simulate_scan:
-                rubiks_cube = Cube(data.MOVES10POS)
+                # rubiks_cube = Cube(data.MOVES10POS)
+                rubiks_cube = Cube(data.SOLVED_POS)
             else:
                 rubiks_cube = Cube(rubiks_bot.scan_cube(simulate_scan))
             solve_cube(rubiks_cube)

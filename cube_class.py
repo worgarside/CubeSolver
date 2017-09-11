@@ -187,21 +187,25 @@ class Cube:
     # Changes digital/human moves to account for frame of reference changes with M/E/S robot style moves
     def normalize_digital_move_sequence(self):
         temp_sequence = self.digital_solve_sequence
-        for index, move in enumerate(temp_sequence):
-            norm_dict = {
-                'm': self.norm_m,
-                'not_m': self.norm_not_m,
-                'm2': self.norm_m2,
-                'e': self.norm_e,
-                'not_e': self.norm_not_e,
-                'e2': self.norm_e2,
-                's': self.norm_s,
-                'not_s': self.norm_not_s,
-                's2': self.norm_s2,
-            }
+        print(temp_sequence, end='\n\n')
+        norm_dict = {
+            'm': self.norm_m,
+            'not_m': self.norm_not_m,
+            'm2': self.norm_m2,
+            'e': self.norm_e,
+            'not_e': self.norm_not_e,
+            'e2': self.norm_e2,
+            's': self.norm_s,
+            'not_s': self.norm_not_s,
+            's2': self.norm_s2,
+        }
 
-            temp_sequence = temp_sequence[:index+1] + norm_dict.get(move, self.norm_default)(temp_sequence[index+1:])
+        for root_index, root_move in enumerate(temp_sequence):
+            for stem_index in range(root_index+1, len(temp_sequence)):
+                temp_sequence[stem_index] = norm_dict.get(temp_sequence[root_index], self.norm_default)(temp_sequence[stem_index])
+            print(str(root_move) + ' | ' + str(temp_sequence))
         self.digital_solve_sequence = temp_sequence
+
 
     def optimize_digital_move_sequence(self):
         # combine repeated moves
@@ -258,11 +262,11 @@ class Cube:
 
     # Static methods to normalize a sequence passed to it from the main normalize method
     @staticmethod
-    def norm_default(sequence):
-        return sequence
+    def norm_default(move):
+        return move
 
     @staticmethod
-    def norm_m(sequence):
+    def norm_m(move):
         move_m_dict = {
             'u': 'b',
             'not_u': 'not_b',
@@ -292,12 +296,10 @@ class Cube:
             'not_s': 'e',
             's2': 'e2'
         }
-        for i in range(len(sequence)):
-            sequence[i] = move_m_dict[sequence[i]]
-        return sequence
+        return move_m_dict[move]
 
     @staticmethod
-    def norm_not_m(sequence):
+    def norm_not_m(move):
         move_not_m_dict = {
             'u': 'f',
             'not_u': 'not_f',
@@ -327,12 +329,10 @@ class Cube:
             'not_s': 'e',
             's2': 'e2'
         }
-        for i in range(len(sequence)):
-            sequence[i] = move_not_m_dict[sequence[i]]
-        return sequence
+        return move_not_m_dict[move]
 
     @staticmethod
-    def norm_m2(sequence):
+    def norm_m2(move):
         move_m2_dict = {
             'u': 'd',
             'not_u': 'not_d',
@@ -362,12 +362,10 @@ class Cube:
             'not_s': 's',
             's2': 's2'
         }
-        for i in range(len(sequence)):
-            sequence[i] = move_m2_dict[sequence[i]]
-        return sequence
+        return move_m2_dict[move]
 
     @staticmethod
-    def norm_e(sequence):
+    def norm_e(move):
         move_e_dict = {
             'u': 'u',
             'not_u': 'not_u',
@@ -395,62 +393,58 @@ class Cube:
             'e2': 'e2',
             's': 'm',
             'not_s': 'not_m',
-            's2': 's2'
+            's2': 'm2'
         }
-        for i in range(len(sequence)):
-            sequence[i] = move_e_dict[sequence[i]]
-        return sequence
+        return move_e_dict[move]
 
     @staticmethod
-    def norm_not_e(sequence):
+    def norm_not_e(move):
         move_not_e_dict = {
-            'u': 'f',
-            'not_u': 'not_f',
-            'u2': 'f2',
-            'd': 'b',
-            'not_d': 'not_b',
-            'd2': 'b2',
-            'l': 'l',
-            'not_l': 'not_l',
-            'l2': 'l2',
-            'r': 'r',
-            'not_r': 'not_r',
-            'r2': 'r2',
-            'f': 'd',
-            'not_f': 'not_d',
-            'f2': 'd2',
-            'b': 'u',
-            'not_b': 'not_u',
-            'b2': 'u2',
-            'm': 'not_s',
-            'not_m': 's',
-            'm2': 'm2',
+            'u': 'u',
+            'not_u': 'not_u',
+            'u2': 'u2',
+            'd': 'd',
+            'not_d': 'not_d',
+            'd2': 'd2',
+            'l': 'f',
+            'not_l': 'not_f',
+            'l2': 'f2',
+            'r': 'b',
+            'not_r': 'not_b',
+            'r2': 'b2',
+            'f': 'r',
+            'not_f': 'not_r',
+            'f2': 'r2',
+            'b': 'l',
+            'not_b': 'not_l',
+            'b2': 'l2',
+            'm': 's',
+            'not_m': 'not_s',
+            'm2': 's2',
             'e': 'e',
             'not_e': 'not_e',
             'e2': 'e2',
-            's': 'm',
-            'not_s': 'not_m',
-            's2': 's2'
+            's': 'not_m',
+            'not_s': 'm',
+            's2': 'm2'
         }
-        for i in range(len(sequence)):
-            sequence[i] = move_not_e_dict[sequence[i]]
-        return sequence
+        return move_not_e_dict[move]
 
     @staticmethod
-    def norm_e2(sequence):
+    def norm_e2(move):
         move_e2_dict = {
-            'u': 'd',
-            'not_u': 'not_d',
-            'u2': 'd2',
-            'd': 'u',
-            'not_d': 'not_u',
-            'd2': 'u2',
-            'l': 'l',
-            'not_l': 'not_l',
-            'l2': 'l2',
-            'r': 'r',
-            'not_r': 'not_r',
-            'r2': 'r2',
+            'u': 'u',
+            'not_u': 'not_u',
+            'u2': 'u2',
+            'd': 'd',
+            'not_d': 'not_d',
+            'd2': 'd2',
+            'l': 'r',
+            'not_l': 'not_r',
+            'l2': 'r2',
+            'r': 'l',
+            'not_r': 'not_l',
+            'r2': 'l2',
             'f': 'b',
             'not_f': 'not_b',
             'f2': 'b2',
@@ -467,12 +461,10 @@ class Cube:
             'not_s': 's',
             's2': 's2'
         }
-        for i in range(len(sequence)):
-            sequence[i] = move_e2_dict[sequence[i]]
-        return sequence
+        return move_e2_dict[move]
 
     @staticmethod
-    def norm_s(sequence):
+    def norm_s(move):
         move_s_dict = {
             'u': 'l',
             'not_u': 'not_l',
@@ -497,17 +489,15 @@ class Cube:
             'm2': 'e2',
             'e': 'not_m',
             'not_e': 'm',
-            'e2': 'e2',
+            'e2': 'm2',
             's': 's',
             'not_s': 'not_s',
             's2': 's2'
         }
-        for i in range(len(sequence)):
-            sequence[i] = move_s_dict[sequence[i]]
-        return sequence
+        return move_s_dict[move]
 
     @staticmethod
-    def norm_not_s(sequence):
+    def norm_not_s(move):
         move_not_s_dict = {
             'u': 'r',
             'not_u': 'not_r',
@@ -532,17 +522,15 @@ class Cube:
             'm2': 'e2',
             'e': 'm',
             'not_e': 'not_m',
-            'e2': 'e2',
+            'e2': 'm2',
             's': 's',
             'not_s': 'not_s',
             's2': 's2'
         }
-        for i in range(len(sequence)):
-            sequence[i] = move_not_s_dict[sequence[i]]
-        return sequence
+        return move_not_s_dict[move]
 
     @staticmethod
-    def norm_s2(sequence):
+    def norm_s2(move):
         move_s2_dict = {
             'u': 'd',
             'not_u': 'not_d',
@@ -572,6 +560,4 @@ class Cube:
             'not_s': 'not_s',
             's2': 's2'
         }
-        for i in range(len(sequence)):
-            sequence[i] = move_s2_dict[sequence[i]]
-        return sequence
+        return move_s2_dict[move]
