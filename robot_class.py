@@ -104,6 +104,8 @@ class Robot:
         self.grabber.run_to_abs_pos(position_sp=self.gbr_guard_pos, speed_sp=self.grabber_speed)
         self.grabber.wait_for_position(self.gbr_guard_pos)
 
+        sleep(0.05)
+
     # Increments the progressbar when scanning the cube to display progress to the user
     def increment_progressbar(self):
         # Progressbar will change width depending on console size
