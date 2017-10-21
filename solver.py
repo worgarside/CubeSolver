@@ -38,12 +38,14 @@ def get_color_by_cubie_type(self, color, cubie_type=None):
 def get_cubies_by_type_and_side(cubie_type, side):
     return list(set(eval(side.name.lower())).intersection(cubie_type.value))
 
+def white_cross_yellow_middle(self):
+    pass
+
 
 def white_cross(self):
     white_middles = get_color_by_cubie_type(self, Color.WHITE, CubieType.MIDDLES)
-    print(white_middles)
 
-    # while white_middles != get_cubies_by_type_and_side(CubieType.MIDDLES, self._white_side):
-    #     pass
+    while white_middles != get_cubies_by_type_and_side(CubieType.MIDDLES, self._yellow_side):
+        white_cross_yellow_middle(self)
 
     # move any white middles from sides to yellow face - unless they're in correct place already

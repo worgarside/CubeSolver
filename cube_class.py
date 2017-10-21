@@ -187,7 +187,6 @@ class Cube:
     # Changes digital/human moves to account for frame of reference changes with M/E/S robot style moves
     def normalize_digital_move_sequence(self):
         temp_sequence = self.digital_solve_sequence
-        print(temp_sequence, end='\n\n')
         norm_dict = {
             'm': self.norm_m,
             'not_m': self.norm_not_m,
@@ -203,7 +202,6 @@ class Cube:
         for root_index, root_move in enumerate(temp_sequence):
             for stem_index in range(root_index+1, len(temp_sequence)):
                 temp_sequence[stem_index] = norm_dict.get(temp_sequence[root_index], self.norm_default)(temp_sequence[stem_index])
-            print(str(root_move) + ' | ' + str(temp_sequence))
         self.digital_solve_sequence = temp_sequence
 
 

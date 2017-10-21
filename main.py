@@ -59,8 +59,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    # import random
-    # print('[', end='')
-    # for i in range(30):
-    #     print('\'' + str(random.choice(data.MOVES1)) + '\', ', end='')
-    # print(']')
