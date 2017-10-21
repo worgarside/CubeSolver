@@ -1,4 +1,4 @@
-from move_converter import digital_moves as dmove
+from moves import digital_moves as dmove
 
 """
 These are the lowest level moves, and are the only ones the robot is capable of actuating.

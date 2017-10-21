@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
-from cube_class import Cube
 import data
+from cube.cube_class import Cube
+
 try:
-    from robot_class import Robot
+    from robot.robot_class import Robot
     from ev3dev.helper import MotorStall
     robot_env = True
 except FileNotFoundError as e:
@@ -14,10 +15,10 @@ import random
 
 
 def solve_cube(rubiks_cube):
-    print(str(rubiks_cube) + '\n')
+    # print(str(rubiks_cube) + '\n')
     rubiks_cube.generate_solve_sequences()
     # print(rubiks_cube.robot_solve_sequence)
-    print()
+    # print()
 
 
 def randomize():
@@ -36,7 +37,6 @@ def main():
         try:
             rubiks_bot.init_motors(simulate_init)
             if simulate_scan:
-                # rubiks_cube = Cube(data.MOVES10POS)
                 rubiks_cube = Cube(data.SOLVED_POS)
             else:
                 rubiks_cube = Cube(rubiks_bot.scan_cube(simulate_scan))
@@ -52,8 +52,7 @@ def main():
             rubiks_bot.exit(True)
         rubiks_bot.exit()
     else:
-        # rubiks_cube = Cube(data.SOLVED_POS)
-        rubiks_cube = Cube(data.MOVES10POS)
+        rubiks_cube = Cube(data.SOLVED_POS)
         solve_cube(rubiks_cube)
 
 

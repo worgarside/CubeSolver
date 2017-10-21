@@ -1,6 +1,8 @@
-from rotation_class import Rotation
-from side_class import Side
 from copy import deepcopy
+
+from cube.rotation_class import Rotation
+from cube.side_class import Side
+
 
 def u(self, print_flag=False):
     c = deepcopy(self)

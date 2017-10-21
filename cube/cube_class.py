@@ -1,9 +1,9 @@
 from copy import deepcopy
 
-import solver
-from move_converter import primary_moves as pmove
-from rotation_class import Rotation
-from side_class import Side
+from cube.side_class import Side
+from moves import primary_moves as pmove
+from solve import solver
+from .rotation_class import Rotation
 
 
 class Cube:

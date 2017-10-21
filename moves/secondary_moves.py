@@ -1,4 +1,4 @@
-from move_converter import tertiary_moves as tmove
+from moves import tertiary_moves as tmove
 
 """
 These methods all split down the human-readable moves into moves that the robot can perform.

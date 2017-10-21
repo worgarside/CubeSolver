@@ -1,12 +1,14 @@
-import data
-from time import sleep
-from sys import stdout
 from os import get_terminal_size
-from color_class import Color
+from sys import stdout
+from time import sleep
+
 import ev3dev.ev3 as ev3
-from ev3dev.ev3 import Sound
 from ev3dev.auto import OUTPUT_A, OUTPUT_B, OUTPUT_C
+from ev3dev.ev3 import Sound
 from ev3dev.helper import LargeMotor, MediumMotor, ColorSensor
+
+import data
+from cube.color_class import Color
 
 
 class Robot:
