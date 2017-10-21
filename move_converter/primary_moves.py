@@ -1,5 +1,5 @@
 from color_class import Color
-import secondary_moves as smove
+from move_converter import secondary_moves as smove
 
 
 # Returns a tertiary method mainly based on color

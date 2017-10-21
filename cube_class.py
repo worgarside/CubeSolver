@@ -1,9 +1,9 @@
-from side_class import Side
-from rotation_class import Rotation
-import data
-import primary_moves as pmove
 from copy import deepcopy
+
 import solver
+from move_converter import primary_moves as pmove
+from rotation_class import Rotation
+from side_class import Side
 
 
 class Cube:
@@ -178,7 +178,7 @@ class Cube:
     # Generates main solves sequence then processes it from human to robot
     def generate_solve_sequences(self):
         # runs solve functions to produce sequence of digital moves to generate_solve_sequences
-        self.digital_solve_sequence = solver.solve(self)
+        self.digital_solve_sequence = solver.solve()  # solve(self)
         print('\n')
         self.normalize_digital_move_sequence()
         self.convert_digital_to_colors()
@@ -201,9 +201,9 @@ class Cube:
 
         for root_index, root_move in enumerate(temp_sequence):
             for stem_index in range(root_index+1, len(temp_sequence)):
-                temp_sequence[stem_index] = norm_dict.get(temp_sequence[root_index], self.norm_default)(temp_sequence[stem_index])
+                temp_sequence[stem_index] = norm_dict.get(temp_sequence[root_index],
+                                                          self.norm_default)(temp_sequence[stem_index])
         self.digital_solve_sequence = temp_sequence
-
 
     def optimize_digital_move_sequence(self):
         # combine repeated moves

@@ -1,7 +1,4 @@
-from rotation_class import Rotation
-from side_class import Side
-from copy import deepcopy
-import digital_moves as dmove
+from move_converter import digital_moves as dmove
 
 """
 These are the lowest level moves, and are the only ones the robot is capable of actuating.
