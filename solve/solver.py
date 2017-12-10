@@ -10,6 +10,7 @@ back = [18, 19, 20, 30, 31, 32, 42, 43, 44]
 
 def solve():
     ida.setup()
+    ida.solve()
     return []
     # return ['l2', 'not_r', 'b', 'not_u', 'not_r', 'b2', 'd', 'r2', 'd2', 'not_l', 'not_d', 'not_u']
 

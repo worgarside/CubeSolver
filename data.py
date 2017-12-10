@@ -40,3 +40,5 @@ SUPERFLIP = ['r', 'l', 'u2', 'f', 'not_u', 'd', 'f2', 'r2', 'b2', 'l', 'u2',
              'not_f', 'not_b', 'u', 'r2', 'd', 'f2', 'u', 'r2', 'u']
 
 SCRAMBLE = ['u', 'd', 'l', 'd2', 'r2', 'not_d', 'b2', 'r', 'u', 'not_b', 'r', 'l2']
+
+SIMPLE_SCRAMBLE = ['f', 'r', 'b']
