@@ -10,6 +10,7 @@
 \usepackage{multirow}
 \usepackage{gensymb}
 \usepackage{csquotes}
+\usepackage{xcolor}
 
 \begin{document}
 		
@@ -47,14 +48,14 @@
 			\toprule
 			\textbf{Abbreviation/Word} & \textbf{Definition} \\
 			\midrule
-			Rubik's Cube 		& 	\multirow{ 2}{*}{A standard 3x3x3 Rubik's Cube.} \\
+			Rubik's Cube 		& 	\multirow{ 2}{*}{A standard 3x3x3 Rubik's Cube\textsuperscript{\ref{cube definition}}.} \\
 			Cube 				& 	\\
-			Face 				& 	One of the size faces on a Cube. Denoted by position (LRFBUD) or colour.\\
+%			Face 				& 	One of the size faces on a Cube. Denoted by position (LRFBUD) or colourl.\\
 			Slice				&	A central layer between two faces. Usually referenced by the faces it spans. \\
 			Quarter Turn		&	A clockwise rotation of a face or slice by 90\degree \\
 			Half Turn			&	A clockwise rotation of a face or slice by 180\degree \\
 			Quarter Turn Metric	&	When counting moves, a Quarter Turn is counted as a single move and a half is two moves. \\
-			Half Turn Metric	&	Quarter turns and half turns are both counted as single moves. \\
+			Half Turn Metric\textsuperscript{\ref{metric definition}}	&	Quarter turns and half turns are both counted as single moves. \\
 			Cubie				&	One of the twenty-six smaller cubes that make up a Cube. \\
 			Goal State			&	All the cubies on a given face match the colour of the centre cubie. i.e. a solved Cube. \\
 			Position			&	A Cube's state (mixed or solved). \\
@@ -86,6 +87,13 @@
 			\bottomrule
 		\end{tabular}
 	\end{table}
+	% Content for footnote is here because it wouldn't display from table %
+	\textcolor{white}{
+		\footnote{\label{cube definition}This Dissertation is only dealing with 3x3x3 Rubik’s Cubes, and any discussion of alternative dimensions will be explicitly stated.}
+		\footnote{\label{metric definition}For this Dissertation the Half Turn Metric is used unless explicitly stated.}		
+	}
+
+
 
 	\newpage
 	\tableofcontents
