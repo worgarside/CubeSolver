@@ -4,13 +4,19 @@
 \date{01-01-1901}
 \author{Will Garside}
 
-\usepackage[a4paper,left=2.54cm,right=2.54cm, top=2.54cm, bottom=2.54cm]{geometry}
-\usepackage{booktabs}
-\usepackage{tabularx}
-\usepackage{multirow}
-\usepackage{gensymb}
-\usepackage{csquotes}
-\usepackage{xcolor}
+\usepackage[a4paper,left=2.54cm,right=2.54cm, top=2.54cm, bottom=2.54cm]{geometry}	% better margins
+\usepackage{booktabs} 		% tables with nice formatting
+\usepackage{tabularx}		% tables with proper width
+\usepackage{multirow}		% multi-row cells in table
+\usepackage{gensymb}		% symbols
+\usepackage[british]{babel}	% sets language formatting to British
+\usepackage{csquotes}		% quoting commands
+\usepackage{xcolor}			% font coloring
+\usepackage{epigraph}		% epigraphs in chapters
+\usepackage{parskip}		% better paragraph formatting
+\usepackage{graphicx}		% image package
+
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
 
 \begin{document}
 		
@@ -40,17 +46,19 @@
 	\newpage
 	\section*{Abbreviations, Definitions and Notations}
 	\addcontentsline{toc}{section}{Abbreviations, Definitions and Notations}
-	\subsection*{Basic Definitions}
 	\addcontentsline{toc}{subsection}{Basic Definitions}
 	\begin{table}[htbp]
-		\def\arraystretch{1.25}
-		\begin{tabular}{p{0.25\textwidth}m{0.65\textwidth}}
+		\def\arraystretch{1.2}
+		\centering
+		\caption{Terminology used in this document}
+		\label{tab:table1}
+		\begin{tabular}{m{0.25\textwidth}m{0.65\textwidth}}
 			\toprule
 			\textbf{Abbreviation/Word} & \textbf{Definition} \\
 			\midrule
 			Rubik's Cube 		& 	\multirow{ 2}{*}{A standard 3x3x3 Rubik's Cube\textsuperscript{\ref{cube definition}}.} \\
 			Cube 				& 	\\
-%			Face 				& 	One of the size faces on a Cube. Denoted by position (LRFBUD) or colourl.\\
+			Face 				& 	One of the size faces on a Cube. Denoted by position (LRFBUD) or colour.\\
 			Slice				&	A central layer between two faces. Usually referenced by the faces it spans. \\
 			Quarter Turn		&	A clockwise rotation of a face or slice by 90\degree \\
 			Half Turn			&	A clockwise rotation of a face or slice by 180\degree \\
@@ -67,11 +75,14 @@
 			\bottomrule
 		\end{tabular}
 	\end{table}
-	\subsection*{Notation}
+
 	\addcontentsline{toc}{subsection}{Notation}
 	\begin{table}[htbp]
-		\def\arraystretch{1.25}
-		\begin{tabular}{p{0.25\textwidth}m{0.2\textwidth}m{0.425\textwidth}}
+		\def\arraystretch{1.2}
+		\centering
+		\caption{Notation used in this document}
+		\label{tab:table2}
+		\begin{tabular}{m{0.25\textwidth}m{0.2\textwidth}m{0.425\textwidth}}
 			\toprule
 			\textbf{Symbol Notation} & \textbf{Meaning} \\
 			\midrule
@@ -102,26 +113,20 @@
 	\pagenumbering{arabic}
 	\section{Introduction}
     \subsection{Background}
-    \paragraph{}
+
     In 1974, Ern\"{o} Rubik was struggling to create a cube with independently moving parts which remain together, regardless of how much they moved. His first attempts made use of elastic, which broke and rendered the cube unusable. Rubik persevered in his attempts to hold the blocks (now called \enquote{cubies}) together - eventually concluding that the best way was to have the cubes hold themselves together. He called this design \enquote{The Magic Cube}, and it would go on to be one of the world's best-selling puzzles \cite{Waxman2014b}. It was later re-branded to \enquote{\textit{Rubik's Cube}} to overcome an oversight involving patenting and copyrighting  the design.
     
-    \paragraph{}
     In an unpublished manuscript \cite{Rubik1986}, Rubik described first randomising his new cube, \blockquote{It was wonderful to see how, after only a few turns, the colors became mixed, apparently in random fashion. Like after a nice walk when you have seen many lovely sights you decide to go home, after a while I decided it was time to go home, let us put the cubes back in order. And it was at that moment that I came face to face with the Big Challenge: What is the way home?}
     
-    \paragraph{}
     It took Rubik over a month to solve this first cube - he knew intuitively that there must be a method to solving the cube, but lacked the finer methodology \cite{RubiksCube}. Since Rubik devised the first method, hobbyists and mathematicians alike have been immersed in solving the Cube as quickly and efficiently as possible. Whilst many solutions are markedly successful when it comes to optimisation, others only better them in quirkiness or internet fame \cite{Chan2016}.
     
-    \paragraph{}
     There is one method which is mere speculation, despite having been proved mathematically: God's Algorithm. God's Algorithm states that an omniscient being would always make the most efficient moves and that they would be able to solve a Cube from any given position in a certain number of moves or less. This is referred to as God's Number, and was finally proved to be twenty in 2010 by a group of 4 researchers \cite{Rokicki2010b}.
     
     \subsection{General Objectives}
-    \paragraph{}
     The primary objective of this project is to successfully implement an algorithm to solve a Cube with a Mindstorms robot. The efficiency of this algorithm is initially non-imperative, but will ideally be improved over the project time-line. The most recent iteration of the Mindstorms line, the Lego EV3 31313, will be used in the construction of the robot. This provides a wireless connectivity via Bluetooth (or WiFi with a USB dongle), three motors, a colour sensor, and a touch sensor amongst other peripherals. A custom operating system can also be installed on a microSD card to allow for greater expandability.
     
-    \paragraph{}
     Secondary objectives include implementing other algorithms from various sources, devising and refining my own algorithms, and comparing the performance, efficiency and solve-length of the algorithm. The robot will have to be of sound construction, with little-to-no room for error when manipulating the Cube.
     
-    \paragraph{}
     The objectives for this project are as follows:
     
     \begin{enumerate}
@@ -134,17 +139,69 @@
     \end{enumerate}
     
     \subsection{Limitations and Constraints}
-    \paragraph{}
     The scope of this project is relatively local and therefore it lacks major limitations. Instead, it has several minor limitations which each present their own problems and solutions. The first problem which will be encountered will undoubtedly be during the design and build of the robot: the number of Lego pieces supplied in the EV3 set is quite limited at only six-hundred-and-one pieces - approximately a quarter of which are only for aesthetics. The design will  be supplemented by sets sourced externally, thus allowing a robot of sufficient quality to be built.
     
-    \paragraph{}
-    Despite being of high quality and uniform across all sets, Lego is still fundamentally a toy - which will lead to errors with the precision of the robot\cite{Cook2017}. An example of this is the motors: there is a somewhat significant degree of freedom/play in the motors, which means that they can’t be relied on to move to accurate positions. A worm gear is the ideal solution to this problem: despite reducing the speed, it provides a considerable increase in motor accuracy.
+    Despite being of high quality and uniform across all sets, Lego is still fundamentally a toy - which will lead to errors with the precision of the robot \cite{Cook2017}. An example of this is the motors: there is a somewhat significant degree of freedom/play in the motors, which means that they can’t be relied on to move to accurate positions. A worm gear is the ideal solution to this problem: despite reducing the speed, it provides a considerable increase in motor accuracy.
     
-    \paragraph{}
     One of the larger issues that this project will encounter is the run-time of the program to find a solution. Many programs have been known to take upwards of three days to find a solve sequence - this project currently aims to find a solution in approximately ten minutes or less. This will require extensive optimisation of search spaces and group theory through symmetrical elimination and set covering in order to reduce the necessary coverage of the search algorithm.
     
-    \paragraph{}
     Finding the optimal solve sequence for any given position has been deliberately omitted from the objectives of this project: there are over forty-three quintillion valid positions of a Cube, each requiring an extensive amount of time to find the optimal solution for. Based on current hardware capabilities and previous studies and research, an estimated timespan for finding all optimal solutions is in the order of millennia\footnote{See cube20.org table of “20 move or less” vs “optimal” and explain}.
+    
+    \newpage
+    \section{Literature Review}
+    \epigraph{Please forgive me, but to give birth to a machine is wonderful progress. It's more convenient and it's quicker, and everything that's quicker means progress. Nature had no notion of the modern rate of work. From a technical point of view, the whole of childhood is quite pointless.}{\textit{Mr. Fabry, in Karel \v{C}apek's Rossum's Universal Robots}}
+    
+    \subsection{Robotics}
+    The term robot was first brought to the collective consciousness of the general public by Karel \v{C}apek in 1921 in his play \enquote{Rossum's Universal Robots} \cite{Capek1921b}. It comes from the Czech for \enquote{forced labour} and was coined by \v{C}apek's brother, Josef, for a short story written some years earlier \cite{Etymonline2017}. One of the main discussions in the field of robotics has been about ethics and morality. This discussion was started in \v{C}apek's play, when a visiting scientist tries to destroy the robot-manufacturing business, in the hope of giving the robots a soul and making them happier. This plan goes awry when the robots become sentient and start to overthrow the humans that created them. Twenty-one years later, the novelette \enquote{Runaround} by Isaac Asimov was featured in the magazine \enquote{Astounding Science-Fiction} \cite{Asimov1942b}. It included his now-prominent Three Laws of Robotics, which were a turning point in the field of robotics and meta-ethics.
+    
+    The twentieth century generated many ideas about the future of robotics, such as \enquote{Kitchen units will be devised that will prepare \enquote{automeals}, heating water and converting it to coffee} alongside grandiose aspirations such as \enquote{An experimental fusion-power plant or two will already exist in 2014} \cite{Asimov1964b}. Whilst some predictions have been fulfilled by the technology of the past two decades, others are still nowhere near completion and could be considered impossible for the next century. This is a clear demonstration that the field of Robotics has made vast improvements, but is still - in some respects - very much in its youth.
+    
+    In the same way as the field of Robotics, Artificial Intelligence (AI) has vast potential and we have only touched the tip of the iceberg. The most advanced consumer-facing AI systems available currently are intended to make people's lives easier through organisation and saving precious seconds in performing simple tasks on their smartphones, and now in their homes. However, Google's Assistant, Apple's Siri, and Amazon's Alexa still fall short when it comes to the intelligence demonstrated in Asimov's book \enquote{I, Robot}. We are still far from being unable to \enquote{differentiate between a robot and the very best of humans} \cite{Asimov1970}.
+    
+    \subsection{Robotics in Education}
+    There has always been a clear use of ‘edutainment’ style teaching in one form or another for hundreds of years. One of the earliest known uses of edutainment is in \enquote{Poor Richard's Almanack}, which was written by Benjamin Franklin and published annually between 1732 and 1758. Alongside all the usual information contained in an Almanac, Franklin (under the pseudonym \enquote{Poor Richard}) included maths exercises, puzzles, and aphorisms \cite{Beato2015}, \cite{Franklin1732}. Walt Disney was another pioneer of edutainment in the time immediately before, during, and following the World Wars. His first piece of edutainment was a short film, \enquote{Tommy Tucker’s Tooth}, which was commissioned by a dental institute in 1922.
+    
+    In the past few decades, there has been a marked change in the form of edutainment in line with advances in technology. We have progressed from paper-based, so called ‘serious games’ in the 1970s, to early-era video games such as the infamous Oregon Trail; and then in the past decade electronic and robotic kits have made their way into classrooms. One of the leaders of modern edutainment is the Lego Mindstorms kit. The Lego Mindstorms kit has undergone two major revisions since the launch of the first generation of the Mindstorms kit in 1998 (the RCX): in July 2006, the second-generation NXT was released, updating the sensors and adding Bluetooth amongst other improvements; then in September 2013, Lego released the EV3 Home and Education sets. This release cemented Lego’s position at the forefront of edutainment \cite{Becker}.
+    
+    \subsection{Lego Mindstorms}
+    A study at the University of Calabria in 2009 looked at how Lego Mindstorms worked as a learning tool when used in team-building type tasks \cite{Bilotta2009}. 28 students were divided into 6 groups, each given a Lego robot and preliminary training which covered the Lego Mindstorms and programming environment. The groups were all given the same task, and their progress studied throughout the sessions. When studying the building and programming as two separate sub-tasks, three main categories of work subdivision were found: each group member had a set role in building, but all shared the programming; both sub-tasks were equally divided amongst members; each member had a set role in either sub-task, and there was a clear leader. This closely follows real-world teamwork mechanics and scenarios, and the use of robots was found to stimulate the student into exploring and sharing critical knowledge within the group. The study's conclusion was that Lego Mindstorms - and inherently variable morphology robots - stimulates further process analysis, information selection, and to observe and experiment with the consequences of their actions \cite{Bilotta2009}.
+    
+    The Lego Mindstorms’ native programming environment is visual-based, with drag-and-drop code blocks used to form programs which can run natively on the main \enquote{brick}. This provides a simplistic user experience and allows novice programmers to create complex programs with relative ease. Drag-and-drop programming can drastically reduce the amount of syntax errors in a program, allowing programmers to better focus on the functionality of their program \cite{Kelleher2002}.
+
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics[width=0.5\textwidth]{Images/EV3ProgrammingSoftware.jpg}
+			\caption{A sample program in \enquote{EV3 Programming Software}}
+			\label{fig:ev3software}
+		\end{center}
+	\end{figure}
+    
+    \subsection{Solving Puzzles with Algorithms}
+    When it comes to playing games and solving puzzles, Google’s AlphaGo Zero is the clear winner. Whilst Google’s first Go-playing program defeated the world champion at Go, it took months of supervised learning from experts and reinforcement learning from self-play. The new version started tabula rasa and was completely self-taught - it had no interaction with any humans, and uses no historical data. Through reinforced learning alone by simulating games against itself, it took three days to reach the level of AlphaGo and in forty days had surpassed any Go player’s performance - human or artificial \cite{Silver2017}, \cite{Cellan-Jones2017}.
+    
+    When a computer solves a Cube (or any other similar puzzle), it does so by following set algorithms and rules until the solved state is achieved. Computers cannot use humanlike instincts, so we often try to provide a heuristic to make the task simpler. These heuristics can be pre-computed data tables to reduce the amount of processing at run time, or a reduction in the original data set through elimination of certain data sets.
+    
+    In his 1997 paper on the use of pattern databases to increase solve efficiency, Richard Korf uses different heuristic functions and characterises how effective they are in reducing the number of moves in a solve sequence. His first method used an Iterative-Deepening A* algorithm, combined with the heuristic of the Manhattan distances from the edge cubies’ current position and orientation to that which is desired. This reduced the time required to solve a Cube at depth-14 to three days\footnote{The simulation was run on a Sun Ultra-Sparc Model 1 workstation}, however when increased to depth-18 the time increased exponentially to two hundred and fifty years. After a re-evaluation, Korf modified the heuristic by pre-computing the Manhattan distance of each cubie from all of its possible positions and orientations and storing the table in memory at run-time. This created a table of nearly ninety-million entries - which would have been bigger but was restricted by the available memory (the table was approximately forty-two megabytes). The newer heuristic reduced the time to search at depth-18 to less than four weeks - a reduction of approximately 99.97\%. Korf suggested that the speed of the algorithm used would increase linearly with the amount of memory available, meaning that if it were run today the depth-18 search would take under three hours\footnote{This is based on the memory capacity of the Model Workstation and a modern computer being 64MB and 16GB respectively.} \cite{Korf1997}.
+    
+   	\begin{table}[htbp]
+    	\def\arraystretch{1.25}
+    	\centering
+    	\caption{Morwen Thistlethwaite's five groups for his algorithm \cite{Singmaster1981}}
+    	\label{tab:table3}
+    	\begin{tabular}{M{0.15\textwidth}M{0.3\textwidth}m{0.525\textwidth}}
+    		\toprule
+    		\textbf{Group Denotation} & \textbf{Mathematical Representation} & \textbf{Summary} \\
+    		\midrule
+   			$G_0$	&	$\langle L,\;R,\;F,\;B,\;U,\;D \rangle$	&	All valid positions \\    		
+	    	$G_1$	&	$\langle L,\;R,\;F,\;B,\;U2,\;D2 \rangle$	&	All positions that can be reached with quarter turns of the $L,\;R,\;F,\;B$ faces and half turns of the $U,\;D$ faces \\
+	    	$G_2$	&	$\langle L,\;R,\;F2,\;B2,\;U2,\;D2 \rangle$	&	Positions reachable from quarter turns of $L,\;R$ faces and half turns of the $F,\;B,\;U,\;D$ faces \\
+	    	$G_3$	&	$\langle L2,\;R2,\;F2,\;B2,\;U2,\;D2 \rangle$	&	Positions only reachable from half turns of any face \\
+	    	$G_4$	&	$ \{I\}$	&	The goal state \\
+    		\bottomrule
+    	\end{tabular}
+    \end{table}
+    
+    There have been many historical landmark algorithms since the Rubik’s Cube’s inception in 1974. One of the earliest instances was created by Morwen Thistlethwaite circa 1981 and is based on group theory. Thistlethwaite’s algorithm splits all possible positions of the cube into five groups of decreasing size as seen in Table \ref{tab:table3}. David Singmaster, Thistlethwaite’s colleague at London South Bank University (then called Polytechnic of the South Bank), describes the methodology of the algorithm: \enquote{Once in $G_i$, one only uses moves in $G_i$ to get into $G_{i+1}$. The ratio $\frac{|G_i|}{|G_{i+1}|}$ is called the index of $G_{i+1}$ in $G_i$.} Using this algorithm, Thistlethwaite proved that the maximum number of moves required to solve any valid position is fifty-two \cite{Singmaster1981}. This was the first development of God’s Number, so named because it is the number of moves that an omniscient being would use to solve a Cube in the most efficient manner without failure. 
     
     \begin{appendix}
     	\newpage  
