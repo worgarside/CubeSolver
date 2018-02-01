@@ -114,6 +114,38 @@
     \paragraph{}
     There is one method which is mere speculation, despite having been proved mathematically: God's Algorithm. God's Algorithm states that an omniscient being would always make the most efficient moves and that they would be able to solve a Cube from any given position in a certain number of moves or less. This is referred to as God's Number, and was finally proved to be twenty in 2010 by a group of 4 researchers \cite{Rokicki2010b}.
     
+    \subsection{General Objectives}
+    \paragraph{}
+    The primary objective of this project is to successfully implement an algorithm to solve a Cube with a Mindstorms robot. The efficiency of this algorithm is initially non-imperative, but will ideally be improved over the project time-line. The most recent iteration of the Mindstorms line, the Lego EV3 31313, will be used in the construction of the robot. This provides a wireless connectivity via Bluetooth (or WiFi with a USB dongle), three motors, a colour sensor, and a touch sensor amongst other peripherals. A custom operating system can also be installed on a microSD card to allow for greater expandability.
+    
+    \paragraph{}
+    Secondary objectives include implementing other algorithms from various sources, devising and refining my own algorithms, and comparing the performance, efficiency and solve-length of the algorithm. The robot will have to be of sound construction, with little-to-no room for error when manipulating the Cube.
+    
+    \paragraph{}
+    The objectives for this project are as follows:
+    
+    \begin{enumerate}
+    	\item Build a robot which can move a Cube to a sufficient degree of accuracy
+    	\item Write a program which takes a move sequence as its input and moves a Cube to match that sequence
+    	\item Implement a system which successfully  generates a solve sequence for any given position
+    	\item Ensure the runtime of the system is an acceptable length
+    	\item Implement a program to use other algorithms to generate a solve sequence
+    	\item Compare the performance of different algorithms, especially the difference between human-compatible and robot-compatible move sequences
+    \end{enumerate}
+    
+    \subsection{Limitations and Constraints}
+    \paragraph{}
+    The scope of this project is relatively local and therefore it lacks major limitations. Instead, it has several minor limitations which each present their own problems and solutions. The first problem which will be encountered will undoubtedly be during the design and build of the robot: the number of Lego pieces supplied in the EV3 set is quite limited at only six-hundred-and-one pieces - approximately a quarter of which are only for aesthetics. The design will  be supplemented by sets sourced externally, thus allowing a robot of sufficient quality to be built.
+    
+    \paragraph{}
+    Despite being of high quality and uniform across all sets, Lego is still fundamentally a toy - which will lead to errors with the precision of the robot\cite{Cook2017}. An example of this is the motors: there is a somewhat significant degree of freedom/play in the motors, which means that they can’t be relied on to move to accurate positions. A worm gear is the ideal solution to this problem: despite reducing the speed, it provides a considerable increase in motor accuracy.
+    
+    \paragraph{}
+    One of the larger issues that this project will encounter is the run-time of the program to find a solution. Many programs have been known to take upwards of three days to find a solve sequence - this project currently aims to find a solution in approximately ten minutes or less. This will require extensive optimisation of search spaces and group theory through symmetrical elimination and set covering in order to reduce the necessary coverage of the search algorithm.
+    
+    \paragraph{}
+    Finding the optimal solve sequence for any given position has been deliberately omitted from the objectives of this project: there are over forty-three quintillion valid positions of a Cube, each requiring an extensive amount of time to find the optimal solution for. Based on current hardware capabilities and previous studies and research, an estimated timespan for finding all optimal solutions is in the order of millennia\footnote{See cube20.org table of “20 move or less” vs “optimal” and explain}.
+    
     \begin{appendix}
     	\newpage  
     	\listoffigures
