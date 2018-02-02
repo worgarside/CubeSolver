@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass{report}
 
 \title{Solving Rubik's Cube with Lego Mindstorms}
 \date{01-01-1901}
@@ -15,6 +15,7 @@
 \usepackage{epigraph}		% epigraphs in chapters
 \usepackage{parskip}		% better paragraph formatting
 \usepackage{graphicx}		% image package
+\usepackage{longtable} 		% To display tables on several pages
 
 \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
 
@@ -86,7 +87,7 @@
 			\toprule
 			\textbf{Symbol Notation} & \textbf{Meaning} \\
 			\midrule
-			$L$	&	Left			&	\multirow{ 9}{*}{\parbox{0.425\textwidth}{This notation is used to show a quarter turn of a face. It can have a single quote or a '2' appended to show a counter-clockwise quarter turn or a half turn respectively.}} \\
+			$L$	&	Left			&	\multirow{9}{*}{\parbox{0.425\textwidth}{This notation is used to show a quarter turn of a face. It can have a single quote or a '2' appended to show a counter-clockwise quarter turn or a half turn respectively.}} \\
 			$R$	&	Right			&	\\
 			$F$	&	Front			&	\\
 			$B$	&	Back			&	\\
@@ -111,8 +112,8 @@
 	
 	\newpage
 	\pagenumbering{arabic}
-	\section{Introduction}
-    \subsection{Background}
+	\chapter{Introduction}
+    \section{Background}
 
     In 1974, Ern\"{o} Rubik was struggling to create a cube with independently moving parts which remain together, regardless of how much they moved. His first attempts made use of elastic, which broke and rendered the cube unusable. Rubik persevered in his attempts to hold the blocks (now called \enquote{cubies}) together - eventually concluding that the best way was to have the cubes hold themselves together. He called this design \enquote{The Magic Cube}, and it would go on to be one of the world's best-selling puzzles \cite{Waxman2014b}. It was later re-branded to \enquote{\textit{Rubik's Cube}} to overcome an oversight involving patenting and copyrighting  the design.
     
@@ -120,9 +121,9 @@
     
     It took Rubik over a month to solve this first cube - he knew intuitively that there must be a method to solving the cube, but lacked the finer methodology \cite{RubiksCube}. Since Rubik devised the first method, hobbyists and mathematicians alike have been immersed in solving the Cube as quickly and efficiently as possible. Whilst many solutions are markedly successful when it comes to optimisation, others only better them in quirkiness or internet fame \cite{Chan2016}.
     
-    There is one method which is mere speculation, despite having been proved mathematically: God's Algorithm. God's Algorithm states that an omniscient being would always make the most efficient moves and that they would be able to solve a Cube from any given position in a certain number of moves or less. This is referred to as God's Number, and was finally proved to be twenty in 2010 by a group of 4 researchers \cite{Rokicki2010b}.
+    There is one method which is mere speculation, despite having been proved mathematically: God's Algorithm. God's Algorithm states that an omniscient being would always make the most efficient moves and that they would be able to solve a Cube from any given position in a certain number of moves or less. This is referred to as God's Number, and was finally proved to be twenty in 2010 by a group of 4 researchers \cite{Rokicki2010}.
     
-    \subsection{General Objectives}
+    \section{General Objectives}
     The primary objective of this project is to successfully implement an algorithm to solve a Cube with a Mindstorms robot. The efficiency of this algorithm is initially non-imperative, but will ideally be improved over the project time-line. The most recent iteration of the Mindstorms line, the Lego EV3 31313, will be used in the construction of the robot. This provides a wireless connectivity via Bluetooth (or WiFi with a USB dongle), three motors, a colour sensor, and a touch sensor amongst other peripherals. A custom operating system can also be installed on a microSD card to allow for greater expandability.
     
     Secondary objectives include implementing other algorithms from various sources, devising and refining my own algorithms, and comparing the performance, efficiency and solve-length of the algorithm. The robot will have to be of sound construction, with little-to-no room for error when manipulating the Cube.
@@ -138,7 +139,7 @@
     	\item Compare the performance of different algorithms, especially the difference between human-compatible and robot-compatible move sequences
     \end{enumerate}
     
-    \subsection{Limitations and Constraints}
+    \section{Limitations and Constraints}
     The scope of this project is relatively local and therefore it lacks major limitations. Instead, it has several minor limitations which each present their own problems and solutions. The first problem which will be encountered will undoubtedly be during the design and build of the robot: the number of Lego pieces supplied in the EV3 set is quite limited at only six-hundred-and-one pieces - approximately a quarter of which are only for aesthetics. The design will  be supplemented by sets sourced externally, thus allowing a robot of sufficient quality to be built.
     
     Despite being of high quality and uniform across all sets, Lego is still fundamentally a toy - which will lead to errors with the precision of the robot \cite{Cook2017}. An example of this is the motors: there is a somewhat significant degree of freedom/play in the motors, which means that they can’t be relied on to move to accurate positions. A worm gear is the ideal solution to this problem: despite reducing the speed, it provides a considerable increase in motor accuracy.
@@ -148,22 +149,22 @@
     Finding the optimal solve sequence for any given position has been deliberately omitted from the objectives of this project: there are over forty-three quintillion valid positions of a Cube, each requiring an extensive amount of time to find the optimal solution for. Based on current hardware capabilities and previous studies and research, an estimated timespan for finding all optimal solutions is in the order of millennia\footnote{See cube20.org table of “20 move or less” vs “optimal” and explain}.
     
     \newpage
-    \section{Literature Review}
-    \epigraph{Please forgive me, but to give birth to a machine is wonderful progress. It's more convenient and it's quicker, and everything that's quicker means progress. Nature had no notion of the modern rate of work. From a technical point of view, the whole of childhood is quite pointless.}{\textit{Mr. Fabry, in Karel \v{C}apek's Rossum's Universal Robots}}
+    \chapter{Literature Review}
+    \epigraph{Please forgive me, but to give birth to a machine is wonderful progress. It's more convenient and it's quicker, and everything that's quicker means progress. Nature had no notion of the modern rate of work. From a technical point of view, the whole of childhood is quite pointless.}{\textit{Mr. Fabry, in Karel \v{C}apek's Rossum's Universal Robots (1921)}}
     
-    \subsection{Robotics}
+    \section{Robotics}
     The term robot was first brought to the collective consciousness of the general public by Karel \v{C}apek in 1921 in his play \enquote{Rossum's Universal Robots} \cite{Capek1921b}. It comes from the Czech for \enquote{forced labour} and was coined by \v{C}apek's brother, Josef, for a short story written some years earlier \cite{Etymonline2017}. One of the main discussions in the field of robotics has been about ethics and morality. This discussion was started in \v{C}apek's play, when a visiting scientist tries to destroy the robot-manufacturing business, in the hope of giving the robots a soul and making them happier. This plan goes awry when the robots become sentient and start to overthrow the humans that created them. Twenty-one years later, the novelette \enquote{Runaround} by Isaac Asimov was featured in the magazine \enquote{Astounding Science-Fiction} \cite{Asimov1942b}. It included his now-prominent Three Laws of Robotics, which were a turning point in the field of robotics and meta-ethics.
     
     The twentieth century generated many ideas about the future of robotics, such as \enquote{Kitchen units will be devised that will prepare \enquote{automeals}, heating water and converting it to coffee} alongside grandiose aspirations such as \enquote{An experimental fusion-power plant or two will already exist in 2014} \cite{Asimov1964b}. Whilst some predictions have been fulfilled by the technology of the past two decades, others are still nowhere near completion and could be considered impossible for the next century. This is a clear demonstration that the field of Robotics has made vast improvements, but is still - in some respects - very much in its youth.
     
     In the same way as the field of Robotics, Artificial Intelligence (AI) has vast potential and we have only touched the tip of the iceberg. The most advanced consumer-facing AI systems available currently are intended to make people's lives easier through organisation and saving precious seconds in performing simple tasks on their smartphones, and now in their homes. However, Google's Assistant, Apple's Siri, and Amazon's Alexa still fall short when it comes to the intelligence demonstrated in Asimov's book \enquote{I, Robot}. We are still far from being unable to \enquote{differentiate between a robot and the very best of humans} \cite{Asimov1970}.
     
-    \subsection{Robotics in Education}
+    \section{Robotics in Education}
     There has always been a clear use of ‘edutainment’ style teaching in one form or another for hundreds of years. One of the earliest known uses of edutainment is in \enquote{Poor Richard's Almanack}, which was written by Benjamin Franklin and published annually between 1732 and 1758. Alongside all the usual information contained in an Almanac, Franklin (under the pseudonym \enquote{Poor Richard}) included maths exercises, puzzles, and aphorisms \cite{Beato2015}, \cite{Franklin1732}. Walt Disney was another pioneer of edutainment in the time immediately before, during, and following the World Wars. His first piece of edutainment was a short film, \enquote{Tommy Tucker’s Tooth}, which was commissioned by a dental institute in 1922.
     
     In the past few decades, there has been a marked change in the form of edutainment in line with advances in technology. We have progressed from paper-based, so called ‘serious games’ in the 1970s, to early-era video games such as the infamous Oregon Trail; and then in the past decade electronic and robotic kits have made their way into classrooms. One of the leaders of modern edutainment is the Lego Mindstorms kit. The Lego Mindstorms kit has undergone two major revisions since the launch of the first generation of the Mindstorms kit in 1998 (the RCX): in July 2006, the second-generation NXT was released, updating the sensors and adding Bluetooth amongst other improvements; then in September 2013, Lego released the EV3 Home and Education sets. This release cemented Lego’s position at the forefront of edutainment \cite{Becker}.
     
-    \subsection{Lego Mindstorms}
+    \section{Lego Mindstorms}
     A study at the University of Calabria in 2009 looked at how Lego Mindstorms worked as a learning tool when used in team-building type tasks \cite{Bilotta2009}. 28 students were divided into 6 groups, each given a Lego robot and preliminary training which covered the Lego Mindstorms and programming environment. The groups were all given the same task, and their progress studied throughout the sessions. When studying the building and programming as two separate sub-tasks, three main categories of work subdivision were found: each group member had a set role in building, but all shared the programming; both sub-tasks were equally divided amongst members; each member had a set role in either sub-task, and there was a clear leader. This closely follows real-world teamwork mechanics and scenarios, and the use of robots was found to stimulate the student into exploring and sharing critical knowledge within the group. The study's conclusion was that Lego Mindstorms - and inherently variable morphology robots - stimulates further process analysis, information selection, and to observe and experiment with the consequences of their actions \cite{Bilotta2009}.
     
     The Lego Mindstorms’ native programming environment is visual-based, with drag-and-drop code blocks used to form programs which can run natively on the main \enquote{brick}. This provides a simplistic user experience and allows novice programmers to create complex programs with relative ease. Drag-and-drop programming can drastically reduce the amount of syntax errors in a program, allowing programmers to better focus on the functionality of their program \cite{Kelleher2002}.
@@ -176,7 +177,7 @@
 		\end{center}
 	\end{figure}
     
-    \subsection{Solving Puzzles with Algorithms}
+    \section{Solving Puzzles with Algorithms}
     When it comes to playing games and solving puzzles, Google’s AlphaGo Zero is the clear winner. Whilst Google’s first Go-playing program defeated the world champion at Go, it took months of supervised learning from experts and reinforcement learning from self-play. The new version started tabula rasa and was completely self-taught - it had no interaction with any humans, and uses no historical data. Through reinforced learning alone by simulating games against itself, it took three days to reach the level of AlphaGo and in forty days had surpassed any Go player’s performance - human or artificial \cite{Silver2017}, \cite{Cellan-Jones2017}.
     
     When a computer solves a Cube (or any other similar puzzle), it does so by following set algorithms and rules until the solved state is achieved. Computers cannot use humanlike instincts, so we often try to provide a heuristic to make the task simpler. These heuristics can be pre-computed data tables to reduce the amount of processing at run time, or a reduction in the original data set through elimination of certain data sets.
@@ -201,7 +202,86 @@
     	\end{tabular}
     \end{table}
     
-    There have been many historical landmark algorithms since the Rubik’s Cube’s inception in 1974. One of the earliest instances was created by Morwen Thistlethwaite circa 1981 and is based on group theory. Thistlethwaite’s algorithm splits all possible positions of the cube into five groups of decreasing size as seen in Table \ref{tab:table3}. David Singmaster, Thistlethwaite’s colleague at London South Bank University (then called Polytechnic of the South Bank), describes the methodology of the algorithm: \enquote{Once in $G_i$, one only uses moves in $G_i$ to get into $G_{i+1}$. The ratio $\frac{|G_i|}{|G_{i+1}|}$ is called the index of $G_{i+1}$ in $G_i$.} Using this algorithm, Thistlethwaite proved that the maximum number of moves required to solve any valid position is fifty-two \cite{Singmaster1981}. This was the first development of God’s Number, so named because it is the number of moves that an omniscient being would use to solve a Cube in the most efficient manner without failure. 
+    There have been many historical landmark algorithms since the Rubik’s Cube’s inception in 1974. One of the earliest instances was created by Morwen Thistlethwaite circa 1981 and is based on group theory. Thistlethwaite’s algorithm splits all possible positions of the cube into five groups of decreasing size as seen in Table \ref{tab:table3}. David Singmaster, Thistlethwaite’s colleague at London South Bank University (then called Polytechnic of the South Bank), describes the methodology of the algorithm: \enquote{Once in $G_i$, one only uses moves in $G_i$ to get into $G_{i+1}$. The ratio $\frac{|G_i|}{|G_{i+1}|}$ is called the index of $G_{i+1}$ in $G_i$.} Using this algorithm, Thistlethwaite proved that the maximum number of moves required to solve any valid position is fifty-two \cite{Singmaster1981}. This was the first development of God’s Number, so named because it is the number of moves that an omniscient being would use to solve a Cube in the most efficient manner without failure.
+    
+    \section{God's Number}
+    The lower bound for God’s Number was recognised to be eighteen moves through analysis of the number of sequences of seventeen moves or fewer, and the discovery that there were more Cube positions than seventeen-moves-or-fewer sequences. In 1995, the lower bound was increased to twenty by Michael Reid upon discovering that the \enquote{Superflip} position requires twenty moves to solve. He included his findings in an email to the Cube-Lovers mailing list, \enquote{superflip is now known to require 20 face turns . . . this is the first improvement to the lower bound (18f) given by a simple counting argument} \cite{Reid1995}.
+    
+    The next refinement to the upper bound of God’s Number came from Dutch Mathematician Hans Kloosterman in December of 1989. Kloosterman’s findings were published in a newsletter \enquote{Cubism for Fun} (CFF) as an article titled \enquote{Rubik’s Cube in 44 Moves}. In this article Kloosterman discusses his existing solution to the Magic Domino, a subset of the Rubik’s Cube, and how he has adapted it into a more efficient Cube solution with the help of Thistlethwaite’s algorithm. Kloosterman reduced the estimation of God’s Number by adapting Thistlethwaite’s $G_3$ into a subgroup of $G_2$ where all of the $U$-cubies are on the $U$ face and all the $D$-cubies are similarly on the $D$ face. This reduces the index $\frac{|G_2|}{|G_3|}$ form 15 to 8 (whilst also reducing the ($G_1:G_2$) index by 3 and increasing the ($G_3:G_4$) index by 1), creating a net decrease of 8 moves when compared to Thistlethwaite’s algorithm. \enquote{Rubik's Cube in 44 Moves} ended with an editor’s note stating that not all of the details of the algorithm were certain and more (including a more efficient algorithm) would be revealed in a later issue \cite{Kloosterman1989}.
+    
+    Sure enough, a year later Kloosterman wrote an article titled \enquote{Rubik’s Cube in 42 Moves} in the twenty-fifth issue of CFF. This stated that the new algorithm was in fact the final version of Kloosterman’s forty-four move algorithm. In the same way as its predecessor, this article is split into four stages to solve a Cube. The first three stages are based on \enquote{solving} a Cube with only certain cubies coloured - the positions of the other remain irrelevant until a later stage. The final stage is solving the Cube in a non-particular manner, and is calculated to take no more than eighteen moves \cite{Kloosterman1990}.
+    
+    In the following twenty years, the upper bound was gradually refined to match the lower bound - meaning that God’s Number is exactly twenty. The final development came from a group of four Rubik’s Cube enthusiasts in July of 2010, and was only achieved through a brute force method: the four-man team first took every possible position of a Cube and reduced it from forty-three quintillion positions down to just over one quintillion - still a vast number, but a reduction by a factor of forty-three - by using rules of symmetry and mirroring. They then wrote a program to find solve sequences of length twenty or less, and ran it on a \enquote{large number of computers at Google} to find all solve sequences in a few weeks. The parallel computation took the equivalent of thirty-five years \cite{Rokicki2010}.
+    
+   	\begin{figure}[h]
+    	\begin{center}
+    		\includegraphics[width=0.5\textwidth]{Images/GodsNumberGraph.jpg}
+    		\caption{The upper bound was decreased to 20 over the course of twenty-nine years and across thirteen separate studies \cite{Rokicki2010}}
+    		\label{fig:godsnumbergraph}
+    	\end{center}
+    \end{figure}
+    
+    \section{Python as a Scientific Scripting Language}
+    Traditionally when performing large calculations and processes, compiled languages (C, C++, Fortran etc.) are the preferred choice over scripting languages such as Ruby, JavaScript, (pure) Python, etcetera. This is because compilation is done before run-time, allowing the program to run un-hindered by on-the-fly translation/interpretation \cite{Cai2005}.
+    
+    For general purpose applications, scripting languages are preferable because they allow small changes to be made without re-compiling large classes before testing. In the thirteenth issue of \enquote{Scientific Programming}, Cai, Langtangen and Moe \cite{Cai2005} explain how MATLAB is often a preferable choice for less intensive scientific computation due to its many features, such as: integrated simulation and visualisation tools; clear syntax; immediate feedback of commands; impressive documentation. They describe the use of MATLAB in computational science as paradoxical, as it is a scripting language which inherently is interpreted at run-time.
+    
+    One of MATLAB’s biggest selling points, the IDE with integrated support for matrices, graphs and other mathematical features, can be replicated in a few Python IDEs or with the addition of Python ‘packages’. Python’s main core can be expanded massively by using any of the tens of thousands of available packages, which can provide any of MATLAB’s advantages alongside extra flexibility and capabilities. One of the most popular packages, ‘Numerical Python’ (NumPy), adds support for most scientific calculations. It expands Python’s inbuilt data structures to use multi-dimensional homogenous arrays of any Python data type. NumPy takes Python from a well-structured general-purpose language to a powerful mathematical language which can be applied to many different tasks \cite{Cai2005}, \cite{Oliphant2006}.
+    
+    As well as the multitude of available packages, Python has another major tool in its arsenal: it can be extended with a compiled language by design. This means that processor-intensive tasks like nested for loops can be migrated to a compiled language such as C++ or Fortran, increasing run speed up to a factor of ten. This extension process is now a trivial matter thanks to automated tools such as \enquote{f2py}, which allows for automated calls to compiled Fortran code \cite{Oliphant2006}. In conclusion, given Python’s wide compatibility, clear high-level syntax, and extendibility to compiled code for more complex calculations, it is the ideal language for this project.
+    
+    \section{Conclusion}
+    % TODO: add a conclusion
+   
+    \newpage
+    \chapter{Requirements and Analysis}
+    \epigraph{I have yet to see any problem, however complicated, which when you looked at in the right way, did not become still more complicated.}{\textit{Paul Anderson, New Scientist (25/09/1969)\cite{Anderson1969}}}
+    
+    \section{Chapter Introduction} % TODO: maybe add more to this
+    This chapter covers the specific requirements needed for the project to succeed: the hardware required to build the robot and run the solving program; the software needed to write and run the program; and the specific tasks to complete the project. As well as the requirements, an in-depth analysis of the project and its goals is made, discussing their feasibility, difficulty, and how necessary they are for the success of this project.
+    
+    \section{Specific Aims and Objectives}
+    \renewcommand*{\arraystretch}{1.4}
+    \begin{longtable}[h]{m{0.6\textwidth}M{0.15\textwidth}M{0.15\textwidth}}
+    	\caption{The objectives, with relative difficulty and value}
+    	\label{tab:table4}\\
+    	\toprule
+    	\multirow{2}{*}{\textbf{Objective}} & \multicolumn{2}{c}{\textbf{Weightings}} \\
+    	& \textbf{Difficulty} & \textbf{Value} \\
+    	\midrule
+    	\endfirsthead
+    	\toprule
+    	\multirow{2}{*}{\textbf{Objective}} & \multicolumn{2}{c}{\textbf{Weightings}} \\
+    	& \textbf{Difficulty} & \textbf{Value} \\
+    	\midrule
+    	\endhead 
+    	\textit{1. Build a robot which can move a Cube to a sufficient degree of accuracy.} \par This is the primary objective for this project, and is imperative to the project’s success. As such it will be the first objective to be completed. This task, despite being of a medium difficulty, is fairly straightforward by nature: the robot simply needs to manipulate a Cube in any valid move. & 10\% & 20\% \\
+		\textit{2. Convert human-compatible move sequences to robot-compatible sequences.} \par This objective is non-essential to the project’s success because all of the analysis could be performed using the robot’s capabilities as a constant ‘frame of reference’. This, however, would require a manual translation of the pre-existing algorithms into robot-compatible algorithms and as such the translator is of high value in this project. & 20\% & 10\% \\
+		\textit{2.1 Move the Cube in a given (robot-compatible) sequence.} \par Once a robot-compatible move sequence has been generated, the robot must move the Cube in this exact sequence with no errors or move-failures. If a single move is performed incorrectly then the entire move sequence is inherently moot. & 5\% & 10\% \\
+		\textit{3. Implement a system which successfully generates a solve sequence for any given position.} \par This is the core goal of the project, and take precedence above all others. The program will take certain arguments to define the parameters of the algorithm and output a solve sequence. This may take a substantial amount of time to complete and this must be a consideration on completing this task. & 40\% & 30\% \\
+		\textit{4. Ensure the runtime of the system is an acceptable length.} \par Some previous attempts at finding optimal solve-sequences have had estimated run times in the order of tens of weeks. Clearly this is unacceptable or the scope of this project and thus the runtime of the project will have a target of sub-fifteen minutes, with the intention of bringing it under five minutes. & 10\% & 10\% \\
+		\textit{5. Implement a program to use other algorithms to generate a solve sequence.} \par This objective makes up a significant part of this project. Different algorithms presented by notable persons will be implemented and measured by the robot. & 10\% & 10\% \\
+		\textit{6. Compare the performance of different algorithms, especially the difference between human-compatible and robot-compatible move sequences.} \par Once all algorithms have been run and measured, their performance will be analysed and compared. In this context, performance comprises the efficiency in finding the solve sequence and the length of the solve sequence. \par Algorithms for generating a human-compatible sequence will also be compared against those that generate robot-compatible sequences. & 5\% & 10\% \\
+    	\bottomrule
+    \end{longtable}
+    
+    \section{Analysis}
+    \subsection{Software Requirements}
+    \subsubsection{Python 3.6 Runtime Environment}
+    Python is the ideal language for this project, as discussed in the Literature Review, and requires a runtime environment for programs to be run. This consists of the Python interpreter, libraries, and any packages used in the development process.
+    \subsubsection{ev3dev}
+    ev3dev \cite{Ev3dev.org} is a custom operating system (OS) for the EV3 which s contain a low-level framework for the peripherals of an EV3. It allows users to write their own programs in a multitude of languages (including Python) to create complex functions and models. It is installed by flashing the ev3dev OS to a microSD card which is then inserted into the EV3, avoiding affecting the EV3’s original firmware.
+    
+    A Python wrapper is available on GitHub \cite{Ev3dev} for the ev3dev OS, allowing the creation of Python programs with packaged support for the actuators and sensors of the EV3.
+    
+    \subsubsection{PyCharm}
+    Python doesn’t require an Integrated Development Environment (IDE) for developing or running programs, however using an IDE makes both of these tasks, and testing, much easier. The program(s) for this project will be written using PyCharm from JetBrains \cite{JetBrains}. PyCharm provides strong code completion abilities, project-wide refactoring, and software development kit (SDK) modification amongst many other abilities. This will allow more time to be allocated to tasks of higher value rather than struggling with relatively minor issues.
+    
+    
+    
+    
+    
+    
     
     \begin{appendix}
     	\newpage  
