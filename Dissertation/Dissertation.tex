@@ -16,6 +16,7 @@
 \usepackage{parskip}		% better paragraph formatting
 \usepackage{graphicx}		% image package
 \usepackage{longtable} 		% To display tables on several pages
+\usepackage{pgfgantt}		% Gantt Charts
 
 \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
 
@@ -278,6 +279,8 @@
     Python doesn’t require an Integrated Development Environment (IDE) for developing or running programs, however using an IDE makes both of these tasks, and testing, much easier. The program(s) for this project will be written using PyCharm from JetBrains \cite{JetBrains}. PyCharm provides strong code completion abilities, project-wide refactoring, and software development kit (SDK) modification amongst many other abilities. This will allow more time to be allocated to tasks of higher value rather than struggling with relatively minor issues.
     
     \subsubsection{Software-Hardware Comparisons}
+    The below tables show the requirements of the software to be used in the creation of this project, and the capabilities of the computer that they will be running on. This includes both the Main Development Computer and also the Lego EV3.
+    
     \begin{table}[htbp]
     	\def\arraystretch{1.25}
     	\centering
@@ -299,7 +302,7 @@
 		\def\arraystretch{1.25}
 		\centering
 		\caption{Software requirements for the main development computer and its capabilities}
-		\label{tab:table5}
+		\label{tab:table6}
 		\begin{tabular}{M{0.18\textwidth}M{0.18\textwidth}M{0.18\textwidth}M{0.18\textwidth}M{0.18\textwidth}}
 			\toprule
 			\multirow{2}{*}{\textbf{Software/Hardware}} & \multicolumn{4}{c}{\textbf{Requirements/Capabilities}} \\
@@ -314,8 +317,27 @@
 		\end{tabular}
 	\end{table}
     
+    \subsubsection{Evaluative Techniques}
+    The progress of this project is estimated to follow the below Gantt Chart. For the duration of its lifespan, there will be a continual measurement of the actual progress against predicted.
     
-    
+	\begin{center}
+		\begin{ganttchart}[
+			hgrid,x unit=0.475mm,
+			vgrid={*{6}{draw=none},dotted},
+			milestone/.append style={xscale=12.5},
+			title height=.6,
+			time slot format=isodate
+			]{2017-07-03}{2018-04-29}
+			\gantttitlecalendar{year, month=shortname} \\
+			\ganttgroup{Robot}{2017-07-15}{2017-12-25} \\
+			\ganttbar{Design}{2017-07-20}{2017-10-01} \\
+			\ganttbar{Build}{2017-07-20}{2017-10-01} \\
+			\ganttbar{Testing}{2017-07-20}{2017-10-01} \\
+			\ganttbar{Refinement}{2017-07-20}{2017-10-01} \\
+			\ganttmilestone{Complete}{2017-10-01}
+			
+		\end{ganttchart}
+	\end{center}
     
     
     \begin{appendix}
