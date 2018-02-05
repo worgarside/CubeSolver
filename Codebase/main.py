@@ -1,21 +1,20 @@
 from cube.cube_class import Cube
-import cube.moves as move
+from cube.moves import *
 
 r_cube = Cube()
 
-move.d2(r_cube)
-move.b(r_cube)
-move.not_u(r_cube)
-move.l(r_cube)
-move.not_d(r_cube)
-move.f(r_cube)
-move.b2(r_cube)
-move.not_d(r_cube)
-move.b(r_cube)
-move.not_f(r_cube)
-move.not_f(r_cube)
-move.u(r_cube)
-move.not_r(r_cube)
-move.u(r_cube)
-
 print(r_cube)
+d2(r_cube)
+b(r_cube)
+not_u(r_cube)
+l(r_cube)
+not_d(r_cube)
+f(r_cube)
+b2(r_cube)
+not_d(r_cube)
+b(r_cube)
+not_f(r_cube)
+not_f(r_cube)
+u(r_cube)
+not_r(r_cube)
+u(r_cube)
