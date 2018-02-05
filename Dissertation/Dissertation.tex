@@ -321,23 +321,47 @@
     The progress of this project is estimated to follow the below Gantt Chart. For the duration of its lifespan, there will be a continual measurement of the actual progress against predicted.
     
 	\begin{center}
-		\begin{ganttchart}[
-			hgrid,x unit=0.475mm,
-			vgrid={*{6}{draw=none},dotted},
-			milestone/.append style={xscale=12.5},
-			title height=.6,
-			time slot format=isodate
-			]{2017-07-03}{2018-04-29}
+		\begin{ganttchart}[title/.append style={fill=black!10}, hgrid, x unit=0.4mm, y unit title=7.5mm,, y unit chart=5mm, vgrid={*{6}{draw=none},dotted},	milestone/.append style={xscale=10}, time slot format=isodate]{2017-07-03}{2018-04-29}
 			\gantttitlecalendar{year, month=shortname} \\
-			\ganttgroup{Robot}{2017-07-15}{2017-12-25} \\
-			\ganttbar{Design}{2017-07-20}{2017-10-01} \\
-			\ganttbar{Build}{2017-07-20}{2017-10-01} \\
-			\ganttbar{Testing}{2017-07-20}{2017-10-01} \\
-			\ganttbar{Refinement}{2017-07-20}{2017-10-01} \\
-			\ganttmilestone{Complete}{2017-10-01}
-			
+			\ganttgroup{Robot}{2017-07-15}{2017-09-18} \\
+			\ganttbar{Design}{2017-07-20}{2017-08-20} \\
+			\ganttbar{Build}{2017-08-08}{2017-09-04} \\
+			\ganttbar{Testing}{2017-09-01}{2017-09-15} \\
+			\ganttbar{Refinement}{2017-09-05}{2017-09-17} \\
+			\ganttmilestone{Complete}{2017-09-18} \\
+			\ganttgroup{Project}{2018-02-01}{2018-04-15} \\
+			\ganttbar{Binary Search Method}{2018-02-05}{2018-02-25} \\
+			\ganttbar{Primary Solve Method}{2018-02-24}{2018-03-05} \\
+			\ganttmilestone{Cube Solved}{2018-03-05} \\
+			\ganttbar{Primary Refinements}{2018-03-05}{2018-03-12} \\
+			\ganttbar{Further Algorithms}{2018-03-10}{2018-03-20} \\
+			\ganttbar{Performance Comparison}{2018-03-20}{2018-03-31} \\
+			\ganttmilestone{Optimal Solve}{2018-04-05} \\
+			\ganttbar{Implementation}{2018-03-16}{2018-04-04} \\
+			\ganttbar{Testing}{2018-03-30}{2018-04-05} \\
+			\ganttgroup{Final Write Up}{2017-09-20}{2018-04-29} \\
+			\ganttbar{Introduction}{2017-09-23}{2017-10-02} \\
+			\ganttbar{Research}{2017-09-28}{2017-12-12} \\
+			\ganttbar{Literature Review}{2017-10-03}{2017-11-13} \\
+			\ganttbar{Requirements and Analysis}{2017-10-28}{2017-11-20} \\
+			\ganttbar{Results and Discussion}{2018-03-24}{2018-04-17} \\
+			\ganttmilestone{Conclusions}{2018-04-20} \\
+			\ganttmilestone{Deadline}{2018-05-02}
 		\end{ganttchart}
-	\end{center}
+	\end{center}    
+    
+    \newpage
+    \chapter{Design}
+    
+    \newpage
+    \chapter{Implementation and Testing}
+    
+    \newpage
+    \chapter{Results and Discussion}
+    
+    \newpage
+    \chapter{Conclusions}
+    
     
     
     \begin{appendix}
