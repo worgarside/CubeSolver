@@ -1,20 +1,25 @@
 from cube.cube_class import Cube
-from cube.moves import *
+from cube.move_class import Move as MOVE
+from position_generator import *
+from linked_list import LinkedList
+
+GROUP_THREE = [MOVE.U2, MOVE.D2, MOVE.L2, MOVE.R2, MOVE.F2, MOVE.B2]
+GROUP_TWO = [MOVE.U2, MOVE.D2, MOVE.L, MOVE.R, MOVE.F2, MOVE.B2]
+GROUP_ONE = [MOVE.U2, MOVE.D2, MOVE.L, MOVE.R, MOVE.F, MOVE.B]
+GROUP_ZERO = [MOVE.U, MOVE.D, MOVE.L, MOVE.R, MOVE.F, MOVE.B]
+
+GROUP_TEST = [MOVE.U, MOVE.D]
 
 r_cube = Cube()
 
-print(r_cube)
-d2(r_cube)
-b(r_cube)
-not_u(r_cube)
-l(r_cube)
-not_d(r_cube)
-f(r_cube)
-b2(r_cube)
-not_d(r_cube)
-b(r_cube)
-not_f(r_cube)
-not_f(r_cube)
-u(r_cube)
-not_r(r_cube)
-u(r_cube)
+generate_positions(Cube(), GROUP_TEST)
+
+l = LinkedList()
+
+l.add( 'a' )
+l.add( 'b' )
+l.add( 'c' )
+
+print(l)
+l.remove( l.search( 'b' ) )
+print(l)
