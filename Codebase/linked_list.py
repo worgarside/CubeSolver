@@ -1,18 +1,25 @@
+from cube.cube_class import SOLVED_POS
+
+DEFAULT_HEAD = 0, SOLVED_POS , '-', False
+
 class Node:
-    def __init__(self, data):
-        self.id = None
+    def __init__(self, id, data, parent_move, leaf = False):
+        self.parent = None
+        self.child = None
+        self.id = id
         self.data = data
-        self.next = None
-        self.prev = None
-        self.parent_move = None
-        self.leaf = None
+        self.parent_move = parent_move
+        self.leaf = leaf
+
+    def __str__(self):
+        return str(self.id) + ', ' + self.data
 
 class LinkedList:
     def __init__(self):
-        self.head = None
+        self.head = Node(*DEFAULT_HEAD)
 
-    def push(self, data):
-        node = Node(data)
+    def push(self, id, data, parent_move, leaf = False):
+        node = Node(id, data, parent_move, leaf)
         if self.head == None:
             self.head = node
         else:
@@ -20,37 +27,12 @@ class LinkedList:
             node.parent.child = node
             self.head = node
 
-    def add(self, data):
-        node = Node(data)
-        if self.head == None:
-            self.head = node
-        else:
-            node.next = self.head
-            node.next.prev = node
-            self.head = node
-
-    def search(self, k):
-        p = self.head
-        if p != None:
-            while p.next != None:
-                if (p.data == k):
-                    return p
-                p = p.next
-            if (p.data == k):
-                return p
-        return None
-
-    def remove(self, p):
-        tmp = p.prev
-        p.prev.next = p.next
-        p.prev = tmp
-
     def __str__(self):
-        s = ""
-        p = self.head
-        if p != None:
-            while p.next != None:
-                s += p.data
-                p = p.next
-            s += p.data
-        return s
+        output = ""
+        curr_node = self.head
+        if curr_node != None:
+            while curr_node.parent != None:
+                output += str(curr_node.id) + ', ' + curr_node.data + ', ' + str(curr_node.parent_move) + ', ' + str(curr_node.leaf) + "\n"
+                curr_node = curr_node.parent
+            output += str(curr_node.id) + ', ' + curr_node.data + ', ' + str(curr_node.parent_move) + ', ' + str(curr_node.leaf)
+        return output
