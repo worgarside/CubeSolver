@@ -2,11 +2,12 @@ from cube.moves import *
 from cube.cube_class import Cube
 from position_class import Position # (id, position, depth, parent_id, parent_move)
 
-DEPTH_LIMIT = 9
+DEPTH_LIMIT = 6
 
 def generate_positions(cube, group):
     positions = {}  # depth: set(position)
     position_set = set()
+    coded_position_set = set()
     depth = 0
     id = 0
 
@@ -24,12 +25,15 @@ def generate_positions(cube, group):
                 symmetrical = False
 
                 if not symmetrical:
-                    if c.position not in position_set:
+                    # use a set to check duplicates
+                    # if c.position not in position_set:
+                    if code_position(c.position) not in coded_position_set:
                         id += 1
                         # write all data to file / add to database
                         positions[depth + 1].add(Position(id, c.position, depth, p.id, m))
 
                         position_set.add(c.position)
+                        coded_position_set.add(code_position(c.position))
                     else:
                         prev_count += 1
 
@@ -37,3 +41,16 @@ def generate_positions(cube, group):
         print(depth)
 
     return positions.values()
+
+
+def code_position(position):
+    colors = []
+    pos_coded = ""
+
+    for color in position:
+        if color not in colors:
+            colors.append(color)
+
+        pos_coded += str(colors.index(color))
+
+    return pos_coded

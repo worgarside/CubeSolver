@@ -4,12 +4,13 @@ from .side_class import Side
 
 colorama.init()
 
-SOLVED_POS = "WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY"
+SOLVED_POS = 'WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY'
 
 class Cube:
 
     def __init__(self, position = SOLVED_POS):
         self.position = position
+        self.color_position = ""
         self._color_dict = {'R': '\033[31m', 'B': '\033[34m', 'G': '\033[32m', 'O': '\033[35m', 'W': '\033[37m', 'Y': '\033[33m'}
         self.update_sides()
 
@@ -18,8 +19,8 @@ class Cube:
         linebreak_dict = {2: "\n      ", 5: "\n      ", 8: "\n", 20: "\n", 32: "\n", 44: "\n      ", 47: "\n      ", 50: "\n      "}
         char_net = "      "
         for index, color in enumerate(self.position):
-            char_net = char_net + self._color_dict[color] + color + '\033[0m' + linebreak_dict.get(index, " ")
-        char_net = char_net + "\n"
+            char_net += self._color_dict[color] + color + '\033[0m' + linebreak_dict.get(index, " ")
+        char_net += "\n"
         return char_net
 
     # Updates the sides of the cube from the main position variable
@@ -30,6 +31,11 @@ class Cube:
         self.right = self.position[15:18] + self.position[27:30] + self.position[39:42]
         self.front = self.position[12:15] + self.position[24:27] + self.position[36:39]
         self.back = self.position[18:21] + self.position[30:33] + self.position[42:45]
+        self.update_pos_colors()
+
+    def update_pos_colors(self):
+        for color in self.position:
+            self.color_position += self._color_dict[color] + color + '\033[0m'
 
     # Setter methods
     def set_up(self, pos):

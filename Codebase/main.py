@@ -9,11 +9,11 @@ GROUP_TWO = [MOVE.U2, MOVE.D2, MOVE.L, MOVE.R, MOVE.F2, MOVE.B2]
 GROUP_ONE = [MOVE.U2, MOVE.D2, MOVE.L, MOVE.R, MOVE.F, MOVE.B]
 GROUP_ZERO = [MOVE.U, MOVE.D, MOVE.L, MOVE.R, MOVE.F, MOVE.B]
 
-GROUP_TEST = [MOVE.U, MOVE.R]
-print("Start: " + datetime.datetime.now().strftime("%H%M"))
+GROUP_TEST = [MOVE.U, MOVE.D, MOVE.L, MOVE.R, MOVE.F, MOVE.B, MOVE.X, MOVE.Y, MOVE.Z]
+print("Start: " + datetime.datetime.now().strftime("%H:%M"))
 
 start = int(round(time.time() * 1000))
-pos_vals = generate_positions(Cube(), GROUP_ZERO)
+pos_vals = generate_positions(Cube(), GROUP_TEST)
 end = int(round(time.time() * 1000))
 
 total = (end - start)/1000
@@ -26,3 +26,16 @@ with open("Positions/" + datetime.datetime.now().strftime("%Y-%m-%d %H%M") + ".c
             f.write(str(q) + ',')
         f.write("\n")
 f.close()
+
+# from symmetry_checker import check_symmetry
+#
+# cube1 = Cube()
+# r2(cube1)
+# not_d(cube1)
+#
+# cube2 = Cube()
+# x2(cube2)
+# r2(cube2)
+# not_d(cube2)
+#
+# check_symmetry(cube1.position, cube2.position)
