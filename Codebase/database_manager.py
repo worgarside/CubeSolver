@@ -19,5 +19,12 @@ class DatabaseManager(object):
         self.conn.commit()
         return self.cur
 
+    def clear(self):
+        tables = self.query("SELECT name FROM main.sqlite_master WHERE type='table'")
+        for t in tables:
+            print("DROP TABLE %s" % t[0])
+            self.cur.execute("DROP TABLE %s" % t[0])
+        return self.cur
+
     def __del__(self):
         self.conn.close()

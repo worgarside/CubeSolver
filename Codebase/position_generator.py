@@ -2,45 +2,36 @@ from cube.moves import *
 from cube.cube_class import Cube
 from position_class import Position # (id, position, depth, parent_id, parent_move)
 
-DEPTH_LIMIT = 4
+DEPTH_LIMIT = 7
 
-def generate_positions(cube, group):
-    positions = {}  # depth: set(position)
-    position_set = set()
-    coded_position_set = set()
+def generate_positions(db, cube, group):
     depth = 0
     id = 0
 
-    positions[depth] = {Position(0, cube.position, depth, -1, MOVE.NONE)}
+    db.query("INSERT INTO positions VALUES (?, ?, ?, ?, ?)", (0, cube.position, depth, -1, 'NONE'))
 
     while depth < DEPTH_LIMIT:
-        positions[depth+1] = set()
-        for p in positions[depth]:
-            prev_count = 0
-            for m in group:
-                c = Cube(p.position)
-                dyn_move(c, m)
 
-                # check symmetry here
-                symmetrical = False
+        position_data = db.query("SELECT * FROM positions WHERE depth=?", [depth])
+        position_data = position_data.fetchall()
 
-                if not symmetrical:
-                    # use a set to check duplicates
-                    # if c.position not in position_set:
-                    if code_position(c.position) not in coded_position_set:
-                        id += 1
-                        # write all data to file / add to database
-                        positions[depth + 1].add(Position(id, c.position, depth, p.id, m))
-
-                        position_set.add(c.position)
-                        coded_position_set.add(code_position(c.position))
-                    else:
-                        prev_count += 1
+        for p in position_data:
+            for move in group:
+                c = Cube(p[1])
+                dyn_move(c, move)
+                id += 1
+                db.query("INSERT INTO positions VALUES (?, ?, ?, ?, ?)", (id, c.position, depth+1, p[0], str(move)[5:]))
 
         depth += 1
-        print(depth)
 
-    return positions.values()
+                # found = db.query("SELECT EXISTS(SELECT 1 FROM positions WHERE position=?) LIMIT 1", [c.position]).fetchone()
+                #
+                # if found == (0,):
+                #     id += 1
+                #     db.query("INSERT INTO positions VALUES (?, ?, ?, ?, ?)", (id, c.position, depth, p[0], str(move)[5:]))
+                #     print('-', end='')
+                # else:
+                #     print('.', end='')
 
 
 def code_position(position):

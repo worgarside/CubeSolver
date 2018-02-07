@@ -11,57 +11,42 @@ GROUP_TWO = [MOVE.U2, MOVE.D2, MOVE.L, MOVE.R, MOVE.F2, MOVE.B2]
 GROUP_ONE = [MOVE.U2, MOVE.D2, MOVE.L, MOVE.R, MOVE.F, MOVE.B]
 GROUP_ZERO = [MOVE.U, MOVE.D, MOVE.L, MOVE.R, MOVE.F, MOVE.B]
 
-GROUP_TEST = [MOVE.U, MOVE.D, MOVE.L, MOVE.R, MOVE.F, MOVE.B, MOVE.X, MOVE.Y, MOVE.Z]
-
-conn = None
+GROUP_TEST = [MOVE.U2, MOVE.D2, MOVE.L2, MOVE.R2, MOVE.F2, MOVE.B2]
 
 
-def main():
+def init_db():
     db = DatabaseManager('data/db.sqlite3')
 
-    print("Start: " + datetime.datetime.now().strftime("%H:%M"))
-
     db.query("""CREATE TABLE IF NOT EXISTS positions (
-                id integer PRIMARY KEY,
-                position text NOT NULL,
-                depth integer NOT NULL,
-                parent_id integer NOT NULL,
-                parent_move text NOT NULL)
-            """)
+                    id integer PRIMARY KEY,
+                    position text NOT NULL,
+                    depth integer NOT NULL,
+                    parent_id integer NOT NULL,
+                    parent_move text NOT NULL)
+                """)
 
+    return db
+
+def main():
+    db = init_db()
+
+    print("Start: " + datetime.datetime.now().strftime("%H:%M"))
     start = int(round(time.time() * 1000))
-    pos_vals = generate_positions(Cube(), GROUP_TEST)
+    generate_positions(db, Cube(), GROUP_THREE)
     end = int(round(time.time() * 1000))
-
     total = (end - start)/1000
-    print("Total Time: " + str(total))
-
-    print("Inserting...")
-
-    for value in pos_vals:
-        print(len(value))
-        for p in value:
-            db.query("INSERT INTO positions VALUES (?, ?, ?, ?, ?)", (p.id, p.position, p.depth, p.parent_id, str(p.parent_move)))
+    print("Time: " + str(total))
+    #
+    # found = db.query("SELECT EXISTS(SELECT 1 FROM positions WHERE position='WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY') LIMIT 1", ).fetchone()
+    #
+    # print(found)
+    #
+    # if found == (1,):
+    #     print('true')
+    # else:
+    #     print('false')
 
     db.commit()
-
-    end = int(round(time.time() * 1000))
-
-    total = (end - start)/1000
-    print("Total Time: " + str(total))
-
-    # from symmetry_checker import check_symmetry
-    #
-    # cube1 = Cube()
-    # r2(cube1)
-    # not_d(cube1)
-    #
-    # cube2 = Cube()
-    # x2(cube2)
-    # r2(cube2)
-    # not_d(cube2)
-    #
-    # check_symmetry(cube1.position, cube2.position)
 
 
 if __name__ == "__main__":
