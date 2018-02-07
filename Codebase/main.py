@@ -10,9 +10,10 @@ GROUP_ONE = [MOVE.U2, MOVE.D2, MOVE.L, MOVE.R, MOVE.F, MOVE.B]
 GROUP_ZERO = [MOVE.U, MOVE.D, MOVE.L, MOVE.R, MOVE.F, MOVE.B]
 
 GROUP_TEST = [MOVE.U, MOVE.R]
+print("Start: " + datetime.datetime.now().strftime("%H%M"))
 
 start = int(round(time.time() * 1000))
-pos_vals = generate_positions(Cube(), GROUP_THREE)
+pos_vals = generate_positions(Cube(), GROUP_ZERO)
 end = int(round(time.time() * 1000))
 
 total = (end - start)/1000
