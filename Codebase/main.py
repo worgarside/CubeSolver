@@ -1,5 +1,9 @@
-from position_generator import *
+from position_generator import generate_positions
 import time
+from cube.moves import *
+from cube.cube_class import Cube
+import datetime
+
 
 GROUP_THREE = [MOVE.U2, MOVE.D2, MOVE.L2, MOVE.R2, MOVE.F2, MOVE.B2]
 GROUP_TWO = [MOVE.U2, MOVE.D2, MOVE.L, MOVE.R, MOVE.F2, MOVE.B2]
@@ -11,17 +15,16 @@ GROUP_TEST = [MOVE.U, MOVE.R]
 # r_cube = Cube()
 #
 start = int(round(time.time() * 1000))
-generate_positions(Cube(), GROUP_THREE)
+pos_vals = generate_positions(Cube(), GROUP_THREE)
 end = int(round(time.time() * 1000))
 
 total = (end - start)/1000
 print("Total Time: " + str(total))
-# l = LinkedList()
-#
-# l.push(1, 'WYORGB', MOVE.U, 1, False)
-# l.push(2, 'ORGBWY', MOVE.U, 2, False)
-# l.push(3, 'GBWYOR', MOVE.U, 2, False)
-# l.push(4, 'BGROYW', MOVE.U, 3, False)
-# l.push(5, 'WWWWWW', MOVE.U, 3, True)
-#
-# print(l)
+
+with open(datetime.datetime.now().strftime("%Y-%m-%d %H%M") + ".csv", "w+") as f:
+    for p in pos_vals:
+        print(len(p))
+        for q in p:
+            f.write(q.position + ',')
+        f.write("\n")
+f.close()

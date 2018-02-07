@@ -1,35 +1,30 @@
-from linked_list import LinkedList
 from cube.moves import *
 from cube.cube_class import Cube
+from position_class import Position # (id, position, depth, parent, parent_move, leaf)
 
-DEPTH_LIMIT = 2
-
-positions = {} # depth: set(position)
+DEPTH_LIMIT = 10
 
 def generate_positions(cube, group):
-    pos_list = LinkedList()
-
+    positions = {}  # depth: set(position)
     depth = 0
     id = 0
 
-    pos_list.push(id, cube.pos, MOVE.NONE, depth)
-    positions[depth] = {cube.pos}
+    positions[depth] = {Position(0, cube.position, depth, None, MOVE.NONE, False)}
 
     while depth < DEPTH_LIMIT:
         positions[depth+1] = set()
         for p in positions[depth]:
             for m in group:
-                c = Cube(p)
+                c = Cube(p.position)
                 dyn_move(c, m)
-                positions[depth + 1].add(c.pos)
+
+                # check symmetry here
+                symmetrical = False
+
+                if not symmetrical:
+                    positions[depth + 1].add(Position(id, c.position, depth, None, m, False))
 
         depth += 1
+        print(depth)
 
-
-
-
-
-        # pos_list.push(id, cube.pos, MOVE.U, depth)
-        # depth += 1
-        # print(depth, end=' ')
-
+    return positions.values()

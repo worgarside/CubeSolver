@@ -8,8 +8,8 @@ SOLVED_POS = "WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY"
 
 class Cube:
 
-    def __init__(self, pos = SOLVED_POS):
-        self.pos = pos
+    def __init__(self, position = SOLVED_POS):
+        self.position = position
         self._color_dict = {'R': '\033[31m', 'B': '\033[34m', 'G': '\033[32m', 'O': '\033[35m', 'W': '\033[37m', 'Y': '\033[33m'}
         self.update_sides()
 
@@ -17,75 +17,75 @@ class Cube:
         """Returns a colored net of the Cube"""
         linebreak_dict = {2: "\n      ", 5: "\n      ", 8: "\n", 20: "\n", 32: "\n", 44: "\n      ", 47: "\n      ", 50: "\n      "}
         char_net = "      "
-        for index, color in enumerate(self.pos):
+        for index, color in enumerate(self.position):
             char_net = char_net + self._color_dict[color] + color + '\033[0m' + linebreak_dict.get(index, " ")
         char_net = char_net + "\n"
         return char_net
 
     # Updates the sides of the cube from the main position variable
     def update_sides(self):
-        self.up = self.pos[:9]
-        self.down = self.pos[45:54]
-        self.left = self.pos[9:12] + self.pos[21:24] + self.pos[33:36]
-        self.right = self.pos[15:18] + self.pos[27:30] + self.pos[39:42]
-        self.front = self.pos[12:15] + self.pos[24:27] + self.pos[36:39]
-        self.back = self.pos[18:21] + self.pos[30:33] + self.pos[42:45]
+        self.up = self.position[:9]
+        self.down = self.position[45:54]
+        self.left = self.position[9:12] + self.position[21:24] + self.position[33:36]
+        self.right = self.position[15:18] + self.position[27:30] + self.position[39:42]
+        self.front = self.position[12:15] + self.position[24:27] + self.position[36:39]
+        self.back = self.position[18:21] + self.position[30:33] + self.position[42:45]
 
     # Setter methods
     def set_up(self, pos):
         if len(pos) == 9:
-            self.pos = pos + self.pos[9:]
+            self.position = pos + self.position[9:]
             self.update_sides()
         else:
-            print('\nset_up: len(pos) != 9')
+            print('\nset_up: len(position) != 9')
             exit()
 
     def set_down(self, pos):
         if len(pos) == 9:
-            self.pos = self.pos[:45] + pos
+            self.position = self.position[:45] + pos
             self.update_sides()
         else:
-            print('\nset_down: len(pos) != 9')
+            print('\nset_down: len(position) != 9')
             exit()
 
     def set_left(self, pos):
         if len(pos) == 9:
-            self.pos = self.pos[:9] + pos[:3] + self.pos[12:21] + pos[3:6] + self.pos[24:33] + pos[6:] + \
-                       self.pos[36:]
+            self.position = self.position[:9] + pos[:3] + self.position[12:21] + pos[3:6] + self.position[24:33] + pos[6:] + \
+                            self.position[36:]
             self.update_sides()
         else:
-            print('\nset_left: len(pos) != 9')
+            print('\nset_left: len(position) != 9')
             exit()
 
     def set_right(self, pos):
         if len(pos) == 9:
-            self.pos = self.pos[:15] + pos[:3] + self.pos[18:27] + pos[3:6] + self.pos[30:39] + pos[6:] + \
-                       self.pos[42:]
+            self.position = self.position[:15] + pos[:3] + self.position[18:27] + pos[3:6] + self.position[30:39] + pos[6:] + \
+                            self.position[42:]
             self.update_sides()
         else:
-            print('\nset_right: len(pos) != 9')
+            print('\nset_right: len(position) != 9')
             exit()
 
     def set_front(self, pos):
         if len(pos) == 9:
-            self.pos = self.pos[:12] + pos[:3] + self.pos[15:24] + pos[3:6] + self.pos[27:36] + pos[6:] + \
-                       self.pos[39:]
+            self.position = self.position[:12] + pos[:3] + self.position[15:24] + pos[3:6] + self.position[27:36] + pos[6:] + \
+                            self.position[39:]
             self.update_sides()
         else:
-            print('\nset_front: len(pos) != 9')
+            print('\nset_front: len(position) != 9')
             exit()
 
     def set_back(self, pos):
         if len(pos) == 9:
-            self.pos = self.pos[:18] + pos[:3] + self.pos[21:30] + pos[3:6] + self.pos[33:42] + pos[6:] + \
-                       self.pos[45:]
+            self.position = self.position[:18] + pos[:3] + self.position[21:30] + pos[3:6] + self.position[33:42] + pos[6:] + \
+                            self.position[45:]
             self.update_sides()
         else:
-            print('\nset_back: len(pos) != 9')
+            print('\nset_back: len(position) != 9')
             exit()
 
     def rotate_side(self, direction, side):
-        c = Cube(self.pos)
+        c = Cube(self.position)
 
         if direction == Rotation.CLOCKWISE:
             if side == Side.LEFT:
