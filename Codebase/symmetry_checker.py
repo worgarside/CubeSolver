@@ -10,6 +10,7 @@ OPPOSITE_FACE_DICT = {
     COLOR.BLUE: COLOR.GREEN
 }
 
+
 def check_symmetry(orig_position, second_position):
     check_colour_rotation(orig_position,second_position)
     check_reflection(orig_position, second_position)
@@ -33,6 +34,7 @@ def check_colour_rotation(orig_position, second_position):
 
         orig_pos_coded += str(orig_colors.index(orig))
         second_pos_coded += str(second_colors.index(second))
+
 
 def check_reflection(orig_position, second_position):
     pass

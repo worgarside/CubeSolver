@@ -2,7 +2,7 @@ from cube.moves import *
 from cube.cube_class import Cube
 from position_class import Position # (id, position, depth, parent_id, parent_move)
 
-DEPTH_LIMIT = 6
+DEPTH_LIMIT = 4
 
 def generate_positions(cube, group):
     positions = {}  # depth: set(position)
