@@ -1,4 +1,5 @@
 from thistlethwaite.position_generator import generate_positions
+from korf.tree_generator import generator
 import time
 from cube.moves import *
 import datetime
@@ -14,6 +15,9 @@ GROUP_ZERO = [MOVE.U, MOVE.D, MOVE.L, MOVE.R, MOVE.F, MOVE.B]
 
 GROUP_TEST = [MOVE.U2, MOVE.D2, MOVE.L2, MOVE.R2, MOVE.F2, MOVE.B2]
 
+GROUP_COMPLETE = [MOVE.U, MOVE.NOT_U, MOVE.U2, MOVE.D, MOVE.NOT_D, MOVE.D2,
+                  MOVE.L, MOVE.NOT_L, MOVE.L2, MOVE.R, MOVE.NOT_R, MOVE.R2,
+                  MOVE.F, MOVE.NOT_F, MOVE.F2, MOVE.B, MOVE.NOT_B, MOVE.B2]
 
 def init_db():
     db = DatabaseManager('data/db.sqlite3')
@@ -30,7 +34,7 @@ def init_db():
 
     return db
 
-def main():
+def thistlethwaite():
     db = init_db()
 
     print("Start: " + datetime.datetime.now().strftime("%H:%M"))
@@ -48,6 +52,19 @@ def main():
 
     for i in range(1, 15):
         winsound.Beep(i*100, 100)
+
+
+def korf():
+    cube = Cube()
+    u(cube)
+    r(cube)
+    # l(cube)
+
+    generator(cube, GROUP_COMPLETE)
+
+
+def main():
+    korf()
 
 
 if __name__ == "__main__":
