@@ -5,6 +5,8 @@ import datetime
 from database_manager import DatabaseManager
 import sqlite3
 from cube.cube_class import Cube
+import winsound
+
 
 GROUP_THREE = [MOVE.U2, MOVE.D2, MOVE.L2, MOVE.R2, MOVE.F2, MOVE.B2]
 GROUP_TWO = [MOVE.U2, MOVE.D2, MOVE.L, MOVE.R, MOVE.F2, MOVE.B2]
@@ -16,6 +18,8 @@ GROUP_TEST = [MOVE.U2, MOVE.D2, MOVE.L2, MOVE.R2, MOVE.F2, MOVE.B2]
 
 def init_db():
     db = DatabaseManager('data/db.sqlite3')
+
+    db.query("DROP TABLE IF EXISTS positions")
 
     db.query("""CREATE TABLE IF NOT EXISTS positions (
                     id integer PRIMARY KEY,
@@ -32,21 +36,19 @@ def main():
 
     print("Start: " + datetime.datetime.now().strftime("%H:%M"))
     start = int(round(time.time() * 1000))
-    generate_positions(db, Cube(), GROUP_THREE)
+    pos = generate_positions(Cube(), GROUP_THREE)
     end = int(round(time.time() * 1000))
     total = (end - start)/1000
     print("Time: " + str(total))
-    #
-    # found = db.query("SELECT EXISTS(SELECT 1 FROM positions WHERE position='WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY') LIMIT 1", ).fetchone()
-    #
-    # print(found)
-    #
-    # if found == (1,):
-    #     print('true')
-    # else:
-    #     print('false')
+
+    for p in pos:
+        for q in p:
+            db.query("INSERT INTO positions VALUES (?, ?, ?, ?, ?)", (q.id, q.position, q.depth, q.parent_id, str(q.parent_move)))
 
     db.commit()
+
+    for i in range(1, 15):
+        winsound.Beep(i*100, 100)
 
 
 if __name__ == "__main__":

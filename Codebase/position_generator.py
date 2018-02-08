@@ -2,36 +2,37 @@ from cube.moves import *
 from cube.cube_class import Cube
 from position_class import Position # (id, position, depth, parent_id, parent_move)
 
-DEPTH_LIMIT = 7
+DEPTH_LIMIT = 6
 
-def generate_positions(db, cube, group):
+def generate_positions(cube, group):
+    positions = {}  # depth: set(position)
+    position_set = set()
     depth = 0
     id = 0
 
-    db.query("INSERT INTO positions VALUES (?, ?, ?, ?, ?)", (0, cube.position, depth, -1, 'NONE'))
+    positions[depth] = {Position(0, cube.position, depth, -1, MOVE.NONE)}
 
     while depth < DEPTH_LIMIT:
+        positions[depth+1] = set()
+        for p in positions[depth]:
+            for m in group:
+                c = Cube(p.position)
+                dyn_move(c, m)
 
-        position_data = db.query("SELECT * FROM positions WHERE depth=?", [depth])
-        position_data = position_data.fetchall()
+                # check symmetry here
+                symmetrical = False
 
-        for p in position_data:
-            for move in group:
-                c = Cube(p[1])
-                dyn_move(c, move)
-                id += 1
-                db.query("INSERT INTO positions VALUES (?, ?, ?, ?, ?)", (id, c.position, depth+1, p[0], str(move)[5:]))
+                if not symmetrical:
+                    if c.position not in position_set:
+                        id += 1
+                        # write all data to file / add to database
+                        positions[depth + 1].add(Position(id, c.position, depth+1, p.id, str(m)[5:]))
+                        position_set.add(c.position)
 
         depth += 1
+        print(depth)
 
-                # found = db.query("SELECT EXISTS(SELECT 1 FROM positions WHERE position=?) LIMIT 1", [c.position]).fetchone()
-                #
-                # if found == (0,):
-                #     id += 1
-                #     db.query("INSERT INTO positions VALUES (?, ?, ?, ?, ?)", (id, c.position, depth, p[0], str(move)[5:]))
-                #     print('-', end='')
-                # else:
-                #     print('.', end='')
+    return positions.values()
 
 
 def code_position(position):
