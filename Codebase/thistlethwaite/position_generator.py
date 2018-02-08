@@ -1,6 +1,6 @@
 from cube.moves import *
 from cube.cube_class import Cube
-from position_class import Position # (id, position, depth, parent_id, parent_move)
+from thistlethwaite.position_class import Position # (id, position, depth, parent_id, parent_move)
 
 DEPTH_LIMIT = 6
 
@@ -19,15 +19,11 @@ def generate_positions(cube, group):
                 c = Cube(p.position)
                 dyn_move(c, m)
 
-                # check symmetry here
-                symmetrical = False
-
-                if not symmetrical:
-                    if c.position not in position_set:
-                        id += 1
-                        # write all data to file / add to database
-                        positions[depth + 1].add(Position(id, c.position, depth+1, p.id, str(m)[5:]))
-                        position_set.add(c.position)
+                if c.position not in position_set:
+                    id += 1
+                    # write all data to file / add to database
+                    positions[depth + 1].add(Position(id, c.position, depth+1, p.id, str(m)[5:]))
+                    position_set.add(c.position)
 
         depth += 1
         print(depth)

@@ -1,9 +1,8 @@
-from position_generator import generate_positions
+from thistlethwaite.position_generator import generate_positions
 import time
 from cube.moves import *
 import datetime
-from database_manager import DatabaseManager
-import sqlite3
+from data.database_manager import DatabaseManager
 from cube.cube_class import Cube
 import winsound
 
