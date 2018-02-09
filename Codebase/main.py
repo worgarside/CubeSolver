@@ -55,15 +55,11 @@ def korf(db = None):
 
     cube = Cube()
     u(cube)
-    not_d(cube)
-    u(cube)
-    u2(cube)
-    d2(cube)
-    print(cube)
+    r(cube)
+    l(cube)
 
-    print("Start: " + datetime.datetime.now().strftime("%H:%M"))
     start = int(round(time.time() * 1000))
-    generator(db, cube, GROUP_COMPLETE)
+    generator(cube, GROUP_COMPLETE)
     end = int(round(time.time() * 1000))
     total = (end - start)/1000
     print("Time: " + str(total))
