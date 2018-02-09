@@ -51,13 +51,13 @@ def thistlethwaite(db):
         winsound.Beep(i*100, 100)
 
 
-def korf(db):
+def korf(db = None):
 
     cube = Cube()
     b(cube)
     d(cube)
     f(cube)
-    l(cube)
+    print(cube)
 
     print("Start: " + datetime.datetime.now().strftime("%H:%M"))
     start = int(round(time.time() * 1000))
@@ -68,10 +68,7 @@ def korf(db):
 
 
 def main():
-    db = init_db()
-    korf(db)
-    db.commit()
-
+    korf()
 
 if __name__ == "__main__":
     main()
