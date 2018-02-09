@@ -6,7 +6,7 @@ import datetime
 from data.database_manager import DatabaseManager
 from cube.cube_class import Cube
 import winsound
-
+import colorama
 
 GROUP_THREE = [MOVE.U2, MOVE.D2, MOVE.L2, MOVE.R2, MOVE.F2, MOVE.B2]
 GROUP_TWO = [MOVE.U2, MOVE.D2, MOVE.L, MOVE.R, MOVE.F2, MOVE.B2]
@@ -57,15 +57,17 @@ def korf(db = None):
     u(cube)
     r(cube)
     l(cube)
+    print(cube.color_position)
 
-    start = int(round(time.time() * 1000))
-    generator(cube, GROUP_COMPLETE)
-    end = int(round(time.time() * 1000))
-    total = (end - start)/1000
-    print("Time: " + str(total))
+    # start = int(round(time.time() * 1000))
+    # generator(cube, GROUP_COMPLETE)
+    # end = int(round(time.time() * 1000))
+    # total = (end - start)/1000
+    # print("Time: " + str(total))
 
 
 def main():
+    colorama.init()
     korf()
 
 if __name__ == "__main__":

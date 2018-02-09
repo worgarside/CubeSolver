@@ -1,8 +1,7 @@
-import colorama
 from .rotation_class import Rotation
 from .side_class import Side
 
-colorama.init()
+
 
 SOLVED_POS = 'WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY'
 
@@ -34,6 +33,7 @@ class Cube:
         self.update_pos_colors()
 
     def update_pos_colors(self):
+        self.color_position = ''
         for color in self.position:
             self.color_position += self._color_dict[color] + color + '\033[0m'
 
