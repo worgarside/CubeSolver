@@ -3,9 +3,10 @@ from korf.position_class import Position # (id, position, depth, parent_id, pare
 from cube.move_class import Move as MOVE
 from cube.moves import dyn_move
 import curses
+import re
+from curses import wrapper
 
 def generator(cube, move_group):
-    global stdscr
     solved = False
     solution_id = -1
     positions = {}
@@ -17,6 +18,7 @@ def generator(cube, move_group):
     stdscr = curses.initscr()
     curses.noecho()
     curses.cbreak()
+    curses.start_color()
 
     while not solved:
         positions[depth + 1] = []
@@ -27,8 +29,8 @@ def generator(cube, move_group):
                 id += 1
                 positions[depth + 1].append(Position(id, c.position, depth + 1, p.id, str(m), p.move_chain + [str(m)[5:]]))
 
-                if id % 47 == 0:
-                    print_status(depth, id, c.position, p.move_chain + [str(m)[5:]])
+                if id % 53 == 0:
+                    print_status(stdscr, depth, id, c.position, p.move_chain + [str(m)[5:]])
 
                 if c.position == SOLVED_POS:
                     solved = True
@@ -39,19 +41,24 @@ def generator(cube, move_group):
                 break
         depth += 1
 
-    print_status(depth, solution_id, SOLVED_POS, solution_move_chain)
+    print_status(stdscr, depth, solution_id, SOLVED_POS,solution_move_chain)
 
-    # curses.echo()
-    # curses.nocbreak()
-    # curses.endwin()
-    # sys.stdout.write("\rDepth: %i     Pos ID: %i     Cube: %s     Move Chain: %s                         " %
-    #                  (depth, solution_id, SOLVED_POS, solution_move_chain))
-    # sys.stdout.flush()
 
-def print_status(depth, id, position, move_chain):
-    stdscr.addstr(0, 0, "Depth: %i" % depth)
-    stdscr.addstr(1, 0, "Current Position #%i" % id)
-    stdscr.addstr(2, 0, "Position: %s" % position)
-    stdscr.addstr(3, 0, "Move Chain: %s                 " % move_chain)
-    stdscr.addstr(4, 0, "")
-    stdscr.refresh()
+def print_status(screen, depth, id, position, move_chain):
+    screen.addstr(1, 0, "Depth: %i" % depth)
+    screen.addstr(2, 0, "Current Position #%i" % id)
+    screen.addstr(3, 0, "Move Chain: %s                 " % move_chain)
+    screen.addstr(5, 8, " ".join(position[:3]))
+    screen.addstr(6, 8, " ".join(position[3:6]))
+    screen.addstr(7, 8, " ".join(position[6:9]))
+    screen.addstr(8, 2, " ".join(position[9:21]))
+    screen.addstr(9, 2, " ".join(position[21:33]))
+    screen.addstr(10, 2, " ".join(position[33:45]))
+    screen.addstr(11, 8, " ".join(position[45:48]))
+    screen.addstr(12, 8, " ".join(position[48:51]))
+    screen.addstr(13, 8, " ".join(position[51:]))
+
+
+
+    screen.move(15, 0)
+    screen.refresh()

@@ -55,15 +55,16 @@ def korf(db = None):
 
     cube = Cube()
     u(cube)
+    u(cube)
+    u(cube)
     r(cube)
     l(cube)
-    print(cube.color_position)
 
-    # start = int(round(time.time() * 1000))
-    # generator(cube, GROUP_COMPLETE)
-    # end = int(round(time.time() * 1000))
-    # total = (end - start)/1000
-    # print("Time: " + str(total))
+    start = int(round(time.time() * 1000))
+    generator(cube, GROUP_COMPLETE)
+    end = int(round(time.time() * 1000))
+    total = (end - start)/1000
+    print("Time: " + str(total))
 
 
 def main():
