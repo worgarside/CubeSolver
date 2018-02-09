@@ -14,10 +14,10 @@ def generator(cube, move_group):
     id = 0
     positions[depth] = {Position(0, cube.position, depth, -1, MOVE.NONE, [])}
     solution_move_chain = []
+    color_dict = {'O': curses.COLOR_MAGENTA, 'R': curses.COLOR_RED, 'B': curses.COLOR_BLUE, 'Y': curses.COLOR_YELLOW,
+                  'G': curses.COLOR_GREEN}
 
-    stdscr = curses.initscr()
-    curses.noecho()
-    curses.cbreak()
+    curses.initscr()
     curses.start_color()
 
     while not solved:
@@ -29,8 +29,9 @@ def generator(cube, move_group):
                 id += 1
                 positions[depth + 1].append(Position(id, c.position, depth + 1, p.id, str(m), p.move_chain + [str(m)[5:]]))
 
-                if id % 53 == 0:
-                    print_status(stdscr, depth, id, c.position, p.move_chain + [str(m)[5:]])
+                if id % 97 == 0:
+                    # print_status(stdscr, depth, id, c.position, p.move_chain + [str(m)[5:]])
+                    wrapper(print_status, depth, id, c.position, p.move_chain + [str(m)[5:]], color_dict)
 
                 if c.position == SOLVED_POS:
                     solved = True
@@ -41,24 +42,47 @@ def generator(cube, move_group):
                 break
         depth += 1
 
-    print_status(stdscr, depth, solution_id, SOLVED_POS,solution_move_chain)
+    # print_status(stdscr, depth, solution_id, SOLVED_POS,solution_move_chain)
+    wrapper(print_status, depth, solution_id, SOLVED_POS,solution_move_chain, color_dict)
 
 
-def print_status(screen, depth, id, position, move_chain):
+def print_status(screen, depth, id, position, move_chain, color_dict):
+    curses.init_pair(curses.COLOR_MAGENTA, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
+    curses.init_pair(curses.COLOR_BLUE, curses.COLOR_BLUE, curses.COLOR_BLACK)
+    curses.init_pair(curses.COLOR_GREEN, curses.COLOR_GREEN, curses.COLOR_BLACK)
+    curses.init_pair(curses.COLOR_RED, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(curses.COLOR_YELLOW, curses.COLOR_YELLOW, curses.COLOR_BLACK)
+
     screen.addstr(1, 0, "Depth: %i" % depth)
     screen.addstr(2, 0, "Current Position #%i" % id)
     screen.addstr(3, 0, "Move Chain: %s                 " % move_chain)
-    screen.addstr(5, 8, " ".join(position[:3]))
-    screen.addstr(6, 8, " ".join(position[3:6]))
-    screen.addstr(7, 8, " ".join(position[6:9]))
-    screen.addstr(8, 2, " ".join(position[9:21]))
-    screen.addstr(9, 2, " ".join(position[21:33]))
-    screen.addstr(10, 2, " ".join(position[33:45]))
-    screen.addstr(11, 8, " ".join(position[45:48]))
-    screen.addstr(12, 8, " ".join(position[48:51]))
-    screen.addstr(13, 8, " ".join(position[51:]))
+    # screen.addstr(5, 8, " ".join(position[:3]))
+    # screen.addstr(6, 8, " ".join(position[3:6]))
+    # screen.addstr(7, 8, " ".join(position[6:9]))
+    # screen.addstr(8, 2, " ".join(position[9:21]))
+    # screen.addstr(9, 2, " ".join(position[21:33]))
+    # screen.addstr(10, 2, " ".join(position[33:45]))
+    # screen.addstr(11, 8, " ".join(position[45:48]))
+    # screen.addstr(12, 8, " ".join(position[48:51]))
+    # screen.addstr(13, 8, " ".join(position[51:]))
 
+    addstr_colored(screen, 5, 8, " ".join(position[:3]), color_dict)
+    addstr_colored(screen, 6, 8, " ".join(position[3:6]), color_dict)
+    addstr_colored(screen, 7, 8, " ".join(position[6:9]), color_dict)
+    addstr_colored(screen, 8, 2, " ".join(position[9:21]), color_dict)
+    addstr_colored(screen, 9, 2, " ".join(position[21:33]), color_dict)
+    addstr_colored(screen, 10, 2, " ".join(position[33:45]), color_dict)
+    addstr_colored(screen, 11, 8, " ".join(position[45:48]), color_dict)
+    addstr_colored(screen, 12, 8, " ".join(position[48:51]), color_dict)
+    addstr_colored(screen, 13, 8, " ".join(position[51:]), color_dict)
 
-
-    screen.move(15, 0)
     screen.refresh()
+
+
+def addstr_colored(screen, row, col, string, color_dict):
+    screen.move(row, col)
+
+    pattern = r'([A-Z])'
+    s = re.split(pattern, string)
+    for s in s:
+        screen.addstr(s, curses.color_pair(color_dict.get(s, 0)))

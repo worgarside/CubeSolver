@@ -54,9 +54,15 @@ def thistlethwaite(db):
 def korf(db = None):
 
     cube = Cube()
-    u(cube)
-    u(cube)
-    u(cube)
+    # u(cube)
+    # u(cube)
+    # d(cube)
+    # u(cube)
+    # r(cube)
+    # l(cube)
+
+    d(cube)
+    not_u(cube)
     r(cube)
     l(cube)
 

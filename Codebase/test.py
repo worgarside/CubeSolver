@@ -50,7 +50,7 @@ curses.noecho()
 curses.cbreak()
 curses.start_color()
 
-colors = {'O': curses.COLOR_MAGENTA, 'R': curses.COLOR_RED, 'B': curses.COLOR_BLUE, 'Y': curses.COLOR_YELLOW, 'G': curses.COLOR_GREEN}
+color_dict = {'O': curses.COLOR_MAGENTA, 'R': curses.COLOR_RED, 'B': curses.COLOR_BLUE, 'Y': curses.COLOR_YELLOW, 'G': curses.COLOR_GREEN}
 
 wrapper(print_status, 1, 420, "WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY", ['NOT_L', 'NOT_R', 'NOT_U'], colors)
 # wrapper(main, colors)
