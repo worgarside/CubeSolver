@@ -1,11 +1,11 @@
 class Position:
-    def __init__(self, id, position, depth, parent_id, parent_move, move_chain, leaf = False):
+    def __init__(self, id, position, depth, parent_id, parent_move, leaf = False):
         self.id = id
         self.position = position
         self.depth = depth
         self.parent_id = parent_id
         self.parent_move = parent_move
-        self.move_chain = move_chain
+        # self.move_chain = move_chain
         self.leaf = leaf
 
     def __str__(self):

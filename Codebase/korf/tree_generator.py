@@ -19,7 +19,7 @@ def generator(db, cube, move_group):
                 c = Cube(p.position)
                 dyn_move(c, m)
                 id += 1
-                positions[depth + 1].append(Position(id, c.position, depth + 1, p.id, [], str(m)))
+                positions[depth + 1].append(Position(id, c.position, depth + 1, p.id, str(m)))
 
                 if id % 47 == 0:
                     # print(str(depth) + ' ' + str(id))
