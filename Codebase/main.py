@@ -35,13 +35,7 @@ def init_db():
     return db
 
 def thistlethwaite(db):
-
-    print("Start: " + datetime.datetime.now().strftime("%H:%M"))
-    start = int(round(time.time() * 1000))
-    pos = generate_positions(Cube(), GROUP_THREE)
-    end = int(round(time.time() * 1000))
-    total = (end - start)/1000
-    print("Time: " + str(total))
+    pos = time_function(generate_positions, Cube(), GROUP_THREE)
 
     for p in pos:
         for q in p:
@@ -51,26 +45,25 @@ def thistlethwaite(db):
         winsound.Beep(i*100, 100)
 
 
-def korf(db = None):
-
+def korf():
     cube = Cube()
-    # u(cube)
-    # u(cube)
-    # d(cube)
-    # u(cube)
-    # r(cube)
-    # l(cube)
 
     d(cube)
     not_u(cube)
     r(cube)
     l(cube)
 
+    time_function(generator, cube, GROUP_COMPLETE)
+
+
+def time_function(func, *args):
     start = int(round(time.time() * 1000))
-    generator(cube, GROUP_COMPLETE)
+    result = func(*args)
     end = int(round(time.time() * 1000))
     total = (end - start)/1000
     print("Time: " + str(total))
+
+    return result
 
 
 def main():

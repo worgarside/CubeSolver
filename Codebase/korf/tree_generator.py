@@ -6,6 +6,7 @@ import curses
 import re
 from curses import wrapper
 
+
 def generator(cube, move_group):
     solved = False
     solution_id = -1
@@ -29,8 +30,7 @@ def generator(cube, move_group):
                 id += 1
                 positions[depth + 1].append(Position(id, c.position, depth + 1, p.id, str(m), p.move_chain + [str(m)[5:]]))
 
-                if id % 97 == 0:
-                    # print_status(stdscr, depth, id, c.position, p.move_chain + [str(m)[5:]])
+                if id % 193 == 0:
                     wrapper(print_status, depth, id, c.position, p.move_chain + [str(m)[5:]], color_dict)
 
                 if c.position == SOLVED_POS:
@@ -42,7 +42,6 @@ def generator(cube, move_group):
                 break
         depth += 1
 
-    # print_status(stdscr, depth, solution_id, SOLVED_POS,solution_move_chain)
     wrapper(print_status, depth, solution_id, SOLVED_POS,solution_move_chain, color_dict)
 
 
@@ -56,16 +55,6 @@ def print_status(screen, depth, id, position, move_chain, color_dict):
     screen.addstr(1, 0, "Depth: %i" % depth)
     screen.addstr(2, 0, "Current Position #%i" % id)
     screen.addstr(3, 0, "Move Chain: %s                 " % move_chain)
-    # screen.addstr(5, 8, " ".join(position[:3]))
-    # screen.addstr(6, 8, " ".join(position[3:6]))
-    # screen.addstr(7, 8, " ".join(position[6:9]))
-    # screen.addstr(8, 2, " ".join(position[9:21]))
-    # screen.addstr(9, 2, " ".join(position[21:33]))
-    # screen.addstr(10, 2, " ".join(position[33:45]))
-    # screen.addstr(11, 8, " ".join(position[45:48]))
-    # screen.addstr(12, 8, " ".join(position[48:51]))
-    # screen.addstr(13, 8, " ".join(position[51:]))
-
     addstr_colored(screen, 5, 8, " ".join(position[:3]), color_dict)
     addstr_colored(screen, 6, 8, " ".join(position[3:6]), color_dict)
     addstr_colored(screen, 7, 8, " ".join(position[6:9]), color_dict)
@@ -75,7 +64,6 @@ def print_status(screen, depth, id, position, move_chain, color_dict):
     addstr_colored(screen, 11, 8, " ".join(position[45:48]), color_dict)
     addstr_colored(screen, 12, 8, " ".join(position[48:51]), color_dict)
     addstr_colored(screen, 13, 8, " ".join(position[51:]), color_dict)
-
     screen.refresh()
 
 
