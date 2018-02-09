@@ -1,5 +1,5 @@
 from cube.cube_class import Cube, SOLVED_POS
-from korf.position_class import Position # (id, position, depth, parent_id, parent_move, move_chain, leaf)
+from korf.position_class import Position # (id, position, depth, parent_id, parent_move, move_chain)
 from cube.move_class import Move as MOVE
 from cube.moves import dyn_move
 import sys
@@ -10,7 +10,8 @@ def generator(db, cube, move_group):
     positions = {}
     depth = 0
     id = 0
-    positions[depth] = {Position(0, cube.position, depth, -1, [], MOVE.NONE)}
+    positions[depth] = {Position(0, cube.position, depth, -1, MOVE.NONE, [])}
+    solution_move_chain = []
 
     while not solved:
         positions[depth + 1] = []
@@ -19,31 +20,20 @@ def generator(db, cube, move_group):
                 c = Cube(p.position)
                 dyn_move(c, m)
                 id += 1
-                positions[depth + 1].append(Position(id, c.position, depth + 1, p.id, str(m)))
+                positions[depth + 1].append(Position(id, c.position, depth + 1, p.id, str(m), p.move_chain + [str(m)[5:]]))
 
                 if id % 47 == 0:
-                    # print(str(depth) + ' ' + str(id))
-                    sys.stdout.write("\r Depth: %i     Pos ID: %i     Cube: %s" % (depth, id, c.position))
+                    sys.stdout.write("\rDepth: %i     Pos ID: %i     Cube: %s     Move Chain: %s                         " % (depth, id, c.position, p.move_chain + [str(m)[5:]]))
                     sys.stdout.flush()
 
                 if c.position == SOLVED_POS:
                     solved = True
                     solution_id = id
+                    solution_move_chain = p.move_chain + [str(m)[5:]]
                     break
 
         depth += 1
 
-    backtrace(solution_id, positions)
-
-
-def backtrace(solution_id, position_dict):
-    target_id = solution_id
-    move_list= []
-
-    for depth, position_set in sorted(list(position_dict.items()), key=lambda x: x[0], reverse=True):
-        position = [pos for pos in position_set if pos.id == target_id][0]
-        move_list.append(position.parent_move)
-        target_id = position.parent_id
-
-    print('\n')
-    print(move_list[::-1][1:])
+    sys.stdout.write("\rDepth: %i     Pos ID: %i     Cube: %s     Move Chain: %s                         " %
+                     (depth, solution_id, SOLVED_POS, solution_move_chain))
+    sys.stdout.flush()

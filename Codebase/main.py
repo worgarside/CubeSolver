@@ -54,9 +54,11 @@ def thistlethwaite(db):
 def korf(db = None):
 
     cube = Cube()
-    b(cube)
-    d(cube)
-    f(cube)
+    u(cube)
+    not_d(cube)
+    u(cube)
+    u2(cube)
+    d2(cube)
     print(cube)
 
     print("Start: " + datetime.datetime.now().strftime("%H:%M"))
