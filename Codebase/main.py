@@ -47,7 +47,6 @@ def thistlethwaite(db):
         for q in p:
             db.query("INSERT INTO positions VALUES (?, ?, ?, ?, ?)", (q.id, q.position, q.depth, q.parent_id, str(q.parent_move)))
 
-
     for i in range(1, 15):
         winsound.Beep(i*100, 100)
 
@@ -55,11 +54,17 @@ def thistlethwaite(db):
 def korf(db):
 
     cube = Cube()
-    u(cube)
-    r(cube)
-    b2(cube)
+    b(cube)
+    d(cube)
+    f(cube)
+    l(cube)
 
+    print("Start: " + datetime.datetime.now().strftime("%H:%M"))
+    start = int(round(time.time() * 1000))
     generator(db, cube, GROUP_COMPLETE)
+    end = int(round(time.time() * 1000))
+    total = (end - start)/1000
+    print("Time: " + str(total))
 
 
 def main():
