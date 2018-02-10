@@ -1,5 +1,5 @@
 class Position:
-    def __init__(self, id, position, depth, parent_id, parent_move, move_chain = None):
+    def __init__(self, id, position, depth, parent_id, parent_move, move_chain=None):
         self.id = id
         self.position = position
         self.depth = depth
