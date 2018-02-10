@@ -7,4 +7,5 @@ class Position:
         self.parent_move = parent_move
 
     def __str__(self):
-        return str(self.id) + ' ' + self.position + ' ' + str(self.depth) + ' ' + str(self.parent_id) + ' ' + str(self.parent_move)[5:]
+        return str(self.id) + ' ' + self.position + ' ' + str(self.depth) + ' ' + str(self.parent_id) + ' ' + str(
+            self.parent_move)[5:]

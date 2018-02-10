@@ -5,18 +5,22 @@
 \author{Will Garside}
 
 \usepackage[a4paper,left=2.54cm,right=2.54cm, top=2.54cm, bottom=2.54cm]{geometry}	% better margins
-\usepackage{booktabs} 		% tables with nice formatting
-\usepackage{tabularx}		% tables with proper width
-\usepackage{multirow}		% multi-row cells in table
-\usepackage{gensymb}		% symbols
-\usepackage[british]{babel}	% sets language formatting to British
-\usepackage{csquotes}		% quoting commands
-\usepackage{xcolor}			% font coloring
-\usepackage{epigraph}		% epigraphs in chapters
-\usepackage{parskip}		% better paragraph formatting
-\usepackage{graphicx}		% image package
-\usepackage{longtable} 		% To display tables on several pages
-\usepackage{pgfgantt}		% Gantt Charts
+\usepackage{booktabs} 			% tables with nice formatting
+\usepackage{tabularx}			% tables with proper width
+\usepackage{multirow}			% multi-row cells in table
+\usepackage{gensymb}			% symbols
+\usepackage[british]{babel}		% sets language formatting to British
+\usepackage{csquotes}			% quoting commands
+\usepackage{xcolor}				% font coloring
+\usepackage{epigraph}			% epigraphs in chapters
+\usepackage{parskip}			% better paragraph formatting
+\usepackage{graphicx}			% image package
+\usepackage{longtable} 			% To display tables on several pages
+\usepackage{pgfgantt}			% Gantt Charts
+\usepackage{pgfplots}			% draw charts and graphs
+
+\usepgfplotslibrary{dateplot}	% use date in pgfplot
+\pgfplotsset{compat=1.8}
 
 \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
 
@@ -151,7 +155,7 @@
     
     \newpage
     \chapter{Literature Review}
-    \epigraph{Please forgive me, but to give birth to a machine is wonderful progress. It's more convenient and it's quicker, and everything that's quicker means progress. Nature had no notion of the modern rate of work. From a technical point of view, the whole of childhood is quite pointless.}{\textit{Mr. Fabry, in Karel \v{C}apek's Rossum's Universal Robots (1921)}}
+    \epigraph{Please forgive me, but to give birth to a machine is wonderful progress. It's more convenient and it's quicker, and everything that's quicker means progress. Nature had no notion of the modern rate of work. From a technical point of view, the whole of childhood is quite pointless.}{Mr. Fabry, in Karel \v{C}apek's \textit{Rossum's Universal Robots \cite{Capek1921b}}}
     
     \section{Robotics}
     The term robot was first brought to the collective consciousness of the general public by Karel \v{C}apek in 1921 in his play \enquote{Rossum's Universal Robots} \cite{Capek1921b}. It comes from the Czech for \enquote{forced labour} and was coined by \v{C}apek's brother, Josef, for a short story written some years earlier \cite{Etymonline2017}. One of the main discussions in the field of robotics has been about ethics and morality. This discussion was started in \v{C}apek's play, when a visiting scientist tries to destroy the robot-manufacturing business, in the hope of giving the robots a soul and making them happier. This plan goes awry when the robots become sentient and start to overthrow the humans that created them. Twenty-one years later, the novelette \enquote{Runaround} by Isaac Asimov was featured in the magazine \enquote{Astounding Science-Fiction} \cite{Asimov1942b}. It included his now-prominent Three Laws of Robotics, which were a turning point in the field of robotics and meta-ethics.
@@ -216,11 +220,48 @@
     
    	\begin{figure}[h]
     	\begin{center}
-    		\includegraphics[width=0.5\textwidth]{Images/GodsNumberGraph.jpg}
+			\begin{tikzpicture}
+				\begin{axis}[title={God's Number}, date coordinates in=x,	enlarge x limits=false, xticklabel={\year},	date ZERO=1980-01-01, xmin=1980-01-01, xmax=2020-01-01,	xtick={1980-01-02,1990-01-01,2000-01-01,2010-01-01,2020-01-01}]
+				\addplot coordinates {
+					(1981-07-01, 52)
+					(1990-12-01, 42)
+					(1992-05-01, 39)
+					(1992-05-01, 37)
+					(1995-01-01, 29)
+					(1995-01-01, 29)
+					(2005-12-01, 28)
+					(2006-04-01, 27)
+					(2007-05-01, 26)
+					(2008-03-01, 25)
+					(2008-04-01, 23)
+					(2008-08-01, 22)
+					(2010-07-01, 20)
+					(2018-01-01, 20)
+				};
+				\addplot coordinates {
+					(1981-07-01, 18)
+					(1990-12-01, 18)
+					(1992-05-01, 18)
+					(1992-05-01, 18)
+					(1995-01-01, 18)
+					(1995-01-01, 20)
+					(2005-12-01, 20)
+					(2006-04-01, 20)
+					(2007-05-01, 20)
+					(2008-03-01, 20)
+					(2008-04-01, 20)
+					(2008-08-01, 20)
+					(2010-07-01, 20)
+					(2018-01-01, 20)
+				};
+				\legend{Upper Bound, Lower Bound}
+				\end{axis}
+			\end{tikzpicture}
     		\caption{The upper bound was decreased to 20 over the course of twenty-nine years and across thirteen separate studies \cite{Rokicki2010}}
-    		\label{fig:godsnumbergraph}
-    	\end{center}
-    \end{figure}
+			\label{fig:godsnumbergraph}
+		\end{center}
+	\end{figure}
+
     
     \section{Python as a Scientific Scripting Language}
     Traditionally when performing large calculations and processes, compiled languages (C, C++, Fortran etc.) are the preferred choice over scripting languages such as Ruby, JavaScript, (pure) Python, etcetera. This is because compilation is done before run-time, allowing the program to run un-hindered by on-the-fly translation/interpretation \cite{Cai2005}.
@@ -229,14 +270,15 @@
     
     One of MATLAB’s biggest selling points, the IDE with integrated support for matrices, graphs and other mathematical features, can be replicated in a few Python IDEs or with the addition of Python ‘packages’. Python’s main core can be expanded massively by using any of the tens of thousands of available packages, which can provide any of MATLAB’s advantages alongside extra flexibility and capabilities. One of the most popular packages, ‘Numerical Python’ (NumPy), adds support for most scientific calculations. It expands Python’s inbuilt data structures to use multi-dimensional homogenous arrays of any Python data type. NumPy takes Python from a well-structured general-purpose language to a powerful mathematical language which can be applied to many different tasks \cite{Cai2005}, \cite{Oliphant2006}.
     
-    As well as the multitude of available packages, Python has another major tool in its arsenal: it can be extended with a compiled language by design. This means that processor-intensive tasks like nested for loops can be migrated to a compiled language such as C++ or Fortran, increasing run speed up to a factor of ten. This extension process is now a trivial matter thanks to automated tools such as \enquote{f2py}, which allows for automated calls to compiled Fortran code \cite{Oliphant2006}. In conclusion, given Python’s wide compatibility, clear high-level syntax, and extendibility to compiled code for more complex calculations, it is the ideal language for this project.
+    As well as the multitude of available packages, Python has another major tool in its arsenal: it can be extended with a compiled language by design. This means that processor-intensive tasks like nested for loops can be migrated to a compiled language such as C++ or Fortran, increasing run speed up to a factor of ten. This extension process is now a trivial matter thanks to automated tools such as \enquote{f2py}, which allows for automated calls to compiled Fortran code \cite{Oliphant2006}.
     
     \section{Conclusion}
     % TODO: add a conclusion
+    In conclusion, given Python’s wide compatibility, clear high-level syntax, and extendibility to compiled code for more complex calculations, it is the ideal language for this project.
    
     \newpage
     \chapter{Requirements and Analysis}
-    \epigraph{I have yet to see any problem, however complicated, which when you looked at in the right way, did not become still more complicated.}{\textit{Paul Anderson, New Scientist (25/09/1969)\cite{Anderson1969}}}
+    \epigraph{I have yet to see any problem, however complicated, which when you looked at in the right way, did not become still more complicated.}{Paul Anderson, New Scientist \cite{Anderson1969}}
     
     \section{Chapter Introduction} % TODO: maybe add more to this
     This chapter covers the specific requirements needed for the project to succeed: the hardware required to build the robot and run the solving program; the software needed to write and run the program; and the specific tasks to complete the project. As well as the requirements, an in-depth analysis of the project and its goals is made, discussing their feasibility, difficulty, and how necessary they are for the success of this project.
@@ -352,20 +394,36 @@
     
     \newpage
     \chapter{Design}
-    \section{Cube Class}
-    \subsubsection{Structure}
-    A string 
+    \epigraph{There are two ways of constructing a software design: One way is to make it so simple that there are obviously no deficiencies, and the other way is to make it so complicated that there are no obvious deficiencies. The first method is far more difficult.}{\textit{C.A.R.Hoare\cite{Hoare1981}}}
+    \section{Robot}
+    \subsection{Cube Manipulation}
+    \subsection{Move Sequence Translation}
+    \section{Codebase}
+    \subsection{Object Classes}
+    \subsubsection{Cube}
+    \subsubsection{Position}
+    \subsection{Solve Methods}
+    \subsubsection{Group Based}
+    \subsubsection{Tree Based}
+    \subsection{Database}
     
     \newpage
     \chapter{Implementation and Testing}
+    \section{Building the Robot}
+    \subsection{The Color Scanner}
+    \subsection{The Cradle}
+    \subsection{Z-Move Arm}
+    \section{Coding a Solver}
+    \subsection{Group Theory Method}
+    \subsubsection{Group Generation}
+    \subsection{Tree Method}
+    \subsubsection{Tree Generation}
     
     \newpage
     \chapter{Results and Discussion}
     
     \newpage
     \chapter{Conclusions}
-    
-    
     
     \begin{appendix}
     	\newpage  

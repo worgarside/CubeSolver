@@ -313,7 +313,7 @@ def z2(self, print_flag=False):
     print('z2') if print_flag else 0
 
 
-def dyn_move(self, move, print_flag = False):
+def dyn_move(self, move, print_flag=False):
     move_dict = {
         MOVE.U: u,
         MOVE.NOT_U: not_u,

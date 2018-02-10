@@ -1,8 +1,9 @@
 from cube.moves import dyn_move
 from cube.cube_class import Cube
-from thistlethwaite.position_class import Position # (id, position, depth, parent_id, parent_move)
+from thistlethwaite.position_class import Position  # (id, position, depth, parent_id, parent_move)
 
 DEPTH_LIMIT = 6
+
 
 def generate_positions(cube, group):
     positions = {}  # depth: set(position)
@@ -13,7 +14,7 @@ def generate_positions(cube, group):
     positions[depth] = {Position(0, cube.position, depth, -1, MOVE.NONE)}
 
     while depth < DEPTH_LIMIT:
-        positions[depth+1] = set()
+        positions[depth + 1] = set()
         for p in positions[depth]:
             for m in group:
                 c = Cube(p.position)

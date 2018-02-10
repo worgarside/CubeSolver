@@ -1,5 +1,5 @@
 from cube.cube_class import Cube, SOLVED_POS
-from korf.position_class import Position # (id, position, depth, parent_id, parent_move, move_chain)
+from korf.position_class import Position  # (id, position, depth, parent_id, parent_move, move_chain)
 from cube.move_class import Move as MOVE
 from cube.moves import dyn_move
 import curses
@@ -28,6 +28,9 @@ def generator(cube, move_group):
             for m in move_group:
                 c = Cube(p.position)
                 dyn_move(c, m)
+                id += 1
+                positions[depth + 1].append(
+                    Position(id, c.position, depth + 1, p.id, str(m), p.move_chain + [str(m)[5:]]))
 
                 if c.position not in position_set:
                     id += 1
@@ -46,7 +49,7 @@ def generator(cube, move_group):
                 break
         depth += 1
 
-    wrapper(print_status, depth, solution_id, SOLVED_POS,solution_move_chain, color_dict)
+    wrapper(print_status, depth, solution_id, SOLVED_POS, solution_move_chain, color_dict)
 
 
 def print_status(screen, depth, id, position, move_chain, color_dict):

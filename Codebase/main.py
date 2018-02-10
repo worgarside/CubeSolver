@@ -25,11 +25,11 @@ def init_db():
     db.query("DROP TABLE IF EXISTS positions")
 
     db.query("""CREATE TABLE IF NOT EXISTS positions (
-                    id integer PRIMARY KEY,
-                    position text NOT NULL,
-                    depth integer NOT NULL,
-                    parent_id integer NOT NULL,
-                    parent_move text NOT NULL)
+                    id INTEGER PRIMARY KEY,
+                    position TEXT NOT NULL,
+                    depth INTEGER NOT NULL,
+                    parent_id INTEGER NOT NULL,
+                    parent_move TEXT NOT NULL)
                 """)
 
     return db
@@ -44,7 +44,7 @@ def thistlethwaite(db):
                      (q.id, q.position, q.depth, q.parent_id, str(q.parent_move)))
 
     for i in range(1, 15):
-        winsound.Beep(i*100, 100)
+        winsound.Beep(i * 100, 100)
 
 
 def korf():
@@ -75,7 +75,7 @@ def time_function(func, *args):
     start = int(round(time.time() * 1000))
     result = func(*args)
     end = int(round(time.time() * 1000))
-    total = (end - start)/1000
+    total = (end - start) / 1000
     print("Time: " + str(total))
 
     return result
