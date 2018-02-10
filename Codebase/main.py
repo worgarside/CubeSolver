@@ -1,11 +1,10 @@
 from thistlethwaite.position_generator import generate_positions
-from korf.tree_generator import generator
+from korf.tree_generator import TreeGenerator
 import time
 from cube.moves import *
 from data.database_manager import DatabaseManager
 from cube.cube_class import Cube
-import winsound
-import colorama
+from gui.interface import Interface
 
 GROUP_THREE = [MOVE.U2, MOVE.D2, MOVE.L2, MOVE.R2, MOVE.F2, MOVE.B2]
 GROUP_TWO = [MOVE.U2, MOVE.D2, MOVE.L, MOVE.R, MOVE.F2, MOVE.B2]
@@ -43,18 +42,16 @@ def thistlethwaite(db):
             db.query("INSERT INTO positions VALUES (?, ?, ?, ?, ?)",
                      (q.id, q.position, q.depth, q.parent_id, str(q.parent_move)))
 
-    for i in range(1, 15):
-        winsound.Beep(i * 100, 100)
 
-
-def korf():
+def korf(window):
     cube = Cube()
 
     u(cube)
     r(cube)
     l(cube)
 
-    time_function(generator, cube, GROUP_COMPLETE)
+    # time_function(generator, cube, GROUP_COMPLETE)
+    TreeGenerator(cube, GROUP_COMPLETE, window)
 
 
 def time_function(func, *args):
@@ -68,9 +65,8 @@ def time_function(func, *args):
 
 
 def main():
-    colorama.init()
-    korf()
-
+    window = Interface()
+    korf(window)
 
 if __name__ == "__main__":
     main()
