@@ -50,23 +50,9 @@ def thistlethwaite(db):
 def korf():
     cube = Cube()
 
-    # d(cube)
-    # not_u(cube)
-    # r(cube)
-    # l(cube)
+    u(cube)
     r(cube)
-    u(cube)
-    not_r(cube)
-    u2(cube)
-    not_l(cube)
-    d(cube)
-    u(cube)
-    not_l(cube)
-    not_r(cube)
-    u2(cube)
-    not_d(cube)
-
-    # print(cube)
+    l(cube)
 
     time_function(generator, cube, GROUP_COMPLETE)
 
