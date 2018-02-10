@@ -31,7 +31,9 @@ class TreeGenerator:
 
                     if c.position not in self.position_set:
 
-                        self.window.update_position(c.position)
+                        if self.pos_id % 50 == 0:
+                            print(self.pos_id)
+                            self.window.update_position(c.position)
 
                         self.pos_id += 1
                         self.positions[self.depth + 1].append(

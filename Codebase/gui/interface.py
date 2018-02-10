@@ -1,7 +1,8 @@
 from tkinter import *
 
+
 class Interface():
-    def __init__(self, width = 500, height = 500):
+    def __init__(self, width=1500, height=1000):
         self.root = Tk()
         self.canvas = Canvas(self.root, width=width, height=height)
         self.color_dict = {
@@ -12,6 +13,7 @@ class Interface():
             'B': 'blue',
             'Y': 'yellow'
         }
+        self.cubie = []
         self.canvas.pack()
         self.update_canvas()
 
@@ -21,9 +23,30 @@ class Interface():
         # self.root.mainloop()
 
     def create_elements(self):
-        self.cubie_1 = self.canvas.create_rectangle(20, 20, 100, 100, fill='white')
+        coords = [
+            (3, 0, 4, 1), (4, 0, 5, 1), (5, 0, 6, 1),
+            (3, 1, 4, 2), (4, 1, 5, 2), (5, 1, 6, 2),
+            (3, 2, 4, 3), (4, 2, 5, 3), (5, 2, 6, 3),
+            (0, 3, 1, 4), (1, 3, 2, 4), (2, 3, 3, 4), (3, 3, 4, 4), (4, 3, 5, 4), (5, 3, 6, 4), (6, 3, 7, 4),
+            (7, 3, 8, 4), (8, 3, 9, 4), (9, 3, 10, 4), (10, 3, 11, 4), (11, 3, 12, 4),
+            (0, 4, 1, 5), (1, 4, 2, 5), (2, 4, 3, 5), (3, 4, 4, 5), (4, 4, 5, 5), (5, 4, 6, 5), (6, 4, 7, 5),
+            (7, 4, 8, 5), (8, 4, 9, 5), (9, 4, 10, 5), (10, 4, 11, 5), (11, 4, 12, 5),
+            (0, 5, 1, 6), (1, 5, 2, 6), (2, 5, 3, 6), (3, 5, 4, 6), (4, 5, 5, 6), (5, 5, 6, 6), (6, 5, 7, 6),
+            (7, 5, 8, 6), (8, 5, 9, 6), (9, 5, 10, 6), (10, 5, 11, 6), (11, 5, 12, 6),
+            (3, 6, 4, 7), (4, 6, 5, 7), (5, 6, 6, 7),
+            (3, 7, 4, 8), (4, 7, 5, 8), (5, 7, 6, 8),
+            (3, 8, 4, 9), (4, 8, 5, 9), (5, 8, 6, 9),
+            
+        ]
+        self.cubie_1 = self.canvas.create_rectangle(200, 100, 5, 5, fill='white')
+        for c in range(len(coords)):
+            self.cubie.append(
+                self.canvas.create_rectangle(*tuple((i * 40) + 100 for i in coords[c]), fill='red', outline='white'))
+
         print('creating things')
 
     def update_position(self, position):
-        self.canvas.itemconfig(self.cubie_1, fill=self.color_dict[position[0]])
+        for index, color in enumerate(position):
+            self.canvas.itemconfig(self.cubie[index], fill=self.color_dict[color])
+
         self.update_canvas()

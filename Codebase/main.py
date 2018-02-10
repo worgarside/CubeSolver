@@ -66,7 +66,7 @@ def time_function(func, *args):
 
 def main():
     window = Interface()
-    korf(window)
+    time_function(korf, window)
 
 if __name__ == "__main__":
     main()
