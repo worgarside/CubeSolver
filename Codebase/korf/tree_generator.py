@@ -17,6 +17,7 @@ def generator(cube, move_group):
     solution_move_chain = []
     color_dict = {'O': curses.COLOR_MAGENTA, 'R': curses.COLOR_RED, 'B': curses.COLOR_BLUE, 'Y': curses.COLOR_YELLOW,
                   'G': curses.COLOR_GREEN}
+    position_set = set()
 
     curses.initscr()
     curses.start_color()
@@ -27,17 +28,20 @@ def generator(cube, move_group):
             for m in move_group:
                 c = Cube(p.position)
                 dyn_move(c, m)
-                id += 1
-                positions[depth + 1].append(Position(id, c.position, depth + 1, p.id, str(m), p.move_chain + [str(m)[5:]]))
 
-                if id % 193 == 0:
-                    wrapper(print_status, depth, id, c.position, p.move_chain + [str(m)[5:]], color_dict)
+                if c.position not in position_set:
+                    id += 1
+                    positions[depth + 1].append(Position(id, c.position, depth + 1, p.id, str(m), p.move_chain + [str(m)[5:]]))
+                    position_set.add(c.position)
 
-                if c.position == SOLVED_POS:
-                    solved = True
-                    solution_id = id
-                    solution_move_chain = p.move_chain + [str(m)[5:]]
-                    break
+                    if id % 193 == 0:
+                        wrapper(print_status, depth, id, c.position, p.move_chain + [str(m)[5:]], color_dict)
+
+                    if c.position == SOLVED_POS:
+                        solved = True
+                        solution_id = id
+                        solution_move_chain = p.move_chain + [str(m)[5:]]
+                        break
             if solved:
                 break
         depth += 1
