@@ -1,48 +1,76 @@
-#!/usr/bin/python3
-
-import queue
-import threading
-import datetime
+import random
 import time
-
-exitFlag = 0
-
-
-class MyThread(threading.Thread):
-    def __init__(self, thread_id, name, q, func):
-        threading.Thread.__init__(self)
-        self.threadID = thread_id
-        self.name = name
-        self.q = q
-        self.func = func
-
-    def run(self):
-        print("Starting " + self.name)
-        self.func(self.q)
-        print("Exiting " + self.name)
+import tkinter
+from multiprocessing import Process, Queue
 
 
-def create_data(q):
-    while True:
-        q.put(str(datetime.datetime.now().time()))
-        time.sleep(0.5)
+class Interface():
+    def __init__(self, queue):
+        self.queue = queue
+        self.root = tkinter.Tk()
+        self.canvas = tkinter.Canvas(self.root, width=500, height=500)
+        self.squares = []
+        self.create_squares()
 
-def print_data(q):
-    time.sleep(10)
-    while not q.empty():
-        data = q.get()
-        print(data)
+    def create_squares(self):
+        coords = [(3, 0, 4, 1), (4, 0, 5, 1), (5, 0, 6, 1), (3, 1, 4, 2), (4, 1, 5, 2)]
+        for j in range(5):
+            self.squares.append(
+                self.canvas.create_rectangle(*tuple((i * 40) + 40 for i in coords[j]), fill='red', outline='white'))
+        self.canvas.pack()
 
-workQueue = queue.Queue(0)
+    def update_square(self):
+        while not self.queue.empty():
+            color = self.queue.get()
+            print(color)
+            self.canvas.itemconfig(self.squares[0], fill=color)
+            time.sleep(0.5)
+            self.root.update_idletasks()
+            self.root.update()
 
 
-gen_thread = MyThread(1, 'gen', workQueue, create_data)
-print_thread = MyThread(2, 'print', workQueue, print_data)
+def create_data(queue):
+    color_list = ['white', 'orange', 'red', 'green', 'blue', 'yellow']
+    data_count = 0
+    while data_count < 20:
+        rand_color = random.choice(color_list)
+        queue.put(rand_color)
+        print('.', end='')
+        data_count += 1
+        time.sleep(0.25)
+    print('data completed')
 
-gen_thread.start()
-print_thread.start()
 
-gen_thread.join()
-print_thread.join()
+def main():
+    position_queue = Queue()
+    p = Process(target=create_data, args=(position_queue,))
+    p.start()
+    # p.join()
 
-print("Exiting Main Thread")
+    window = Interface(position_queue)
+    window.root.after(1000, window.update_square)
+    window.root.mainloop()
+    # window.root.update_idletasks()
+    # window.root.update()
+
+    # number_of_task = 10
+    # number_of_processes = 4
+    # tasks_that_are_done = Queue()
+    # processes = []
+    #
+    # for i in range(number_of_task):
+    #     tasks_to_accomplish.put("Task no " + str(i))
+    #
+    # # creating processes
+    # for w in range(number_of_processes):
+    #     p = Process(target=do_job, args=(tasks_to_accomplish, tasks_that_are_done))
+    #     processes.append(p)
+    #     p.start()
+    #
+    # # completing process
+    # for p in processes:
+    #     p.join()
+
+
+if __name__ == '__main__':
+    main()

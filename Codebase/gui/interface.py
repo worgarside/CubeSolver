@@ -37,7 +37,6 @@ class Interface():
             (3, 6, 4, 7), (4, 6, 5, 7), (5, 6, 6, 7),
             (3, 7, 4, 8), (4, 7, 5, 8), (5, 7, 6, 8),
             (3, 8, 4, 9), (4, 8, 5, 9), (5, 8, 6, 9),
-
         ]
         # self.cubie_1 = self.canvas.create_rectangle(200, 100, 5, 5, fill='white')
         for c in range(len(coords)):
