@@ -33,15 +33,8 @@ def print_data(q):
         data = q.get()
         print(data)
 
-# queueLock = threading.Lock()
 workQueue = queue.Queue(0)
 
-# Create new threads
-# for tName in threadList:
-#     thread = MyThread(threadID, tName, workQueue)
-#     thread.start()
-#     threads.append(thread)
-#     threadID += 1
 
 gen_thread = MyThread(1, 'gen', workQueue, create_data)
 print_thread = MyThread(2, 'print', workQueue, print_data)

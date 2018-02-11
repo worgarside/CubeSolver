@@ -5,8 +5,9 @@ from cube.moves import dyn_move
 
 
 class TreeGenerator:
-    def __init__(self, cube, move_group, window):
-        self.window = window
+    def __init__(self, cube, move_group):
+        print('New TreeGenerator')
+        self.move_group = move_group
         self.solved = False
         self.positions = {}
         self.depth = 0
@@ -14,15 +15,14 @@ class TreeGenerator:
         self.position_set = set()
         self.positions[self.depth] = {Position(0, cube.position, self.depth, -1, MOVE.NONE, [])}
 
-        self.window.create_elements()
-        self.generate_tree(move_group)
-
-
-    def generate_tree(self, move_group):
+    def generate_tree(self, queue):
+        print('Generating tree...')
+        solution_move_chain = []
         while not self.solved:
+            print('.', end='')
             self.positions[self.depth + 1] = []
             for p in self.positions[self.depth]:
-                for m in move_group:
+                for m in self.move_group:
                     c = Cube(p.position)
                     dyn_move(c, m)
                     self.pos_id += 1
@@ -31,9 +31,9 @@ class TreeGenerator:
 
                     if c.position not in self.position_set:
 
-                        if self.pos_id % 50 == 0:
-                            print(self.pos_id)
-                            self.window.update_position(c.position)
+                        # if self.pos_id % 50 == 0:
+                            # print(self.pos_id)
+                        queue.put(c.position)
 
                         self.pos_id += 1
                         self.positions[self.depth + 1].append(
@@ -43,8 +43,9 @@ class TreeGenerator:
 
                         if c.position == SOLVED_POS:
                             self.solved = True
+                            solution_move_chain = p.move_chain + [str(m)[5:]]
                             break
                 if self.solved:
                     break
             self.depth += 1
-        print('SOLVED')
+        print("\nSOLVED: %s" % str(solution_move_chain))

@@ -14,7 +14,8 @@ class Interface():
             'Y': 'yellow'
         }
         self.cubie = []
-        self.canvas.pack()
+        self.create_elements()
+        # self.root.mainloop()
         self.update_canvas()
 
     def update_canvas(self):
@@ -36,17 +37,20 @@ class Interface():
             (3, 6, 4, 7), (4, 6, 5, 7), (5, 6, 6, 7),
             (3, 7, 4, 8), (4, 7, 5, 8), (5, 7, 6, 8),
             (3, 8, 4, 9), (4, 8, 5, 9), (5, 8, 6, 9),
-            
+
         ]
-        self.cubie_1 = self.canvas.create_rectangle(200, 100, 5, 5, fill='white')
+        # self.cubie_1 = self.canvas.create_rectangle(200, 100, 5, 5, fill='white')
         for c in range(len(coords)):
             self.cubie.append(
-                self.canvas.create_rectangle(*tuple((i * 40) + 100 for i in coords[c]), fill='red', outline='white'))
+                self.canvas.create_rectangle(*tuple((i * 40) + 40 for i in coords[c]), fill='red', outline='white'))
 
         print('creating things')
+        self.canvas.pack()
 
-    def update_position(self, position):
-        for index, color in enumerate(position):
-            self.canvas.itemconfig(self.cubie[index], fill=self.color_dict[color])
-
-        self.update_canvas()
+    def update_position(self, queue):
+        while not queue.empty():
+            print('-', end='')
+            position = queue.get()
+            for index, color in enumerate(position):
+                self.canvas.itemconfig(self.cubie[index], fill=self.color_dict[color])
+            self.update_canvas()
