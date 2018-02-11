@@ -1,5 +1,5 @@
-from thistlethwaite.position_generator import generate_positions
-from korf.tree_generator import TreeGenerator
+from group_theory.position_generator import generate_positions
+from position_tree.tree_generator import TreeGenerator
 import time
 from cube.moves import *
 from data.database_manager import DatabaseManager

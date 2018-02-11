@@ -1,6 +1,6 @@
 from cube.moves import dyn_move
 from cube.cube_class import Cube
-from thistlethwaite.position_class import Position  # (id, position, depth, parent_id, parent_move)
+from group_theory.position_class import Position  # (id, position, depth, parent_id, parent_move)
 
 DEPTH_LIMIT = 6
 

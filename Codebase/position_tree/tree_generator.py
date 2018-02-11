@@ -1,5 +1,5 @@
 from cube.cube_class import Cube, SOLVED_POS
-from korf.position_class import Position  # (id, position, depth, parent_id, parent_move, move_chain)
+from position_tree.position_class import Position  # (id, position, depth, parent_id, parent_move, move_chain)
 from cube.move_class import Move as MOVE
 from cube.moves import dyn_move
 
