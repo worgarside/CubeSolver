@@ -4,33 +4,33 @@ from time import sleep
 
 
 def set_aspect(content, padding_frame, aspect_ratio):
-    def enforce_aspect_ratio(event):
-        desired_width = event.width
-        desired_height = int(event.width / aspect_ratio)
+    def aspect_handler(event):
+        target_width = event.width
+        target_height = int(event.width / aspect_ratio)
 
-        if desired_height > event.height:
-            desired_height = event.height
-            desired_width = int(event.height * aspect_ratio)
+        # if aspect ratio breached, limit frame size
+        if target_height > event.height:
+            target_height = event.height
+            target_width = int(event.height * aspect_ratio)
 
-        content.place(in_=padding_frame, x=0, y=0,
-                      width=desired_width, height=desired_height)
+        content.place(in_=padding_frame, width=target_width, height=target_height)
 
-    padding_frame.bind("<Configure>", enforce_aspect_ratio)
+    padding_frame.bind("<Configure>", aspect_handler)
 
 
-class ResizingCanvas(Canvas):
+class DynamicCanvas(Canvas):
     def __init__(self, parent, **kwargs):
         Canvas.__init__(self, parent, **kwargs)
-        self.bind("<Configure>", self.on_resize)
+        self.bind("<Configure>", self.resize_handler)
         self.height = self.winfo_reqheight()
         self.width = self.winfo_reqwidth()
 
-    def on_resize(self, window):
+    def resize_handler(self, event):
         # determine the ratio of old width/height to new width/height
-        x_scale = float(window.width) / self.width
-        y_scale = float(window.height) / self.height
-        self.width = window.width
-        self.height = window.height
+        x_scale = float(event.width) / self.width
+        y_scale = float(event.height) / self.height
+        self.width = event.width
+        self.height = event.height
         # resize the canvas
         self.config(width=self.width, height=self.height)
         # rescale all the objects tagged with the "all" tag
@@ -38,19 +38,9 @@ class ResizingCanvas(Canvas):
 
 
 class Interface():
-    def __init__(self, queue, canvas_width=560, canvas_height=440):
+    def __init__(self, queue):
         self.queue = queue
         self.root = Tk("Rubik's Cube Solver")
-        self.pad_frame = Frame(borderwidth=0, width=self.root.winfo_screenwidth() / 2,
-                               height=self.root.winfo_screenheight() / 2)
-        self.pad_frame.grid(row=0, column=0, sticky="nsew", padx=0, pady=0)
-        self.content_frame = Frame(self.root)
-        set_aspect(self.content_frame, self.pad_frame, aspect_ratio=canvas_width / canvas_height)
-        self.root.rowconfigure(0, weight=1)
-        self.root.columnconfigure(0, weight=1)
-        self.canvas = ResizingCanvas(self.content_frame, width=canvas_width, height=canvas_height)
-        self.canvas.pack(fill=BOTH, expand=YES)
-
         self.color_dict = {
             'W': 'white',
             'O': 'orange',
@@ -60,9 +50,27 @@ class Interface():
             'Y': 'yellow'
         }
         self.cubie = []
-        self.create_elements()
 
-    def create_elements(self):
+        self.pad_frame = Frame(borderwidth=0, width=self.root.winfo_screenwidth() / 2,
+                               height=self.root.winfo_screenheight() / 2)
+        self.pad_frame.grid(row=0, column=0, sticky="nsew")
+        self.content_frame = Frame(self.root)
+        set_aspect(self.content_frame, self.pad_frame, aspect_ratio=14 / 12)
+        self.root.rowconfigure(0, weight=1)
+        self.root.columnconfigure(0, weight=1)
+
+        self.depth_label = Label(self.content_frame, text='Depth: ')
+        self.depth_label.pack(side=RIGHT)
+
+        self.move_chain_label = Label(self.content_frame, text='Move Chain: ')
+        self.move_chain_label.pack(side=RIGHT)
+
+        self.canvas = DynamicCanvas(self.content_frame, width=560, height=440, bg='bisque')
+        self.canvas.pack(fill=BOTH, expand=YES)
+
+        self.draw_cube()
+
+    def draw_cube(self):
         coords = [
             (3, 0, 4, 1), (4, 0, 5, 1), (5, 0, 6, 1),
             (3, 1, 4, 2), (4, 1, 5, 2), (5, 1, 6, 2),
@@ -92,7 +100,9 @@ class Interface():
                 if position == 'solved':
                     solved = True
                 else:
-                    for index, color in enumerate(position):
+                    for index, color in enumerate(position.position):
+                        self.depth_label['text'] = "Depth: %i" % position.depth
+                        self.move_chain_label['text'] = "Move Chain: %s" % str(position.move_chain)
                         self.canvas.itemconfig(self.cubie[index], fill=self.color_dict[color])
                     self.root.update_idletasks()
                     self.root.update()
