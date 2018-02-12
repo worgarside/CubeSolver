@@ -1,12 +1,12 @@
 from group_theory.position_generator import generate_positions
-from position_tree.tree_generator import TreeGenerator
 import time
 from cube.moves import *
 from data.database_manager import DatabaseManager
 from cube.cube_class import Cube
 from gui.interface import Interface
 import queue
-from processor_thread import ProcessThread
+from multiprocessing import Process, Queue
+from position_tree.tree_generator2 import generate_tree
 
 GROUP_THREE = [MOVE.U2, MOVE.D2, MOVE.L2, MOVE.R2, MOVE.F2, MOVE.B2]
 GROUP_TWO = [MOVE.U2, MOVE.D2, MOVE.L, MOVE.R, MOVE.F2, MOVE.B2]
@@ -46,22 +46,8 @@ def thistlethwaite(db):
 
 
 def korf():
-    position_queue = queue.Queue(0)
+    pass
 
-    cube = Cube()
-    u(cube)
-    r(cube)
-    l(cube)
-
-    tree_gen = TreeGenerator(cube, GROUP_COMPLETE)
-    generation_thread = ProcessThread('generation_thread', position_queue, tree_gen.generate_tree)
-
-    window = Interface()
-
-    generation_thread.start()
-
-    generation_thread.join()
-    window.update_position(position_queue)
 
 def time_function(func, *args):
     start = int(round(time.time() * 1000))
@@ -74,7 +60,20 @@ def time_function(func, *args):
 
 
 def main():
-    korf()
+    cube = Cube()
+    u(cube)
+    r(cube)
+    l(cube)
+
+    position_queue = Queue()
+
+    p = Process(target=generate_tree, args=(cube, GROUP_COMPLETE, position_queue,))
+    p.start()
+
+    window = Interface(position_queue)
+    window.root.after(500, window.update_position)
+    window.root.mainloop()
+
 
 if __name__ == "__main__":
     main()

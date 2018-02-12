@@ -5,9 +5,9 @@ from cube.moves import dyn_move
 
 
 class TreeGenerator:
-    def __init__(self, cube, move_group):
-        print('New TreeGenerator')
+    def __init__(self, cube, move_group, queue):
         self.move_group = move_group
+        self.queue = queue
         self.solved = False
         self.positions = {}
         self.depth = 0
@@ -15,11 +15,11 @@ class TreeGenerator:
         self.position_set = set()
         self.positions[self.depth] = {Position(0, cube.position, self.depth, -1, MOVE.NONE, [])}
 
-    def generate_tree(self, queue):
+    def generate_tree(self):
         print('Generating tree...')
         solution_move_chain = []
         while not self.solved:
-            print('.', end='')
+            # print('.', end='')
             self.positions[self.depth + 1] = []
             for p in self.positions[self.depth]:
                 for m in self.move_group:
@@ -31,9 +31,7 @@ class TreeGenerator:
 
                     if c.position not in self.position_set:
 
-                        # if self.pos_id % 50 == 0:
-                            # print(self.pos_id)
-                        queue.put(c.position)
+                        self.queue.put(c.position)
 
                         self.pos_id += 1
                         self.positions[self.depth + 1].append(

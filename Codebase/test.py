@@ -2,6 +2,7 @@ import random
 import time
 import tkinter
 from multiprocessing import Process, Queue
+import winsound
 
 
 class Interface():
@@ -39,37 +40,17 @@ def create_data(queue):
         data_count += 1
         time.sleep(0.25)
     print('data completed')
+    winsound.Beep(800, 1000)
 
 
 def main():
     position_queue = Queue()
     p = Process(target=create_data, args=(position_queue,))
     p.start()
-    # p.join()
 
     window = Interface(position_queue)
     window.root.after(1000, window.update_square)
     window.root.mainloop()
-    # window.root.update_idletasks()
-    # window.root.update()
-
-    # number_of_task = 10
-    # number_of_processes = 4
-    # tasks_that_are_done = Queue()
-    # processes = []
-    #
-    # for i in range(number_of_task):
-    #     tasks_to_accomplish.put("Task no " + str(i))
-    #
-    # # creating processes
-    # for w in range(number_of_processes):
-    #     p = Process(target=do_job, args=(tasks_to_accomplish, tasks_that_are_done))
-    #     processes.append(p)
-    #     p.start()
-    #
-    # # completing process
-    # for p in processes:
-    #     p.join()
 
 
 if __name__ == '__main__':
