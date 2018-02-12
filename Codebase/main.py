@@ -1,24 +1,28 @@
-from group_solver.position_generator import generate_positions
 import time
+from _tkinter import TclError
+from multiprocessing import Process, Queue
+
+from cube.cube_class import Cube
 from cube.moves import *
 from data.database_manager import DatabaseManager
-from cube.cube_class import Cube
+from group_solver.position_generator import generate_positions
 from gui.interface import Interface
-from multiprocessing import Process, Queue
 from tree_solver.tree_generator import generate_tree
-from sys import  exit
-from _tkinter import TclError
 
 GROUP_THREE = [MOVE.U2, MOVE.D2, MOVE.L2, MOVE.R2, MOVE.F2, MOVE.B2]
 GROUP_TWO = [MOVE.U2, MOVE.D2, MOVE.L, MOVE.R, MOVE.F2, MOVE.B2]
 GROUP_ONE = [MOVE.U2, MOVE.D2, MOVE.L, MOVE.R, MOVE.F, MOVE.B]
 GROUP_ZERO = [MOVE.U, MOVE.D, MOVE.L, MOVE.R, MOVE.F, MOVE.B]
 
-GROUP_TEST = [MOVE.U2, MOVE.D2, MOVE.L2, MOVE.R2, MOVE.F2, MOVE.B2]
+GROUP_TEST = [MOVE.U, MOVE.D]
 
 GROUP_COMPLETE = [MOVE.U, MOVE.NOT_U, MOVE.U2, MOVE.D, MOVE.NOT_D, MOVE.D2,
                   MOVE.L, MOVE.NOT_L, MOVE.L2, MOVE.R, MOVE.NOT_R, MOVE.R2,
                   MOVE.F, MOVE.NOT_F, MOVE.F2, MOVE.B, MOVE.NOT_B, MOVE.B2]
+
+GROUP_QUARTERS = [MOVE.U, MOVE.NOT_U, MOVE.D, MOVE.NOT_D,
+                  MOVE.L, MOVE.NOT_L, MOVE.R, MOVE.NOT_R,
+                  MOVE.F, MOVE.NOT_F, MOVE.B, MOVE.NOT_B, ]
 
 
 def init_db():
@@ -50,25 +54,32 @@ def tree_solve():
     process_list = []
 
     cube = Cube()
-    u(cube)
-    r(cube)
+    u2(cube)
+    not_r(cube)
     l(cube)
+    not_u(cube)
+    not_b(cube)
+    d(cube)
 
     position_queue = Queue()
 
-    tree_process = Process(target=time_function, args=(generate_tree, cube, GROUP_COMPLETE, position_queue,), name='tree_process')
+    tree_process = Process(target=time_function, args=(generate_tree, cube, GROUP_QUARTERS, position_queue,),
+                           name='tree_process')
     process_list.append(tree_process)
 
     for p in process_list:
         p.start()
 
-    window = Interface(position_queue)
-    window.root.after(500, window.update_position)
-    window.root.mainloop()
+    try:
+        window = Interface(position_queue)
+        window.root.after(500, window.update_position)
+        window.root.mainloop()
+    except TclError as e:
+        print(e)
 
     for p in process_list:
         print('Terminating %s' % p.name)
-        p.terminate() # kill process when window is closed
+        p.terminate()  # kill process when window is closed
 
 
 def time_function(func, *args):

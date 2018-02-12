@@ -1,72 +1,44 @@
+from time import sleep
 from tkinter import *
 from tkinter.constants import *
-from time import sleep
 
 
-def set_aspect(content, padding_frame, aspect_ratio):
-    def aspect_handler(event):
-        target_width = event.width
-        target_height = int(event.width / aspect_ratio)
-
-        # if aspect ratio breached, limit frame size
-        if target_height > event.height:
-            target_height = event.height
-            target_width = int(event.height * aspect_ratio)
-
-        content.place(in_=padding_frame, width=target_width, height=target_height)
-
-    padding_frame.bind("<Configure>", aspect_handler)
-
-
-class DynamicCanvas(Canvas):
-    def __init__(self, parent, **kwargs):
-        Canvas.__init__(self, parent, **kwargs)
-        self.bind("<Configure>", self.resize_handler)
-        self.height = self.winfo_reqheight()
-        self.width = self.winfo_reqwidth()
-
-    def resize_handler(self, event):
-        # determine the ratio of old width/height to new width/height
-        x_scale = float(event.width) / self.width
-        y_scale = float(event.height) / self.height
-        self.width = event.width
-        self.height = event.height
-        # resize the canvas
-        self.config(width=self.width, height=self.height)
-        # rescale all the objects tagged with the "all" tag
-        self.scale("all", 0, 0, x_scale, y_scale)
-
-
-class Interface():
+class Interface:
     def __init__(self, queue):
         self.queue = queue
-        self.root = Tk("Rubik's Cube Solver")
-        self.color_dict = {
-            'W': 'white',
-            'O': 'orange',
-            'R': 'red',
-            'G': 'green',
-            'B': 'blue',
-            'Y': 'yellow'
-        }
+        self.root = Tk()
+        self.root.resizable(width=False, height=False)
+        self.width = self.root.winfo_screenwidth() / 2
+        self.height = self.root.winfo_screenheight() / 2
+
+        self.root.geometry("%ix%i" % (self.width, self.height))
         self.cubie = []
 
-        self.pad_frame = Frame(borderwidth=0, width=self.root.winfo_screenwidth() / 2,
-                               height=self.root.winfo_screenheight() / 2)
-        self.pad_frame.grid(row=0, column=0, sticky="nsew")
-        self.content_frame = Frame(self.root)
-        set_aspect(self.content_frame, self.pad_frame, aspect_ratio=14 / 12)
-        self.root.rowconfigure(0, weight=1)
-        self.root.columnconfigure(0, weight=1)
+        control_width = self.width - (self.height * (14 / 11))
 
-        self.depth_label = Label(self.content_frame, text='Depth: ')
-        self.depth_label.pack(side=RIGHT)
+        self.control_frame = Frame(self.root, width=control_width, height=self.height, bg='#cdd0d6')
+        self.control_frame.pack(side=LEFT)
 
-        self.move_chain_label = Label(self.content_frame, text='Move Chain: ')
-        self.move_chain_label.pack(side=RIGHT)
+        self.lbl_title = Label(self.control_frame, text="Rubik's Cube Solver", font='Microsoft\ YaHei\ UI 16 bold',
+                               bg='#cdd0d6')
+        self.lbl_title.place(x=control_width / 2, y=self.height / 20, anchor=CENTER)
 
-        self.canvas = DynamicCanvas(self.content_frame, width=560, height=440, bg='bisque')
-        self.canvas.pack(fill=BOTH, expand=YES)
+        self.lbl_id = Label(self.control_frame, text='Position ID: ', font='Microsoft\ YaHei\ UI 10', bg='#cdd0d6')
+        self.lbl_id.place(x=control_width / 20, y=(1.75 * self.height) / 20)
+
+        self.lbl_depth = Label(self.control_frame, text='Depth: ', font='Microsoft\ YaHei\ UI 10', bg='#cdd0d6')
+        self.lbl_depth.place(x=control_width / 20, y=(2.75 * self.height) / 20)
+
+        self.lbl_move_chain_title = Label(self.control_frame, text='Move Chain: ', font='Microsoft\ YaHei\ UI 10',
+                                          bg='#cdd0d6')
+        self.lbl_move_chain_title.place(x=control_width / 20, y=(3.75 * self.height) / 20)
+
+        self.lbl_move_chain_moves = Label(self.control_frame, text='U', font='Courier\ New 13', bg='#cdd0d6')
+        self.lbl_move_chain_moves.place(x=(control_width / 20) + 82, y=(3.76 * self.height) / 20)
+
+        self.canvas = Canvas(self.root, width=self.height * (14 / 11), height=self.height, bg='#cdd0d6',
+                             highlightthickness=5, highlightcolor='black', highlightbackground='black')
+        self.canvas.pack(side=RIGHT)
 
         self.draw_cube()
 
@@ -87,11 +59,20 @@ class Interface():
         ]
         for c in range(len(coords)):
             self.cubie.append(
-                self.canvas.create_rectangle(*tuple((i * 40) + 40 for i in coords[c]), fill='white', outline='black'))
+                self.canvas.create_rectangle(*tuple((i * self.height / 11) + (self.height / 11) for i in coords[c]),
+                                             fill='white', outline='black'))
 
         self.canvas.addtag_all("all")
 
     def update_position(self):
+        color_dict = {
+            'W': 'white',
+            'O': 'orange',
+            'R': 'red',
+            'G': 'green',
+            'B': 'blue',
+            'Y': 'yellow'
+        }
         try:
             solved = False
             while not solved:
@@ -101,9 +82,10 @@ class Interface():
                     solved = True
                 else:
                     for index, color in enumerate(position.position):
-                        self.depth_label['text'] = "Depth: %i" % position.depth
-                        self.move_chain_label['text'] = "Move Chain: %s" % str(position.move_chain)
-                        self.canvas.itemconfig(self.cubie[index], fill=self.color_dict[color])
+                        self.lbl_id['text'] = "Position ID: %i" % position.id
+                        self.lbl_depth['text'] = "Depth: %i" % position.depth
+                        self.lbl_move_chain_moves['text'] = position.move_chain
+                        self.canvas.itemconfig(self.cubie[index], fill=color_dict[color])
                     self.root.update_idletasks()
                     self.root.update()
         except TclError:
