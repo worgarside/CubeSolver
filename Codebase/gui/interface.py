@@ -1,12 +1,56 @@
 from tkinter import *
+from tkinter.constants import *
 from time import sleep
 
 
+def set_aspect(content, padding_frame, aspect_ratio):
+    def enforce_aspect_ratio(event):
+        desired_width = event.width
+        desired_height = int(event.width / aspect_ratio)
+
+        if desired_height > event.height:
+            desired_height = event.height
+            desired_width = int(event.height * aspect_ratio)
+
+        content.place(in_=padding_frame, x=0, y=0,
+                      width=desired_width, height=desired_height)
+
+    padding_frame.bind("<Configure>", enforce_aspect_ratio)
+
+
+class ResizingCanvas(Canvas):
+    def __init__(self, parent, **kwargs):
+        Canvas.__init__(self, parent, **kwargs)
+        self.bind("<Configure>", self.on_resize)
+        self.height = self.winfo_reqheight()
+        self.width = self.winfo_reqwidth()
+
+    def on_resize(self, window):
+        # determine the ratio of old width/height to new width/height
+        x_scale = float(window.width) / self.width
+        y_scale = float(window.height) / self.height
+        self.width = window.width
+        self.height = window.height
+        # resize the canvas
+        self.config(width=self.width, height=self.height)
+        # rescale all the objects tagged with the "all" tag
+        self.scale("all", 0, 0, x_scale, y_scale)
+
+
 class Interface():
-    def __init__(self, queue, width=560, height=440):
+    def __init__(self, queue, canvas_width=560, canvas_height=440):
         self.queue = queue
-        self.root = Tk()
-        self.canvas = Canvas(self.root, width=width, height=height)
+        self.root = Tk("Rubik's Cube Solver")
+        self.pad_frame = Frame(borderwidth=0, width=self.root.winfo_screenwidth() / 2,
+                               height=self.root.winfo_screenheight() / 2)
+        self.pad_frame.grid(row=0, column=0, sticky="nsew", padx=0, pady=0)
+        self.content_frame = Frame(self.root)
+        set_aspect(self.content_frame, self.pad_frame, aspect_ratio=canvas_width / canvas_height)
+        self.root.rowconfigure(0, weight=1)
+        self.root.columnconfigure(0, weight=1)
+        self.canvas = ResizingCanvas(self.content_frame, width=canvas_width, height=canvas_height)
+        self.canvas.pack(fill=BOTH, expand=YES)
+
         self.color_dict = {
             'W': 'white',
             'O': 'orange',
@@ -17,7 +61,6 @@ class Interface():
         }
         self.cubie = []
         self.create_elements()
-
 
     def create_elements(self):
         coords = [
@@ -36,16 +79,23 @@ class Interface():
         ]
         for c in range(len(coords)):
             self.cubie.append(
-                self.canvas.create_rectangle(*tuple((i * 40) + 40 for i in coords[c]), fill='red', outline='white'))
+                self.canvas.create_rectangle(*tuple((i * 40) + 40 for i in coords[c]), fill='white', outline='black'))
 
-        self.canvas.pack()
+        self.canvas.addtag_all("all")
 
     def update_position(self):
-        while not self.queue.empty():
-            position = self.queue.get()
-            for index, color in enumerate(position):
-                self.canvas.itemconfig(self.cubie[index], fill=self.color_dict[color])
-
-            self.root.update_idletasks()
-            self.root.update()
-        print('Queue Empty')
+        try:
+            solved = False
+            while not solved:
+                sleep(0.005)
+                position = self.queue.get()
+                if position == 'solved':
+                    solved = True
+                else:
+                    for index, color in enumerate(position):
+                        self.canvas.itemconfig(self.cubie[index], fill=self.color_dict[color])
+                    self.root.update_idletasks()
+                    self.root.update()
+        except TclError:
+            # catches error when window is closed
+            return

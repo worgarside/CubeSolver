@@ -1,5 +1,5 @@
 from cube.cube_class import Cube, SOLVED_POS
-from position_tree.position_class import Position  # (id, position, depth, parent_id, parent_move, move_chain)
+from tree_solver.position_class import Position  # (id, position, depth, parent_id, parent_move, move_chain)
 from cube.move_class import Move as MOVE
 from cube.moves import dyn_move
 
@@ -25,7 +25,8 @@ def generate_tree(cube, move_group, queue):
 
                 if c.position not in position_set:
 
-                    queue.put(c.position)
+                    if pos_id % 1 == 0:
+                        queue.put(c.position)
 
                     pos_id += 1
                     positions[depth + 1].append(
@@ -40,4 +41,5 @@ def generate_tree(cube, move_group, queue):
             if solved:
                 break
         depth += 1
-    print("\nSOLVED: %s" % str(solution_move_chain))
+
+    queue.put('solved')

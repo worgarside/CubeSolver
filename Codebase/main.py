@@ -1,12 +1,13 @@
-from group_theory.position_generator import generate_positions
+from group_solver.position_generator import generate_positions
 import time
 from cube.moves import *
 from data.database_manager import DatabaseManager
 from cube.cube_class import Cube
 from gui.interface import Interface
-import queue
 from multiprocessing import Process, Queue
-from position_tree.tree_generator2 import generate_tree
+from tree_solver.tree_generator import generate_tree
+from sys import  exit
+from _tkinter import TclError
 
 GROUP_THREE = [MOVE.U2, MOVE.D2, MOVE.L2, MOVE.R2, MOVE.F2, MOVE.B2]
 GROUP_TWO = [MOVE.U2, MOVE.D2, MOVE.L, MOVE.R, MOVE.F2, MOVE.B2]
@@ -36,7 +37,7 @@ def init_db():
     return db
 
 
-def thistlethwaite(db):
+def group_solve(db):
     pos = time_function(generate_positions, Cube(), GROUP_THREE)
 
     for p in pos:
@@ -45,21 +46,9 @@ def thistlethwaite(db):
                      (q.id, q.position, q.depth, q.parent_id, str(q.parent_move)))
 
 
-def korf():
-    pass
+def tree_solve():
+    process_list = []
 
-
-def time_function(func, *args):
-    start = int(round(time.time() * 1000))
-    result = func(*args)
-    end = int(round(time.time() * 1000))
-    total = (end - start) / 1000
-    print("Time: " + str(total))
-
-    return result
-
-
-def main():
     cube = Cube()
     u(cube)
     r(cube)
@@ -67,12 +56,33 @@ def main():
 
     position_queue = Queue()
 
-    p = Process(target=generate_tree, args=(cube, GROUP_COMPLETE, position_queue,))
-    p.start()
+    tree_process = Process(target=time_function, args=(generate_tree, cube, GROUP_COMPLETE, position_queue,), name='tree_process')
+    process_list.append(tree_process)
+
+    for p in process_list:
+        p.start()
 
     window = Interface(position_queue)
     window.root.after(500, window.update_position)
     window.root.mainloop()
+
+    for p in process_list:
+        print('Terminating %s' % p.name)
+        p.terminate() # kill process when window is closed
+
+
+def time_function(func, *args):
+    start = int(round(time.time() * 1000))
+    result = func(*args)
+    end = int(round(time.time() * 1000))
+    total = (end - start) / 1000
+    print("Time: %0.2fs" % total)
+
+    return result
+
+
+def main():
+    tree_solve()
 
 
 if __name__ == "__main__":
