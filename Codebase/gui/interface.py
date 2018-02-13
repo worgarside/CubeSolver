@@ -7,37 +7,40 @@ class Interface:
     def __init__(self, queue):
         self.queue = queue
         self.root = Tk()
+        self.root.title("Rubik's Cube Solver")
+        self.root.iconbitmap('Codebase/gui/cube.ico')
         self.root.resizable(width=False, height=False)
-        self.width = self.root.winfo_screenwidth() / 2
-        self.height = self.root.winfo_screenheight() / 2
-
-        self.root.geometry("%ix%i" % (self.width, self.height))
         self.cubie = []
+        self.height = 0.75 * self.root.winfo_screenheight()
+        canvas_width = self.height * (14 / 11)
+        control_width = 300
+        self.width = canvas_width + control_width
+        self.root.geometry("%ix%i" % (self.width, self.height))
 
-        control_width = self.width - (self.height * (14 / 11))
+        bg_color = '#dddddd'
 
-        self.control_frame = Frame(self.root, width=control_width, height=self.height, bg='#cdd0d6')
+        self.control_frame = Frame(self.root, width=control_width, height=self.height, bg=bg_color)
         self.control_frame.pack(side=LEFT)
 
         self.lbl_title = Label(self.control_frame, text="Rubik's Cube Solver", font='Microsoft\ YaHei\ UI 16 bold',
-                               bg='#cdd0d6')
-        self.lbl_title.place(x=control_width / 2, y=self.height / 20, anchor=CENTER)
+                               bg=bg_color)
+        self.lbl_title.place(x=control_width / 2, y=40, anchor=CENTER)
 
-        self.lbl_id = Label(self.control_frame, text='Position ID: ', font='Microsoft\ YaHei\ UI 10', bg='#cdd0d6')
-        self.lbl_id.place(x=control_width / 20, y=(1.75 * self.height) / 20)
+        self.lbl_depth = Label(self.control_frame, text='Depth: ', font='Microsoft\ YaHei\ UI 10', bg=bg_color)
+        self.lbl_depth.place(x=control_width / 20, y=70)
 
-        self.lbl_depth = Label(self.control_frame, text='Depth: ', font='Microsoft\ YaHei\ UI 10', bg='#cdd0d6')
-        self.lbl_depth.place(x=control_width / 20, y=(2.75 * self.height) / 20)
+        self.lbl_id = Label(self.control_frame, text='Position Count: ', font='Microsoft\ YaHei\ UI 10', bg=bg_color)
+        self.lbl_id.place(x=control_width / 20, y=100)
 
         self.lbl_move_chain_title = Label(self.control_frame, text='Move Chain: ', font='Microsoft\ YaHei\ UI 10',
-                                          bg='#cdd0d6')
-        self.lbl_move_chain_title.place(x=control_width / 20, y=(3.75 * self.height) / 20)
+                                          bg=bg_color)
+        self.lbl_move_chain_title.place(x=control_width / 20, y=130)
 
-        self.lbl_move_chain_moves = Label(self.control_frame, text='U', font='Courier\ New 13', bg='#cdd0d6')
-        self.lbl_move_chain_moves.place(x=(control_width / 20) + 82, y=(3.76 * self.height) / 20)
+        self.lbl_move_chain_moves = Label(self.control_frame, text='U', font='Courier\ New 13', bg=bg_color)
+        self.lbl_move_chain_moves.place(x=125, y=132)
 
-        self.canvas = Canvas(self.root, width=self.height * (14 / 11), height=self.height, bg='#cdd0d6',
-                             highlightthickness=5, highlightcolor='black', highlightbackground='black')
+        self.canvas = Canvas(self.root, width=canvas_width, height=self.height, bg=bg_color,
+                             highlightthickness=3, highlightcolor='black', highlightbackground='black')
         self.canvas.pack(side=RIGHT)
 
         self.draw_cube()
@@ -82,8 +85,8 @@ class Interface:
                     solved = True
                 else:
                     for index, color in enumerate(position.position):
-                        self.lbl_id['text'] = "Position ID: %i" % position.id
                         self.lbl_depth['text'] = "Depth: %i" % position.depth
+                        self.lbl_id['text'] = "Position Count: %i" % position.id
                         self.lbl_move_chain_moves['text'] = position.move_chain
                         self.canvas.itemconfig(self.cubie[index], fill=color_dict[color])
                     self.root.update_idletasks()

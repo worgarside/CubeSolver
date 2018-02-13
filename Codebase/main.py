@@ -74,8 +74,8 @@ def tree_solve():
         window = Interface(position_queue)
         window.root.after(500, window.update_position)
         window.root.mainloop()
-    except TclError as e:
-        print(e)
+    except TclError as err:
+        print(err)
 
     for p in process_list:
         print('Terminating %s' % p.name)

@@ -1,18 +1,30 @@
-from tkinter import *
+import tkinter  # tkinter with small t for python 3
+#import ttk  # nicer widgets
 
-root = Tk()
+root = tkinter.Tk()
 
-f = Frame(root, bg="orange", width=500, height=500)
-f.pack(side=LEFT, expand=1)
+mainFrame = tkinter.Frame(root)
+mainFrame.grid()
+button = tkinter.Button(mainFrame, text="dummy")
+button.grid()
 
-f3 = Frame(f, bg="red", width=500)
-f3.pack(side=LEFT, expand=1)
 
-b = Button(f3, text="1", bg="red")
-b.grid(row=0, column=0)
-b2 = Button(f3, text="2")
-b2.grid(row=1, column=1)
-b3 = Button(f3, text="3")
-b3.grid(row=2, column=2)
+entryFrame = tkinter.Frame(mainFrame, width=454, height=20)
+entryFrame.grid(row=0, column=1)
+
+# allow the column inside the entryFrame to grow    
+entryFrame.columnconfigure(0, weight=10)  
+
+# By default the frame will shrink to whatever is inside of it and 
+# ignore width & height. We change that:
+entryFrame.grid_propagate(False)
+# as far as I know you can not set this for x / y separately so you
+# have to choose a proper height for the frame or do something more sophisticated
+
+# input entry
+inValue = tkinter.StringVar()
+inValueEntry = tkinter.Entry(entryFrame, textvariable=inValue)
+inValueEntry.grid(sticky="we")
+
 
 root.mainloop()
