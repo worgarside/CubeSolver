@@ -1,6 +1,8 @@
 import time
 from _tkinter import TclError
-from multiprocessing import Process, Queue
+from multiprocessing import Process
+from multiprocessing.managers import BaseManager
+from queue import LifoQueue
 
 from cube.cube_class import Cube
 from cube.moves import *
@@ -54,14 +56,15 @@ def tree_solve():
     process_list = []
 
     cube = Cube()
-    u2(cube)
+    u(cube)
     not_r(cube)
-    l(cube)
-    not_u(cube)
     not_b(cube)
-    d(cube)
+    not_r(cube)
 
-    position_queue = Queue()
+    BaseManager.register('LifoQueue', LifoQueue)
+    manager = BaseManager()
+    manager.start()
+    position_queue = manager.LifoQueue()
 
     tree_process = Process(target=time_function, args=(generate_tree, cube, GROUP_QUARTERS, position_queue,),
                            name='tree_process')
@@ -72,7 +75,7 @@ def tree_solve():
 
     try:
         window = Interface(position_queue)
-        window.root.after(500, window.update_position)
+        window.root.after(50, window.update_position)
         window.root.mainloop()
     except TclError as err:
         print(err)

@@ -22,21 +22,17 @@ def generate_tree(cube, move_group, queue):
             for m in move_group:
                 c = Cube(p.position)
                 dyn_move(c, m)
-                pos_id += 1
 
                 if c.position not in position_set:
-
-                    new_pos = Position(pos_id, c.position, depth + 1, p.id, str(m), p.move_chain + move_dict[m] + "\n")
-
-                    if pos_id % 50 == 0:
-                        queue.put(new_pos)
-
                     pos_id += 1
+                    new_pos = Position(pos_id, c.position, depth + 1, p.id, str(m), p.move_chain + move_dict[m] + "\n")
+                    queue.put(new_pos)
                     positions[depth + 1].append(new_pos)
                     position_set.add(new_pos.position)
 
                     if new_pos.position == SOLVED_POS:
                         solved = True
+                        queue.put('solved')
                         queue.put(new_pos)
                         break
             if solved:

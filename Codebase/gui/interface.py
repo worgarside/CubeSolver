@@ -1,4 +1,4 @@
-from time import sleep
+from time import sleep, time
 from tkinter import *
 from tkinter.constants import *
 
@@ -26,24 +26,28 @@ class Interface:
                                bg=bg_color)
         self.lbl_title.place(x=control_width / 2, y=40, anchor=CENTER)
 
+        self.lbl_timer = Label(self.control_frame, text='Time: ', font='Microsoft\ YaHei\ UI 10', bg=bg_color)
+        self.lbl_timer.place(x=control_width / 20, y=70)
+
         self.lbl_depth = Label(self.control_frame, text='Depth: ', font='Microsoft\ YaHei\ UI 10', bg=bg_color)
-        self.lbl_depth.place(x=control_width / 20, y=70)
+        self.lbl_depth.place(x=control_width / 20, y=100)
 
         self.lbl_id = Label(self.control_frame, text='Position Count: ', font='Microsoft\ YaHei\ UI 10', bg=bg_color)
-        self.lbl_id.place(x=control_width / 20, y=100)
+        self.lbl_id.place(x=control_width / 20, y=130)
 
         self.lbl_move_chain_title = Label(self.control_frame, text='Move Chain: ', font='Microsoft\ YaHei\ UI 10',
                                           bg=bg_color)
-        self.lbl_move_chain_title.place(x=control_width / 20, y=130)
+        self.lbl_move_chain_title.place(x=control_width / 20, y=160)
 
         self.lbl_move_chain_moves = Label(self.control_frame, text='U', font='Courier\ New 13', bg=bg_color)
-        self.lbl_move_chain_moves.place(x=125, y=132)
+        self.lbl_move_chain_moves.place(x=125, y=162)
 
         self.canvas = Canvas(self.root, width=canvas_width, height=self.height, bg=bg_color,
                              highlightthickness=3, highlightcolor='black', highlightbackground='black')
         self.canvas.pack(side=RIGHT)
 
         self.draw_cube()
+        self.start_time = int(time())
 
     def draw_cube(self):
         coords = [
@@ -78,16 +82,21 @@ class Interface:
         }
         try:
             solved = False
+            next_solved = False
             while not solved:
                 sleep(0.005)
                 position = self.queue.get()
-                if position == 'solved':
+                if next_solved:
                     solved = True
+                if position == 'solved':
+                    next_solved = True
                 else:
+                    mins, secs = divmod((int(time()) - self.start_time), 60)
+                    self.lbl_timer['text'] = "Time: %02i:%02i" % (mins, secs)
+                    self.lbl_depth['text'] = "Depth: %i" % position.depth
+                    self.lbl_id['text'] = "Position Count: %i" % position.id
+                    self.lbl_move_chain_moves['text'] = position.move_chain
                     for index, color in enumerate(position.position):
-                        self.lbl_depth['text'] = "Depth: %i" % position.depth
-                        self.lbl_id['text'] = "Position Count: %i" % position.id
-                        self.lbl_move_chain_moves['text'] = position.move_chain
                         self.canvas.itemconfig(self.cubie[index], fill=color_dict[color])
                     self.root.update_idletasks()
                     self.root.update()
