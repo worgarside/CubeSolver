@@ -2,28 +2,58 @@ from .rotation_class import Rotation
 from .side_class import Side
 
 SOLVED_POS = 'WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY'
+SOLVED_SET = {'WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY',
+              'WWWWWWWWWGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBOOOYYYYYYYYY',
+              'WWWWWWWWWRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGYYYYYYYYY',
+              'WWWWWWWWWBBBOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRYYYYYYYYY',
+              'OOOOOOOOOWWWBBBYYYGGGWWWBBBYYYGGGWWWBBBYYYGGGRRRRRRRRR',
+              'OOOOOOOOOGGGWWWBBBYYYGGGWWWBBBYYYGGGWWWBBBYYYRRRRRRRRR',
+              'OOOOOOOOOBBBYYYGGGWWWBBBYYYGGGWWWBBBYYYGGGWWWRRRRRRRRR',
+              'OOOOOOOOOYYYGGGWWWBBBYYYGGGWWWBBBYYYGGGWWWBBBRRRRRRRRR',
+              'GGGGGGGGGWWWOOOYYYRRRWWWOOOYYYRRRWWWOOOYYYRRRBBBBBBBBB',
+              'GGGGGGGGGOOOYYYRRRWWWOOOYYYRRRWWWOOOYYYRRRWWWBBBBBBBBB',
+              'GGGGGGGGGRRRWWWOOOYYYRRRWWWOOOYYYRRRWWWOOOYYYBBBBBBBBB',
+              'GGGGGGGGGYYYRRRWWWOOOYYYRRRWWWOOOYYYRRRWWWOOOBBBBBBBBB',
+              'RRRRRRRRRWWWGGGYYYBBBWWWGGGYYYBBBWWWGGGYYYBBBOOOOOOOOO',
+              'RRRRRRRRRGGGYYYBBBWWWGGGYYYBBBWWWGGGYYYBBBWWWOOOOOOOOO',
+              'RRRRRRRRRBBBWWWGGGYYYBBBWWWGGGYYYBBBWWWGGGYYYOOOOOOOOO',
+              'RRRRRRRRRYYYBBBWWWGGGYYYBBBWWWGGGYYYBBBWWWGGGOOOOOOOOO',
+              'BBBBBBBBBWWWRRRYYYOOOWWWRRRYYYOOOWWWRRRYYYOOOGGGGGGGGG',
+              'BBBBBBBBBOOOWWWRRRYYYOOOWWWRRRYYYOOOWWWRRRYYYGGGGGGGGG',
+              'BBBBBBBBBRRRYYYOOOWWWRRRYYYOOOWWWRRRYYYOOOWWWGGGGGGGGG',
+              'BBBBBBBBBYYYOOOWWWRRRYYYOOOWWWRRRYYYOOOWWWRRRGGGGGGGGG',
+              'YYYYYYYYYOOOBBBRRRGGGOOOBBBRRRGGGOOOBBBRRRGGGWWWWWWWWW',
+              'YYYYYYYYYGGGOOOBBBRRRGGGOOOBBBRRRGGGOOOBBBRRRWWWWWWWWW',
+              'YYYYYYYYYRRRGGGOOOBBBRRRGGGOOOBBBRRRGGGOOOBBBWWWWWWWWW',
+              'YYYYYYYYYBBBRRRGGGOOOBBBRRRGGGOOOBBBRRRGGGOOOWWWWWWWWW'}
 
 
 class Cube:
     def __init__(self, position=SOLVED_POS):
         self.position = position
-        self.color_position = ""
+        self.color_position = ''
         self._color_dict = {'R': '\033[31m', 'B': '\033[34m', 'G': '\033[32m', 'O': '\033[35m', 'W': '\033[37m',
                             'Y': '\033[33m'}
+        self.up = ''
+        self.down = ''
+        self.left = ''
+        self.right = ''
+        self.front = ''
+        self.back = ''
         self.update_sides()
 
     def __str__(self):
-        """Returns a colored net of the Cube"""
-        linebreak_dict = {2: "\n      ", 5: "\n      ", 8: "\n", 20: "\n", 32: "\n", 44: "\n      ", 47: "\n      ",
-                          50: "\n      "}
-        char_net = "      "
+        """ Returns a colored net of the Cube """
+        linebreak_dict = {2: '\n      ', 5: '\n      ', 8: '\n', 20: '\n', 32: '\n', 44: '\n      ', 47: '\n      ',
+                          50: '\n      '}
+        char_net = '      '
         for index, color in enumerate(self.position):
-            char_net += self._color_dict[color] + color + '\033[0m' + linebreak_dict.get(index, " ")
-        char_net += "\n"
+            char_net += self._color_dict[color] + color + '\033[0m' + linebreak_dict.get(index, ' ')
+        char_net += '\n'
         return char_net
 
-    # Updates the sides of the cube from the main position variable
     def update_sides(self):
+        """ Updates the sides of the cube from the main position variable """
         self.up = self.position[:9]
         self.down = self.position[45:54]
         self.left = self.position[9:12] + self.position[21:24] + self.position[33:36]
@@ -56,9 +86,8 @@ class Cube:
 
     def set_left(self, pos):
         if len(pos) == 9:
-            self.position = self.position[:9] + pos[:3] + self.position[12:21] + pos[3:6] + self.position[24:33] + pos[
-                                                                                                                   6:] + \
-                            self.position[36:]
+            self.position = self.position[:9] + pos[:3] + self.position[12:21] + pos[3:6] + \
+                            self.position[24:33] + pos[6:] + self.position[36:]
             self.update_sides()
         else:
             print('\nset_left: len(position) != 9')
@@ -66,9 +95,8 @@ class Cube:
 
     def set_right(self, pos):
         if len(pos) == 9:
-            self.position = self.position[:15] + pos[:3] + self.position[18:27] + pos[3:6] + self.position[30:39] + pos[
-                                                                                                                    6:] + \
-                            self.position[42:]
+            self.position = self.position[:15] + pos[:3] + self.position[18:27] + pos[3:6] + \
+                            self.position[30:39] + pos[6:] + self.position[42:]
             self.update_sides()
         else:
             print('\nset_right: len(position) != 9')
@@ -76,9 +104,8 @@ class Cube:
 
     def set_front(self, pos):
         if len(pos) == 9:
-            self.position = self.position[:12] + pos[:3] + self.position[15:24] + pos[3:6] + self.position[27:36] + pos[
-                                                                                                                    6:] + \
-                            self.position[39:]
+            self.position = self.position[:12] + pos[:3] + self.position[15:24] + pos[3:6] + \
+                            self.position[27:36] + pos[6:] + self.position[39:]
             self.update_sides()
         else:
             print('\nset_front: len(position) != 9')

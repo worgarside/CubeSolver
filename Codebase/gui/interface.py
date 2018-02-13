@@ -2,6 +2,8 @@ from time import sleep, time
 from tkinter import *
 from tkinter.constants import *
 
+from cube.move_class import Move
+
 
 class Interface:
     def __init__(self, queue):
@@ -15,7 +17,7 @@ class Interface:
         canvas_width = self.height * (14 / 11)
         control_width = 300
         self.width = canvas_width + control_width
-        self.root.geometry("%ix%i" % (self.width, self.height))
+        self.root.geometry('%ix%i' % (self.width, self.height))
 
         bg_color = '#dddddd'
 
@@ -69,9 +71,7 @@ class Interface:
                 self.canvas.create_rectangle(*tuple((i * self.height / 11) + (self.height / 11) for i in coords[c]),
                                              fill='white', outline='black'))
 
-        self.canvas.addtag_all("all")
-
-    def update_position(self):
+    def update_cube_net(self):
         color_dict = {
             'W': 'white',
             'O': 'orange',
@@ -80,6 +80,9 @@ class Interface:
             'B': 'blue',
             'Y': 'yellow'
         }
+        move_dict = {Move.U: 'U ', Move.NOT_U: "U'", Move.U2: 'U2', Move.D: 'D ', Move.NOT_D: "D'", Move.D2: 'D2',
+                     Move.L: 'L ', Move.NOT_L: "L'", Move.L2: 'L2', Move.R: 'R ', Move.NOT_R: "R'", Move.R2: 'R2',
+                     Move.F: 'F ', Move.NOT_F: "F'", Move.F2: 'F2', Move.B: 'B ', Move.NOT_B: "B'", Move.B2: 'B2'}
         try:
             solved = False
             next_solved = False
@@ -91,11 +94,13 @@ class Interface:
                 if position == 'solved':
                     next_solved = True
                 else:
-                    mins, secs = divmod((int(time()) - self.start_time), 60)
-                    self.lbl_timer['text'] = "Time: %02i:%02i" % (mins, secs)
-                    self.lbl_depth['text'] = "Depth: %i" % position.depth
-                    self.lbl_id['text'] = "Position Count: %i" % position.id
-                    self.lbl_move_chain_moves['text'] = position.move_chain
+                    minutes, secs = divmod((int(time()) - self.start_time), 60)
+                    self.lbl_timer['text'] = 'Time: %02i:%02i' % (minutes, secs)
+                    self.lbl_depth['text'] = 'Depth: %i' % position.depth
+                    self.lbl_id['text'] = 'Position Count: %i' % position.id
+                    self.lbl_move_chain_moves['text'] = ''
+                    for m in position.move_chain:
+                        self.lbl_move_chain_moves['text'] += move_dict[m] + '\n'
                     for index, color in enumerate(position.position):
                         self.canvas.itemconfig(self.cubie[index], fill=color_dict[color])
                     self.root.update_idletasks()

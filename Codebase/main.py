@@ -30,15 +30,14 @@ GROUP_QUARTERS = [MOVE.U, MOVE.NOT_U, MOVE.D, MOVE.NOT_D,
 def init_db():
     db = DatabaseManager('data/db.sqlite3')
 
-    db.query("DROP TABLE IF EXISTS positions")
-
-    db.query("""CREATE TABLE IF NOT EXISTS positions (
+    db.query('DROP TABLE IF EXISTS positions')
+    db.query('''CREATE TABLE IF NOT EXISTS positions (
                     id INTEGER PRIMARY KEY,
                     position TEXT NOT NULL,
                     depth INTEGER NOT NULL,
                     parent_id INTEGER NOT NULL,
                     parent_move TEXT NOT NULL)
-                """)
+                ''')
 
     return db
 
@@ -48,25 +47,24 @@ def group_solve(db):
 
     for p in pos:
         for q in p:
-            db.query("INSERT INTO positions VALUES (?, ?, ?, ?, ?)",
+            db.query('INSERT INTO positions VALUES (?, ?, ?, ?, ?)',
                      (q.id, q.position, q.depth, q.parent_id, str(q.parent_move)))
 
 
 def tree_solve():
+    BaseManager.register('LifoQueue', LifoQueue)
+    manager = BaseManager()
+    manager.start()
+    position_queue = manager.LifoQueue()
+
     process_list = []
 
     cube = Cube()
     u(cube)
     not_r(cube)
     not_b(cube)
-    not_r(cube)
 
-    BaseManager.register('LifoQueue', LifoQueue)
-    manager = BaseManager()
-    manager.start()
-    position_queue = manager.LifoQueue()
-
-    tree_process = Process(target=time_function, args=(generate_tree, cube, GROUP_QUARTERS, position_queue,),
+    tree_process = Process(target=time_function, args=(generate_tree, cube, GROUP_COMPLETE, position_queue,),
                            name='tree_process')
     process_list.append(tree_process)
 
@@ -75,7 +73,7 @@ def tree_solve():
 
     try:
         window = Interface(position_queue)
-        window.root.after(50, window.update_position)
+        window.root.after(0, window.update_cube_net)
         window.root.mainloop()
     except TclError as err:
         print(err)
@@ -90,8 +88,7 @@ def time_function(func, *args):
     result = func(*args)
     end = int(round(time.time() * 1000))
     total = (end - start) / 1000
-    print("Time: %0.2fs" % total)
-
+    print('Time: %0.2fs' % total)
     return result
 
 
@@ -99,5 +96,5 @@ def main():
     tree_solve()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
