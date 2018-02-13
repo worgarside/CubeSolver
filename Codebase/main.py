@@ -93,6 +93,9 @@ def time_function(func, *args):
 
 
 def main():
+    # print()
+    # cube = Cube()
+    # test.generate_colour_symmetries(cube.position)
     tree_solve()
 
 
