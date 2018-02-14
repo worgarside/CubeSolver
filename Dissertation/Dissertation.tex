@@ -57,7 +57,7 @@
 		\def\arraystretch{1.2}
 		\centering
 		\caption{Terminology used in this document}
-		\label{tab:table1}
+		\label{tab:abbrev}
 		\begin{tabular}{m{0.25\textwidth}m{0.65\textwidth}}
 			\toprule
 			\textbf{Abbreviation/Word} & \textbf{Definition} \\
@@ -87,7 +87,7 @@
 		\def\arraystretch{1.2}
 		\centering
 		\caption{Notation used in this document}
-		\label{tab:table2}
+		\label{tab:notation}
 		\begin{tabular}{m{0.25\textwidth}m{0.2\textwidth}m{0.425\textwidth}}
 			\toprule
 			\textbf{Symbol Notation} & \textbf{Meaning} \\
@@ -106,8 +106,8 @@
 	\end{table}
 	% Content for footnote is here because it wouldn't display from table %
 	\textcolor{white}{
-		\footnote{\label{cube definition}This Dissertation is only dealing with 3x3x3 Rubik’s Cubes, and any discussion of alternative dimensions will be explicitly stated.}
-		\footnote{\label{metric definition}For this Dissertation the Half Turn Metric is used unless explicitly stated.}		
+		\footnote{\label{footnote:cube}This Dissertation is only dealing with 3x3x3 Rubik’s Cubes, and any discussion of alternative dimensions will be explicitly stated.}
+		\footnote{\label{footnote:metric}For this Dissertation the Half Turn Metric is used unless explicitly stated.}		
 	}
 
 
@@ -118,6 +118,8 @@
 	\newpage
 	\pagenumbering{arabic}
 	\chapter{Introduction}
+	\epigraph{Like after a nice walk when you have seen many lovely sights you decide to go home, after a while I decided it was time to go home, let us put the cubes back in order. And it was at that moment that I came face to face with the Big Challenge: What is the way home?}{Ern\"{o} Rubik \cite{Rubik1986}}
+	
     \section{Background}
 
     In 1974, Ern\"{o} Rubik was struggling to create a cube with independently moving parts which remain together, regardless of how much they moved. His first attempts made use of elastic, which broke and rendered the cube unusable. Rubik persevered in his attempts to hold the blocks (now called \enquote{cubies}) together - eventually concluding that the best way was to have the cubes hold themselves together. He called this design \enquote{The Magic Cube}, and it would go on to be one of the world's best-selling puzzles \cite{Waxman2014b}. It was later re-branded to \enquote{\textit{Rubik's Cube}} to overcome an oversight involving patenting and copyrighting  the design.
@@ -193,7 +195,7 @@
     	\def\arraystretch{1.25}
     	\centering
     	\caption{Morwen Thistlethwaite's five groups for his algorithm \cite{Singmaster1981}}
-    	\label{tab:table3}
+    	\label{tab:thistlethwaite}
     	\begin{tabular}{M{0.15\textwidth}M{0.3\textwidth}m{0.525\textwidth}}
     		\toprule
     		\textbf{Group Denotation} & \textbf{Mathematical Representation} & \textbf{Summary} \\
@@ -287,7 +289,7 @@
     \renewcommand*{\arraystretch}{1.4}
     \begin{longtable}[h]{m{0.6\textwidth}M{0.15\textwidth}M{0.15\textwidth}}
     	\caption{The objectives, with relative difficulty and value}
-    	\label{tab:table4}\\
+    	\label{tab:objectives}\\
     	\toprule
     	\multirow{2}{*}{\textbf{Objective}} & \multicolumn{2}{c}{\textbf{Weightings}} \\
     	& \textbf{Difficulty} & \textbf{Value} \\
@@ -327,7 +329,7 @@
     	\def\arraystretch{1.25}
     	\centering
     	\caption{Software requirements for the EV3 and its capabilities}
-    	\label{tab:table5}
+    	\label{tab:ev3_software}
     	\begin{tabular}{M{0.225\textwidth}M{0.225\textwidth}M{0.225\textwidth}M{0.225\textwidth}}
     		\toprule
     		\multirow{2}{*}{\textbf{Software/Hardware}} & \multicolumn{3}{c}{\textbf{Requirements/Capabilities}} \\
@@ -344,7 +346,7 @@
 		\def\arraystretch{1.25}
 		\centering
 		\caption{Software requirements for the main development computer and its capabilities}
-		\label{tab:table6}
+		\label{tab:win_software}
 		\begin{tabular}{M{0.18\textwidth}M{0.18\textwidth}M{0.18\textwidth}M{0.18\textwidth}M{0.18\textwidth}}
 			\toprule
 			\multirow{2}{*}{\textbf{Software/Hardware}} & \multicolumn{4}{c}{\textbf{Requirements/Capabilities}} \\
