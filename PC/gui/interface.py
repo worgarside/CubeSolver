@@ -10,7 +10,7 @@ class Interface:
         self.queue = queue
         self.root = Tk()
         self.root.title("Rubik's Cube Solver")
-        self.root.iconbitmap('PCPC/gui/cube.ico')
+        self.root.iconbitmap('PC/gui/cube.ico')
         self.root.resizable(width=False, height=False)
         self.cubie = []
         self.height = 0.75 * self.root.winfo_screenheight()
