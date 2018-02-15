@@ -1,0 +1,1 @@
+set path=U:\Software\Python 36;U:\Software\Python 36\Scripts%path%

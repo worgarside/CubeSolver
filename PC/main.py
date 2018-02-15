@@ -28,27 +28,27 @@ GROUP_QUARTERS = [MOVE.U, MOVE.NOT_U, MOVE.D, MOVE.NOT_D,
 
 
 def init_db():
-    db = DatabaseManager('data/db.sqlite3')
+    db = DatabaseManager('PC/data/db.sqlite3')
 
     db.query('DROP TABLE IF EXISTS positions')
     db.query('''CREATE TABLE IF NOT EXISTS positions (
                     id INTEGER PRIMARY KEY,
                     position TEXT NOT NULL,
                     depth INTEGER NOT NULL,
-                    parent_id INTEGER NOT NULL,
-                    parent_move TEXT NOT NULL)
+                    move_chain TEXT NOT NULL)
                 ''')
 
     return db
 
 
 def group_solve(db):
-    pos = time_function(generate_positions, Cube(), GROUP_THREE)
+    pos_dict = time_function(generate_positions, GROUP_THREE)
 
-    for p in pos:
-        for q in p:
-            db.query('INSERT INTO positions VALUES (?, ?, ?, ?, ?)',
-                     (q.id, q.position, q.depth, q.parent_id, str(q.parent_move)))
+    for depth in pos_dict:
+        for position in depth:
+            db.query('INSERT INTO positions VALUES (?, ?, ?, ?)',
+                     (position.pos_id, position.position, position.depth, str(position.move_chain)))
+    db.commit()
 
 
 def tree_solve():
@@ -93,10 +93,8 @@ def time_function(func, *args):
 
 
 def main():
-    # print()
-    # cube = Cube()
-    # test.generate_colour_symmetries(cube.position)
-    tree_solve()
+    db = init_db()
+    group_solve(db)
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 from cube.cube_class import Cube, SOLVED_SET
 from cube.move_class import Move
 from cube.moves import dyn_move
-from tree_solver.position_class import Position  # (id, position, depth, move_chain)
+from cube.position_class import Position  # (id, position, depth, move_chain)
 
 
 def generate_tree(cube, move_group, queue):

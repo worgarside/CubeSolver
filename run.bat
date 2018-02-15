@@ -1,4 +1,5 @@
 @echo off
+
 IF %1.==. GOTO No1
 
 python PC/%1.py
