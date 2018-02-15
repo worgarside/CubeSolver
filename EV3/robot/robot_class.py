@@ -25,11 +25,19 @@ class Robot:
     """A LEGO EV3 Robot with 3 motors, a colour sensor, and a touch sensor"""
 
     def __init__(self):
+        self.peripherals = []
         self.cradle = LargeMotor(OUTPUT_A)
         self.grabber = LargeMotor(OUTPUT_B)
         self.cs_arm = MediumMotor(OUTPUT_C)
         self.touch_sensor = TouchSensor()
         self.color_sensor = ColorSensor()
+
+        self.peripherals.append(self.cradle)
+        self.peripherals.append(self.grabber)
+        self.peripherals.append(self.cs_arm)
+        self.peripherals.append(self.touch_sensor)
+        self.peripherals.append(self.color_sensor)
+
         self.color_sensor.mode = self.color_sensor.MODE_COL_COLOR
 
         self.cs_mid_pos = -1700
@@ -44,6 +52,8 @@ class Robot:
         self.gbr_guard_pos = -35
         self.gbr_grab_pos = -90
 
+        self.check_peripherals()
+
     # Allows user to manually position the motors at their starting position
     def init_motors(self, simulate=False):
         if not simulate:
@@ -53,7 +63,6 @@ class Robot:
             self.grabber.run_timed(time_sp=1, speed_sp=1)
             self.cs_arm.stop_action = 'coast'
             self.cs_arm.run_timed(time_sp=1, speed_sp=1)
-            Sound.speak('Set the motors to neutral position')
             while self.touch_sensor.value() != 1:
                 Leds.set_color(Leds.LEFT, Leds.AMBER)
                 Leds.set_color(Leds.RIGHT, Leds.AMBER)
@@ -70,6 +79,17 @@ class Robot:
         self.cs_arm.position = 0
 
         Sound.beep()
+
+    def check_peripherals(self):
+        all_connected = True
+        for p in self.peripherals:
+            if not p.connected:
+                print('%s not connected properly' % p)
+                all_connected = False
+
+        if not all_connected:
+            print('Exiting...')
+            exit()
 
     # Custom exit method to reposition motors back to starting position and ensure safe shutdown
     def exit(self, stall_flag=False):
@@ -99,7 +119,7 @@ class Robot:
 
     # Rotates the cradle by the provided angle
     def rotate_cradle(self, angle=90):
-        # 1200 is 1/4 turn - 40/3:1 gear ratio
+        # 400 is 1/4 turn - 13.333:1 gear ratio
         mod_angle = angle * (40 / 9)
         pos = self.cradle.position + mod_angle
         self.cradle.run_to_abs_pos(position_sp=pos, speed_sp=self.cradle_speed, ramp_down_sp=100)
