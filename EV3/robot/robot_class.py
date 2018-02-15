@@ -20,6 +20,7 @@ SOLVED_SIDES = [(Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE
                 (Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.ORANGE,
                  Color.ORANGE, Color.ORANGE)]
 
+
 class Robot:
     """A LEGO EV3 Robot with 3 motors, a colour sensor, and a touch sensor"""
 
@@ -46,13 +47,13 @@ class Robot:
     # Allows user to manually position the motors at their starting position
     def init_motors(self, simulate=False):
         if not simulate:
-            self.cradle.stop_action = "coast"
+            self.cradle.stop_action = 'coast'
             self.cradle.run_timed(time_sp=1, speed_sp=1)
-            self.grabber.stop_action = "coast"
+            self.grabber.stop_action = 'coast'
             self.grabber.run_timed(time_sp=1, speed_sp=1)
-            self.cs_arm.stop_action = "coast"
+            self.cs_arm.stop_action = 'coast'
             self.cs_arm.run_timed(time_sp=1, speed_sp=1)
-
+            Sound.speak('Set the motors to neutral position')
             while self.touch_sensor.value() != 1:
                 Leds.set_color(Leds.LEFT, Leds.AMBER)
                 Leds.set_color(Leds.RIGHT, Leds.AMBER)
@@ -60,9 +61,9 @@ class Robot:
             Leds.set_color(Leds.LEFT, Leds.GREEN)
             Leds.set_color(Leds.RIGHT, Leds.GREEN)
 
-        self.cradle.stop_action = "hold"
-        self.grabber.stop_action = "hold"
-        self.cs_arm.stop_action = "hold"
+        self.cradle.stop_action = 'hold'
+        self.grabber.stop_action = 'hold'
+        self.cs_arm.stop_action = 'hold'
 
         self.cradle.position = 0
         self.grabber.position = 0
@@ -85,11 +86,11 @@ class Robot:
 
         sleep(1)
 
-        self.cradle.stop_action = "coast"
+        self.cradle.stop_action = 'coast'
         self.cradle.run_timed(time_sp=1, speed_sp=1)
-        self.grabber.stop_action = "coast"
+        self.grabber.stop_action = 'coast'
         self.grabber.run_timed(time_sp=1, speed_sp=1)
-        self.cs_arm.stop_action = "coast"
+        self.cs_arm.stop_action = 'coast'
         self.cs_arm.run_timed(time_sp=1, speed_sp=1)
         print()
         print()
@@ -99,7 +100,7 @@ class Robot:
     # Rotates the cradle by the provided angle
     def rotate_cradle(self, angle=90):
         # 1200 is 1/4 turn - 40/3:1 gear ratio
-        mod_angle = angle * (40 / 3)
+        mod_angle = angle * (40 / 9)
         pos = self.cradle.position + mod_angle
         self.cradle.run_to_abs_pos(position_sp=pos, speed_sp=self.cradle_speed, ramp_down_sp=100)
         self.cradle.wait_for_position(pos)
@@ -131,10 +132,10 @@ class Robot:
         self._scanned_cubies += 1
         progress = int(self._scanned_cubies / (54 / progressbar_width))
 
-        stdout.write("\r|")
-        stdout.write("#" * progress)
-        stdout.write("-" * (progressbar_width - progress))
-        stdout.write("| %.2f%%" % ((self._scanned_cubies / 54) * 100))
+        stdout.write('\r|')
+        stdout.write('#' * progress)
+        stdout.write('-' * (progressbar_width - progress))
+        stdout.write('| %.2f%%' % ((self._scanned_cubies / 54) * 100))
         stdout.flush()
 
     # Scans the top face of the cube
@@ -181,12 +182,12 @@ class Robot:
 
         self.increment_progressbar()
 
-        """
+        '''
         The face is scanned in this order:
             1 1 0
             2 C 0
             2 3 3
-        """
+        '''
 
         return corner[1], middle[1], corner[0], middle[2], centre, middle[0], corner[2], middle[3], corner[3]
 
