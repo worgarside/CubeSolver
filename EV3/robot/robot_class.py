@@ -24,6 +24,7 @@ SOLVED_SIDES = [(Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE
 class Robot:
     """A LEGO EV3 Robot with 3 motors, a colour sensor, and a touch sensor"""
 
+
     def __init__(self):
         self.peripherals = []
         self.cradle = LargeMotor(OUTPUT_A)
@@ -54,8 +55,12 @@ class Robot:
 
         self.check_peripherals()
 
-    # Allows user to manually position the motors at their starting position
     def init_motors(self, simulate=False):
+        """
+        Allows user to manually position the motors at their starting position
+        :param simulate: whether the cube is being simulated or not
+        :return: None
+        """
         if not simulate:
             self.cradle.stop_action = 'coast'
             self.cradle.run_timed(time_sp=1, speed_sp=1)
@@ -81,6 +86,10 @@ class Robot:
         Sound.beep()
 
     def check_peripherals(self):
+        """
+        Checks all peripherals (sensors & motors) are connected properly
+        :return: boolean connection flag (if False then exit())
+        """
         all_connected = True
         for p in self.peripherals:
             if not p.connected:
@@ -91,8 +100,12 @@ class Robot:
             print('Exiting...')
             exit()
 
-    # Custom exit method to reposition motors back to starting position and ensure safe shutdown
     def exit(self, stall_flag=False):
+        """
+        Custom exit method to reposition motors back to starting position and ensure safe shutdown
+        :param stall_flag: boolean if exiting due to motor stall
+        :return:
+        """
         Leds.set_color(Leds.LEFT, Leds.GREEN)
         Leds.set_color(Leds.RIGHT, Leds.GREEN)
 
@@ -117,16 +130,23 @@ class Robot:
         Sound.tone([(800, 100, 0), (600, 150, 0), (400, 100, 0)]).wait()
         exit()
 
-    # Rotates the cradle by the provided angle
     def rotate_cradle(self, angle=90):
+        """
+        Rotates the cradle by the provided angle
+        :param angle: rotation angle in degrees
+        :return: None
+        """
         # 400 is 1/4 turn - 13.333:1 gear ratio
         mod_angle = angle * (40 / 9)
         pos = self.cradle.position + mod_angle
         self.cradle.run_to_abs_pos(position_sp=pos, speed_sp=self.cradle_speed, ramp_down_sp=100)
         self.cradle.wait_for_position(pos)
 
-    # Rotates the cube in the x direction
     def grab_cube(self):
+        """
+        Rotates the cube in the x direction
+        :return: None
+        """
         self.grabber.run_to_abs_pos(position_sp=self.gbr_grab_pos, speed_sp=self.grabber_speed * 1.5)
         self.grabber.wait_for_position(self.gbr_grab_pos)
 
@@ -138,8 +158,11 @@ class Robot:
 
         sleep(0.05)
 
-    # Increments the progressbar when scanning the cube to display progress to the user
     def increment_progressbar(self):
+        """
+        Increments the progressbar when scanning the cube to display progress to the user
+        :return: None
+        """
         # Progressbar will change width depending on console size
         dims = get_terminal_size()
 
@@ -158,8 +181,11 @@ class Robot:
         stdout.write('| %.2f%%' % ((self._scanned_cubies / 54) * 100))
         stdout.flush()
 
-    # Scans the top face of the cube
     def scan_up_face(self):
+        """
+        Scans the top face of the cube
+        :return: None
+        """
         middle = []
         corner = []
 
@@ -211,8 +237,12 @@ class Robot:
 
         return corner[1], middle[1], corner[0], middle[2], centre, middle[0], corner[2], middle[3], corner[3]
 
-    # Scans all 6 faces and returns the cube's position
     def scan_cube(self, simulate=False):
+        """
+        Scans all 6 faces and returns the cube's position
+        :param simulate: simulation flag to avoid long scanning stage
+        :return: cube position as string
+        """
         """
         - X X X Y X X X
         U F D B - R - L    <---- Initial State

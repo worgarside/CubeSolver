@@ -16,8 +16,6 @@ GROUP_TWO = [MOVE.U2, MOVE.D2, MOVE.L, MOVE.R, MOVE.F2, MOVE.B2]
 GROUP_ONE = [MOVE.U2, MOVE.D2, MOVE.L, MOVE.R, MOVE.F, MOVE.B]
 GROUP_ZERO = [MOVE.U, MOVE.D, MOVE.L, MOVE.R, MOVE.F, MOVE.B]
 
-GROUP_TEST = [MOVE.U, MOVE.D]
-
 GROUP_COMPLETE = [MOVE.U, MOVE.NOT_U, MOVE.U2, MOVE.D, MOVE.NOT_D, MOVE.D2,
                   MOVE.L, MOVE.NOT_L, MOVE.L2, MOVE.R, MOVE.NOT_R, MOVE.R2,
                   MOVE.F, MOVE.NOT_F, MOVE.F2, MOVE.B, MOVE.NOT_B, MOVE.B2]
@@ -42,7 +40,7 @@ def init_db():
 
 
 def group_solve(db):
-    pos_dict = time_function(generate_positions, GROUP_THREE)
+    pos_dict = time_function(generate_positions, GROUP_ZERO)
 
     for depth in pos_dict:
         for position in depth:
@@ -93,11 +91,9 @@ def time_function(func, *args):
 
 
 def main():
-    # db = init_db()
-    # group_solve(db)
-    cube = Cube()
-    print(cube.position)
-    print(cube.position_reduced)
+    db = init_db()
+    group_solve(db)
+
 
 if __name__ == '__main__':
     main()
