@@ -28,7 +28,7 @@ GROUP_QUARTERS = [MOVE.U, MOVE.NOT_U, MOVE.D, MOVE.NOT_D,
 
 
 def init_db():
-    db = DatabaseManager('PC/data/db.sqlite3')
+    db = DatabaseManager('PC/data/db.sqlite')
 
     db.query('DROP TABLE IF EXISTS positions')
     db.query('''CREATE TABLE IF NOT EXISTS positions (
@@ -93,9 +93,11 @@ def time_function(func, *args):
 
 
 def main():
-    db = init_db()
-    group_solve(db)
-
+    # db = init_db()
+    # group_solve(db)
+    cube = Cube()
+    print(cube.position)
+    print(cube.position_reduced)
 
 if __name__ == '__main__':
     main()

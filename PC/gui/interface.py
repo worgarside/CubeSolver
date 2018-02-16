@@ -80,9 +80,6 @@ class Interface:
             'B': 'blue',
             'Y': 'yellow'
         }
-        move_dict = {Move.U: 'U ', Move.NOT_U: "U'", Move.U2: 'U2', Move.D: 'D ', Move.NOT_D: "D'", Move.D2: 'D2',
-                     Move.L: 'L ', Move.NOT_L: "L'", Move.L2: 'L2', Move.R: 'R ', Move.NOT_R: "R'", Move.R2: 'R2',
-                     Move.F: 'F ', Move.NOT_F: "F'", Move.F2: 'F2', Move.B: 'B ', Move.NOT_B: "B'", Move.B2: 'B2'}
         try:
             solved = False
             next_solved = False
@@ -100,7 +97,7 @@ class Interface:
                     self.lbl_id['text'] = 'Position Count: %i' % position.id
                     self.lbl_move_chain_moves['text'] = ''
                     for m in position.move_chain:
-                        self.lbl_move_chain_moves['text'] += move_dict[m] + '\n'
+                        self.lbl_move_chain_moves['text'] += m.value + '\n'
                     for index, color in enumerate(position.position):
                         self.canvas.itemconfig(self.cubie[index], fill=color_dict[color])
                     self.root.update_idletasks()

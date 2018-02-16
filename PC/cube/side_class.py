@@ -1,10 +1,10 @@
-from enum import Enum
+from enum import Enum, unique
 
-
+@unique
 class Side(Enum):
-    UP = 0
-    DOWN = 1
-    LEFT = 2
-    RIGHT = 3
-    FRONT = 4
-    BACK = 5
+    UP = 'U'
+    DOWN = 'D'
+    LEFT = 'L'
+    RIGHT = 'R'
+    FRONT = 'F'
+    BACK = 'B'
