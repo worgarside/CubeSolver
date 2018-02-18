@@ -241,13 +241,13 @@ class Robot:
     def scan_cube(self, simulate=False):
         """
         Scans all 6 faces and returns the cube's position
-        :param simulate: simulation flag to avoid long scanning stage
-        :return: cube position as string
-        """
-        """
+
         - X X X Y X X X
         U F D B - R - L    <---- Initial State
         L B R F - D - U   <---- Final State!!
+
+        :param simulate: simulation flag to avoid long scanning stage
+        :return: cube position as string
         """
 
         print("Scanning Rubik's Cube...")
