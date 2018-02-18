@@ -24,7 +24,6 @@ SOLVED_SIDES = [(Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE
 class Robot:
     """A LEGO EV3 Robot with 3 motors, a colour sensor, and a touch sensor"""
 
-
     def __init__(self):
         self.peripherals = []
         self.cradle = LargeMotor(OUTPUT_A)
@@ -40,6 +39,8 @@ class Robot:
         self.peripherals.append(self.color_sensor)
 
         self.color_sensor.mode = self.color_sensor.MODE_COL_COLOR
+        self.color_scan_dict = {0: Color.NONE, 1: Color.DARK, 2: Color.BLUE, 3: Color.GREEN, 4: Color.YELLOW,
+                                5: Color.RED, 6: Color.WHITE, 7: Color.ORANGE, }
 
         self.cs_mid_pos = -1700
         self.cs_cor_pos = -1390
@@ -197,7 +198,7 @@ class Robot:
             # Middle
             self.cs_arm.run_to_abs_pos(position_sp=self.cs_mid_pos, speed_sp=self.cs_speed)
             self.cs_arm.wait_for_position(self.cs_mid_pos)
-            middle.append(Color(self.color_sensor.value()))
+            middle.append(self.color_scan_dict[self.color_sensor.value()])
 
             self.increment_progressbar()
 
@@ -209,7 +210,7 @@ class Robot:
 
             # Checks that the color sensor is not reading no color or too dark a value
             if self.color_sensor.value() != (0 or 1):
-                corner.append(Color(self.color_sensor.value()))
+                corner.append(self.color_scan_dict[self.color_sensor.value()])
             else:
                 # Currently just exits the program if an extreme value is read
                 print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
@@ -224,7 +225,7 @@ class Robot:
         # Read centre cubie
         self.cs_arm.run_to_abs_pos(position_sp=self.cs_cen_pos, speed_sp=self.cs_speed)
         self.cs_arm.wait_for_position(self.cs_cen_pos)
-        centre = Color(self.color_sensor.value())
+        centre = self.color_scan_dict[self.color_sensor.value()]
 
         self.increment_progressbar()
 
@@ -284,16 +285,16 @@ class Robot:
 
         # These transformations align the cubes faces correctly, as they are inherently rotated when scanning the cube
         sides[0] = sides[0][6:7] + sides[0][3:4] + sides[0][0:1] + sides[0][7:8] + sides[0][4:5] + sides[0][1:2] + \
-            sides[0][8:9] + sides[0][5:6] + sides[0][2:3]
+                   sides[0][8:9] + sides[0][5:6] + sides[0][2:3]
 
         sides[1] = sides[1][6:7] + sides[1][3:4] + sides[1][0:1] + sides[1][7:8] + sides[1][4:5] + sides[1][1:2] + \
-            sides[1][8:9] + sides[1][5:6] + sides[1][2:3]
+                   sides[1][8:9] + sides[1][5:6] + sides[1][2:3]
 
         sides[2] = sides[2][6:7] + sides[2][3:4] + sides[2][0:1] + sides[2][7:8] + sides[2][4:5] + sides[2][1:2] + \
-            sides[2][8:9] + sides[2][5:6] + sides[2][2:3]
+                   sides[2][8:9] + sides[2][5:6] + sides[2][2:3]
 
         sides[3] = sides[3][6:7] + sides[3][3:4] + sides[3][0:1] + sides[3][7:8] + sides[3][4:5] + sides[3][1:2] + \
-            sides[3][8:9] + sides[3][5:6] + sides[3][2:3]
+                   sides[3][8:9] + sides[3][5:6] + sides[3][2:3]
 
         # Makes sure all the lists of colors are split down to form one list (Cube._pos)
         cube_pos = []
@@ -303,9 +304,9 @@ class Robot:
 
         # Re-orders the cube sides to match the ordering of the cube position variable
         corrected_cube_pos = cube_pos[45:] + cube_pos[0:3] + cube_pos[27:30] + cube_pos[18:21] + \
-            cube_pos[9:12] + cube_pos[3:6] + cube_pos[30:33] + cube_pos[21:24] + \
-            cube_pos[12:15] + cube_pos[6:9] + cube_pos[33:36] + cube_pos[24:27] + \
-            cube_pos[15:18] + cube_pos[36:45]
+                             cube_pos[9:12] + cube_pos[3:6] + cube_pos[30:33] + cube_pos[21:24] + \
+                             cube_pos[12:15] + cube_pos[6:9] + cube_pos[33:36] + cube_pos[24:27] + \
+                             cube_pos[15:18] + cube_pos[36:45]
 
         return corrected_cube_pos
 
