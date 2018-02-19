@@ -1,27 +1,20 @@
 from cube.cube_class import Cube, EDGES, Color, Side
 
 
-def find_bad_cubies(position):
-    cubie_dict = {}
-    print(Cube(position))
-    print(position + '\n\n')
-
+def detect_bad_cubies(position):
     for e, f in EDGES:
-        cubie_dict[(e, f)] = False
         cubie_color = [Color(position[c]) for c in (e, f)]
 
-        # if on_correct_face or on_opposite_face or on_adjacent_face_middle
+        good = on_correct_face(position, cubie_color[0], e) or \
+               on_correct_face(position, cubie_color[1], f) or \
+               on_opposite_face(position, cubie_color[0], e) or \
+               on_opposite_face(position, cubie_color[1], f) or \
+               on_adjacent_slice(position, cubie_color[0], e) or \
+               on_adjacent_slice(position, cubie_color[1], f)
 
-        # print(str(e) + '  ' + str(cubie_color[0]) + '  ' + str(on_correct_face(position, cubie_color[0], e)) + '  ' + str(on_opposite_face(position, cubie_color[0], e)))
-
-        #     pass
-
-        # print(cubie_color)
-        # print(str(e) + ' ' + position[e[0]] + ' ' + position[e[1]])
-        print(str(e) + '   ' +
-              str(on_correct_face(position, cubie_color[0], e) or on_opposite_face(position, cubie_color[0], e) or
-        on_adjacent_slice(position, cubie_color[0], e)))
-    # print(cubie_dict)
+        if not good:
+            return False
+    return True
 
 
 def on_correct_face(position, facelet, location):
