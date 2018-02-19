@@ -9,7 +9,7 @@ from cube.cube_class import Cube
 from cube.moves import *
 from data.database_manager import DatabaseManager
 from group_solver.position_generator import generate_positions
-from group_solver.good_bad_edges import detect_bad_cubies
+from group_solver.good_bad_edges import get_cube_goodness
 from gui.interface import Interface
 from tree_solver.tree_generator import generate_tree
 
@@ -97,36 +97,8 @@ def main():
     # group_solve(db)
     # tree_solve()
     cube = Cube()
-    # u(cube)
-    # d(cube)
-    l(cube)
-    r(cube)
-    f(cube)
-    l(cube)
-    b(cube)
-    r(cube)
-    f(cube)
-    r(cube)
-    b(cube)
-    l(cube)
-    f(cube)
-    b(cube)
-    r(cube)
-    r(cube)
-    f(cube)
-    l(cube)
-    l(cube)
-    b(cube)
-    r(cube)
-    l(cube)
-    f(cube)
-    b(cube)
-    f(cube)
-    b(cube)
-    b(cube)
-    l(cube)
-    r(cube)
-    good = detect_bad_cubies(cube.position)
+    u(cube)
+    good = get_cube_goodness(cube.position)
     print(good)
 
 

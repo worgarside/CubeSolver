@@ -1,8 +1,8 @@
-from cube.cube_class import Cube, EDGES, Color, Side
+from cube.cube_class import Cube, EDGES_NO_UP_DOWN, Color, Side
 
 
-def detect_bad_cubies(position):
-    for e, f in EDGES:
+def get_cube_goodness(position):
+    for e, f in EDGES_NO_UP_DOWN:
         cubie_color = [Color(position[c]) for c in (e, f)]
 
         good = on_correct_face(position, cubie_color[0], e) or \
