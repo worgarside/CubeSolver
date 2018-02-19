@@ -1,6 +1,6 @@
+from .color_class import Color
 from .rotation_class import Rotation
 from .side_class import Side
-from .color_class import Color
 
 SOLVED_POS = 'WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY'
 SOLVED_POS_REDUCED = 'WWWWWWWWWRRRBBBRRRBBBRRRBBBRRRBBBRRRBBBRRRBBBWWWWWWWWW'
@@ -37,18 +37,34 @@ EDGES = [(1, 19), (3, 10), (5, 16), (7, 13),
 class Cube:
     def __init__(self, position=SOLVED_POS):
         self.position = position
-        self.reduction_dict = {Color.ORANGE: Color.RED, Color.YELLOW: Color.WHITE, Color.GREEN: Color.BLUE,
-                               Color.RED: Color.RED, Color.WHITE: Color.WHITE, Color.BLUE: Color.BLUE}
         self.position_reduced = ''
         self.color_position = ''
-        self._color_dict = {Color.RED: '\033[31m', Color.BLUE: '\033[34m', Color.GREEN: '\033[32m',
-                            Color.ORANGE: '\033[35m', Color.WHITE: '\033[37m', Color.YELLOW: '\033[33m'}
+
         self.up = ''
         self.down = ''
         self.left = ''
         self.right = ''
         self.front = ''
         self.back = ''
+
+        self.reduction_dict = {Color.ORANGE: Color.RED, Color.YELLOW: Color.WHITE, Color.GREEN: Color.BLUE,
+                               Color.RED: Color.RED, Color.WHITE: Color.WHITE, Color.BLUE: Color.BLUE}
+        self.opposite_sides_dict = {Side.UP: Side.DOWN, Side.DOWN: Side.UP, Side.LEFT: Side.RIGHT,
+                                    Side.RIGHT: Side.LEFT, Side.FRONT: Side.BACK, Side.BACK: Side.FRONT}
+        self.facelet_side_dict = {0: Side.UP, 1: Side.UP, 2: Side.UP, 3: Side.UP, 4: Side.UP, 5: Side.UP, 6: Side.UP,
+                                  7: Side.UP, 8: Side.UP, 9: Side.LEFT, 10: Side.LEFT, 11: Side.LEFT, 12: Side.FRONT,
+                                  13: Side.FRONT, 14: Side.FRONT, 15: Side.RIGHT, 16: Side.RIGHT, 17: Side.RIGHT,
+                                  18: Side.BACK, 19: Side.BACK, 20: Side.BACK, 21: Side.LEFT, 22: Side.LEFT,
+                                  23: Side.LEFT, 24: Side.FRONT, 25: Side.FRONT, 26: Side.FRONT, 27: Side.RIGHT,
+                                  28: Side.RIGHT, 29: Side.RIGHT, 30: Side.BACK, 31: Side.BACK, 32: Side.BACK,
+                                  33: Side.LEFT, 34: Side.LEFT, 35: Side.LEFT, 36: Side.FRONT, 37: Side.FRONT,
+                                  38: Side.FRONT, 39: Side.RIGHT, 40: Side.RIGHT, 41: Side.RIGHT, 42: Side.BACK,
+                                  43: Side.BACK, 44: Side.BACK, 45: Side.DOWN, 46: Side.DOWN, 47: Side.DOWN,
+                                  48: Side.DOWN, 49: Side.DOWN, 50: Side.DOWN, 51: Side.DOWN, 52: Side.DOWN,
+                                  53: Side.DOWN}
+        self._color_print_dict = {Color.RED: '\033[31m', Color.BLUE: '\033[34m', Color.GREEN: '\033[32m',
+                                  Color.ORANGE: '\033[35m', Color.WHITE: '\033[37m', Color.YELLOW: '\033[33m'}
+
         self.update_fields()
 
     def __str__(self):
@@ -57,9 +73,11 @@ class Cube:
                           50: '\n      '}
         char_net = '      '
         for index, color in enumerate(self.position):
-            char_net += self._color_dict[Color(color)] + color + '\033[0m' + linebreak_dict.get(index, ' ')
+            char_net += self._color_print_dict[Color(color)] + color + '\033[0m' + linebreak_dict.get(index, ' ')
         char_net += '\n'
         return char_net
+
+    # ------------------ Update Methods ------------------ #
 
     def update_fields(self):
         """Updates all fields of Cube from position"""
@@ -80,14 +98,14 @@ class Cube:
         """Updates position field with colored output"""
         self.color_position = ''
         for color in self.position:
-            self.color_position += self._color_dict[Color(color)] + color + '\033[0m'
+            self.color_position += self._color_print_dict[Color(color)] + color + '\033[0m'
 
     def update_reduced_cube(self):
         self.position_reduced = ''
         for color in self.position:
             self.position_reduced += self.reduction_dict[Color(color)].value
 
-    # Setter methods
+    # ------------------ Setter Methods ------------------ #
     """Each of these sets the relevant face facelets to the given string and updates the relevant fields"""
 
     def set_up(self, pos):
@@ -194,3 +212,34 @@ class Cube:
         else:
             print('\nrotate_side: invalid direction')
             exit()
+
+    # ------------------ Getter Methods ------------------ #
+
+    def get_color_of_side(self, **kwargs):
+        if 'facelet' in kwargs:
+            facelet = kwargs['facelet']
+            try:
+                side = self.facelet_side_dict[facelet]
+                return Color(eval('self.%s' % side.name.lower())[4])
+            except KeyError:
+                print('Invalid Facelet number passed to method')
+
+        if 'side' in kwargs:
+            side = kwargs['side']
+            try:
+                return Color(eval('self.%s' % side.name.lower())[4])
+            except AttributeError:
+                print('Invalid Side passed to method')
+
+    def get_side_with_color(self, **kwargs):
+        if 'color' in kwargs:
+            color = kwargs['color']
+            sides = {Side.UP: self.up, Side.DOWN: self.down,
+                     Side.LEFT: self.left, Side.RIGHT: self.right,
+                     Side.FRONT: self.front, Side.BACK: self.back}
+
+            for side, colors in sides.items():
+                if Color(colors[4]) == color:
+                    return side
+            print("No sides found with color '%s'" % str(color))
+            raise AttributeError

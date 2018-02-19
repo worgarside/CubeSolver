@@ -1,5 +1,4 @@
-from cube.cube_class import Cube, SOLVED_POS, SOLVED_POS_REDUCED, EDGES
-from cube.color_class import Color
+from cube.cube_class import Cube, SOLVED_POS
 from cube.moves import dyn_move
 from cube.position_class import Position  # (pos_id, position, depth, move_chain)
 

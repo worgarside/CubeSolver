@@ -2,8 +2,6 @@ from time import sleep, time
 from tkinter import *
 from tkinter.constants import *
 
-from cube.move_class import Move
-
 
 class Interface:
     def __init__(self, queue):
@@ -94,7 +92,7 @@ class Interface:
                     minutes, secs = divmod((int(time()) - self.start_time), 60)
                     self.lbl_timer['text'] = 'Time: %02i:%02i' % (minutes, secs)
                     self.lbl_depth['text'] = 'Depth: %i' % position.depth
-                    self.lbl_id['text'] = 'Position Count: %i' % position.id
+                    self.lbl_id['text'] = 'Position Count: %i' % position.pos_id
                     self.lbl_move_chain_moves['text'] = ''
                     for m in position.move_chain:
                         self.lbl_move_chain_moves['text'] += m.value + '\n'

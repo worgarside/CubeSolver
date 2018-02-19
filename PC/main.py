@@ -1,3 +1,4 @@
+import colorama
 import time
 from _tkinter import TclError
 from multiprocessing import Process
@@ -8,6 +9,7 @@ from cube.cube_class import Cube
 from cube.moves import *
 from data.database_manager import DatabaseManager
 from group_solver.position_generator import generate_positions
+from group_solver.good_bad_edges import find_bad_cubies
 from gui.interface import Interface
 from tree_solver.tree_generator import generate_tree
 
@@ -91,9 +93,19 @@ def time_function(func, *args):
 
 
 def main():
-    db = init_db()
-    group_solve(db)
+    # db = init_db()
+    # group_solve(db)
+    # tree_solve()
+    cube = Cube()
+    u(cube)
+    d(cube)
+    l(cube)
+    r(cube)
+    f(cube)
+    b(cube)
+    find_bad_cubies(cube.position)
 
 
 if __name__ == '__main__':
+    colorama.init()
     main()

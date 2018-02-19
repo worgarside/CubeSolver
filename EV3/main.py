@@ -1,5 +1,3 @@
-from cube.cube_class import Cube
-import colorama
 from robot.robot_class import Robot
 
 
@@ -8,9 +6,8 @@ def main():
     robot = Robot()
     robot.init_motors(simulation)
     pos = robot.scan_cube(simulation)
-    cube = Cube(pos)
-    colorama.init()
-    print(cube)
+    # send pos to PC
+    print(pos)
     robot.exit()
 
 
