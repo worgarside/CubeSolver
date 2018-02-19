@@ -1,14 +1,48 @@
 from cube.cube_class import Cube, Color, Side
+from cube.moves import dyn_move
+from cube.position_class import Position  # (pos_id, position, depth, move_chain)
 
 EDGES_NO_UP_DOWN = [(19, 19), (10, 10), (16, 16), (13, 13),
                     (21, 32), (23, 24), (26, 27), (29, 30),
                     (34, 34), (37, 37), (40, 40), (43, 43)]
 
 
-def get_cube_goodness(position):
+def make_all_edges_good(position, group):
+    positions = {}  # depth: set(position)
+    position_set = set()
+    depth = 0
+    id = 0
+
+    positions[depth] = {Position(0, position, depth, [])}
+
+    if cube_is_good(position):
+        return Position(0, position, depth, [])
+
+    while depth < 8:
+        positions[depth + 1] = set()
+        for p in positions[depth]:
+            for m in group:
+                c = Cube(p.position)
+                dyn_move(c, m)
+
+                if cube_is_good(c.position):
+                    return Position(id, c.position, depth + 1, p.move_chain + [str(m)])
+
+                if c.position not in position_set:
+                    id += 1
+                    positions[depth + 1].add(Position(id, c.position, depth + 1, p.move_chain + [str(m)]))
+                    position_set.add(c.position)
+
+        depth += 1
+        print(depth)
+
+    print('here now')
+
+
+def cube_is_good(position):
     """
     Return whether or not all edge cubies are GOOD
-    All 3 variable
+    All 3 variables are checked out of necessity, however the continues reduce computational time
     :param position:
     :return:
     """
@@ -30,12 +64,7 @@ def get_cube_goodness(position):
         good_adjacent_slice = on_adjacent_slice(position, cubie_color[0], e) or \
             on_adjacent_slice(position, cubie_color[1], f)
 
-        if good_adjacent_slice:
-            continue
-
-        good = good_correct_face or good_opposite_face or good_adjacent_slice
-
-        if not good:
+        if not good_adjacent_slice:
             return False
 
     return True

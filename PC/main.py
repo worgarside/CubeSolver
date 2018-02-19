@@ -9,7 +9,7 @@ from cube.cube_class import Cube
 from cube.moves import *
 from data.database_manager import DatabaseManager
 from group_solver.position_generator import generate_positions
-from group_solver.good_bad_edges import get_cube_goodness
+from group_solver.good_bad_edges import make_all_edges_good
 from gui.interface import Interface
 from tree_solver.tree_generator import generate_tree
 
@@ -97,9 +97,15 @@ def main():
     # group_solve(db)
     # tree_solve()
     cube = Cube()
+    u(cube)
+    d(cube)
     l(cube)
-    good = get_cube_goodness(cube.position)
-    print(good)
+    r(cube)
+    f(cube)
+    b(cube)
+    u(cube)
+    d(cube)
+    print(make_all_edges_good(cube.position_reduced, GROUP_QUARTERS))
 
 
 if __name__ == '__main__':
