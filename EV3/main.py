@@ -4,14 +4,11 @@ from robot.robot_class import Robot
 
 
 def main():
+    simulation = False
     robot = Robot()
-    robot.init_motors(False)
-    # robot.rotate_cradle(180)
-    # time.sleep(5)
-    # robot.grab_cube()
-    pos = robot.scan_cube()
+    robot.init_motors(simulation)
+    pos = robot.scan_cube(simulation)
     cube = Cube(pos)
-    print(pos)
     colorama.init()
     print(cube)
     robot.exit()

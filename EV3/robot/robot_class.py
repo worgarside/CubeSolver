@@ -213,9 +213,7 @@ class Robot:
                 corner.append(self.color_scan_dict[self.color_sensor.value()])
             else:
                 # Currently just exits the program if an extreme value is read
-                print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
-                print(str(Color(self.color_sensor.value())))
-                print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+                print('Extreme Color value: %s' %  str(Color(self.color_sensor.value())))
                 exit()
             self.increment_progressbar()
 
@@ -267,7 +265,7 @@ class Robot:
                 self.cs_arm.wait_for_position(0)
 
                 if i == 3:
-                    self.rotate_cradle(90)
+                    self.rotate_cradle()
 
                 if i < 5:
                     self.grab_cube()
@@ -285,29 +283,30 @@ class Robot:
 
         # These transformations align the cubes faces correctly, as they are inherently rotated when scanning the cube
         sides[0] = sides[0][6:7] + sides[0][3:4] + sides[0][0:1] + sides[0][7:8] + sides[0][4:5] + sides[0][1:2] + \
-                   sides[0][8:9] + sides[0][5:6] + sides[0][2:3]
+            sides[0][8:9] + sides[0][5:6] + sides[0][2:3]
 
         sides[1] = sides[1][6:7] + sides[1][3:4] + sides[1][0:1] + sides[1][7:8] + sides[1][4:5] + sides[1][1:2] + \
-                   sides[1][8:9] + sides[1][5:6] + sides[1][2:3]
+            sides[1][8:9] + sides[1][5:6] + sides[1][2:3]
 
         sides[2] = sides[2][6:7] + sides[2][3:4] + sides[2][0:1] + sides[2][7:8] + sides[2][4:5] + sides[2][1:2] + \
-                   sides[2][8:9] + sides[2][5:6] + sides[2][2:3]
+            sides[2][8:9] + sides[2][5:6] + sides[2][2:3]
 
         sides[3] = sides[3][6:7] + sides[3][3:4] + sides[3][0:1] + sides[3][7:8] + sides[3][4:5] + sides[3][1:2] + \
-                   sides[3][8:9] + sides[3][5:6] + sides[3][2:3]
+            sides[3][8:9] + sides[3][5:6] + sides[3][2:3]
 
         # Makes sure all the lists of colors are split down to form one list (Cube._pos)
         cube_pos = []
         for side in sides:
             for i in side:
-                cube_pos.append(i)
+                cube_pos.append(Color(i).value)
 
         # Re-orders the cube sides to match the ordering of the cube position variable
         corrected_cube_pos = cube_pos[45:] + cube_pos[0:3] + cube_pos[27:30] + cube_pos[18:21] + \
-                             cube_pos[9:12] + cube_pos[3:6] + cube_pos[30:33] + cube_pos[21:24] + \
-                             cube_pos[12:15] + cube_pos[6:9] + cube_pos[33:36] + cube_pos[24:27] + \
-                             cube_pos[15:18] + cube_pos[36:45]
+            cube_pos[9:12] + cube_pos[3:6] + cube_pos[30:33] + cube_pos[21:24] + \
+            cube_pos[12:15] + cube_pos[6:9] + cube_pos[33:36] + cube_pos[24:27] + \
+            cube_pos[15:18] + cube_pos[36:45]
 
+        print('\n')
         return corrected_cube_pos
 
     # Robot moves
