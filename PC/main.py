@@ -97,7 +97,7 @@ def main():
     # group_solve(db)
     # tree_solve()
     cube = Cube()
-    u(cube)
+    l(cube)
     good = get_cube_goodness(cube.position)
     print(good)
 

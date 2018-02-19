@@ -1,19 +1,43 @@
-from cube.cube_class import Cube, EDGES_NO_UP_DOWN, Color, Side
+from cube.cube_class import Cube, Color, Side
+
+EDGES_NO_UP_DOWN = [(19, 19), (10, 10), (16, 16), (13, 13),
+                    (21, 32), (23, 24), (26, 27), (29, 30),
+                    (34, 34), (37, 37), (40, 40), (43, 43)]
 
 
 def get_cube_goodness(position):
+    """
+    Return whether or not all edge cubies are GOOD
+    All 3 variable
+    :param position:
+    :return:
+    """
     for e, f in EDGES_NO_UP_DOWN:
         cubie_color = [Color(position[c]) for c in (e, f)]
 
-        good = on_correct_face(position, cubie_color[0], e) or \
-               on_correct_face(position, cubie_color[1], f) or \
-               on_opposite_face(position, cubie_color[0], e) or \
-               on_opposite_face(position, cubie_color[1], f) or \
-               on_adjacent_slice(position, cubie_color[0], e) or \
-               on_adjacent_slice(position, cubie_color[1], f)
+        good_correct_face = on_correct_face(position, cubie_color[0], e) or \
+            on_correct_face(position, cubie_color[1], f)
+
+        if good_correct_face:
+            continue
+
+        good_opposite_face = on_opposite_face(position, cubie_color[0], e) or \
+            on_opposite_face(position, cubie_color[1], f)
+
+        if good_opposite_face:
+            continue
+
+        good_adjacent_slice = on_adjacent_slice(position, cubie_color[0], e) or \
+            on_adjacent_slice(position, cubie_color[1], f)
+
+        if good_adjacent_slice:
+            continue
+
+        good = good_correct_face or good_opposite_face or good_adjacent_slice
 
         if not good:
             return False
+
     return True
 
 
