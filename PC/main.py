@@ -1,14 +1,15 @@
-import colorama
+import socket
 import time
 from _tkinter import TclError
 from multiprocessing import Process
 from multiprocessing.managers import BaseManager
 from queue import LifoQueue
 
+import colorama
+
 from cube.cube_class import Cube
 from cube.moves import *
 from data.database_manager import DatabaseManager
-from group_solver.position_generator import generate_positions
 from group_solver.good_bad_edges import make_all_edges_good
 from gui.interface import Interface
 from tree_solver.tree_generator import generate_tree
@@ -55,21 +56,21 @@ def group_solve(db):
     d(cube)
     l(cube)
     r(cube)
-    b(cube)
-    u(cube)
-    l(cube)
-    r(cube)
-    f(cube)
-    u(cube)
-    d(cube)
-    l(cube)
-    d(cube)
-    r(cube)
-    b(cube)
-    u(cube)
-    d(cube)
+    # b(cube)
+    # u(cube)
+    # l(cube)
+    # r(cube)
+    # f(cube)
+    # u(cube)
+    # d(cube)
+    # l(cube)
+    # d(cube)
+    # r(cube)
+    # b(cube)
+    # u(cube)
+    # d(cube)
     good_pos = make_all_edges_good(cube.position_reduced)
-    print(good_pos)
+    good_chain = good_pos.move_chain[1:]
 
 
 def tree_solve():
@@ -113,11 +114,30 @@ def time_function(func, *args):
     return result
 
 
+def create_socket():
+    conn = socket.socket()
+    conn.bind(('0.0.0.0', 3000))
+    print('Listening for connection...')
+    conn.listen(1)
+    c, addr = conn.accept()
+    print('Got connection from %s:%s' % (addr[0], addr[1]))
+    return c
+
+
 def main():
-    db = init_db()
-    # group_solve(db)
-    # tree_solve()
-    time_function(group_solve, db)
+    conn = create_socket()
+
+    pos_received = False
+    position = ''
+    while not pos_received:
+        position = conn.recv(1024).decode()
+        if position != '':
+            print(position)
+            pos_received = True
+
+    print(Cube(position))
+
+    conn.close()
 
 
 if __name__ == '__main__':

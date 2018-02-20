@@ -24,8 +24,9 @@ SOLVED_SIDES = [(Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE
 class Robot:
     """A LEGO EV3 Robot with 3 motors, a colour sensor, and a touch sensor"""
 
-    def __init__(self):
+    def __init__(self, simulation=False):
         self.peripherals = []
+        self.simulated = simulation
         self.cradle = LargeMotor(OUTPUT_A)
         self.grabber = LargeMotor(OUTPUT_B)
         self.cs_arm = MediumMotor(OUTPUT_C)
@@ -56,19 +57,21 @@ class Robot:
 
         self.check_peripherals()
 
-    def init_motors(self, simulate=False):
+    def init_motors(self):
         """
         Allows user to manually position the motors at their starting position
         :param simulate: whether the cube is being simulated or not
         :return: None
         """
-        if not simulate:
-            self.cradle.stop_action = 'coast'
-            self.cradle.run_timed(time_sp=1, speed_sp=1)
-            self.grabber.stop_action = 'coast'
-            self.grabber.run_timed(time_sp=1, speed_sp=1)
-            self.cs_arm.stop_action = 'coast'
-            self.cs_arm.run_timed(time_sp=1, speed_sp=1)
+
+        self.cradle.stop_action = 'coast'
+        self.cradle.run_timed(time_sp=1, speed_sp=1)
+        self.grabber.stop_action = 'coast'
+        self.grabber.run_timed(time_sp=1, speed_sp=1)
+        self.cs_arm.stop_action = 'coast'
+        self.cs_arm.run_timed(time_sp=1, speed_sp=1)
+
+        if not self.simulated:
             while self.touch_sensor.value() != 1:
                 Leds.set_color(Leds.LEFT, Leds.AMBER)
                 Leds.set_color(Leds.RIGHT, Leds.AMBER)
@@ -76,13 +79,13 @@ class Robot:
             Leds.set_color(Leds.LEFT, Leds.GREEN)
             Leds.set_color(Leds.RIGHT, Leds.GREEN)
 
-        self.cradle.stop_action = 'hold'
-        self.grabber.stop_action = 'hold'
-        self.cs_arm.stop_action = 'hold'
+            self.cradle.stop_action = 'hold'
+            self.grabber.stop_action = 'hold'
+            self.cs_arm.stop_action = 'hold'
 
-        self.cradle.position = 0
-        self.grabber.position = 0
-        self.cs_arm.position = 0
+            self.cradle.position = 0
+            self.grabber.position = 0
+            self.cs_arm.position = 0
 
         Sound.beep()
 
@@ -236,7 +239,7 @@ class Robot:
 
         return corner[1], middle[1], corner[0], middle[2], centre, middle[0], corner[2], middle[3], corner[3]
 
-    def scan_cube(self, simulate=False):
+    def scan_cube(self):
         """
         Scans all 6 faces and returns the cube's position
 
@@ -252,12 +255,15 @@ class Robot:
 
         sides = [[], [], [], [], [], []]
 
-        # Move grabber out of the way
-        self.grabber.run_to_abs_pos(position_sp=self.gbr_no_guard_pos, speed_sp=self.grabber_speed / 2)
-        self.grabber.wait_for_position(self.gbr_no_guard_pos)
+
 
         # The scanning process can be simulated for testing purposes
-        if not simulate:
+        if not self.simulated:
+
+            # Move grabber out of the way
+            self.grabber.run_to_abs_pos(position_sp=self.gbr_no_guard_pos, speed_sp=self.grabber_speed / 2)
+            self.grabber.wait_for_position(self.gbr_no_guard_pos)
+
             for i in range(len(sides)):
                 sides[i] = self.scan_up_face()
 
