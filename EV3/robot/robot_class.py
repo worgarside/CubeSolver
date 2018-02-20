@@ -48,7 +48,7 @@ class Robot:
         self.cs_cen_pos = -2500
         self.cradle_speed = 1020
         self.cs_speed = 1020
-        self.grabber_speed = 300
+        self.grabber_speed = 325
         self._scanned_cubies = 0
 
         self.gbr_no_guard_pos = 65
@@ -57,12 +57,17 @@ class Robot:
 
         self.check_peripherals()
 
-    def init_motors(self):
+    def init_motors(self, override=False):
         """
         Allows user to manually position the motors at their starting position
         :param simulate: whether the cube is being simulated or not
         :return: None
         """
+
+        if override:
+            simulate_initialisation = False
+        else:
+            simulate_initialisation = self.simulated
 
         self.cradle.stop_action = 'coast'
         self.cradle.run_timed(time_sp=1, speed_sp=1)
@@ -71,10 +76,20 @@ class Robot:
         self.cs_arm.stop_action = 'coast'
         self.cs_arm.run_timed(time_sp=1, speed_sp=1)
 
-        if not self.simulated:
+        if not simulate_initialisation:
+            wait_count = 0
+            amber = True
+            Sound.speak('initialise motors')
             while self.touch_sensor.value() != 1:
-                Leds.set_color(Leds.LEFT, Leds.AMBER)
-                Leds.set_color(Leds.RIGHT, Leds.AMBER)
+                wait_count += 1
+                if wait_count % 50 == 0:
+                    if amber:
+                        Leds.set_color(Leds.LEFT, Leds.AMBER)
+                        Leds.set_color(Leds.RIGHT, Leds.AMBER)
+                    else:
+                        Leds.set_color(Leds.LEFT, Leds.GREEN)
+                        Leds.set_color(Leds.RIGHT, Leds.GREEN)
+                    amber = not amber
 
             Leds.set_color(Leds.LEFT, Leds.GREEN)
             Leds.set_color(Leds.RIGHT, Leds.GREEN)
@@ -322,8 +337,9 @@ class Robot:
         self.grabber.wait_for_position(self.gbr_guard_pos)
 
         # Rotate Cradle -90
-        self.rotate_cradle(-96)
-        self.rotate_cradle(6)
+        self.rotate_cradle(-100)
+        self.rotate_cradle(15)
+        self.rotate_cradle(-5)
 
     def r_move_not_d(self):
         # Set guards to block position
@@ -331,8 +347,9 @@ class Robot:
         self.grabber.wait_for_position(self.gbr_guard_pos)
 
         # Rotate Cradle 90
-        self.rotate_cradle(96)
-        self.rotate_cradle(-6)
+        self.rotate_cradle(100)
+        self.rotate_cradle(-15)
+        self.rotate_cradle(5)
 
     def r_move_d2(self):
         # Set guards to block position
@@ -353,7 +370,7 @@ class Robot:
         self.grabber.run_to_abs_pos(position_sp=self.gbr_no_guard_pos, speed_sp=self.grabber_speed)
         self.grabber.wait_for_position(self.gbr_no_guard_pos)
         # Rotate Cradle +90
-        self.rotate_cradle(90)
+        self.rotate_cradle()
 
     def r_move_not_y(self):
         # Remove guards
@@ -366,7 +383,7 @@ class Robot:
         # Remove guards
         self.grabber.run_to_abs_pos(position_sp=self.gbr_no_guard_pos, speed_sp=self.grabber_speed)
         self.grabber.wait_for_position(self.gbr_no_guard_pos)
-        # Rotate Cradle +90
+        # Rotate Cradle 180
         self.rotate_cradle(180)
 
     # Allows any valid move to be actuated by passing a string in
@@ -382,3 +399,4 @@ class Robot:
     def run_move_sequence(self, move_chain):
         for move in move_chain:
             self.run_move_method(move)
+            print(move, end=', ')

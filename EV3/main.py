@@ -1,4 +1,8 @@
+import pickle
 import socket
+from time import sleep
+
+from ev3dev.ev3 import Sound
 
 from robot.robot_class import Robot
 
@@ -14,23 +18,36 @@ def create_socket():
     print('Connecting to %s:%s' % (IP_DICT['WILLS-DESKTOP @ HOME'], 3000))
     conn.connect((IP_DICT['WILLS-DESKTOP @ HOME'], 3000))
     print('Connected!')
+    Sound.speak('connected to server')
+    sleep(1.5)
     return conn
 
 
 def create_robot():
-    simulation = False
+    simulation = True
     robot = Robot(simulation)
-    robot.init_motors()
+    robot.init_motors(True)
     return robot
 
 
 def main():
     conn = create_socket()
     robot = create_robot()
-
+    #
     pos_str = ''.join(robot.scan_cube())
     conn.send(pos_str.encode())
 
+    sequence = ''
+    sequence_received = False
+    while not sequence_received:
+        data = conn.recv(1024)
+        sequence = pickle.loads(data)
+        if sequence != '':
+            sequence_received = True
+
+    print(sequence)
+
+    robot.run_move_sequence(sequence)
     robot.exit()
 
 

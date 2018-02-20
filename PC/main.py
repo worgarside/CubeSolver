@@ -1,3 +1,4 @@
+import pickle
 import socket
 import time
 from _tkinter import TclError
@@ -7,12 +8,15 @@ from queue import LifoQueue
 
 import colorama
 
-from cube.cube_class import Cube
+from cube.cube_class import Cube, SOLVED_POS
+from cube.move_class import Move
 from cube.moves import *
 from data.database_manager import DatabaseManager
 from group_solver.good_bad_edges import make_all_edges_good
 from gui.interface import Interface
 from tree_solver.tree_generator import generate_tree
+
+from robot.move_converter import convert_sequence
 
 GROUP_THREE = [MOVE.U2, MOVE.D2, MOVE.L2, MOVE.R2, MOVE.F2, MOVE.B2]
 GROUP_TWO = [MOVE.U2, MOVE.D2, MOVE.L, MOVE.R, MOVE.F2, MOVE.B2]
@@ -42,35 +46,17 @@ def init_db():
     return db
 
 
-def group_solve(db):
-    # pos_dict = time_function(generate_positions, GROUP_ZERO)
-    #
-    # for depth in pos_dict:
-    #     for position in depth:
-    #         db.query('INSERT INTO positions VALUES (?, ?, ?, ?)',
-    #                  (position.pos_id, position.position, position.depth, str(position.move_chain)))
-    # db.commit()
-
-    cube = Cube()
-    u(cube)
-    d(cube)
-    l(cube)
-    r(cube)
-    # b(cube)
-    # u(cube)
-    # l(cube)
-    # r(cube)
-    # f(cube)
-    # u(cube)
-    # d(cube)
-    # l(cube)
-    # d(cube)
-    # r(cube)
-    # b(cube)
-    # u(cube)
-    # d(cube)
+def group_solve(db, cube=Cube(SOLVED_POS)):
     good_pos = make_all_edges_good(cube.position_reduced)
     good_chain = good_pos.move_chain[1:]
+
+    new_cube = deepcopy(cube)
+
+    for move in good_chain:
+        dyn_move(new_cube, move)
+
+    print(new_cube)
+    return good_chain
 
 
 def tree_solve():
@@ -119,14 +105,12 @@ def create_socket():
     conn.bind(('0.0.0.0', 3000))
     print('Listening for connection...')
     conn.listen(1)
-    c, addr = conn.accept()
-    print('Got connection from %s:%s' % (addr[0], addr[1]))
+    c, client_address = conn.accept()
+    print('EV3 connected @ %s:%s\n' % (client_address[0], client_address[1]))
     return c
 
 
-def main():
-    conn = create_socket()
-
+def get_current_position(conn):
     pos_received = False
     position = ''
     while not pos_received:
@@ -134,10 +118,37 @@ def main():
         if position != '':
             print(position)
             pos_received = True
+    return position
 
-    print(Cube(position))
 
+def main():
+    conn = create_socket()
+    position = get_current_position(conn)
+    cube = Cube(position)
+    solve_sequence = []
+
+    print(cube)
+
+    # db = init_db()
+    # solve_sequence.extend(time_function(group_solve, db, cube))
+
+    ##############
+    cube = Cube()
+    not_u(cube)
+    r(cube)
+    not_d(cube)
+    l2(cube)
+
+    print(cube)
+
+    solve_sequence = [Move.L2, Move.D, Move.NOT_R, Move.U]
+    robot_sequence = convert_sequence(cube, solve_sequence)
+    ##############
+
+    conn.send(pickle.dumps(robot_sequence))
     conn.close()
+
+
 
 
 if __name__ == '__main__':

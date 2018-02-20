@@ -47,6 +47,8 @@ class Cube:
         self.front = ''
         self.back = ''
 
+        self.robot_solve_sequence = []
+
         self.reduction_dict = {Color.ORANGE: Color.RED, Color.YELLOW: Color.WHITE, Color.GREEN: Color.BLUE,
                                Color.RED: Color.RED, Color.WHITE: Color.WHITE, Color.BLUE: Color.BLUE}
         self.opposite_sides_dict = {Side.UP: Side.DOWN, Side.DOWN: Side.UP, Side.LEFT: Side.RIGHT,
