@@ -9,14 +9,12 @@ from queue import LifoQueue
 import colorama
 
 from cube.cube_class import Cube, SOLVED_POS
-from cube.move_class import Move
 from cube.moves import *
 from data.database_manager import DatabaseManager
 from group_solver.good_bad_edges import make_all_edges_good
 from gui.interface import Interface
-from tree_solver.tree_generator import generate_tree
-
 from robot.move_converter import convert_sequence
+from tree_solver.tree_generator import generate_tree
 
 GROUP_THREE = [MOVE.U2, MOVE.D2, MOVE.L2, MOVE.R2, MOVE.F2, MOVE.B2]
 GROUP_TWO = [MOVE.U2, MOVE.D2, MOVE.L, MOVE.R, MOVE.F2, MOVE.B2]
@@ -129,26 +127,24 @@ def main():
 
     print(cube)
 
-    # db = init_db()
-    # solve_sequence.extend(time_function(group_solve, db, cube))
+    db = init_db()
+    solve_sequence.extend(time_function(group_solve, db, cube))
 
     ##############
-    cube = Cube()
-    not_u(cube)
-    r(cube)
-    not_d(cube)
-    l2(cube)
-
-    print(cube)
-
-    solve_sequence = [Move.L2, Move.D, Move.NOT_R, Move.U]
+    # cube = Cube()
+    # not_u(cube)
+    # r(cube)
+    # not_d(cube)
+    # l2(cube)
+    #
+    # print(cube)
+    #
+    # solve_sequence = [Move.L2, Move.D, Move.NOT_R, Move.U]
+    ##############
     robot_sequence = convert_sequence(cube, solve_sequence)
-    ##############
 
     conn.send(pickle.dumps(robot_sequence))
     conn.close()
-
-
 
 
 if __name__ == '__main__':

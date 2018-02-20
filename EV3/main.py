@@ -24,9 +24,9 @@ def create_socket():
 
 
 def create_robot():
-    simulation = True
+    simulation = False
     robot = Robot(simulation)
-    robot.init_motors(True)
+    robot.init_motors()
     return robot
 
 
