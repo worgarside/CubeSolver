@@ -1,42 +1,60 @@
-from cube.cube_class import Cube, Color, Side
+from cube.color_class import Color
+from cube.cube_class import Cube
+from cube.move_class import Move
 from cube.moves import dyn_move
 from cube.position_class import Position  # (pos_id, position, depth, move_chain)
+from cube.side_class import Side
 
 EDGES_NO_UP_DOWN = [(19, 19), (10, 10), (16, 16), (13, 13),
                     (21, 32), (23, 24), (26, 27), (29, 30),
                     (34, 34), (37, 37), (40, 40), (43, 43)]
 
+MOVE_GROUP = [Move.U, Move.D, Move.L, Move.R, Move.F, Move.B]
 
-def make_all_edges_good(position, group):
+OPPOSITE_MOVE_DICT = {
+    Move.U: Move.D,
+    Move.D: Move.U,
+    Move.L: Move.R,
+    Move.R: Move.L,
+    Move.F: Move.B,
+    Move.B: Move.F,
+}
+
+
+def make_all_edges_good(position):
     positions = {}  # depth: set(position)
     position_set = set()
     depth = 0
-    id = 0
+    pos_id = 0
 
-    positions[depth] = {Position(0, position, depth, [])}
+    positions[depth] = [Position(0, position, depth, [Move.NONE])]
 
     if cube_is_good(position):
         return Position(0, position, depth, [])
 
     while depth < 8:
-        positions[depth + 1] = set()
+        positions[depth + 1] = []
         for p in positions[depth]:
-            for m in group:
+            for m in MOVE_GROUP:
                 c = Cube(p.position)
                 dyn_move(c, m)
 
+                # avoids Half Turns or Extended Half Turns
+                if p.move_chain[-1] == m or (p.move_chain[-1] == OPPOSITE_MOVE_DICT[m] and p.move_chain[-2] == m):
+                    continue
+
                 if cube_is_good(c.position):
-                    return Position(id, c.position, depth + 1, p.move_chain + [str(m)])
+                    return Position(pos_id, c.position, depth + 1, p.move_chain + [m])
 
                 if c.position not in position_set:
-                    id += 1
-                    positions[depth + 1].add(Position(id, c.position, depth + 1, p.move_chain + [str(m)]))
+                    pos_id += 1
+                    positions[depth + 1].append(Position(pos_id, c.position, depth + 1, p.move_chain + [m]))
                     position_set.add(c.position)
 
         depth += 1
         print(depth)
 
-    print('here now')
+    print('FAIL')
 
 
 def cube_is_good(position):

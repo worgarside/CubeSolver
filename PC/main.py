@@ -42,13 +42,34 @@ def init_db():
 
 
 def group_solve(db):
-    pos_dict = time_function(generate_positions, GROUP_ZERO)
+    # pos_dict = time_function(generate_positions, GROUP_ZERO)
+    #
+    # for depth in pos_dict:
+    #     for position in depth:
+    #         db.query('INSERT INTO positions VALUES (?, ?, ?, ?)',
+    #                  (position.pos_id, position.position, position.depth, str(position.move_chain)))
+    # db.commit()
 
-    for depth in pos_dict:
-        for position in depth:
-            db.query('INSERT INTO positions VALUES (?, ?, ?, ?)',
-                     (position.pos_id, position.position, position.depth, str(position.move_chain)))
-    db.commit()
+    cube = Cube()
+    u(cube)
+    d(cube)
+    l(cube)
+    r(cube)
+    b(cube)
+    u(cube)
+    l(cube)
+    r(cube)
+    f(cube)
+    u(cube)
+    d(cube)
+    l(cube)
+    d(cube)
+    r(cube)
+    b(cube)
+    u(cube)
+    d(cube)
+    good_pos = make_all_edges_good(cube.position_reduced)
+    print(good_pos)
 
 
 def tree_solve():
@@ -93,19 +114,10 @@ def time_function(func, *args):
 
 
 def main():
-    # db = init_db()
+    db = init_db()
     # group_solve(db)
     # tree_solve()
-    cube = Cube()
-    u(cube)
-    d(cube)
-    l(cube)
-    r(cube)
-    f(cube)
-    b(cube)
-    u(cube)
-    d(cube)
-    print(make_all_edges_good(cube.position_reduced, GROUP_QUARTERS))
+    time_function(group_solve, db)
 
 
 if __name__ == '__main__':
