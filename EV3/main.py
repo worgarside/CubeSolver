@@ -1,6 +1,6 @@
 import pickle
 import socket
-from time import sleep
+from time import sleep, time
 
 from ev3dev.ev3 import Sound
 
@@ -30,11 +30,41 @@ def create_robot():
     return robot
 
 
+def scan_cube(robot):
+    with open('robot/scan_times.csv') as csv_read:
+        (avg_time_str, scan_count_str) = csv_read.readline().split(',')
+
+    old_avg_time = float(avg_time_str)
+    old_scan_count = int(scan_count_str)
+
+    print(old_avg_time)
+    print(old_scan_count)
+
+    start_time = time()
+    pos = robot.scan_cube()
+    end_time = time()
+
+    new_scan_time = end_time - start_time
+    new_scan_count = old_scan_count + 1
+    new_avg_time = ((old_avg_time * old_scan_count) + new_scan_time) / new_scan_count
+
+    with open('robot/scan_times.csv', 'wb') as csv_write:
+        csv_write.write(bytes('%0.3f,%i' % (new_avg_time, new_scan_count), 'UTF-8'))
+
+    if new_scan_time > new_avg_time:
+        print('Scan time of %0.1fs was ~%0.1fs slower than average' % (new_scan_time, new_scan_time - new_avg_time))
+    else:
+        print('Scan time of %0.1fs was ~%0.1fs faster than average' % (new_scan_time, new_avg_time - new_scan_time))
+
+    return pos
+
+
 def main():
     conn = create_socket()
     robot = create_robot()
-    #
-    pos_str = ''.join(robot.scan_cube())
+    pos = scan_cube(robot)
+
+    pos_str = ''.join(pos)
     conn.send(pos_str.encode())
 
     sequence = ''

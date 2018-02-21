@@ -58,6 +58,5 @@ def create_robot_solve_sequence(cube, color_sequence):
     for pm in color_sequence:
         method = getattr(pr_move, pm.lower())
         method(temp_cube)
-        robot_solve_sequence = temp_cube.robot_solve_sequence
 
-    return robot_solve_sequence
+    return temp_cube.robot_solve_sequence
