@@ -37,9 +37,6 @@ def scan_cube(robot):
     old_avg_time = float(avg_time_str)
     old_scan_count = int(scan_count_str)
 
-    print(old_avg_time)
-    print(old_scan_count)
-
     start_time = time()
     pos = robot.scan_cube()
     end_time = time()

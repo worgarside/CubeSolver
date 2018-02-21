@@ -114,7 +114,6 @@ def get_current_position(conn):
     while not pos_received:
         position = conn.recv(1024).decode()
         if position != '':
-            print(position)
             pos_received = True
     return position
 
