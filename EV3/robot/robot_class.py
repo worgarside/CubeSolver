@@ -44,7 +44,7 @@ class Robot:
                                 5: Color.RED, 6: Color.WHITE, 7: Color.ORANGE, }
 
         self.cs_mid_pos = -1650
-        self.cs_cor_pos = -1300
+        self.cs_cor_pos = -1350
         self.cs_cen_pos = -2300
         self.cradle_speed = 1020
         self.cs_speed = 1020
@@ -300,9 +300,23 @@ class Robot:
 
             sides = SOLVED_SIDES
 
-        print(sides)
+        color_validation_dict = {}
+        for s in sides:
+            for c in s:
+                try:
+                    color_validation_dict[c] += 1
+                except KeyError:
+                    color_validation_dict[c] = 1
 
-        # These transformations align the cubes faces correctly, as they are inherently rotated when scanning the cube
+        for key, value in color_validation_dict.items():
+            if value != 9:
+                print('\nInvalid number of %s facelets scanned (%i)' % (key.name, value))
+                for k, v in color_validation_dict.items():
+                    print('%s: %i' % (k.name, v))
+                self.exit()
+                exit()
+
+    # These transformations align the cubes faces correctly, as they are inherently rotated when scanning the cube
         sides[0] = sides[0][6:7] + sides[0][3:4] + sides[0][0:1] + sides[0][7:8] + sides[0][4:5] + sides[0][1:2] + \
             sides[0][8:9] + sides[0][5:6] + sides[0][2:3]
 

@@ -10,7 +10,6 @@ def convert_sequence(cube, sequence):
     # runs solve functions to produce sequence of digital moves to generate_solve_sequences
     color_sequence = convert_digital_to_colors(cube, sequence)
     robot_sequence = create_robot_solve_sequence(cube, color_sequence)
-    print(robot_sequence)
 
     return robot_sequence
     # Changes digital/human moves to account for frame of reference changes with M/E/S robot style moves

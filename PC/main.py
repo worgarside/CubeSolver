@@ -12,6 +12,7 @@ from cube.cube_class import Cube, SOLVED_POS
 from cube.moves import *
 from data.database_manager import DatabaseManager
 from group_solver.good_bad_edges import make_all_edges_good
+from group_solver.good_bad_corners import make_all_corners_good
 from gui.interface import Interface
 from robot.move_converter import convert_sequence
 from tree_solver.tree_generator import generate_tree
@@ -44,17 +45,35 @@ def init_db():
     return db
 
 
-def group_solve(db, cube=Cube(SOLVED_POS)):
-    good_pos = make_all_edges_good(cube.position_reduced)
-    good_chain = good_pos.move_chain[1:]
+def group_solve(cube=Cube(SOLVED_POS)):
+    sequence_list = []
+    
+    good_edge_pos = make_all_edges_good(cube.position_reduced)
+    good_edge_sequence = good_edge_pos.move_sequence[1:]
+    sequence_list.append(good_edge_sequence)
+    
+    good_edge_cube = deepcopy(cube)
+    for move in good_edge_sequence:
+        dyn_move(good_edge_cube, move)
 
-    new_cube = deepcopy(cube)
+    print(good_edge_cube)
 
-    for move in good_chain:
-        dyn_move(new_cube, move)
+    good_corner_pos = make_all_corners_good(good_edge_cube.position_reduced)
+    good_corner_sequence = good_corner_pos.move_sequence[1:]
+    sequence_list.append(good_corner_sequence)
 
-    print(new_cube)
-    return good_chain
+    good_corner_cube = deepcopy(good_edge_cube)
+    for move in good_corner_sequence:
+        dyn_move(good_corner_cube, move)
+
+    print(good_corner_cube)
+
+    total_sequence = []
+    for sequence in sequence_list:
+        print(sequence)
+        total_sequence.extend(sequence)
+
+    return total_sequence
 
 
 def tree_solve():
@@ -119,37 +138,27 @@ def get_current_position(conn):
 
 
 def main():
-    # conn = create_socket()
-    # position = get_current_position(conn)
+    conn = create_socket()
+    position = get_current_position(conn)
 
     # position = 'OBROWROGRWWWBRBWWWGOGWOYGGGWRYBBBYYYBOBYYYGRGOGROYROBR'
-    position = 'WBWWWWWGWOOOGWGRRRBWBBOGOGRGRBRBOOOOGYGRRRBYBYGYYYYYBY'
+    # position = 'WBWWWWWGWOOOGWGRRRBWBBOGOGRGRBRBOOOOGYGRRRBYBYGYYYYYBY'
+    # position = 'YWRBWYOOWOOBYYOGBYBRGGOGWGWBRYGBOWRRGWBRRYGRBWOWYYBOGR'
+
+    print('Scanned position: %s' % position)
 
     cube = Cube(position)
     solve_sequence = []
 
     print(cube)
 
-    db = init_db()
-    solve_sequence.extend(time_function(group_solve, db, cube))
+    solve_sequence.extend(time_function(group_solve, cube))
 
-    ##############
-    # cube = Cube()
-    # not_u(cube)
-    # r(cube)
-    # not_d(cube)
-    # l2(cube)
-    #
-    # print(cube)
-    #
-    # solve_sequence = [Move.L2, Move.D, Move.NOT_R, Move.U]
-    ##############
     robot_sequence = convert_sequence(cube, solve_sequence)
-
     print(robot_sequence)
 
-    # conn.send(pickle.dumps(robot_sequence))
-    # conn.close()
+    conn.send(pickle.dumps(robot_sequence))
+    conn.close()
 
 
 if __name__ == '__main__':

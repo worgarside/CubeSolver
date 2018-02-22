@@ -1,4 +1,4 @@
-import pickle
+import pickle, os
 import socket
 from time import sleep, time
 
@@ -24,28 +24,28 @@ def create_socket():
 
 
 def create_robot():
-    simulation = False
-    robot = Robot(simulation)
+    robot = Robot()
     robot.init_motors()
     return robot
 
 
 def scan_cube(robot):
-    with open('robot/scan_times.csv') as csv_read:
+    start_time = time()
+    pos = robot.scan_cube()
+    end_time = time()
+
+    file_path = '%s/robot/scan_times.csv' % os.path.abspath(os.path.dirname(__file__))
+    with open(file_path) as csv_read:
         (avg_time_str, scan_count_str) = csv_read.readline().split(',')
 
     old_avg_time = float(avg_time_str)
     old_scan_count = int(scan_count_str)
 
-    start_time = time()
-    pos = robot.scan_cube()
-    end_time = time()
-
     new_scan_time = end_time - start_time
     new_scan_count = old_scan_count + 1
     new_avg_time = ((old_avg_time * old_scan_count) + new_scan_time) / new_scan_count
 
-    with open('robot/scan_times.csv', 'wb') as csv_write:
+    with open(file_path, 'wb') as csv_write:
         csv_write.write(bytes('%0.3f,%i' % (new_avg_time, new_scan_count), 'UTF-8'))
 
     if new_scan_time > new_avg_time:
@@ -57,26 +57,25 @@ def scan_cube(robot):
 
 
 def main():
-    # conn = create_socket()
+    conn = create_socket()
     robot = create_robot()
-    try:
 
+    try:
         pos = scan_cube(robot)
-        #
-        # pos_str = ''.join(pos)
-        # conn.send(pos_str.encode())
-        #
-        # sequence = ''
-        # sequence_received = False
-        # while not sequence_received:
-        #     data = conn.recv(1024)
-        #     sequence = pickle.loads(data)
-        #     if sequence != '':
-        #         sequence_received = True
-        #
-        # print(sequence)
-        #
-        # robot.run_move_sequence(sequence)
+        pos_str = ''.join(pos)
+        conn.send(pos_str.encode())
+
+        sequence = ''
+        sequence_received = False
+        while not sequence_received:
+            data = conn.recv(1024)
+            sequence = pickle.loads(data)
+            if sequence != '':
+                sequence_received = True
+
+        print(sequence)
+
+        robot.run_move_sequence(sequence)
     except MotorStall as err:
         print('\n\n %s' % err)
 

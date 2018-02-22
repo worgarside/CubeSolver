@@ -8,7 +8,6 @@ def generate_tree(cube, move_group, queue):
     positions = {}
     position_set = set()
     depth = 0
-    pos_id = 0
     positions[depth] = {Position(0, cube.position, depth, [])}
 
     while not solved:
@@ -17,10 +16,9 @@ def generate_tree(cube, move_group, queue):
             for m in move_group:
                 c = Cube(p.position)
                 dyn_move(c, m)
-                new_pos = Position(pos_id, c.position, depth + 1, p.move_chain + [m])
+                new_pos = Position(c.position, depth + 1, p.move_chain + [m])
 
                 if valid_pos(new_pos, position_set):
-                    pos_id += 1
                     queue.put(new_pos)
                     positions[depth + 1].append(new_pos)
 

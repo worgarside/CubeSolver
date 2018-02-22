@@ -35,10 +35,11 @@ EDGES = [(1, 19), (3, 10), (5, 16), (7, 13),
 
 
 class Cube:
-    def __init__(self, position=SOLVED_POS):
+    def __init__(self, position=SOLVED_POS, temporary=False):
         self.position = position
         self.position_reduced = ''
         self.color_position = ''
+        self.temporary = temporary
 
         self.up = ''
         self.down = ''
@@ -84,8 +85,10 @@ class Cube:
     def update_fields(self):
         """Updates all fields of Cube from position"""
         self.update_sides()
-        self.update_pos_colors()
-        self.update_reduced_cube()
+        if not self.temporary:
+            self.update_reduced_cube()
+            self.update_pos_colors()
+
 
     def update_sides(self):
         """ Updates the sides of the cube from the main position variable """

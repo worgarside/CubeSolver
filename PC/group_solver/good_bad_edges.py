@@ -1,10 +1,8 @@
-from multiprocessing import Pool
-
 from cube.color_class import Color
 from cube.cube_class import Cube
 from cube.move_class import Move
 from cube.moves import dyn_move
-from cube.position_class import Position  # (pos_id, position, depth, move_chain)
+from cube.position_class import Position  # (pos_id, position, depth, move_sequence)
 from cube.side_class import Side
 
 EDGES_NO_UP_DOWN = [(19, 19), (10, 10), (16, 16), (13, 13),
@@ -15,75 +13,43 @@ MOVE_GROUP = [Move.U, Move.D, Move.L, Move.R, Move.F, Move.B]
 
 OPPOSITE_MOVE_DICT = {
     Move.U: Move.D,
-    Move.NOT_U: Move.NOT_D,
     Move.D: Move.U,
-    Move.NOT_D: Move.NOT_U,
     Move.L: Move.R,
-    Move.NOT_L: Move.NOT_R,
     Move.R: Move.L,
-    Move.NOT_R: Move.NOT_L,
     Move.F: Move.B,
-    Move.NOT_F: Move.NOT_B,
     Move.B: Move.F,
-    Move.NOT_B: Move.NOT_F,
 }
 
 
-position_set = set()
-
 def make_all_edges_good(position):
-    global position_set
-
+    position_set = set()
     positions = {}  # depth: set(position)
-
-    pos_id = 0
     depth = 0
 
-    positions[depth] = [Position(0, position, depth, [Move.NONE])]
-
+    positions[depth] = [Position(position, [Move.NONE])]
     if cube_is_good(position):
-        return Position(0, position, depth, [])
+        return Position(position, [])
 
     while depth < 8:
+        print('D%i' % depth)
         positions[depth + 1] = []
         for p in positions[depth]:
-            # POOL HERE
-            # pool = Pool()
             for m in MOVE_GROUP:
-                try:
-                    pos_id, new_pos_obj, new_pos_str, good_flag = process_move(p, m, depth, pos_id)
-                    if not good_flag:
-                        positions[depth + 1].append(new_pos_obj)
-                        position_set.add(new_pos_str)
-                    else:
-                        return new_pos_obj
-                except TypeError:
-                    pass
+                # avoids Half Turns or Extended Half Turns
+                if p.move_sequence[-1] == m or (p.move_sequence[-1] == OPPOSITE_MOVE_DICT[m] and p.move_sequence[-2] == m):
+                    continue
 
+                c = Cube(p.position, True)
+                dyn_move(c, m)
+
+                if c.position not in position_set:
+                    if cube_is_good(c.position):
+                        return Position(c.position, p.move_sequence + [m])
+                    positions[depth + 1].append(Position(c.position, p.move_sequence + [m]))
+                    position_set.add(c.position)
 
         depth += 1
-        print(depth)
-
     print('FAIL')
-
-
-def process_move(p, m, depth, pos_id):
-    global position_set
-
-    c = Cube(p.position)
-    dyn_move(c, m)
-
-    # avoids Half Turns or Extended Half Turns
-    if p.move_chain[-1] == m or (p.move_chain[-1] == OPPOSITE_MOVE_DICT[m] and p.move_chain[-2] == m):
-        return
-
-    if cube_is_good(c.position):
-        new_id = pos_id + 1
-        return new_id, Position(new_id, c.position, depth + 1, p.move_chain + [m]), c.position, True
-
-    if c.position not in position_set:
-        new_id = pos_id + 1
-        return new_id, Position(new_id, c.position, depth + 1, p.move_chain + [m]), c.position, False
 
 
 def cube_is_good(position):
@@ -97,19 +63,19 @@ def cube_is_good(position):
         cubie_color = [Color(position[c]) for c in (e, f)]
 
         good_correct_face = on_correct_face(position, cubie_color[0], e) or \
-                            on_correct_face(position, cubie_color[1], f)
+            on_correct_face(position, cubie_color[1], f)
 
         if good_correct_face:
             continue
 
         good_opposite_face = on_opposite_face(position, cubie_color[0], e) or \
-                             on_opposite_face(position, cubie_color[1], f)
+            on_opposite_face(position, cubie_color[1], f)
 
         if good_opposite_face:
             continue
 
         good_adjacent_slice = on_adjacent_slice(position, cubie_color[0], e) or \
-                              on_adjacent_slice(position, cubie_color[1], f)
+            on_adjacent_slice(position, cubie_color[1], f)
 
         if not good_adjacent_slice:
             return False
