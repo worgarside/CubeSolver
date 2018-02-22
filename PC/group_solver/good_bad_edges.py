@@ -11,7 +11,7 @@ EDGES_NO_UP_DOWN = [(19, 19), (10, 10), (16, 16), (13, 13),
                     (21, 32), (23, 24), (26, 27), (29, 30),
                     (34, 34), (37, 37), (40, 40), (43, 43)]
 
-MOVE_GROUP = [Move.U, Move.D, Move.L, Move.R, Move.F, Move.B, Move.NOT_L, Move.NOT_R, Move.NOT_F, Move.NOT_B]
+MOVE_GROUP = [Move.U, Move.D, Move.L, Move.R, Move.F, Move.B]
 
 OPPOSITE_MOVE_DICT = {
     Move.U: Move.D,

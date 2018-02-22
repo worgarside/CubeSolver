@@ -119,8 +119,12 @@ def get_current_position(conn):
 
 
 def main():
-    conn = create_socket()
-    position = get_current_position(conn)
+    # conn = create_socket()
+    # position = get_current_position(conn)
+
+    # position = 'OBROWROGRWWWBRBWWWGOGWOYGGGWRYBBBYYYBOBYYYGRGOGROYROBR'
+    position = 'WBWWWWWGWOOOGWGRRRBWBBOGOGRGRBRBOOOOGYGRRRBYBYGYYYYYBY'
+
     cube = Cube(position)
     solve_sequence = []
 
@@ -142,8 +146,10 @@ def main():
     ##############
     robot_sequence = convert_sequence(cube, solve_sequence)
 
-    conn.send(pickle.dumps(robot_sequence))
-    conn.close()
+    print(robot_sequence)
+
+    # conn.send(pickle.dumps(robot_sequence))
+    # conn.close()
 
 
 if __name__ == '__main__':

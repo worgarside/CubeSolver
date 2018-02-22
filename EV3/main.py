@@ -3,7 +3,7 @@ import socket
 from time import sleep, time
 
 from ev3dev.ev3 import Sound
-
+from ev3dev.helper import MotorStall
 from robot.robot_class import Robot
 
 IP_DICT = {
@@ -57,24 +57,29 @@ def scan_cube(robot):
 
 
 def main():
-    conn = create_socket()
+    # conn = create_socket()
     robot = create_robot()
-    pos = scan_cube(robot)
+    try:
 
-    pos_str = ''.join(pos)
-    conn.send(pos_str.encode())
+        pos = scan_cube(robot)
+        #
+        # pos_str = ''.join(pos)
+        # conn.send(pos_str.encode())
+        #
+        # sequence = ''
+        # sequence_received = False
+        # while not sequence_received:
+        #     data = conn.recv(1024)
+        #     sequence = pickle.loads(data)
+        #     if sequence != '':
+        #         sequence_received = True
+        #
+        # print(sequence)
+        #
+        # robot.run_move_sequence(sequence)
+    except MotorStall as err:
+        print('\n\n %s' % err)
 
-    sequence = ''
-    sequence_received = False
-    while not sequence_received:
-        data = conn.recv(1024)
-        sequence = pickle.loads(data)
-        if sequence != '':
-            sequence_received = True
-
-    print(sequence)
-
-    robot.run_move_sequence(sequence)
     robot.exit()
 
 

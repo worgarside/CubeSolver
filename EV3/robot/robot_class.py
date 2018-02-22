@@ -43,9 +43,9 @@ class Robot:
         self.color_scan_dict = {0: Color.NONE, 1: Color.DARK, 2: Color.BLUE, 3: Color.GREEN, 4: Color.YELLOW,
                                 5: Color.RED, 6: Color.WHITE, 7: Color.ORANGE, }
 
-        self.cs_mid_pos = -1700
-        self.cs_cor_pos = -1390
-        self.cs_cen_pos = -2500
+        self.cs_mid_pos = -1650
+        self.cs_cor_pos = -1300
+        self.cs_cen_pos = -2300
         self.cradle_speed = 1020
         self.cs_speed = 1020
         self.grabber_speed = 325
@@ -60,7 +60,7 @@ class Robot:
     def init_motors(self, override=False):
         """
         Allows user to manually position the motors at their starting position
-        :param simulate: whether the cube is being simulated or not
+        :param override: a flag to skip the initialisation for testing
         :return: None
         """
 
@@ -280,8 +280,8 @@ class Robot:
             for i in range(len(sides)):
                 sides[i] = self.scan_up_face()
 
-                self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=self.cs_speed)
-                self.cs_arm.wait_for_position(0)
+                self.cs_arm.run_to_abs_pos(position_sp=-300, speed_sp=self.cs_speed)
+                self.cs_arm.wait_for_position(-300)
 
                 if i == 3:
                     self.rotate_cradle()
@@ -300,18 +300,20 @@ class Robot:
 
             sides = SOLVED_SIDES
 
+        print(sides)
+
         # These transformations align the cubes faces correctly, as they are inherently rotated when scanning the cube
         sides[0] = sides[0][6:7] + sides[0][3:4] + sides[0][0:1] + sides[0][7:8] + sides[0][4:5] + sides[0][1:2] + \
-                   sides[0][8:9] + sides[0][5:6] + sides[0][2:3]
+            sides[0][8:9] + sides[0][5:6] + sides[0][2:3]
 
         sides[1] = sides[1][6:7] + sides[1][3:4] + sides[1][0:1] + sides[1][7:8] + sides[1][4:5] + sides[1][1:2] + \
-                   sides[1][8:9] + sides[1][5:6] + sides[1][2:3]
+            sides[1][8:9] + sides[1][5:6] + sides[1][2:3]
 
         sides[2] = sides[2][6:7] + sides[2][3:4] + sides[2][0:1] + sides[2][7:8] + sides[2][4:5] + sides[2][1:2] + \
-                   sides[2][8:9] + sides[2][5:6] + sides[2][2:3]
+            sides[2][8:9] + sides[2][5:6] + sides[2][2:3]
 
         sides[3] = sides[3][6:7] + sides[3][3:4] + sides[3][0:1] + sides[3][7:8] + sides[3][4:5] + sides[3][1:2] + \
-                   sides[3][8:9] + sides[3][5:6] + sides[3][2:3]
+            sides[3][8:9] + sides[3][5:6] + sides[3][2:3]
 
         # Makes sure all the lists of colors are split down to form one list (Cube._pos)
         cube_pos = []
@@ -321,9 +323,9 @@ class Robot:
 
         # Re-orders the cube sides to match the ordering of the cube position variable
         corrected_cube_pos = cube_pos[45:] + cube_pos[0:3] + cube_pos[27:30] + cube_pos[18:21] + \
-                             cube_pos[9:12] + cube_pos[3:6] + cube_pos[30:33] + cube_pos[21:24] + \
-                             cube_pos[12:15] + cube_pos[6:9] + cube_pos[33:36] + cube_pos[24:27] + \
-                             cube_pos[15:18] + cube_pos[36:45]
+            cube_pos[9:12] + cube_pos[3:6] + cube_pos[30:33] + cube_pos[21:24] + \
+            cube_pos[12:15] + cube_pos[6:9] + cube_pos[33:36] + cube_pos[24:27] + \
+            cube_pos[15:18] + cube_pos[36:45]
 
         print('\n')
         return corrected_cube_pos
@@ -398,3 +400,23 @@ class Robot:
         for move in move_chain:
             self.run_move_method(move)
             print(move, end=', ')
+
+    def test(self):
+        for j in range(2):
+            self.grabber.run_to_abs_pos(position_sp=self.gbr_no_guard_pos, speed_sp=self.grabber_speed / 2)
+            self.grabber.wait_for_position(self.gbr_no_guard_pos)
+
+            self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=self.cs_speed)
+            self.cs_arm.wait_for_position(0)
+
+            self.grab_cube()
+            self.grab_cube()
+
+            self.grabber.run_to_abs_pos(position_sp=self.gbr_no_guard_pos, speed_sp=self.grabber_speed / 2)
+            self.grabber.wait_for_position(self.gbr_no_guard_pos)
+
+            self.cs_arm.run_to_abs_pos(position_sp=-350, speed_sp=self.cs_speed)
+            self.cs_arm.wait_for_position(-350)
+
+            self.grab_cube()
+            self.grab_cube()
