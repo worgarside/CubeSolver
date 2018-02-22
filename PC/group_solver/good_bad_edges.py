@@ -1,11 +1,13 @@
+from itertools import chain
+from itertools import repeat
 from multiprocessing import Pool
 
 from cube.color_class import Color
 from cube.cube_class import Cube
 from cube.move_class import Move
 from cube.moves import dyn_move
-from cube.position_class import Position  # (pos_id, position, depth, move_chain)
 from cube.side_class import Side
+from group_solver.position_class import Position  # (position, depth, move_chain)
 
 EDGES_NO_UP_DOWN = [(19, 19), (10, 10), (16, 16), (13, 13),
                     (21, 32), (23, 24), (26, 27), (29, 30),
@@ -28,62 +30,74 @@ OPPOSITE_MOVE_DICT = {
     Move.NOT_B: Move.NOT_F,
 }
 
-
-position_set = set()
-
+success = False
 def make_all_edges_good(position):
-    global position_set
+    positions = {}  # depth: [position1, ...]
+    position_set = set()
 
-    positions = {}  # depth: set(position)
-
-    pos_id = 0
     depth = 0
-
-    positions[depth] = [Position(0, position, depth, [Move.NONE])]
+    positions[depth] = [Position(position, depth, [Move.NONE])]
 
     if cube_is_good(position):
-        return Position(0, position, depth, [])
+        return Position(position, depth, [])
 
-    while depth < 8:
+    while depth < 4:
         positions[depth + 1] = []
-        for p in positions[depth]:
-            # POOL HERE
-            # pool = Pool()
-            for m in MOVE_GROUP:
-                try:
-                    pos_id, new_pos_obj, new_pos_str, good_flag = process_move(p, m, depth, pos_id)
-                    if not good_flag:
-                        positions[depth + 1].append(new_pos_obj)
-                        position_set.add(new_pos_str)
-                    else:
-                        return new_pos_obj
-                except TypeError:
-                    pass
+        pool = Pool()
+        pool_return = pool.starmap(process_moves, zip(positions[depth], repeat(depth), repeat(position_set)))
 
+        pool_list = list(chain.from_iterable(pool_return))
+        print(len(pool_list))
+
+        positions[depth + 1].extend(pool_list)
+
+        if success:
+            print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+
+        if type(pool_return[0]) is list:
+            pos_list = pool_return[0]
+
+        elif type(pool_return[0]) is Position:
+            pool.terminate()
+            return pool_return[0][1]
+        else:
+            raise TypeError('Pool returned incorrect variable type: %s' % str(type(pool_return)))
+
+        # pool.join()
+        # pool.close()
+        # pool.map(process_moves(depth), )
+        # for p in positions[depth]:
+        #     result = process_moves(depth, p)
+        #     if result is not None:
+        #         return result
 
         depth += 1
-        print(depth)
+        # print(depth)
 
     print('FAIL')
 
 
-def process_move(p, m, depth, pos_id):
-    global position_set
+def process_moves(p, depth, position_set):
+    global success
+    pos_list = []
 
-    c = Cube(p.position)
-    dyn_move(c, m)
+    for m in MOVE_GROUP:
+        c = Cube(p.position)
+        dyn_move(c, m)
 
-    # avoids Half Turns or Extended Half Turns
-    if p.move_chain[-1] == m or (p.move_chain[-1] == OPPOSITE_MOVE_DICT[m] and p.move_chain[-2] == m):
-        return
+        # avoids Half Turns or Extended Half Turns
+        if p.move_chain[-1] == m or (p.move_chain[-1] == OPPOSITE_MOVE_DICT[m] and p.move_chain[-2] == m):
+            continue
 
-    if cube_is_good(c.position):
-        new_id = pos_id + 1
-        return new_id, Position(new_id, c.position, depth + 1, p.move_chain + [m]), c.position, True
+        if cube_is_good(c.position):
+            print('##########################################################')
+            success = True
+            return Position(c.position, depth + 1, p.move_chain + [m])
 
-    if c.position not in position_set:
-        new_id = pos_id + 1
-        return new_id, Position(new_id, c.position, depth + 1, p.move_chain + [m]), c.position, False
+        if c.position not in position_set:
+            pos_list.append(Position(c.position, depth + 1, p.move_chain + [m]))
+            position_set.add(c.position)
+    return pos_list
 
 
 def cube_is_good(position):

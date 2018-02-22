@@ -119,8 +119,9 @@ def get_current_position(conn):
 
 
 def main():
-    conn = create_socket()
-    position = get_current_position(conn)
+    # conn = create_socket()
+    # position = get_current_position(conn)
+    position = 'OBROWROGRWWWBRBWWWGOGWOYGGGWRYBBBYYYBOBYYYGRGOGROYROBR'
     cube = Cube(position)
     solve_sequence = []
 
@@ -129,21 +130,12 @@ def main():
     db = init_db()
     solve_sequence.extend(time_function(group_solve, db, cube))
 
-    ##############
-    # cube = Cube()
-    # not_u(cube)
-    # r(cube)
-    # not_d(cube)
-    # l2(cube)
-    #
-    # print(cube)
-    #
-    # solve_sequence = [Move.L2, Move.D, Move.NOT_R, Move.U]
-    ##############
     robot_sequence = convert_sequence(cube, solve_sequence)
 
-    conn.send(pickle.dumps(robot_sequence))
-    conn.close()
+    print(robot_sequence)
+
+    # conn.send(pickle.dumps(robot_sequence))
+    # conn.close()
 
 
 if __name__ == '__main__':
