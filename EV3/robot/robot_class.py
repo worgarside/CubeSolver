@@ -160,6 +160,7 @@ class Robot:
         pos = self.cradle.position + mod_angle
         self.cradle.run_to_abs_pos(position_sp=pos, speed_sp=self.cradle_speed, ramp_down_sp=100)
         self.cradle.wait_for_position(pos)
+        sleep(0.01)
 
     def grab_cube(self):
         """
@@ -169,7 +170,7 @@ class Robot:
         self.grabber.run_to_abs_pos(position_sp=self.gbr_grab_pos, speed_sp=self.grabber_speed * 1.5)
         self.grabber.wait_for_position(self.gbr_grab_pos)
 
-        self.grabber.run_to_abs_pos(position_sp=-10, speed_sp=self.grabber_speed * 1.5)
+        self.grabber.run_to_abs_pos(position_sp=-10, speed_sp=self.grabber_speed * 1)
         self.grabber.wait_for_position(-10)
 
         self.grabber.run_to_abs_pos(position_sp=self.gbr_guard_pos, speed_sp=self.grabber_speed)

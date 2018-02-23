@@ -25,7 +25,7 @@ def make_all_faces_good(position):
     if cube_is_good(Cube(position)):
         return Position(depth, position, [])
 
-    while depth < 14:
+    while depth < 15:
         print('%i... ' % depth, end='')
         positions[depth + 1] = []
         for p in positions[depth]:

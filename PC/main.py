@@ -1,5 +1,7 @@
+import pickle
 import socket
 import time
+from robot.move_converter import convert_sequence
 from _tkinter import TclError
 from multiprocessing import Process
 from multiprocessing.managers import BaseManager
@@ -10,12 +12,12 @@ import colorama
 from cube.cube_class import Cube, SOLVED_POS
 from cube.moves import *
 from data.database_manager import DatabaseManager
-from group_solver.phase_one import make_all_edges_good
-from group_solver.phase_two import make_all_corners_good
-from group_solver.phase_three import make_all_faces_good
 from group_solver.phase_four import solve_cube
+from group_solver.phase_one import make_all_edges_good
+from group_solver.phase_three import make_all_faces_good
+from group_solver.phase_two import make_all_corners_good
+from group_solver.table_generator import generate_table
 from gui.interface import Interface
-from robot.move_converter import convert_sequence
 from tree_solver.tree_generator import generate_tree
 
 GROUP_THREE = [MOVE.U2, MOVE.D2, MOVE.L2, MOVE.R2, MOVE.F2, MOVE.B2]
@@ -40,7 +42,7 @@ def init_db(clear=False):
         db.query('''CREATE TABLE IF NOT EXISTS phase_four (
                         depth INTEGER NOT NULL,
                         position TEXT PRIMARY KEY,
-                        move_chain TEXT NOT NULL)
+                        move_chain BLOB NOT NULL)
                     ''')
 
     return db
@@ -85,7 +87,6 @@ def group_solve(db, cube=Cube(SOLVED_POS)):
     final_sequence = solve_cube(good_face_cube.position, db)
     sequence_list.append(final_sequence)
 
-    exit()
 
     solved_cube = deepcopy(good_face_cube)
     for move in final_sequence:
@@ -98,7 +99,7 @@ def group_solve(db, cube=Cube(SOLVED_POS)):
     for sequence in sequence_list:
         print(sequence)
         total_sequence.extend(sequence)
-
+    print(len(total_sequence))
     return total_sequence
 
 
@@ -169,10 +170,10 @@ def main():
     db = init_db()
 
     # position = 'OBROWROGRWWWBRBWWWGOGWOYGGGWRYBBBYYYBOBYYYGRGOGROYROBR'
-    position = 'WBWWWWWGWOOOGWGRRRBWBBOGOGRGRBRBOOOOGYGRRRBYBYGYYYYYBY'
+    # position = 'WBWWWWWGWOOOGWGRRRBWBBOGOGRGRBRBOOOOGYGRRRBYBYGYYYYYBY'
     # position = 'YWRBWYOOWOOBYYOGBYBRGGOGWGWBRYGBOWRRGWBRRYGRBWOWYYBOGR'
-    # position = 'BRYGWWYWWRROBGBORRGBWYOOGGGYRWBBBROOGYGOORGYYYRWBYWBOW'
-
+    position = 'BRYGWWYWWRROBGBORRGBWYOOGGGYRWBBBROOGYGOORGYYYRWBYWBOW'
+    # position = 'OGOYWYRBRWOWGOBWRWBRGGOBWGYBRGWBYYOYBRGYRYGOBOBOWYWRGR'
     print('Scanned position: %s' % position)
 
     cube = Cube(position)
@@ -188,18 +189,17 @@ def main():
     # conn.send(pickle.dumps(robot_sequence))
     # conn.close()
 
-    # Genertae phase four table:
+    # Generate phase four table:
     # db = init_db()
-    #
     #
     # position_dict = time_function(generate_table)
     # #
-    # # time_function(add_to_db, position_dict, db)
-    # for i in range(100):
-    #     freq = (i+1)*37
-    #     winsound.Beep(freq, 150)
-
-    # for i in range(15):
+    # time_function(add_to_db, position_dict, db)
+    # for i in range(50):
+    #     freq = (i + 1) * 80
+    #     winsound.Beep(freq, 75)
+    #
+    # for i in range(20):
     #     print(db.query("SELECT COUNT(*) FROM phase_four where depth = '%i'" % i).fetchone()[0])
 
 
@@ -207,7 +207,7 @@ def add_to_db(position_dict, db):
     for depth, positions in position_dict.items():
         for position in positions:
             db.query('INSERT INTO phase_four VALUES (?, ?, ?)',
-                     (position.depth, position.position, str(position.move_sequence[1:])))
+                     (position.depth, position.position, pickle.dumps(position.move_sequence[1:])))
     db.commit()
 
 
