@@ -22,21 +22,23 @@ OPPOSITE_MOVE_DICT = {
 
 
 def make_all_edges_good(position):
+    print(' - Phase 1 - - - - - - -')
     position_set = set()
     positions = {}  # depth: set(position)
     depth = 0
 
-    positions[depth] = [Position(position, [Move.NONE])]
+    positions[depth] = [Position(depth, position, [Move.NONE])]
     if cube_is_good(position):
-        return Position(position, [])
+        return Position(depth, position, [])
 
     while depth < 8:
-        print('D%i' % depth)
+        print('%i... ' % depth, end='')
         positions[depth + 1] = []
         for p in positions[depth]:
             for m in MOVE_GROUP:
                 # avoids Half Turns or Extended Half Turns
-                if p.move_sequence[-1] == m or (p.move_sequence[-1] == OPPOSITE_MOVE_DICT[m] and p.move_sequence[-2] == m):
+                if p.move_sequence[-1] == m or \
+                        (p.move_sequence[-1] == OPPOSITE_MOVE_DICT[m] and p.move_sequence[-2] == m):
                     continue
 
                 c = Cube(p.position, True)
@@ -44,8 +46,8 @@ def make_all_edges_good(position):
 
                 if c.position not in position_set:
                     if cube_is_good(c.position):
-                        return Position(c.position, p.move_sequence + [m])
-                    positions[depth + 1].append(Position(c.position, p.move_sequence + [m]))
+                        return Position(depth, c.position, p.move_sequence + [m])
+                    positions[depth + 1].append(Position(depth, c.position, p.move_sequence + [m]))
                     position_set.add(c.position)
 
         depth += 1

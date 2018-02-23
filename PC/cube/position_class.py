@@ -1,5 +1,6 @@
 class Position:
-    def __init__(self, position, move_sequence):
+    def __init__(self, depth, position, move_sequence):
+        self.depth = depth
         self.position = position
         self.move_sequence = move_sequence
 

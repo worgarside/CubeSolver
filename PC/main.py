@@ -1,4 +1,3 @@
-import pickle
 import socket
 import time
 from _tkinter import TclError
@@ -11,8 +10,10 @@ import colorama
 from cube.cube_class import Cube, SOLVED_POS
 from cube.moves import *
 from data.database_manager import DatabaseManager
-from group_solver.good_bad_edges import make_all_edges_good
-from group_solver.good_bad_corners import make_all_corners_good
+from group_solver.phase_one import make_all_edges_good
+from group_solver.phase_two import make_all_corners_good
+from group_solver.phase_three import make_all_faces_good
+from group_solver.phase_four import solve_cube
 from gui.interface import Interface
 from robot.move_converter import convert_sequence
 from tree_solver.tree_generator import generate_tree
@@ -31,31 +32,32 @@ GROUP_QUARTERS = [MOVE.U, MOVE.NOT_U, MOVE.D, MOVE.NOT_D,
                   MOVE.F, MOVE.NOT_F, MOVE.B, MOVE.NOT_B, ]
 
 
-def init_db():
+def init_db(clear=False):
     db = DatabaseManager('PC/data/db.sqlite')
 
-    db.query('DROP TABLE IF EXISTS positions')
-    db.query('''CREATE TABLE IF NOT EXISTS positions (
-                    id INTEGER PRIMARY KEY,
-                    position TEXT NOT NULL,
-                    depth INTEGER NOT NULL,
-                    move_chain TEXT NOT NULL)
-                ''')
+    if clear:
+        db.query('DROP TABLE IF EXISTS phase_four')
+        db.query('''CREATE TABLE IF NOT EXISTS phase_four (
+                        depth INTEGER NOT NULL,
+                        position TEXT PRIMARY KEY,
+                        move_chain TEXT NOT NULL)
+                    ''')
 
     return db
 
 
-def group_solve(cube=Cube(SOLVED_POS)):
+def group_solve(db, cube=Cube(SOLVED_POS)):
     sequence_list = []
-    
+
     good_edge_pos = make_all_edges_good(cube.position_reduced)
     good_edge_sequence = good_edge_pos.move_sequence[1:]
     sequence_list.append(good_edge_sequence)
-    
+
     good_edge_cube = deepcopy(cube)
     for move in good_edge_sequence:
         dyn_move(good_edge_cube, move)
 
+    print()
     print(good_edge_cube)
 
     good_corner_pos = make_all_corners_good(good_edge_cube.position_reduced)
@@ -66,7 +68,31 @@ def group_solve(cube=Cube(SOLVED_POS)):
     for move in good_corner_sequence:
         dyn_move(good_corner_cube, move)
 
+    print()
     print(good_corner_cube)
+
+    good_face_pos = make_all_faces_good(good_corner_cube.position_reduced)
+    good_face_sequence = good_face_pos.move_sequence[1:]
+    sequence_list.append(good_face_sequence)
+
+    good_face_cube = deepcopy(good_corner_cube)
+    for move in good_face_sequence:
+        dyn_move(good_face_cube, move)
+
+    print()
+    print(good_face_cube)
+
+    final_sequence = solve_cube(good_face_cube.position, db)
+    sequence_list.append(final_sequence)
+
+    exit()
+
+    solved_cube = deepcopy(good_face_cube)
+    for move in final_sequence:
+        dyn_move(solved_cube, move)
+
+    print()
+    print(solved_cube)
 
     total_sequence = []
     for sequence in sequence_list:
@@ -113,7 +139,7 @@ def time_function(func, *args):
     result = func(*args)
     end = int(round(time.time() * 1000))
     total = (end - start) / 1000
-    print('Time: %0.2fs' % total)
+    print('Time: %0.03fs' % total)
     return result
 
 
@@ -138,12 +164,14 @@ def get_current_position(conn):
 
 
 def main():
-    conn = create_socket()
-    position = get_current_position(conn)
+    # conn = create_socket()
+    # position = get_current_position(conn)
+    db = init_db()
 
     # position = 'OBROWROGRWWWBRBWWWGOGWOYGGGWRYBBBYYYBOBYYYGRGOGROYROBR'
-    # position = 'WBWWWWWGWOOOGWGRRRBWBBOGOGRGRBRBOOOOGYGRRRBYBYGYYYYYBY'
+    position = 'WBWWWWWGWOOOGWGRRRBWBBOGOGRGRBRBOOOOGYGRRRBYBYGYYYYYBY'
     # position = 'YWRBWYOOWOOBYYOGBYBRGGOGWGWBRYGBOWRRGWBRRYGRBWOWYYBOGR'
+    # position = 'BRYGWWYWWRROBGBORRGBWYOOGGGYRWBBBROOGYGOORGYYYRWBYWBOW'
 
     print('Scanned position: %s' % position)
 
@@ -152,13 +180,35 @@ def main():
 
     print(cube)
 
-    solve_sequence.extend(time_function(group_solve, cube))
+    solve_sequence.extend(time_function(group_solve, db, cube))
 
     robot_sequence = convert_sequence(cube, solve_sequence)
     print(robot_sequence)
 
-    conn.send(pickle.dumps(robot_sequence))
-    conn.close()
+    # conn.send(pickle.dumps(robot_sequence))
+    # conn.close()
+
+    # Genertae phase four table:
+    # db = init_db()
+    #
+    #
+    # position_dict = time_function(generate_table)
+    # #
+    # # time_function(add_to_db, position_dict, db)
+    # for i in range(100):
+    #     freq = (i+1)*37
+    #     winsound.Beep(freq, 150)
+
+    # for i in range(15):
+    #     print(db.query("SELECT COUNT(*) FROM phase_four where depth = '%i'" % i).fetchone()[0])
+
+
+def add_to_db(position_dict, db):
+    for depth, positions in position_dict.items():
+        for position in positions:
+            db.query('INSERT INTO phase_four VALUES (?, ?, ?)',
+                     (position.depth, position.position, str(position.move_sequence[1:])))
+    db.commit()
 
 
 if __name__ == '__main__':
