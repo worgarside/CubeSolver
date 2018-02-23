@@ -397,4 +397,5 @@ TSWLatexianTemp*
 
 # ---------------- Custom ---------------- #
 
-Codebase/Positions/
+*.sqlite
+*.sqlite3
