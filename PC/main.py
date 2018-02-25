@@ -1,4 +1,3 @@
-import pickle
 import socket
 import time
 from _tkinter import TclError
@@ -11,13 +10,12 @@ import colorama
 import group_solver_mk_one as gs1
 import group_solver_mk_two.phase_one as gs2p1
 import group_solver_mk_two.phase_two as gs2p2
-from cube.cube_class import Cube, SOLVED_POS
+from cube.cube_class import Cube
 from cube.moves import *
 from data.database_manager import DatabaseManager
 from gui.interface import Interface
-from robot.move_converter import convert_sequence
 from tree_solver.tree_generator import generate_tree
-
+from robot.move_converter import convert_sequence
 GROUP_COMPLETE = [MOVE.U, MOVE.NOT_U, MOVE.U2, MOVE.D, MOVE.NOT_D, MOVE.D2,
                   MOVE.L, MOVE.NOT_L, MOVE.L2, MOVE.R, MOVE.NOT_R, MOVE.R2,
                   MOVE.F, MOVE.NOT_F, MOVE.F2, MOVE.B, MOVE.NOT_B, MOVE.B2]
@@ -31,14 +29,8 @@ def init_db(clear=False):
         db.query('''CREATE TABLE IF NOT EXISTS g_solve_mk1_p4 (
                         depth INTEGER NOT NULL,
                         position TEXT PRIMARY KEY,
-                        move_chain BLOB NOT NULL)
+                        move_sequence BLOB NOT NULL)
                     ''')
-
-    db.query('''CREATE TABLE IF NOT EXISTS gs2p1 (
-                    depth INTEGER NOT NULL,
-                    position TEXT PRIMARY KEY,
-                    move_chain BLOB NOT NULL)
-                ''')
 
     return db
 
@@ -191,32 +183,45 @@ def main():
     # conn = create_socket()
     # position = get_current_position(conn)
     db = init_db()
+    # gs2p1.generate_phase_one_table(db)
 
-    # position = 'OBROWROGRWWWBRBWWWGOGWOYGGGWRYBBBYYYBOBYYYGRGOGROYROBR'
+    position = 'OBROWROGRWWWBRBWWWGOGWOYGGGWRYBBBYYYBOBYYYGRGOGROYROBR'
     # position = 'WBWWWWWGWOOOGWGRRRBWBBOGOGRGRBRBOOOOGYGRRRBYBYGYYYYYBY'
     # position = 'YWRBWYOOWOOBYYOGBYBRGGOGWGWBRYGBOWRRGWBRRYGRBWOWYYBOGR'
     # position = 'OGOYWYRBRWOWGOBWRWBRGGOBWGYBRGWBYYOYBRGYRYGOBOBOWYWRGR'
-    position = 'GYWBWRBOYWRWRWRGWBOGRBORYGRGRBOBWWGBYYOYOOGYORBBWYGGOY'
-    # print('Scanned position: %s' % position)
-    #
-    # cube = Cube(position)
-    # solve_sequence = []
-    #
-    # print(cube)
-    #
-    # solve_sequence.extend(time_function(group_solve_mk_two, db, position))
-    #
+    # position = 'GYWBWRBOYWRWRWRGWBOGRBORYGRGRBOBWWGBYYOYOOGYORBBWYGGOY'
+    print('Scanned position: %s' % position)
+
+    cube = Cube(position)
+    solve_sequence = []
+
+    print(cube)
+
+    seq1 = gs2p1.gen_phase_one_sequence(position)
+    seq2 = gs2p1.find_sequence_in_table(db, position)
+
+    print('\n\n-----------------')
+    print(seq1)
+    cube1 = Cube(position)
+    for move in seq1:
+        dyn_move(cube1, move)
+    print(Cube(gs2p1._color_to_monochrome(cube1.position)))
+
+
+    print('\n\n')
+
+    print(seq2)
+    cube2 = Cube(position)
+    for move in seq2:
+        dyn_move(cube2, move)
+    print(Cube(gs2p1._color_to_monochrome(cube2.position)))
+
+
+
     # robot_sequence = convert_sequence(cube, solve_sequence)
     # print(robot_sequence)
 
-    mono_pos = gs2p1.color_to_monochrome(position)
-    sequence = gs2p1.gen_phase_one_sequence(mono_pos)[1:]
-    print(sequence)
-    # gs2p1.generate_phase_one_table(db)
 
-
-    import winsound
-    winsound.Beep(500, 500)
     # conn.send(pickle.dumps(robot_sequence))
     # conn.close()
 

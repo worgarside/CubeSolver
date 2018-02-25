@@ -1,37 +1,125 @@
-from collections import Counter
+import pickle
+from sqlite3 import IntegrityError
 
 from cube.color_class import Color
 from cube.cube_class import Cube
 from cube.move_class import Move
 from cube.moves import dyn_move
-from cube.position_class import Position  # (pos_id, position, depth, move_sequence)
+from cube.position_class import Position  # (position, depth, move_sequence)
 from cube.side_class import Side
 
-FACELETS = [1, 3, 5, 7, 24, 26, 30, 32, 46, 48, 50, 52]
-
-MOVE_GROUP = [Move.U, Move.D, Move.L, Move.R, Move.F, Move.B]
+MOVE_GROUP_CW = [Move.U, Move.D, Move.L, Move.R, Move.F, Move.B]
+MOVE_GROUP_CCW = [Move.NOT_U, Move.NOT_D, Move.NOT_L, Move.NOT_R, Move.NOT_F, Move.NOT_B]
 # MOVE_GROUP = [Move.U, Move.U2, Move.D, Move.D2, Move.L, Move.L2, Move.R, Move.R2, Move.F, Move.F2, Move.B, Move.B2]
 
 SOLVED_MONOCHROME = 'NDNDNDNDNNNNNNNNNNNNNNNNDNDNNNDNDNNNNNNNNNNNNNDNDNDNDN'
 
-OPPOSITE_MOVE_DICT = {
-    Move.U: Move.D,
-    Move.D: Move.U,
-    Move.L: Move.R,
-    Move.R: Move.L,
-    Move.F: Move.B,
-    Move.B: Move.F,
-    Move.U2: Move.D2,
-    Move.D2: Move.U2,
-    Move.L2: Move.R2,
-    Move.R2: Move.L2,
-    Move.F2: Move.B2,
-    Move.B2: Move.F2,
-}
+OPPOSITE_MOVE_DICT = {Move.U: Move.D, Move.D: Move.U, Move.L: Move.R, Move.R: Move.L, Move.F: Move.B, Move.B: Move.F,
+                      Move.U2: Move.D2, Move.D2: Move.U2, Move.L2: Move.R2, Move.R2: Move.L2, Move.F2: Move.B2,
+                      Move.B2: Move.F2, }
 
 
-def color_to_monochrome(position):
+def find_sequence_in_table(db, position):
+    inversion_dict = {
+        Move.U: Move.NOT_U, Move.D: Move.NOT_D, Move.L: Move.NOT_L, Move.R: Move.NOT_R, Move.F: Move.NOT_F,
+        Move.B: Move.NOT_B, Move.NOT_U: Move.U, Move.NOT_D: Move.D, Move.NOT_L: Move.L, Move.NOT_R: Move.R,
+        Move.NOT_F: Move.F, Move.NOT_B: Move.B, }
+    monochrome_pos = _color_to_monochrome(position)
+    orig_sequence = pickle.loads(
+        db.query("SELECT move_sequence FROM gs2p1 where position = '%s'" % monochrome_pos).fetchone()[0])
 
+    reverse_sequence = orig_sequence[::-1]
+
+    inverted_sequence = []
+    for move in reverse_sequence:
+        inverted_sequence.append(inversion_dict[move])
+
+    return inverted_sequence
+
+
+def generate_phase_one_table(db):
+    db.query('DROP TABLE IF EXISTS gs2p1')
+
+    db.query('''CREATE TABLE IF NOT EXISTS gs2p1 (
+                    depth INTEGER NOT NULL,
+                    position TEXT PRIMARY KEY,
+                    move_sequence BLOB NOT NULL)
+                ''')
+
+    count = 0
+    print(' - Generating Table... -')
+    position_set = {SOLVED_MONOCHROME}
+    position_dict = {}  # depth: set(position)
+    depth = 0
+    position_dict[depth] = [Position(depth, SOLVED_MONOCHROME, [Move.NONE])]
+
+    while depth <= 7:
+        print('%i... ' % depth, end='')
+
+        position_dict[depth + 1] = []
+        for p in position_dict[depth]:
+            for m in MOVE_GROUP_CCW:
+
+                c = Cube(p.position, True)
+                dyn_move(c, m)
+
+                if c.position not in position_set:
+                    count += 1
+                    position_dict[depth + 1].append(Position(depth, c.position, p.move_sequence + [m]))
+                    position_set.add(c.position)
+
+        depth += 1
+
+    for positions in position_dict.values():
+        for position in positions:
+            try:
+                db.query('INSERT INTO gs2p1 VALUES (?, ?, ?)',
+                         (position.depth, position.position, pickle.dumps(position.move_sequence[1:])))
+            except IntegrityError as err:
+                print(err)
+                print(position)
+    db.commit()
+
+
+def gen_phase_one_sequence(color_pos):
+    position = _color_to_monochrome(color_pos)
+    count = 0
+    print(' - Phase 1 - - - - - - -')
+    position_set = set()
+    positions = {}  # depth: set(position)
+    depth = 0
+
+    positions[depth] = [Position(depth, position, [Move.NONE])]
+    if position == SOLVED_MONOCHROME:
+        return []
+
+    while depth <= 7:
+        print('%i... ' % depth, end='')
+        positions[depth + 1] = []
+        for p in positions[depth]:
+            for m in MOVE_GROUP_CW:
+                # avoids Half Turns or Extended Half Turns
+                # TODO: from basic tests, this seems to find a *larger* sequence but in a *shorter* time
+                # if p.move_sequence[-1] == m or \
+                #         (p.move_sequence[-1] == OPPOSITE_MOVE_DICT[m] and p.move_sequence[-2] == m):
+                #     continue
+
+                c = Cube(p.position, True)
+                dyn_move(c, m)
+
+                if c.position not in position_set:
+                    count += 1
+                    if c.position == SOLVED_MONOCHROME:
+                        print('Count: %i' % count)
+                        return p.move_sequence[1:] + [m]
+                    positions[depth + 1].append(Position(depth, c.position, p.move_sequence + [m]))
+                    position_set.add(c.position)
+
+        depth += 1
+    print('FAIL')
+
+
+def _color_to_monochrome(position):
     color_dict = {
         Side.UP: Cube(position).get_color_of_side(side=Side.UP),
         Side.DOWN: Cube(position).get_color_of_side(side=Side.DOWN),
@@ -56,99 +144,3 @@ def color_to_monochrome(position):
             monochrome_pos += Color.NONE.value
 
     return monochrome_pos
-
-
-def generate_phase_one_table(db):
-    start_pos = 'NDNDNDNDNNNNNNNNNNNNNNNNDNDNNNDNDNNNNNNNNNNNNNDNDNDNDN'
-    print(Cube(start_pos))
-
-    # count = 0
-    # print(' - Phase 1 - - - - - - -')
-    # position_set = set()
-    # positions = {}  # depth: set(position)
-    # depth = 0
-    #
-    # solved_facelets = []
-    # for f in FACELETS:
-    #     solved_facelets.append(Cube(start_pos).get_color_of_side(facelet=f))
-    #
-    # positions[depth] = [Position(depth, start_pos, [Move.NONE])]
-    #
-    # while depth <= 7:
-    #     print('%i... ' % depth, end='')
-    #     positions[depth + 1] = []
-    #     for p in positions[depth]:
-    #         for m in MOVE_GROUP:
-    #             # avoids Half Turns or Extended Half Turns
-    #             # TODO: from basic tests, this seems to find a *larger* sequence but in a *shorter* time
-    #             # if p.move_sequence[-1] == m or \
-    #             #         (p.move_sequence[-1] == OPPOSITE_MOVE_DICT[m] and p.move_sequence[-2] == m):
-    #             #     continue
-    #
-    #             c = Cube(p.position, True)
-    #             dyn_move(c, m)
-    #
-    #             if c.position not in position_set:
-    #                 count += 1
-    #                 if cube_is_good(c.position, solved_facelets):
-    #                     print('Count: %i' % count)
-    #                     return p.move_sequence + [m]
-    #                 positions[depth + 1].append(Position(depth, c.position, p.move_sequence + [m]))
-    #                 position_set.add(c.position)
-    #
-    #     depth += 1
-    # print('FAIL')
-
-
-def gen_phase_one_sequence(position):
-    count = 0
-    print(' - Phase 1 - - - - - - -')
-    position_set = set()
-    positions = {}  # depth: set(position)
-    depth = 0
-
-    solved_facelets = []
-    for f in FACELETS:
-        solved_facelets.append(Cube(position).get_color_of_side(facelet=f))
-
-    positions[depth] = [Position(depth, position, [Move.NONE])]
-    if cube_is_good(position, solved_facelets):
-        return [Move.NONE]
-
-    while depth <= 7:
-        print('%i... ' % depth, end='')
-        positions[depth + 1] = []
-        for p in positions[depth]:
-            for m in MOVE_GROUP:
-                # avoids Half Turns or Extended Half Turns
-                # TODO: from basic tests, this seems to find a *larger* sequence but in a *shorter* time
-                # if p.move_sequence[-1] == m or \
-                #         (p.move_sequence[-1] == OPPOSITE_MOVE_DICT[m] and p.move_sequence[-2] == m):
-                #     continue
-
-                c = Cube(p.position, True)
-                dyn_move(c, m)
-
-                if c.position not in position_set:
-                    count += 1
-                    # if cube_is_good(c.position, solved_facelets):
-                    if c.position == SOLVED_MONOCHROME:
-                        print('Optimised Count: %i' % count)
-                        return p.move_sequence + [m]
-                    positions[depth + 1].append(Position(depth, c.position, p.move_sequence + [m]))
-                    position_set.add(c.position)
-
-        depth += 1
-    print('FAIL')
-
-
-def cube_is_good(position, solved_facelets):
-    current_facelets = []
-    for f in FACELETS:
-        current_facelets.append(Color(position[f]))
-
-    return compare(current_facelets, solved_facelets)
-
-
-def compare(a, b):
-    return Counter(a) == Counter(b)
