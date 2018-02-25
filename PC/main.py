@@ -10,6 +10,7 @@ import colorama
 import group_solver_mk_one as gs1
 import group_solver_mk_two.phase_one as gs2p1
 import group_solver_mk_two.phase_two as gs2p2
+import group_solver_mk_two.phase_three as gs2p3
 from cube.cube_class import Cube
 from cube.moves import *
 from data.database_manager import DatabaseManager
@@ -99,28 +100,28 @@ def group_solve_mk_two(db, position):
     phase_one_cube = Cube(position)
     for move in phase_one_sequence:
         dyn_move(phase_one_cube, move)
-        print(move.name, end='')
+        print(move.name, end=' ')
 
     print('\n\n- Phase Two -')
 
-    phase_two_position = phase_one_cube.position
-
-    phase_two_sequence = gs2p2.find_sequence_in_table(db, phase_two_position)
+    phase_two_sequence = gs2p2.find_sequence_in_table(db, phase_one_cube.position)
     sequence_list.append(phase_two_sequence)
 
-    phase_two_cube = Cube(position)
+    phase_two_cube = Cube(phase_one_cube.position)
     for move in phase_two_sequence:
         dyn_move(phase_two_cube, move)
-        print(move.name, end='')
+        print(move.name, end=' ')
 
-    # phase_two_sequence = gs2p2.gen_phase_two_sequence(phase_one_cube.position_reduced)[1:]
-    # sequence_list.append(phase_two_sequence)
-    #
-    # phase_two_cube = deepcopy(phase_one_cube)
-    # for move in phase_two_sequence:
-    #     dyn_move(phase_two_cube, move)
-    #
-    # print(phase_two_cube)
+    print('\n\n- Phase Three -')
+
+    phase_three_sequence = gs2p3.find_sequence_in_table(db, phase_two_cube.position)
+    sequence_list.append(phase_three_sequence)
+
+    phase_three_cube = Cube(phase_two_cube.position)
+    for move in phase_three_sequence:
+        dyn_move(phase_three_cube, move)
+        print(move.name, end=' ')
+
     total_sequence = []
     for sequence in sequence_list:
         total_sequence.extend(sequence)
@@ -189,6 +190,7 @@ def get_current_position(conn):
 
 
 def main():
+
     # conn = create_socket()
     # position = get_current_position(conn)
     db = init_db()
@@ -211,8 +213,6 @@ def main():
         dyn_move(cube, move)
     print(cube)
 
-    print(Cube(gs2p1._color_to_monochrome(cube.position)))
-    print(Cube(gs2p2._color_to_monochrome(cube.position)))
 
     # robot_sequence = convert_sequence(cube, solve_sequence)
     # print(robot_sequence)

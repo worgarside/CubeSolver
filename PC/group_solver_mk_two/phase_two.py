@@ -19,19 +19,8 @@ OPPOSITE_MOVE_DICT = {Move.U: Move.D, Move.D: Move.U, Move.L: Move.R, Move.R: Mo
 
 
 def find_sequence_in_table(db, position):
-    inversion_dict = {
-        Move.U: Move.NOT_U,
-        Move.D: Move.NOT_D,
-        Move.L: Move.NOT_L,
-        Move.R: Move.NOT_R,
-        Move.F: Move.NOT_F,
-        Move.B: Move.NOT_B,
-        Move.NOT_U: Move.U,
-        Move.NOT_D: Move.D,
-        Move.NOT_L: Move.L,
-        Move.NOT_R: Move.R,
-        Move.NOT_F: Move.F,
-        Move.NOT_B: Move.B}
+    inversion_dict = {Move.U: Move.NOT_U, Move.D: Move.NOT_D, Move.L: Move.NOT_L, Move.R: Move.NOT_R,
+                      Move.NOT_U: Move.U, Move.NOT_D: Move.D, Move.NOT_L: Move.L, Move.NOT_R: Move.R}
     monochrome_pos = _color_to_monochrome(position)
     orig_sequence = pickle.loads(
         db.query("SELECT move_sequence FROM gs2p2 where position = '%s'" % monochrome_pos).fetchone()[0])
