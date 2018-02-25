@@ -15,7 +15,7 @@ from cube.moves import *
 from data.database_manager import DatabaseManager
 from gui.interface import Interface
 from tree_solver.tree_generator import generate_tree
-from robot.move_converter import convert_sequence
+
 GROUP_COMPLETE = [MOVE.U, MOVE.NOT_U, MOVE.U2, MOVE.D, MOVE.NOT_D, MOVE.D2,
                   MOVE.L, MOVE.NOT_L, MOVE.L2, MOVE.R, MOVE.NOT_R, MOVE.R2,
                   MOVE.F, MOVE.NOT_F, MOVE.F2, MOVE.B, MOVE.NOT_B, MOVE.B2]
@@ -90,30 +90,39 @@ def group_solve_mk_one(db, cube):
 
 
 def group_solve_mk_two(db, position):
-    reduced_pos = Cube(position).position_reduced
     sequence_list = []
 
-    phase_one_sequence = gs2p1.gen_phase_one_sequence(reduced_pos)[1:]
+    print('- Phase One -')
+    phase_one_sequence = gs2p1.find_sequence_in_table(db, position)
     sequence_list.append(phase_one_sequence)
 
     phase_one_cube = Cube(position)
     for move in phase_one_sequence:
         dyn_move(phase_one_cube, move)
+        print(move.name, end='')
 
-    print(phase_one_cube)
+    print('\n\n- Phase Two -')
 
-    phase_two_sequence = gs2p2.gen_phase_two_sequence(phase_one_cube.position_reduced)[1:]
+    phase_two_position = phase_one_cube.position
+
+    phase_two_sequence = gs2p2.find_sequence_in_table(db, phase_two_position)
     sequence_list.append(phase_two_sequence)
 
-    phase_two_cube = deepcopy(phase_one_cube)
+    phase_two_cube = Cube(position)
     for move in phase_two_sequence:
         dyn_move(phase_two_cube, move)
+        print(move.name, end='')
 
-    print(phase_two_cube)
-
+    # phase_two_sequence = gs2p2.gen_phase_two_sequence(phase_one_cube.position_reduced)[1:]
+    # sequence_list.append(phase_two_sequence)
+    #
+    # phase_two_cube = deepcopy(phase_one_cube)
+    # for move in phase_two_sequence:
+    #     dyn_move(phase_two_cube, move)
+    #
+    # print(phase_two_cube)
     total_sequence = []
     for sequence in sequence_list:
-        print(sequence)
         total_sequence.extend(sequence)
     return total_sequence
 
@@ -183,44 +192,30 @@ def main():
     # conn = create_socket()
     # position = get_current_position(conn)
     db = init_db()
-    # gs2p1.generate_phase_one_table(db)
 
-    position = 'OBROWROGRWWWBRBWWWGOGWOYGGGWRYBBBYYYBOBYYYGRGOGROYROBR'
+    # position = 'OBROWROGRWWWBRBWWWGOGWOYGGGWRYBBBYYYBOBYYYGRGOGROYROBR'
     # position = 'WBWWWWWGWOOOGWGRRRBWBBOGOGRGRBRBOOOOGYGRRRBYBYGYYYYYBY'
     # position = 'YWRBWYOOWOOBYYOGBYBRGGOGWGWBRYGBOWRRGWBRRYGRBWOWYYBOGR'
     # position = 'OGOYWYRBRWOWGOBWRWBRGGOBWGYBRGWBYYOYBRGYRYGOBOBOWYWRGR'
-    # position = 'GYWBWRBOYWRWRWRGWBOGRBORYGRGRBOBWWGBYYOYOOGYORBBWYGGOY'
+    position = 'GYWBWRBOYWRWRWRGWBOGRBORYGRGRBOBWWGBYYOYOOGYORBBWYGGOY'
     print('Scanned position: %s' % position)
 
     cube = Cube(position)
-    solve_sequence = []
-
     print(cube)
 
-    seq1 = gs2p1.gen_phase_one_sequence(position)
-    seq2 = gs2p1.find_sequence_in_table(db, position)
+    solve_sequence = group_solve_mk_two(db, position)
+    # print(solve_sequence)
 
-    print('\n\n-----------------')
-    print(seq1)
-    cube1 = Cube(position)
-    for move in seq1:
-        dyn_move(cube1, move)
-    print(Cube(gs2p1._color_to_monochrome(cube1.position)))
+    print('\n\n- Final Cube -')
+    for move in solve_sequence:
+        dyn_move(cube, move)
+    print(cube)
 
-
-    print('\n\n')
-
-    print(seq2)
-    cube2 = Cube(position)
-    for move in seq2:
-        dyn_move(cube2, move)
-    print(Cube(gs2p1._color_to_monochrome(cube2.position)))
-
-
+    print(Cube(gs2p1._color_to_monochrome(cube.position)))
+    print(Cube(gs2p2._color_to_monochrome(cube.position)))
 
     # robot_sequence = convert_sequence(cube, solve_sequence)
     # print(robot_sequence)
-
 
     # conn.send(pickle.dumps(robot_sequence))
     # conn.close()

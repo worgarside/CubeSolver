@@ -1,5 +1,4 @@
 import pickle
-from sqlite3 import IntegrityError
 
 from cube.color_class import Color
 from cube.cube_class import Cube
@@ -10,7 +9,6 @@ from cube.side_class import Side
 
 MOVE_GROUP_CW = [Move.U, Move.D, Move.L, Move.R, Move.F, Move.B]
 MOVE_GROUP_CCW = [Move.NOT_U, Move.NOT_D, Move.NOT_L, Move.NOT_R, Move.NOT_F, Move.NOT_B]
-# MOVE_GROUP = [Move.U, Move.U2, Move.D, Move.D2, Move.L, Move.L2, Move.R, Move.R2, Move.F, Move.F2, Move.B, Move.B2]
 
 SOLVED_MONOCHROME = 'NDNDNDNDNNNNNNNNNNNNNNNNDNDNNNDNDNNNNNNNNNNNNNDNDNDNDN'
 
@@ -72,12 +70,8 @@ def generate_phase_one_table(db):
 
     for positions in position_dict.values():
         for position in positions:
-            try:
-                db.query('INSERT INTO gs2p1 VALUES (?, ?, ?)',
-                         (position.depth, position.position, pickle.dumps(position.move_sequence[1:])))
-            except IntegrityError as err:
-                print(err)
-                print(position)
+            db.query('INSERT INTO gs2p1 VALUES (?, ?, ?)',
+                     (position.depth, position.position, pickle.dumps(position.move_sequence[1:])))
     db.commit()
 
 
@@ -85,7 +79,7 @@ def gen_phase_one_sequence(color_pos):
     position = _color_to_monochrome(color_pos)
     count = 0
     print(' - Phase 1 - - - - - - -')
-    position_set = set()
+    position_set = {SOLVED_MONOCHROME}
     positions = {}  # depth: set(position)
     depth = 0
 
