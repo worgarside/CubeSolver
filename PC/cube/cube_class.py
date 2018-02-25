@@ -66,7 +66,7 @@ class Cube:
                                   48: Side.DOWN, 49: Side.DOWN, 50: Side.DOWN, 51: Side.DOWN, 52: Side.DOWN,
                                   53: Side.DOWN}
         self._color_print_dict = {Color.RED: '\033[31m', Color.BLUE: '\033[34m', Color.GREEN: '\033[32m',
-                                  Color.ORANGE: '\033[35m', Color.WHITE: '\033[37m', Color.YELLOW: '\033[33m'}
+                                  Color.ORANGE: '\033[35m', Color.WHITE: '\033[37m', Color.YELLOW: '\033[33m', Color.DARK: '\033[30m', Color.NONE: '\033[36m'}
 
         self.update_fields()
 
@@ -108,7 +108,7 @@ class Cube:
     def update_reduced_cube(self):
         self.position_reduced = ''
         for color in self.position:
-            self.position_reduced += self.reduction_dict[Color(color)].value
+            self.position_reduced += self.reduction_dict.get(Color(color), Color(color)).value
 
     # ------------------ Setter Methods ------------------ #
     """Each of these sets the relevant face facelets to the given string and updates the relevant fields"""

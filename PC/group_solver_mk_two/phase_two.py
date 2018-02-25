@@ -8,8 +8,8 @@ from cube.position_class import Position  # (pos_id, position, depth, move_seque
 
 FACELETS = [i for i in range(9)] + [i for i in range(45, 54)]
 
-MOVE_GROUP = [Move.U, Move.D, Move.L, Move.R, Move.F2, Move.B2]
-# MOVE_GROUP = [Move.U, Move.U2, Move.D, Move.D2, Move.L, Move.L2, Move.R, Move.R2, Move.F2, Move.B2]
+# MOVE_GROUP = [Move.U, Move.D, Move.L, Move.R, Move.F2, Move.B2]
+MOVE_GROUP = [Move.U, Move.U2, Move.D, Move.D2, Move.L, Move.L2, Move.R, Move.R2, Move.F2, Move.B2]
 
 OPPOSITE_MOVE_DICT = {
     Move.U: Move.D,
