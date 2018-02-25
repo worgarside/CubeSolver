@@ -74,7 +74,7 @@ class Cube:
         """ Returns a colored net of the Cube """
         linebreak_dict = {2: '\n      ', 5: '\n      ', 8: '\n', 20: '\n', 32: '\n', 44: '\n      ', 47: '\n      ',
                           50: '\n      '}
-        char_net = '      '
+        char_net = '\n      '
         for index, color in enumerate(self.position):
             char_net += self._color_print_dict[Color(color)] + color + '\033[0m' + linebreak_dict.get(index, ' ')
         char_net += '\n'

@@ -1,7 +1,6 @@
 import pickle
 import socket
 import time
-from robot.move_converter import convert_sequence
 from _tkinter import TclError
 from multiprocessing import Process
 from multiprocessing.managers import BaseManager
@@ -9,37 +8,27 @@ from queue import LifoQueue
 
 import colorama
 
-from cube.cube_class import Cube, SOLVED_POS
+import group_solver_mk_one as gs1
+import group_solver_mk_two.phase_one as gs2p1
+import group_solver_mk_two.phase_two as gs2p2
+from cube.cube_class import Cube
 from cube.moves import *
 from data.database_manager import DatabaseManager
-from group_solver.phase_four import solve_cube
-from group_solver.phase_one import make_all_edges_good
-from group_solver.phase_three import make_all_faces_good
-from group_solver.phase_two import make_all_corners_good
-from group_solver.table_generator import generate_table
 from gui.interface import Interface
+from robot.move_converter import convert_sequence
 from tree_solver.tree_generator import generate_tree
-
-GROUP_THREE = [MOVE.U2, MOVE.D2, MOVE.L2, MOVE.R2, MOVE.F2, MOVE.B2]
-GROUP_TWO = [MOVE.U2, MOVE.D2, MOVE.L, MOVE.R, MOVE.F2, MOVE.B2]
-GROUP_ONE = [MOVE.U2, MOVE.D2, MOVE.L, MOVE.R, MOVE.F, MOVE.B]
-GROUP_ZERO = [MOVE.U, MOVE.D, MOVE.L, MOVE.R, MOVE.F, MOVE.B]
 
 GROUP_COMPLETE = [MOVE.U, MOVE.NOT_U, MOVE.U2, MOVE.D, MOVE.NOT_D, MOVE.D2,
                   MOVE.L, MOVE.NOT_L, MOVE.L2, MOVE.R, MOVE.NOT_R, MOVE.R2,
                   MOVE.F, MOVE.NOT_F, MOVE.F2, MOVE.B, MOVE.NOT_B, MOVE.B2]
-
-GROUP_QUARTERS = [MOVE.U, MOVE.NOT_U, MOVE.D, MOVE.NOT_D,
-                  MOVE.L, MOVE.NOT_L, MOVE.R, MOVE.NOT_R,
-                  MOVE.F, MOVE.NOT_F, MOVE.B, MOVE.NOT_B, ]
 
 
 def init_db(clear=False):
     db = DatabaseManager('PC/data/db.sqlite')
 
     if clear:
-        db.query('DROP TABLE IF EXISTS phase_four')
-        db.query('''CREATE TABLE IF NOT EXISTS phase_four (
+        db.query('DROP TABLE IF EXISTS g_solve_mk1_p4')
+        db.query('''CREATE TABLE IF NOT EXISTS g_solve_mk1_p4 (
                         depth INTEGER NOT NULL,
                         position TEXT PRIMARY KEY,
                         move_chain BLOB NOT NULL)
@@ -48,10 +37,10 @@ def init_db(clear=False):
     return db
 
 
-def group_solve(db, cube=Cube(SOLVED_POS)):
+def group_solve_mk_one(db, cube):
     sequence_list = []
 
-    good_edge_pos = make_all_edges_good(cube.position_reduced)
+    good_edge_pos = gs1.phase_one.make_all_edges_good(cube.position_reduced)
     good_edge_sequence = good_edge_pos.move_sequence[1:]
     sequence_list.append(good_edge_sequence)
 
@@ -62,7 +51,7 @@ def group_solve(db, cube=Cube(SOLVED_POS)):
     print()
     print(good_edge_cube)
 
-    good_corner_pos = make_all_corners_good(good_edge_cube.position_reduced)
+    good_corner_pos = gs1.phase_two.make_all_corners_good(good_edge_cube.position_reduced)
     good_corner_sequence = good_corner_pos.move_sequence[1:]
     sequence_list.append(good_corner_sequence)
 
@@ -73,7 +62,7 @@ def group_solve(db, cube=Cube(SOLVED_POS)):
     print()
     print(good_corner_cube)
 
-    good_face_pos = make_all_faces_good(good_corner_cube.position_reduced)
+    good_face_pos = gs1.phase_three.make_all_faces_good(good_corner_cube.position_reduced)
     good_face_sequence = good_face_pos.move_sequence[1:]
     sequence_list.append(good_face_sequence)
 
@@ -84,9 +73,8 @@ def group_solve(db, cube=Cube(SOLVED_POS)):
     print()
     print(good_face_cube)
 
-    final_sequence = solve_cube(good_face_cube.position, db)
+    final_sequence = gs1.phase_four.solve_cube(good_face_cube.position, db)
     sequence_list.append(final_sequence)
-
 
     solved_cube = deepcopy(good_face_cube)
     for move in final_sequence:
@@ -100,6 +88,35 @@ def group_solve(db, cube=Cube(SOLVED_POS)):
         print(sequence)
         total_sequence.extend(sequence)
     print(len(total_sequence))
+    return total_sequence
+
+
+def group_solve_mk_two(db, position):
+    reduced_pos = Cube(position).position_reduced
+    sequence_list = []
+
+    phase_one_sequence = gs2p1.gen_phase_one_sequence(reduced_pos)[1:]
+    sequence_list.append(phase_one_sequence)
+
+    phase_one_cube = Cube(position)
+    for move in phase_one_sequence:
+        dyn_move(phase_one_cube, move)
+
+    print(phase_one_cube)
+
+    phase_two_sequence = gs2p2.gen_phase_two_sequence(phase_one_cube.position_reduced)[1:]
+    sequence_list.append(phase_two_sequence)
+
+    phase_two_cube = deepcopy(phase_one_cube)
+    for move in phase_two_sequence:
+        dyn_move(phase_two_cube, move)
+
+    print(phase_two_cube)
+
+    total_sequence = []
+    for sequence in sequence_list:
+        print(sequence)
+        total_sequence.extend(sequence)
     return total_sequence
 
 
@@ -171,9 +188,9 @@ def main():
 
     # position = 'OBROWROGRWWWBRBWWWGOGWOYGGGWRYBBBYYYBOBYYYGRGOGROYROBR'
     # position = 'WBWWWWWGWOOOGWGRRRBWBBOGOGRGRBRBOOOOGYGRRRBYBYGYYYYYBY'
-    # position = 'YWRBWYOOWOOBYYOGBYBRGGOGWGWBRYGBOWRRGWBRRYGRBWOWYYBOGR'
-    position = 'BRYGWWYWWRROBGBORRGBWYOOGGGYRWBBBROOGYGOORGYYYRWBYWBOW'
+    position = 'YWRBWYOOWOOBYYOGBYBRGGOGWGWBRYGBOWRRGWBRRYGRBWOWYYBOGR'
     # position = 'OGOYWYRBRWOWGOBWRWBRGGOBWGYBRGWBYYOYBRGYRYGOBOBOWYWRGR'
+    # position = 'GYWBWRBOYWRWRWRGWBOGRBORYGRGRBOBWWGBYYOYOOGYORBBWYGGOY'
     print('Scanned position: %s' % position)
 
     cube = Cube(position)
@@ -181,34 +198,15 @@ def main():
 
     print(cube)
 
-    solve_sequence.extend(time_function(group_solve, db, cube))
+    solve_sequence.extend(time_function(group_solve_mk_two, db, position))
 
     robot_sequence = convert_sequence(cube, solve_sequence)
     print(robot_sequence)
 
+    import winsound
+    winsound.Beep(500, 500)
     # conn.send(pickle.dumps(robot_sequence))
     # conn.close()
-
-    # Generate phase four table:
-    # db = init_db()
-    #
-    # position_dict = time_function(generate_table)
-    # #
-    # time_function(add_to_db, position_dict, db)
-    # for i in range(50):
-    #     freq = (i + 1) * 80
-    #     winsound.Beep(freq, 75)
-    #
-    # for i in range(20):
-    #     print(db.query("SELECT COUNT(*) FROM phase_four where depth = '%i'" % i).fetchone()[0])
-
-
-def add_to_db(position_dict, db):
-    for depth, positions in position_dict.items():
-        for position in positions:
-            db.query('INSERT INTO phase_four VALUES (?, ?, ?)',
-                     (position.depth, position.position, pickle.dumps(position.move_sequence[1:])))
-    db.commit()
 
 
 if __name__ == '__main__':

@@ -6,26 +6,28 @@ from cube.move_class import Move
 from cube.moves import dyn_move
 from cube.position_class import Position  # (pos_id, position, depth, move_sequence)
 
-EDGES_NO_UP_DOWN = [(19, 19), (10, 10), (16, 16), (13, 13),
-                    (21, 32), (23, 24), (26, 27), (29, 30),
-                    (34, 34), (37, 37), (40, 40), (43, 43)]
+FACELETS = [i for i in range(9)] + [i for i in range(45, 54)]
 
-FACELETS = [1, 3, 5, 7, 24, 26, 30, 32, 46, 48, 50, 52]
-
-MOVE_GROUP = [Move.U, Move.D, Move.L, Move.R, Move.F, Move.B]
+MOVE_GROUP = [Move.U, Move.D, Move.L, Move.R, Move.F2, Move.B2]
+# MOVE_GROUP = [Move.U, Move.U2, Move.D, Move.D2, Move.L, Move.L2, Move.R, Move.R2, Move.F2, Move.B2]
 
 OPPOSITE_MOVE_DICT = {
     Move.U: Move.D,
     Move.D: Move.U,
     Move.L: Move.R,
     Move.R: Move.L,
-    Move.F: Move.B,
-    Move.B: Move.F,
+    Move.U2: Move.D2,
+    Move.D2: Move.U2,
+    Move.L2: Move.R2,
+    Move.R2: Move.L2,
+    Move.F2: Move.B2,
+    Move.B2: Move.F2,
 }
 
 
-def gen_phase_one_sequence(position):
-    print(' - Phase 1 - - - - - - -')
+def gen_phase_two_sequence(position):
+    count = 0
+    print(' - Phase 2 - - - - - - -')
     position_set = set()
     positions = {}  # depth: set(position)
     depth = 0
@@ -38,13 +40,12 @@ def gen_phase_one_sequence(position):
     if cube_is_good(position, solved_facelets):
         return [Move.NONE]
 
-    while depth <= 7:
+    while depth <= 10:
         print('%i... ' % depth, end='')
         positions[depth + 1] = []
         for p in positions[depth]:
             for m in MOVE_GROUP:
                 # avoids Half Turns or Extended Half Turns
-                # TODO: from basic tests, this seems to find a *larger* sequence but in a *shorter* time
                 # if p.move_sequence[-1] == m or \
                 #         (p.move_sequence[-1] == OPPOSITE_MOVE_DICT[m] and p.move_sequence[-2] == m):
                 #     continue
@@ -53,7 +54,9 @@ def gen_phase_one_sequence(position):
                 dyn_move(c, m)
 
                 if c.position not in position_set:
+                    count += 1
                     if cube_is_good(c.position, solved_facelets):
+                        print('Count: %i' % count)
                         return p.move_sequence + [m]
                     positions[depth + 1].append(Position(depth, c.position, p.move_sequence + [m]))
                     position_set.add(c.position)
