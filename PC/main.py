@@ -11,6 +11,8 @@ import group_solver_mk_one as gs1
 import group_solver_mk_two.phase_one as gs2p1
 import group_solver_mk_two.phase_two as gs2p2
 import group_solver_mk_two.phase_three as gs2p3
+import group_solver_mk_two.phase_four as gs2p4
+import group_solver_mk_two.phase_five as gs2p5
 from cube.cube_class import Cube
 from cube.moves import *
 from data.database_manager import DatabaseManager
@@ -122,6 +124,16 @@ def group_solve_mk_two(db, position):
         dyn_move(phase_three_cube, move)
         print(move.name, end=' ')
 
+    print('\n\n- Phase Four -')
+
+    phase_four_sequence = gs2p4.find_sequence_in_table(db, phase_three_cube.position)
+    sequence_list.append(phase_four_sequence)
+
+    phase_four_cube = Cube(phase_three_cube.position)
+    for move in phase_four_sequence:
+        dyn_move(phase_four_cube, move)
+        print(move.name, end=' ')
+
     total_sequence = []
     for sequence in sequence_list:
         total_sequence.extend(sequence)
@@ -194,6 +206,8 @@ def main():
     # conn = create_socket()
     # position = get_current_position(conn)
     db = init_db()
+    gs2p5.generate_lookup_table(db)
+    exit()
 
     # position = 'OBROWROGRWWWBRBWWWGOGWOYGGGWRYBBBYYYBOBYYYGRGOGROYROBR'
     # position = 'WBWWWWWGWOOOGWGRRRBWBBOGOGRGRBRBOOOOGYGRRRBYBYGYYYYYBY'
