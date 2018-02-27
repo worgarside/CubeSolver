@@ -285,29 +285,46 @@
     This chapter covers the specific requirements needed for the project to succeed: the hardware required to build the robot and run the solving program; the software needed to write and run the program; and the specific tasks to complete the project. As well as the requirements, an in-depth analysis of the project and its goals is made, discussing their feasibility, difficulty, and how necessary they are for the success of this project.
     
     \section{Specific Aims and Objectives}
-    \renewcommand*{\arraystretch}{1.4}
-    \begin{longtable}[h]{m{0.6\textwidth}M{0.15\textwidth}M{0.15\textwidth}}
-    	\caption{The objectives, with relative difficulty and value}
-    	\label{tab:objectives}\\
-    	\toprule
-    	\multirow{2}{*}{\textbf{Objective}} & \multicolumn{2}{c}{\textbf{Weightings}} \\
-    	& \textbf{Difficulty} & \textbf{Value} \\
-    	\midrule
-    	\endfirsthead
-    	\toprule
-    	\multirow{2}{*}{\textbf{Objective}} & \multicolumn{2}{c}{\textbf{Weightings}} \\
-    	& \textbf{Difficulty} & \textbf{Value} \\
-    	\midrule
-    	\endhead 
-    	\textit{1. Build a robot which can move a Cube to a sufficient degree of accuracy.} \par This is the primary objective for this project, and is imperative to the project's success. As such it will be the first objective to be completed. This task, despite being of a medium difficulty, is fairly straightforward by nature: the robot simply needs to manipulate a Cube in any valid move. & 10\% & 20\% \\
-		\textit{2. Convert human-compatible move sequences to robot-compatible sequences.} \par This objective is non-essential to the project's success because all of the analysis could be performed using the robot's capabilities as a constant \enquote{frame of reference}. This, however, would require a manual translation of the pre-existing algorithms into robot-compatible algorithms and as such the translator is of high value in this project. & 20\% & 10\% \\
-		\textit{2.1 Move the Cube in a given (robot-compatible) sequence.} \par Once a robot-compatible move sequence has been generated, the robot must move the Cube in this exact sequence with no errors or move-failures. If a single move is performed incorrectly then the entire move sequence is inherently moot. & 5\% & 10\% \\
-		\textit{3. Implement a system which successfully generates a solve sequence for any given position.} \par This is the core goal of the project, and take precedence above all others. The program will take certain arguments to define the parameters of the algorithm and output a solve sequence. This may take a substantial amount of time to complete and this must be a consideration on completing this task. & 40\% & 30\% \\
-		\textit{4. Ensure the runtime of the system is an acceptable length.} \par Some previous attempts at finding optimal solve-sequences have had estimated run times in the order of tens of weeks. Clearly this is unacceptable or the scope of this project and thus the runtime of the project will have a target of sub-fifteen minutes, with the intention of bringing it under five minutes. & 10\% & 10\% \\
-		\textit{5. Implement a program to use other algorithms to generate a solve sequence.} \par This objective makes up a significant part of this project. Different algorithms presented by notable persons will be implemented and measured by the robot. & 10\% & 10\% \\
-		\textit{6. Compare the performance of different algorithms, especially the difference between human-compatible and robot-compatible move sequences.} \par Once all algorithms have been run and measured, their performance will be analysed and compared. In this context, performance comprises the efficiency in finding the solve sequence and the length of the solve sequence. \par Algorithms for generating a human-compatible sequence will also be compared against those that generate robot-compatible sequences. & 5\% & 10\% \\
-    	\bottomrule
-    \end{longtable}
+%    \renewcommand*{\arraystretch}{1.4}
+%    \begin{longtable}[h]{m{0.6\textwidth}M{0.15\textwidth}M{0.15\textwidth}}
+%    	\caption{The objectives, with relative difficulty and value}
+%    	\label{tab:objectives}\\
+%    	\toprule
+%    	\multirow{2}{*}{\textbf{Objective}} & \multicolumn{2}{c}{\textbf{Weightings}} \\
+%    	& \textbf{Difficulty} & \textbf{Value} \\
+%    	\midrule
+%    	\endfirsthead
+%    	\toprule
+%    	\multirow{2}{*}{\textbf{Objective}} & \multicolumn{2}{c}{\textbf{Weightings}} \\
+%    	& \textbf{Difficulty} & \textbf{Value} \\
+%    	\midrule
+%    	\endhead
+%    	\textit{1. Build a robot which can move a Cube to a sufficient degree of accuracy.} \par This is the primary objective for this project, and is imperative to the project's success. As such it will be the first objective to be completed. This task, despite being of a medium difficulty, is fairly straightforward by nature: the robot simply needs to manipulate a Cube in any valid move. & 10\% & 20\% \\
+%		\textit{2. Convert human-compatible move sequences to robot-compatible sequences.} \par This objective is non-essential to the project's success because all of the analysis could be performed using the robot's capabilities as a constant \enquote{frame of reference}. This, however, would require a manual translation of the pre-existing algorithms into robot-compatible algorithms and as such the translator is of high value in this project. & 20\% & 10\% \\
+%		\textit{2.1 Move the Cube in a given (robot-compatible) sequence.} \par Once a robot-compatible move sequence has been generated, the robot must move the Cube in this exact sequence with no errors or move-failures. If a single move is performed incorrectly then the entire move sequence is inherently moot. & 5\% & 10\% \\
+%		\textit{3. Implement a system which successfully generates a solve sequence for any given position.} \par This is the core goal of the project, and take precedence above all others. The program will take certain arguments to define the parameters of the algorithm and output a solve sequence. This may take a substantial amount of time to complete and this must be a consideration on completing this task. & 40\% & 30\% \\
+%		\textit{4. Ensure the runtime of the system is an acceptable length.} \par Some previous attempts at finding optimal solve-sequences have had estimated run times in the order of tens of weeks. Clearly this is unacceptable or the scope of this project and thus the runtime of the project will have a target of sub-fifteen minutes, with the intention of bringing it under five minutes. & 10\% & 10\% \\
+%		\textit{5. Implement a program to use other algorithms to generate a solve sequence.} \par This objective makes up a significant part of this project. Different algorithms presented by notable persons will be implemented and measured by the robot. & 10\% & 10\% \\
+%		\textit{6. Compare the performance of different algorithms, especially the difference between human-compatible and robot-compatible move sequences.} \par Once all algorithms have been run and measured, their performance will be analysed and compared. In this context, performance comprises the efficiency in finding the solve sequence and the length of the solve sequence. \par Algorithms for generating a human-compatible sequence will also be compared against those that generate robot-compatible sequences. & 5\% & 10\% \\
+%    	\bottomrule
+%    \end{longtable}
+    
+    \begin{enumerate}
+    	\item Build a robot which can manipulate a Cube accurately \par This is the first of the two primary objectives for this project, and is imperative to the project's success. As such it will be the first objective to be completed. This task, despite being of a medium difficulty, is fairly straightforward by nature: the robot simply needs to manipulate a Cube in any valid move.
+    	\item Implement a system which successfully generates a solve sequence for any given position. \par The second primary objective ensures that any of the forty-three quintillion positions of Rubik's Cube can be solved correctly. The time taken to generate the solve sequence and the actual length of the solve sequence will both be used when measuring an algorithm's success.
+    	\item When the robot is provided with a move sequence...
+    	\begin{enumerate}
+    		\item Convert any input sequence to be robot-compatible \par All of the pre-exisiting algorithms return a solution which a human being can follow to solve a real-world Cube. In the context of this project the manipulation is done by the robot, which cannot perform all of the standard moves, so any sequences provided must be translated to one which the robot can follow.
+    		\item Correctly follow the sequence to acheive the intended output \par Once a robot-compatible move sequence has been generated, the robot must move the Cube in this exact sequence with no errors or move-failures. If a single move is performed incorrectly then the entire move sequence will produce an incorrect output.
+    	\end{enumerate}
+    	\item Ensure the runtime of the system is an acceptable length \par Previous solve sequence generator algorithms have had a run-time in the order of weeks: the desired run-time of the generation by this project will be in the order of minutes. This will require careful analysis of the trade off between generator efficiency and solve sequence length.
+    	\item Implement a program to use a range of algorithms to generate a solve sequence \par In order to effectively compare the performance of several algorithms, there must be a
+    	\item Compare the performance of different algorithms, especially the difference between human-compatible and robot-compatible move sequences.
+    \end{enumerate}
+    
+    
+    
+    
     
     \section{Analysis}
     \subsection{Software Requirements}
