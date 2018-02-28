@@ -1,3 +1,4 @@
+% !TeX spellcheck = <none>
 \documentclass{report}
 
 \title{Solving Rubik's Cube with Lego Mindstorms}
@@ -19,6 +20,7 @@
 \usepackage{pgfgantt}			% Gantt Charts
 \usepackage{pgfplots}			% draw charts and graphs
 \usepackage{titlesec}			% used in chapter titles
+\usepackage{textcomp}			% allows \texttildelow
 
 \titleformat{\chapter}{\normalfont\Huge\bfseries}{\thechapter}{1em}{}
 \titlespacing*{\chapter}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
@@ -28,6 +30,7 @@
 
 \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
 \newcommand{\propernoun}[1]{\enquote{\textit{#1}}}
+\newcommand{\legopiece}[1]{(\#\textbf{#1})}
 
 \begin{document}
 		
@@ -72,6 +75,7 @@
 			Quarter Turn Metric	&	When counting moves, a Quarter Turn is counted as a single move and a half is two moves. \\
 			Half Turn Metric\textsuperscript{\ref{footnote:metric}}	&	Quarter turns and half turns are both counted as single moves. \\
 			Cubie				&	One of the twenty-six smaller cubes that make up a Cube. \\
+			Facelet				&	One of the fifty-four coloured squares on the sides of the Cube. \\
 			Goal State			&	All the cubies on a given face match the colour of the centre cubie. i.e. a solved Cube. \\
 			Position			&	A Cube's state (mixed or solved). \\
 			Valid Position		&	A position that can be achieved with a real-world Cube without dismantling it. \\
@@ -271,11 +275,12 @@
     
     One of MATLAB's biggest selling points, the IDE with integrated support for matrices, graphs and other mathematical features, can be replicated in a few Python IDEs or with the addition of Python packages. Python's main core can be expanded massively by using any of the tens of thousands of available packages, which can provide any of MATLAB's advantages alongside extra flexibility and capabilities. One of the most popular packages, \propernoun{Numerical Python} (NumPy), adds support for most scientific calculations. It expands Python's inbuilt data structures to use multi-dimensional homogeneous arrays of any Python data type. NumPy takes Python from a well-structured general-purpose language to a powerful mathematical language which can be applied to many different tasks \cite{Cai2005}, \cite{Oliphant2006}.
     
-    As well as the multitude of available packages, Python has another major tool in its arsenal: it can be extended with a compiled language by design. This means that processor-intensive tasks like nested for loops can be migrated to a compiled language such as C++ or Fortran, increasing run speed up to a factor of ten. This extension process is now a trivial matter thanks to automated tools such as \enquote{f2py}, which allows for automated calls to compiled Fortran code \cite{Oliphant2006}.
+    As well as the multitude of available packages, Python has another major tool in its arsenal: it can be extended with a compiled language by design. This means that processor-intensive tasks like nested for loops can be migrated to a compiled language such as C++ or Fortran, increasing run speed up to a factor of ten. This extension process is now a trivial matter thanks to automated tools such as \propernoun{f2py}, which allows for automated calls to compiled Fortran code \cite{Oliphant2006}.
     
     \section{Conclusion}
-    % TODO: add a conclusion
-    In conclusion, given Python's wide compatibility, clear high-level syntax, and extendibility to compiled code for more complex calculations, it is the ideal language for this project.
+    Lego Mindstorms is a strong candidate for the construction of the robot: its variable morphology allows adaptation to a range of tasks; the uniformity between pieces means that the main EV3 kit can be supplemented with other kits to extend its ability; and previous studies have shown that it is ideal for stimulating analysis and observations. Instead of using a single algorithm to solve the Cube, a range will be implemented in sorder to find the strongest method for finding a solve sequence. This will allow cross-comparison between, and analysis of, individual algorithms with the intention of finding the algorithm best suited to this project. Tree and group based algorithms alike will be implemented.
+    
+    MATLAB is incompatible with the Lego EV3, so will not be used for this project. Python's wide compatibility, clear high-level syntax, and extendibility to compiled code for more complex calculations, makes is the ideal language for this project. The main program will be written in Python, with any intensive processing written in C++ to improve the speed of the algorithms.
    
     \newpage
     \chapter{Requirements and Analysis}
@@ -320,7 +325,7 @@
     
     A Python wrapper is available on GitHub \cite{Ev3dev} for the ev3dev OS, allowing the creation of Python programs with packaged support for the actuators and sensors of the EV3.
     
-    \subsubsection{Software Requirements}
+    \subsection{Software Requirements}
     This table shows the requirements of the software to be used in the creation of this project, and the capabilities of the computer that they will be running on. Any 
     
 	\begin{table}[h]
@@ -344,7 +349,13 @@
 		\end{tabular}
 	\end{table}
     
-    \subsubsection{Evaluative Techniques}
+    \section{Feasibility Study}
+    \subsection{Optimal Solutions}
+	\subsection{Tree Based Methods}
+    \subsection{Group Based Methods}
+    
+    
+    \section{Evaluative Techniques}
     The progress of this project is estimated to follow the below Gantt Chart. For the duration of its lifespan, there will be a continual measurement of the actual progress against predicted.
     
 	\begin{center}
@@ -356,7 +367,7 @@
 			\ganttbar{Testing}{2017-09-01}{2017-09-15} \\
 			\ganttbar{Refinement}{2017-09-05}{2017-09-17} \\
 			\ganttmilestone{Complete}{2017-09-18} \\
-			\ganttgroup{Project}{2018-02-01}{2018-04-15} \\
+			\ganttgroup{Codebase}{2018-02-01}{2018-04-15} \\
 			\ganttbar{Binary Search Method}{2018-02-05}{2018-02-25} \\
 			\ganttbar{Primary Solve Method}{2018-02-24}{2018-03-05} \\
 			\ganttmilestone{Cube Solved}{2018-03-05} \\
@@ -381,7 +392,23 @@
     \chapter{Design}
     \epigraph{There are two ways of constructing a software design: One way is to make it so simple that there are obviously no deficiencies, and the other way is to make it so complicated that there are no obvious deficiencies. The first method is far more difficult.}{C.A.R. Hoare\cite{Hoare1981}}
     \section{Robot}
+    \subsection{Sensors and Actuators}
+    The Lego EV3 comes with three DC motors (two large \legopiece{45502} and one medium \legopiece{45503}), a color sensor and a touch sensor amongst other peripherals. The medium motor will be used to move the color sensor to scan the Cube, and the large motors to rotate the Cube about the horizontal and vertical axes respectively. The quantity of the motors will be the largest restriction in designing the robot: the robot will only be able to rotate a Cube about two of the three axes; and the color sensor will only have one degree of freedom so will rely on the rotation of the Cube to scan all of the facelets.
+    
     \subsection{Cube Manipulation}
+    \subsubsection{Cradle}
+    The Cube will sit in a cradle which rotates about the Y axis. This will provide the movement needed for the moveset $ \{Y, Y', D, D'\}$. This will have an inner dimension of 7 studs x 7 studs (56 mm x 56 mm) to provide a close match to the dimensions of the Valk 3: 55.5 mm x 55.5 mm. The 0.5 mm tolerance means that the Cube doesn't have to perfectly aligned when it is rotated - a difficult task considering the play in the motors. The cradle must rotate accurately to 90\degree increments to ensure the success of the X rotations and avoid the Cube falling out of the cradle. 
+    
+    The play in the motor will reduce the accuracy of the cradle, as it effectively introduces a zero error for each rotation. If the cradle only rotates in one direction then the zero error would only have to be offset at the very start of the program because the cradle would \enquote{sit} at one end of the region of play. However, this will reduce the moveset by 50\% and thus have a worst case runtime increase of 100\% (Sequentially, $|D' X| = 2 \rightarrow |D D D X| = 4 $).
+    
+    A worm gear \legopiece{4716} will solve both of these problems: it will be combined with a large gear \legopiece{3649} to create a gear ratio of 1:40, increasing the accuracy of the motor by a factor of forty. This will also slow the maximum rotational velocity of the cradle to 2RPM, so a 90\degree turn will take 7.5 seconds\footnote{This figure is the result of a measurement of the maximum rotational velocity of a large motor, and will fluctuate depending on the voltage supplied by the batteries in the EV3 brick}. A compromise between maximum rotational velocity and accuracy will be found by adding more gears to reduce the ratio. The problem presented by the play in the motors will be reduced to an acceptable level due to the unidirectional nature of the worm gear.
+    
+    The sides of the cradle will only be 1 stud high, but will have a semi-circular profile to allow the Cube to rotate out of the base of the cradle as demonstrated in \ref{cradle demo}.
+    
+    \subsubsection{X-Move Arm}
+    
+    To rotate the Cube about the X axis, 
+    
     \subsection{Move Sequence Translation}
     \section{Codebase}
     \subsection{Object Classes}
@@ -394,10 +421,11 @@
     
     \newpage
     \chapter{Implementation and Testing}
+    \epigraph{To those who say that "if you need \#testing at the end, you're doing it wrong", would you prefer a Boeing, or are you going Air Icarus?}{Michael Bolton \cite{Bolton2016}}
     \section{Building the Robot}
     \subsection{The Color Scanner}
     \subsection{The Cradle}
-    \subsection{Z-Move Arm}
+    \subsection{X-Move Arm}
     \section{Coding a Solver}
     \subsection{Group Theory Method}
     \subsubsection{Group Generation}
