@@ -159,7 +159,7 @@
     
     The twentieth century generated many ideas about the future of robotics, such as \enquote{Kitchen units will be devised that will prepare \enquote{automeals}, heating water and converting it to coffee} alongside grandiose aspirations such as \enquote{An experimental fusion-power plant or two will already exist in 2014} \cite{Asimov1964b}. Whilst some predictions have been fulfilled by the technology of the past two decades, others are still nowhere near completion and could be considered impossible for the next century. This is a clear demonstration that the field of Robotics has made vast improvements, but is still - in some respects - very much in its youth.
     
-    In the same way as the field of Robotics, AI has vast potential and we have only touched the tip of the iceberg. The most advanced consumer AI systems are intended to make people's lives easier through organisation and saving precious seconds in performing simple tasks on their smartphones and more recently in their homes. However, Google's Assistant, Apple's Siri, and Amazon's Alexa still fall short when it comes to the intelligence demonstrated in Asimov's book \propernoun{I, Robot}. We are still far from being unable to \enquote{differentiate between a robot and the very best of humans} \cite{Asimov1970}.
+    In the same way as the field of Robotics, AI has vast potential and we have only touched the tip of the iceberg. The most advanced commercial AI systems are intended to make people's lives easier through organisation and saving precious seconds in performing simple tasks on their smartphones and more recently in their homes. However, Google's Assistant, Apple's Siri, and Amazon's Alexa still fall short when it comes to the intelligence demonstrated in Asimov's book \propernoun{I, Robot}. We are still far from being unable to \enquote{differentiate between a robot and the very best of humans} \cite{Asimov1970}.
     
     \section{Robotics in Education}
     There has always been a clear use of \enquote{edutainment} style teaching in one form or another for hundreds of years. One of the earliest known uses of edutainment is in \propernoun{Poor Richard's Almanack}, which was written by Benjamin Franklin and published annually between 1732 and 1758. Alongside all the usual information contained in an Almanac, Franklin (under the pseudonym \propernoun{Poor Richard}) included maths exercises, puzzles, and aphorisms \cite{Beato2015}, \cite{Franklin1732}. Walt Disney was another pioneer of edutainment in the time immediately before, during, and following the World Wars. His first piece of edutainment was a short film, \propernoun{Tommy Tucker's Tooth}, which was commissioned by a dental institute in 1922.
@@ -282,32 +282,9 @@
     \epigraph{I have yet to see any problem, however complicated, which when you looked at in the right way, did not become still more complicated.}{Paul Anderson, New Scientist \cite{Anderson1969}}
     
     \section{Introduction} % TODO: maybe add more to this
-    This chapter covers the specific requirements needed for the project to succeed: the hardware required to build the robot and run the solving program; the software needed to write and run the program; and the specific tasks to complete the project. As well as the requirements, an in-depth analysis of the project and its goals is made, discussing their feasibility, difficulty, and how necessary they are for the success of this project.
+    This chapter covers the specific requirements needed for the project to succeed: the particular tasks to complete the project; the hardware required to build the robot and run the solving program; and the software needed to write and run the program. As well as the requirements, an in-depth analysis of the project and its goals is made, discussing their feasibility, difficulty, and how necessary they are for the success of this project.
     
     \section{Specific Aims and Objectives}
-%    \renewcommand*{\arraystretch}{1.4}
-%    \begin{longtable}[h]{m{0.6\textwidth}M{0.15\textwidth}M{0.15\textwidth}}
-%    	\caption{The objectives, with relative difficulty and value}
-%    	\label{tab:objectives}\\
-%    	\toprule
-%    	\multirow{2}{*}{\textbf{Objective}} & \multicolumn{2}{c}{\textbf{Weightings}} \\
-%    	& \textbf{Difficulty} & \textbf{Value} \\
-%    	\midrule
-%    	\endfirsthead
-%    	\toprule
-%    	\multirow{2}{*}{\textbf{Objective}} & \multicolumn{2}{c}{\textbf{Weightings}} \\
-%    	& \textbf{Difficulty} & \textbf{Value} \\
-%    	\midrule
-%    	\endhead
-%    	\textit{1. Build a robot which can move a Cube to a sufficient degree of accuracy.} \par This is the primary objective for this project, and is imperative to the project's success. As such it will be the first objective to be completed. This task, despite being of a medium difficulty, is fairly straightforward by nature: the robot simply needs to manipulate a Cube in any valid move. & 10\% & 20\% \\
-%		\textit{2. Convert human-compatible move sequences to robot-compatible sequences.} \par This objective is non-essential to the project's success because all of the analysis could be performed using the robot's capabilities as a constant \enquote{frame of reference}. This, however, would require a manual translation of the pre-existing algorithms into robot-compatible algorithms and as such the translator is of high value in this project. & 20\% & 10\% \\
-%		\textit{2.1 Move the Cube in a given (robot-compatible) sequence.} \par Once a robot-compatible move sequence has been generated, the robot must move the Cube in this exact sequence with no errors or move-failures. If a single move is performed incorrectly then the entire move sequence is inherently moot. & 5\% & 10\% \\
-%		\textit{3. Implement a system which successfully generates a solve sequence for any given position.} \par This is the core goal of the project, and take precedence above all others. The program will take certain arguments to define the parameters of the algorithm and output a solve sequence. This may take a substantial amount of time to complete and this must be a consideration on completing this task. & 40\% & 30\% \\
-%		\textit{4. Ensure the runtime of the system is an acceptable length.} \par Some previous attempts at finding optimal solve-sequences have had estimated run times in the order of tens of weeks. Clearly this is unacceptable or the scope of this project and thus the runtime of the project will have a target of sub-fifteen minutes, with the intention of bringing it under five minutes. & 10\% & 10\% \\
-%		\textit{5. Implement a program to use other algorithms to generate a solve sequence.} \par This objective makes up a significant part of this project. Different algorithms presented by notable persons will be implemented and measured by the robot. & 10\% & 10\% \\
-%		\textit{6. Compare the performance of different algorithms, especially the difference between human-compatible and robot-compatible move sequences.} \par Once all algorithms have been run and measured, their performance will be analysed and compared. In this context, performance comprises the efficiency in finding the solve sequence and the length of the solve sequence. \par Algorithms for generating a human-compatible sequence will also be compared against those that generate robot-compatible sequences. & 5\% & 10\% \\
-%    	\bottomrule
-%    \end{longtable}
     
     \begin{enumerate}
     	\item Build a robot which can manipulate a Cube accurately \par This is the first of the two primary objectives for this project, and is imperative to the project's success. As such it will be the first objective to be completed. This task, despite being of a medium difficulty, is fairly straightforward by nature: the robot simply needs to manipulate a Cube in any valid move.
@@ -315,11 +292,11 @@
     	\item When the robot is provided with a move sequence...
     	\begin{enumerate}
     		\item Convert any input sequence to be robot-compatible \par All of the pre-exisiting algorithms return a solution which a human being can follow to solve a real-world Cube. In the context of this project the manipulation is done by the robot, which cannot perform all of the standard moves, so any sequences provided must be translated to one which the robot can follow.
-    		\item Correctly follow the sequence to acheive the intended output \par Once a robot-compatible move sequence has been generated, the robot must move the Cube in this exact sequence with no errors or move-failures. If a single move is performed incorrectly then the entire move sequence will produce an incorrect output.
+    		\item Correctly follow the sequence to achieve the intended output \par Once a robot-compatible move sequence has been generated, the robot must move the Cube in this exact sequence with no errors or move-failures. If a single move is performed incorrectly then the entire move sequence will produce an incorrect output.
     	\end{enumerate}
     	\item Ensure the runtime of the system is an acceptable length \par Previous solve sequence generator algorithms have had a run-time in the order of weeks: the desired run-time of the generation by this project will be in the order of minutes. This will require careful analysis of the trade off between generator efficiency and solve sequence length.
-    	\item Implement a program to use a range of algorithms to generate a solve sequence \par In order to effectively compare the performance of several algorithms, there must be a
-    	\item Compare the performance of different algorithms, especially the difference between human-compatible and robot-compatible move sequences.
+    	\item Implement a program to use a range of algorithms to generate a solve sequence \par In order to effectively compare the performance of several algorithms, there must be a method of running them under the same conditions and with the same overheads (e.g. transmission time to the robot). For this reason, there will be one main program with an option for the algorithm to use.
+    	\item Compare the performance of different algorithms, especially the difference between human-compatible and robot-compatible move sequences \par The performance of each algorithm will be tracked and compared fairly to show each one's merits and faults. This will allow the choice of one algorithm to be improved to create the most efficient method - or the potential combination of algorithms to form a stronger one.
     \end{enumerate}
     
     
@@ -327,52 +304,42 @@
     
     
     \section{Analysis}
-    \subsection{Software Requirements}
-    \subsubsection{Python 3.6 Runtime Environment}
-    Python is the ideal language for this project, as discussed in the Literature Review, and requires a runtime environment for programs to be run. This consists of the Python interpreter, libraries, and any packages used in the development process.
+    \subsection{Software}
+    
+    \subsubsection{PyCharm/CLion}
+    An Integrated Development Environment (IDE) makes development, running programs, and testing and debugging much easier than using a simple text editor and command line. PyCharm and CLion by JetBrains \cite{JetBrains} will be used for developing in Python and C++ respectively. PyCharm and CLion provide strong code completion abilities, project-wide refactoring, and software development kit (SDK) modification amongst many other abilities. This will allow more time to be allocated to tasks of higher value rather than struggling with relatively minor issues.  
+    
+	\subsubsection{Python 3.6 Runtime Environment}
+    As discussed in the Literature Review, Python is the ideal language for this project. It requires a native runtime environment for programs to be run: this consists of the Python interpreter, libraries, and any packages used in the development process.
+    
+    \subsubsection{MinGW}
+    C++ requires an environment to develop and compile in. MinGW (Minimalist GNU for Windows) is a popular choice when developing C++ applications. % TODO complete this
+    
     \subsubsection{ev3dev}
     ev3dev \cite{Ev3dev.org} is a custom operating system (OS) for the EV3 which contains a low-level framework for the peripherals of an EV3. It allows users to write their own programs in a multitude of languages (including Python) to create complex functions and models. It is installed by flashing the ev3dev OS to a microSD card which is then inserted into the EV3, avoiding affecting the EV3's original firmware.
     
     A Python wrapper is available on GitHub \cite{Ev3dev} for the ev3dev OS, allowing the creation of Python programs with packaged support for the actuators and sensors of the EV3.
     
-    \subsubsection{PyCharm}
-    Python doesn't require an Integrated Development Environment (IDE) for developing or running programs, however using an IDE makes both of these tasks, and testing, much easier. The program(s) for this project will be written using PyCharm from JetBrains \cite{JetBrains}. PyCharm provides strong code completion abilities, project-wide refactoring, and software development kit (SDK) modification amongst many other abilities. This will allow more time to be allocated to tasks of higher value rather than struggling with relatively minor issues.
+    \subsubsection{Software Requirements}
+    This table shows the requirements of the software to be used in the creation of this project, and the capabilities of the computer that they will be running on. Any 
     
-    \subsubsection{Software-Hardware Comparisons}
-    The below tables show the requirements of the software to be used in the creation of this project, and the capabilities of the computer that they will be running on. This includes both the Main Development Computer and also the Lego EV3.
-    
-    \begin{table}[htbp]
-    	\def\arraystretch{1.25}
-    	\centering
-    	\caption{Software requirements for the EV3 and its capabilities}
-    	\label{tab:ev3_software}
-    	\begin{tabular}{M{0.225\textwidth}M{0.225\textwidth}M{0.225\textwidth}M{0.225\textwidth}}
-    		\toprule
-    		\multirow{2}{*}{\textbf{Software/Hardware}} & \multicolumn{3}{c}{\textbf{Requirements/Capabilities}} \\
-    		& \textbf{Processor} & \textbf{Memory} & \textbf{Connectivity} \\
-    		\midrule
- 			ev3dev	&	300MHz	&	64MB	&	WiFi/Bluetooth/USB \\
- 			\midrule
- 			\textit{Lego EV3}	&	\textit{300MHz}	&	\textit{64MB}	&	\textit{1 x USB Port, Bluetooth, WiFi (via USB dongle)} \\
-    		\bottomrule
-    	\end{tabular}
-    \end{table}
-
-	\begin{table}[htbp]
+	\begin{table}[h]
 		\def\arraystretch{1.25}
 		\centering
 		\caption{Software requirements for the main development computer and its capabilities}
 		\label{tab:win_software}
 		\begin{tabular}{M{0.18\textwidth}M{0.18\textwidth}M{0.18\textwidth}M{0.18\textwidth}M{0.18\textwidth}}
 			\toprule
-			\multirow{2}{*}{\textbf{Software/Hardware}} & \multicolumn{4}{c}{\textbf{Requirements/Capabilities}} \\
-			& \textbf{OS} & \textbf{Processor} & \textbf{Memory} & \textbf{Connectivity} \\
+			\multirow{2}{*}{\textbf{Software}} & \multicolumn{4}{c}{\textbf{Requirements/Capabilities}} \\
+			& \textbf{Minimum OS} & \textbf{Processor} & \textbf{Memory} & \textbf{Connectivity} \\
 			\midrule
-			Lego EV3 Programming Software\cite{Lego2017}	&	Windows 2003 (or newer)	&	Dual Core 2GHz	&	2GB	&	1 USB Port \\
-			Python 3.6	&	Windows Vista (or newer)	&	Program Dependent &	Program Dependent & \\
 			PyCharm	&	Windows 2003 (or newer)	&		&	\normalsize{1GB} \scriptsize{minimum} \par \normalsize{2GB} \scriptsize{recommended} & \\
+			CLion	&	Windows 7 64-bit (or newer)	&		&	\normalsize{2GB} \scriptsize{minimum}  & \\
+			Lego EV3 Programming Software\cite{Lego2017}	&	Windows 2003 (or newer)	&	Dual Core 2GHz	&	2GB	&	1 USB Port \\
+			Python 3.6	&	Windows Vista (or newer)	& &	& \\
+			MinGW & \\
 			\midrule
-			\textit{Main Development Computer}	&	\textit{Windows 10 Pro}	&	\textit{Quad Core i5 3.6GHz}	&	\textit{32GB}	&	\textit{WiFi, Bluetooth, 12 x USB Port}\\
+			\textit{Main Development Computer}	&	\textit{Windows 10 Pro 64-bit}	&	\textit{Quad Core i5 6500 3.6GHz}	&	\textit{32GB}	&	\textit{WiFi, Bluetooth, 12 x USB Port}\\
 			\bottomrule
 		\end{tabular}
 	\end{table}
