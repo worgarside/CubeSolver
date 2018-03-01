@@ -20,7 +20,10 @@
 \usepackage{pgfgantt}			% Gantt Charts
 \usepackage{pgfplots}			% draw charts and graphs
 \usepackage{titlesec}			% used in chapter titles
-\usepackage{textcomp}			% allows \texttildelow
+\usepackage{subcaption}			% allows subfigures
+%\usepackage[ruled,vlined,linesnumbered,lined,boxed,commentsnumbered]{algorithm2e}		% formatting algorithms
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 \titleformat{\chapter}{\normalfont\Huge\bfseries}{\thechapter}{1em}{}
 \titlespacing*{\chapter}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
@@ -181,7 +184,7 @@
 
 	\begin{figure}[h]
 		\begin{center}
-			\includegraphics[width=0.5\textwidth]{Images/EV3ProgrammingSoftware.jpg}
+			\includegraphics[width=0.5\textwidth]{Resources/Images/EV3ProgrammingSoftware.jpg}
 			\caption{A sample program in \propernoun{EV3 Programming Software}}
 			\label{fig:ev3software}
 		\end{center}
@@ -401,13 +404,64 @@
     
     The play in the motor will reduce the accuracy of the cradle, as it effectively introduces a zero error for each rotation. If the cradle only rotates in one direction then the zero error would only have to be offset at the very start of the program because the cradle would \enquote{sit} at one end of the region of play. However, this will reduce the moveset by 50\% and thus have a worst case runtime increase of 100\% (Sequentially, $|D' X| = 2 \rightarrow |D D D X| = 4 $).
     
-    A worm gear \legopiece{4716} will solve both of these problems: it will be combined with a large gear \legopiece{3649} to create a gear ratio of 1:40, increasing the accuracy of the motor by a factor of forty. This will also slow the maximum rotational velocity of the cradle to 2RPM, so a 90\degree turn will take 7.5 seconds\footnote{This figure is the result of a measurement of the maximum rotational velocity of a large motor, and will fluctuate depending on the voltage supplied by the batteries in the EV3 brick}. A compromise between maximum rotational velocity and accuracy will be found by adding more gears to reduce the ratio. The problem presented by the play in the motors will be reduced to an acceptable level due to the unidirectional nature of the worm gear.
+    A worm gear \legopiece{4716} will solve both of these problems: it will be combined with a large gear \legopiece{3649} to create a gear ratio of 1:40, increasing the accuracy of the motor by a factor of forty (see \ref{fig:wormgear}). This will also slow the maximum rotational velocity of the cradle to 2RPM, so a 90\degree turn will take 7.5 seconds\footnote{This figure is the result of a measurement of the maximum rotational velocity of a large motor, and will fluctuate depending on the voltage supplied by the batteries in the EV3 brick}. A compromise between maximum rotational velocity and accuracy will be found by adding more gears to reduce the ratio. The problem presented by the play in the motors will be reduced to an acceptable level due to the unidirectional nature of the worm gear.
     
-    The sides of the cradle will only be 1 stud high, but will have a semi-circular profile to allow the Cube to rotate out of the base of the cradle as demonstrated in \ref{cradle demo}.
+    The sides of the cradle will only be 1 stud high, but will have a semi-circular profile to allow the Cube to rotate out of the base of the cradle as demonstrated in \ref{fig:cradle}. The curved edge will also cause the Cube to slide back into the cradle completely, rather than resting on the upper corner of the edge piece. This movement back into the cradle after an X-axis rotation will be assisted by the X-Move Arm.
+    
+   	\begin{figure}[h]
+    	\begin{center}
+    		\includegraphics[width=0.5\textwidth]{Resources/Images/CradleWormGear.png}
+    		\caption{The rotation of the worm gear drives the cradle's rotation}
+    		\label{fig:wormgear}
+    	\end{center}
+    \end{figure}
+    
+	\begin{figure}[h!]
+		\centering
+		\begin{subfigure}[b]{0.4\linewidth}
+			\includegraphics[width=\linewidth]{Resources/Images/CradleCurvedEdgeNormal.png}
+			\caption{Cube resting in the cradle}
+		\end{subfigure}
+		\begin{subfigure}[b]{0.4\linewidth}
+			\includegraphics[width=\linewidth]{Resources/Images/CradleCurvedEdgeTilted.png}
+			\caption{Cube being rotated out of the cradle}
+		\end{subfigure}
+		\caption{A cross-section of the cradle and Cube}
+		\label{fig:cradle}
+	\end{figure}
     
     \subsubsection{X-Move Arm}
     
-    To rotate the Cube about the X axis, 
+    To rotate the Cube about the X axis, a swinging arm will push the Cube up and out of the cradle and cause it to pivot about the edge of the cradle. The Cube will then slide back into the cradle to complete the rotation. A large motor will be directly connected to the shaft which the arm will rotate about, with no need for gears. One end of the arm will have a wheel with a rubber tire to provide enough friction to tip the Cube over, and the other side will have a set of guards which can hold the top two slices of the Cube in place when performing a $D$ or $D'$ move.
+    
+    
+    
+    \subsection{Color Sensor}
+    The color sensor will be attached to the end of an extending arm. The medium sized motor will be used for this, as it produces less torque than the large motors and this is the least strenuous task. The color sensor will be in a fixed position relative to the arm, and will centred on the Cube. In order to scan a full Cube, the sequence $X X X Y X X X$ will be followed to iteratively scan each face. The scanning process is as follows:
+    
+	\begin{algorithm}
+		\caption{Euclid’s algorithm}\label{alg:scanupface}
+		\begin{algorithmic}[1]
+			\Function{ScanUpFace}{}
+				\State $faceletList\gets [ ]$\Comment{Initialise as empty list}
+				
+				\For{$i \gets 0$ \textbf{to} $4$}\Comment{4 Corner-Edge pairs}
+					\State \Call{MoveColorSensor}{edgeCubie}
+					\State $faceletList\gets colorValue$
+					\State \Call{RotateCradle}{45}
+					\State
+					\State \Call{MoveColorSensor}{cornerCubie}
+					\State $faceletList\gets colorValue$
+					\State \Call{RotateCradle}{45}
+				\EndFor
+				\State \Call{MoveColorSensor}{centreCubie}
+				\State $faceletList\gets colorValue$
+				\State \textbf{return} $faceletList$
+			\EndFunction
+		\end{algorithmic}
+	\end{algorithm}
+
+    When a new color is on the Up face, the color sensor will be moved forwards until it is above the first edge cubie
     
     \subsection{Move Sequence Translation}
     \section{Codebase}
@@ -421,7 +475,7 @@
     
     \newpage
     \chapter{Implementation and Testing}
-    \epigraph{To those who say that "if you need \#testing at the end, you're doing it wrong", would you prefer a Boeing, or are you going Air Icarus?}{Michael Bolton \cite{Bolton2016}}
+    \epigraph{To those who say that \enquote{if you need \#testing at the end, you're doing it wrong}, would you prefer a Boeing, or are you going Air Icarus?}{Michael Bolton \cite{Bolton2016}}
     \section{Building the Robot}
     \subsection{The Color Scanner}
     \subsection{The Cradle}
