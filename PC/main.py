@@ -1,3 +1,4 @@
+import datetime
 import socket
 import time
 from _tkinter import TclError
@@ -8,11 +9,10 @@ from queue import LifoQueue
 import colorama
 
 import group_solver_mk_one as gs1
-import group_solver_mk_two.phase_one as gs2p1
-import group_solver_mk_two.phase_two as gs2p2
-import group_solver_mk_two.phase_three as gs2p3
 import group_solver_mk_two.phase_four as gs2p4
-import group_solver_mk_two.phase_five as gs2p5
+import group_solver_mk_two.phase_one as gs2p1
+import group_solver_mk_two.phase_three as gs2p3
+import group_solver_mk_two.phase_two as gs2p2
 from cube.cube_class import Cube
 from cube.moves import *
 from data.database_manager import DatabaseManager
@@ -202,11 +202,11 @@ def get_current_position(conn):
 
 
 def main():
-
     # conn = create_socket()
     # position = get_current_position(conn)
+    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
     db = init_db()
-    gs2p5.generate_lookup_table(db)
+    gs2p4.generate_lookup_table(db)
     exit()
 
     # position = 'OBROWROGRWWWBRBWWWGOGWOYGGGWRYBBBYYYBOBYYYGRGOGROYROBR'
@@ -226,7 +226,6 @@ def main():
     for move in solve_sequence:
         dyn_move(cube, move)
     print(cube)
-
 
     # robot_sequence = convert_sequence(cube, solve_sequence)
     # print(robot_sequence)

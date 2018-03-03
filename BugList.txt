@@ -1,0 +1,39 @@
+Scanned position: BRYGWWYWWRROBGBORRGBWYOOGGGYRWBBBROOGYGOORGYYYRWBYWBOW
+      B R Y
+      G W W
+      Y W W
+R R O B G B O R R G B W
+Y O O G G G Y R W B B B
+R O O G Y G O O R G Y Y
+      Y R W
+      B Y W
+      B O W
+
+D0
+D1
+      R W R
+      G W W
+      O O O
+Y R Y G G B Y R W G B G
+R O R Y G G W R O Y B B
+B O W G G B W O B Y B W
+      O Y O
+      B Y W
+      R Y R
+
+D0
+D1
+      W O B
+      G W W
+      W R Y
+R R O G Y G O R R Y Y G
+W O Y G G G O R Y B B B
+R O O B G B O O R W B G
+      W W Y
+      B Y W
+      Y R B
+
+[<Move.F: 'F '>, <Move.B: 'B '>]
+[<Move.F: 'F '>, <Move.B: 'B '>]
+Time: 0.14s
+['x2', 'x', 'd', 'x2', 'd', 'x2', 'd', 'x2', 'd']

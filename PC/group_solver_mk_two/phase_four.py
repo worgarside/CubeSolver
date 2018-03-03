@@ -9,6 +9,7 @@ MOVE_GROUP = [Move.U, Move.D, Move.L2, Move.R2, Move.F2, Move.B2]
 MOVE_GROUP_CCW = [Move.NOT_U, Move.NOT_D, Move.L2, Move.R2, Move.F2, Move.B2]
 
 SOLVED_REDUCED = 'WWWWWWWWWRRRBBBRRRBBBRRRBBBRRRBBBRRRBBBRRRBBBWWWWWWWWW'
+SOLVED_POS = 'WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY'
 
 OPPOSITE_MOVE_DICT = {Move.U: Move.D, Move.D: Move.U, Move.L: Move.R, Move.R: Move.L, Move.U2: Move.D2,
                       Move.D2: Move.U2, Move.L2: Move.R2, Move.R2: Move.L2, Move.F2: Move.B2, Move.B2: Move.F2, }
@@ -41,18 +42,17 @@ def generate_lookup_table(db):
 
     count = 0
     print(' - Generating Table... -')
-    position_set = {SOLVED_REDUCED}
+    position_set = {SOLVED_POS}
     position_dict = {}  # depth: set(position)
     depth = 0
-    position_dict[depth] = [Position(depth, SOLVED_REDUCED, [Move.NONE])]
-    tree_width = 1
+    position_dict[depth] = [Position(depth, SOLVED_POS, [Move.NONE])]
 
-    while tree_width > 0:
-        tree_width = 0
-        print(depth, end='... ')
+    while depth <= 18:
+        depth += 1
+        print(depth, end='.')
 
-        position_dict[depth + 1] = []
-        for p in position_dict[depth]:
+        position_dict[depth] = []
+        for p in position_dict[depth - 1]:
             for m in MOVE_GROUP_CCW:
 
                 c = Cube(p.position, True)
@@ -60,17 +60,15 @@ def generate_lookup_table(db):
 
                 if c.position not in position_set:
                     count += 1
-                    position_dict[depth + 1].append(Position(depth, c.position, p.move_sequence + [m]))
+                    position_dict[depth].append(Position(depth, c.position, p.move_sequence + [m]))
                     position_set.add(c.position)
-                    tree_width += 1
 
-        depth += 1
-
-    for positions in position_dict.values():
-        for position in positions:
+        print('.', end='')
+        for position in position_dict[depth]:
             db.query('INSERT INTO gs2p4 VALUES (?, ?, ?)',
                      (position.depth, position.position, pickle.dumps(position.move_sequence[1:])))
-    db.commit()
+        db.commit()
+        print('. ', end='')
 
 
 def gen_phase_four_sequence(position):
