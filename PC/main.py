@@ -199,11 +199,11 @@ def get_current_position(conn):
 def main():
     # conn = create_socket()
     # position = get_current_position(conn)
-    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
+    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     db = init_db(True)
-    time_function(gs2p4.generate_lookup_table, db)
+    time_function(gs2p3.generate_lookup_table, db)
     print('DB Size: %0.2fMB' % (os.path.getsize('PC/data/db.sqlite')/1000000))
-    print('DB Row Count: %i' % (db.query('select count(*) from gs2p4').fetchone()[0]))
+    print('DB Row Count: %i' % (db.query('select count(*) from gs2p3').fetchone()[0]))
 
 
     exit()

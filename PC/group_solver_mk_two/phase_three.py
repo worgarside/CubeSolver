@@ -1,11 +1,12 @@
-import pickle
-
+import json
+from multiprocessing import Pool
 from cube.color_class import Color
 from cube.cube_class import Cube
 from cube.move_class import Move
 from cube.moves import dyn_move
 from cube.position_class import Position  # (pos_id, position, depth, move_sequence)
 from cube.side_class import Side
+from sqlite3 import IntegrityError
 
 FACELETS = [i for i in range(9)] + [i for i in range(45, 54)]
 
@@ -22,7 +23,7 @@ def find_sequence_in_table(db, position):
     inversion_dict = {Move.U: Move.NOT_U, Move.D: Move.NOT_D, Move.NOT_U: Move.U, Move.NOT_D: Move.D}
 
     monochrome_pos = _color_to_monochrome(position)
-    orig_sequence = pickle.loads(
+    orig_sequence = json.loads(
         db.query("SELECT move_sequence FROM gs2p3 where position = '%s'" % monochrome_pos).fetchone()[0])
 
     reverse_sequence = orig_sequence[::-1]
@@ -34,6 +35,52 @@ def find_sequence_in_table(db, position):
     return inverted_sequence
 
 
+
+# def generate_lookup_table(db):
+#     db.query('DROP TABLE IF EXISTS gs2p3')
+#
+#     db.query('''CREATE TABLE IF NOT EXISTS gs2p3 (
+#                     depth INTEGER NOT NULL,
+#                     position TEXT PRIMARY KEY,
+#                     move_sequence BLOB NOT NULL)
+#                 ''')
+#
+#     count = 0
+#     print(' - Generating Table... -')
+#     position_set = {SOLVED_MONOCHROME}
+#     position_dict = {}  # depth: set(position)
+#     depth = 0
+#     position_dict[depth] = [Position(depth, SOLVED_MONOCHROME, [Move.NONE])]
+#
+#     while depth < 11:
+#         depth += 1
+#         print(depth, end='... ')
+#
+#         position_dict[depth] = []
+#         for p in position_dict[depth-1]:
+#             for m in MOVE_GROUP_CCW:
+#
+#                 c = Cube(p.position, True)
+#                 dyn_move(c, m)
+#
+#                 if c.position not in position_set:
+#                     count += 1
+#                     position_dict[depth].append(Position(depth, c.position, p.move_sequence + [m.value]))
+#                     position_set.add(c.position)
+#
+#
+#
+#     for positions in position_dict.values():
+#         for position in positions:
+#             db.query('INSERT INTO gs2p3 VALUES (?, ?, ?)',
+#                      (position.depth, position.position, json.dumps(position.move_sequence[1:])))
+#     db.commit()
+#     print()
+
+
+
+
+
 def generate_lookup_table(db):
     db.query('DROP TABLE IF EXISTS gs2p3')
 
@@ -43,35 +90,57 @@ def generate_lookup_table(db):
                     move_sequence BLOB NOT NULL)
                 ''')
 
-    count = 0
     print(' - Generating Table... -')
-    position_set = {SOLVED_MONOCHROME}
     position_dict = {}  # depth: set(position)
     depth = 0
-    position_dict[depth] = [Position(depth, SOLVED_MONOCHROME, [Move.NONE])]
+    position_dict[depth] = [(depth, SOLVED_MONOCHROME, [Move.NONE])]
+    db.query('INSERT INTO gs2p3 VALUES (?, ?, ?)', (depth, SOLVED_MONOCHROME, json.dumps([])))
 
-    while depth <= 8:
-        print(depth, end='... ')
+    p = Pool(processes=4)
+    insert_count = 1
 
-        position_dict[depth + 1] = []
-        for p in position_dict[depth]:
-            for m in MOVE_GROUP_CCW:
-
-                c = Cube(p.position, True)
-                dyn_move(c, m)
-
-                if c.position not in position_set:
-                    count += 1
-                    position_dict[depth + 1].append(Position(depth, c.position, p.move_sequence + [m]))
-                    position_set.add(c.position)
-
+    while insert_count > 0:
+        insert_count = 0
         depth += 1
+        print(depth, end='.')
+        pos_list = db.query('SELECT position, move_sequence FROM gs2p3 where depth = %i' % (depth - 1)).fetchall()
+        pool_result = p.map(gen_next_level, pos_list)
+        print('.', end='')
+        for result in pool_result:
+            for r in result:
+                try:
+                    db.query('INSERT INTO gs2p3 VALUES (?, ?, ?)', (depth, r[0], json.dumps(r[1])))
+                    insert_count += 1
+                except IntegrityError:
+                    pass
+                    # print('\n\nIntegrity Error inserting %s into database' % str(r))
+                    # exit()
+        print('.', end=' ')
+        db.commit()
+    print()
+    p.close()
 
-    for positions in position_dict.values():
-        for position in positions:
-            db.query('INSERT INTO gs2p3 VALUES (?, ?, ?)',
-                     (position.depth, position.position, pickle.dumps(position.move_sequence[1:])))
-    db.commit()
+
+
+
+
+
+
+
+
+
+def gen_next_level(pos_tuple):
+    result_list = []
+    for m in MOVE_GROUP_CCW:
+        c = Cube(pos_tuple[0], True)
+        dyn_move(c, m)
+        result_list.append((c.position, json.loads(pos_tuple[1]) + [m.value]))
+
+    return result_list
+
+
+
+
 
 
 def gen_phase_three_sequence(position):

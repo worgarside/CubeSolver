@@ -1,5 +1,4 @@
 import json
-import pickle
 from multiprocessing import Pool
 from sqlite3 import IntegrityError
 
@@ -22,7 +21,7 @@ def find_sequence_in_table(db, position):
     inversion_dict = {Move.U: Move.NOT_U, Move.D: Move.NOT_D, Move.NOT_U: Move.U, Move.NOT_D: Move.D}
 
     reduced_position = Cube(position).position_reduced
-    orig_sequence = pickle.loads(
+    orig_sequence = json.loads(
         db.query("SELECT move_sequence FROM gs2p4 where position = '%s'" % reduced_position).fetchone()[0])
 
     reverse_sequence = orig_sequence[::-1]
@@ -51,8 +50,7 @@ def generate_lookup_table(db):
 
     p = Pool(processes=4)
 
-
-    while depth < 5:
+    while depth < 18:
         depth += 1
         print(depth, end='.')
         pos_list = db.query('SELECT position, move_sequence FROM gs2p4 where depth = %i' % (depth - 1)).fetchall()
@@ -64,20 +62,20 @@ def generate_lookup_table(db):
                     db.query('INSERT INTO gs2p4 VALUES (?, ?, ?)', (depth, r[0], json.dumps(r[1])))
                 except IntegrityError:
                     pass
-
+                    # print('\n\nIntegrity Error inserting %s into database' % str(r))
+                    # exit()
         print('.', end=' ')
-
         db.commit()
     print()
     p.close()
 
 
-def gen_next_level(n):
+def gen_next_level(pos_tuple):
     result_list = []
     for m in MOVE_GROUP_CCW:
-        c = Cube(n[0], True)
+        c = Cube(pos_tuple[0], True)
         dyn_move(c, m)
-        result_list.append((c.position, json.loads(n[1]) + [m.value]))
+        result_list.append((c.position, json.loads(pos_tuple[1]) + [m.value]))
 
     return result_list
 
