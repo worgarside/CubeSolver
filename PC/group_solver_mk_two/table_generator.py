@@ -1,6 +1,6 @@
+import json
 import os
 import time
-import json
 from multiprocessing import Pool, cpu_count
 from sqlite3 import IntegrityError
 
@@ -9,11 +9,14 @@ from cube.move_class import Move
 from cube.moves import dyn_move
 
 TABLES = ['gs2p1', 'gs2p2', 'gs2p3', 'gs2p4']
+
 TARGET_POS = [
     'NDNDNDNDNNNNNNNNNNNNNNNNDNDNNNDNDNNNNNNNNNNNNNDNDNDNDN',
     'DDDDDDDDDNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNDDDDDDDDD',
     'DDDDDDDDDWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWNNNNNNNNN',
-    'WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY']
+    'WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY'
+]
+
 MOVE_GROUPS = [
     [Move.NOT_U, Move.NOT_D, Move.NOT_L, Move.NOT_R, Move.NOT_F, Move.NOT_B],
     [Move.NOT_U, Move.NOT_D, Move.NOT_L, Move.NOT_R, Move.F2, Move.B2],
@@ -66,8 +69,9 @@ def generate_lookup_table(db, phase):
         end_time = int(round(time.time() * 1000))
         total = (end_time - start_time) / 1000
         print('Time: %10.3fs' % total, end='   |   ')
-        print('DB Size: %7.2fMB' % (os.path.getsize('PC/data/db.sqlite')/1000000), end='   |   ')
-        print('Rows Added: %i' % (db.query('select count(*) from %s WHERE depth = %i' % (TABLES[phase], depth)).fetchone()[0]))
+        print('DB Size: %7.2fMB' % (os.path.getsize('PC/data/db.sqlite') / 1000000), end='   |   ')
+        print('Rows Added: %i' % (
+        db.query('select count(*) from %s WHERE depth = %i' % (TABLES[phase], depth)).fetchone()[0]))
     p.close()
 
 

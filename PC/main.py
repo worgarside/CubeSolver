@@ -1,23 +1,22 @@
 import datetime
+import pickle
 import socket
 import time
 from _tkinter import TclError
 from multiprocessing import Process
 from multiprocessing.managers import BaseManager
 from queue import LifoQueue
-import os
+
 import colorama
 
 import group_solver_mk_one as gs1
-import group_solver_mk_two.phase_four as gs2p4
-import group_solver_mk_two.phase_one as gs2p1
-import group_solver_mk_two.phase_three as gs2p3
-import group_solver_mk_two.phase_two as gs2p2
-import group_solver_mk_two.table_generator as table_gen
+import group_solver_mk_two.table_generator as gs2generator
+import group_solver_mk_two.table_lookup as gs2lookup
 from cube.cube_class import Cube
 from cube.moves import *
 from data.database_manager import DatabaseManager
 from gui.interface import Interface
+from robot.move_converter import convert_sequence
 from tree_solver.tree_generator import generate_tree
 
 GROUP_COMPLETE = [MOVE.U, MOVE.NOT_U, MOVE.U2, MOVE.D, MOVE.NOT_D, MOVE.D2,
@@ -92,7 +91,7 @@ def group_solve_mk_two(db, position):
     sequence_list = []
 
     print('- Phase One -')
-    phase_one_sequence = gs2p1.find_sequence_in_table(db, position)
+    phase_one_sequence = gs2lookup.lookup_position(db, position, 0)
     sequence_list.append(phase_one_sequence)
 
     phase_one_cube = Cube(position)
@@ -101,8 +100,7 @@ def group_solve_mk_two(db, position):
         print(move.name, end=' ')
 
     print('\n\n- Phase Two -')
-
-    phase_two_sequence = gs2p2.find_sequence_in_table(db, phase_one_cube.position)
+    phase_two_sequence = gs2lookup.lookup_position(db, phase_one_cube.position, 1)
     sequence_list.append(phase_two_sequence)
 
     phase_two_cube = Cube(phase_one_cube.position)
@@ -111,8 +109,7 @@ def group_solve_mk_two(db, position):
         print(move.name, end=' ')
 
     print('\n\n- Phase Three -')
-
-    phase_three_sequence = gs2p3.find_sequence_in_table(db, phase_two_cube.position)
+    phase_three_sequence = gs2lookup.lookup_position(db, phase_two_cube.position, 2)
     sequence_list.append(phase_three_sequence)
 
     phase_three_cube = Cube(phase_two_cube.position)
@@ -121,8 +118,7 @@ def group_solve_mk_two(db, position):
         print(move.name, end=' ')
 
     print('\n\n- Phase Four -')
-
-    phase_four_sequence = gs2p4.find_sequence_in_table(db, phase_three_cube.position)
+    phase_four_sequence = gs2lookup.lookup_position(db, phase_three_cube.position, 3)
     sequence_list.append(phase_four_sequence)
 
     phase_four_cube = Cube(phase_three_cube.position)
@@ -187,7 +183,7 @@ def create_socket():
     return c
 
 
-def get_current_position(conn):
+def get_robot_scan(conn):
     pos_received = False
     position = ''
     while not pos_received:
@@ -198,46 +194,52 @@ def get_current_position(conn):
 
 
 def main():
-    # conn = create_socket()
-    # position = get_current_position(conn)
-    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    robot_on = False
+    db_generation = False
+    solving = True
+
+    conn = None
+    position = None
+
     db = init_db(True)
-    # time_function(gs2p1.generate_lookup_table, db)
 
-    for i in range(4):
-        table_gen.generate_lookup_table(db, i)
+    if robot_on:
+        conn = create_socket()
+        position = get_robot_scan(conn)
+        print('Scanned position: %s' % position)
+    elif solving:
+        # position = 'OBROWROGRWWWBRBWWWGOGWOYGGGWRYBBBYYYBOBYYYGRGOGROYROBR'
+        # position = 'WBWWWWWGWOOOGWGRRRBWBBOGOGRGRBRBOOOOGYGRRRBYBYGYYYYYBY'
+        # position = 'YWRBWYOOWOOBYYOGBYBRGGOGWGWBRYGBOWRRGWBRRYGRBWOWYYBOGR'
+        # position = 'OGOYWYRBRWOWGOBWRWBRGGOBWGYBRGWBYYOYBRGYRYGOBOBOWYWRGR'
+        position = 'GYWBWRBOYWRWRWRGWBOGRBORYGRGRBOBWWGBYYOYOOGYORBBWYGGOY'
+        print('Scanned position: %s' % position)
 
-    print('DB Size: %0.2fMB' % (os.path.getsize('PC/data/db.sqlite')/1000000))
-    # print('DB Row Count: %i' % (db.query('select count(*) from gs2p1').fetchone()[0]))
+    if db_generation:
+        for i in range(4):
+            gs2generator.generate_lookup_table(db, i)
 
+    if solving:
 
-    exit()
+        cube = Cube(position)
+        print(cube)
 
-    # position = 'OBROWROGRWWWBRBWWWGOGWOYGGGWRYBBBYYYBOBYYYGRGOGROYROBR'
-    # position = 'WBWWWWWGWOOOGWGRRRBWBBOGOGRGRBRBOOOOGYGRRRBYBYGYYYYYBY'
-    # position = 'YWRBWYOOWOOBYYOGBYBRGGOGWGWBRYGBOWRRGWBRRYGRBWOWYYBOGR'
-    # position = 'OGOYWYRBRWOWGOBWRWBRGGOBWGYBRGWBYYOYBRGYRYGOBOBOWYWRGR'
-    position = 'GYWBWRBOYWRWRWRGWBOGRBORYGRGRBOBWWGBYYOYOOGYORBBWYGGOY'
-    print('Scanned position: %s' % position)
+        solve_sequence = group_solve_mk_two(db, position)
 
-    cube = Cube(position)
-    print(cube)
+        print('\n\n- Final Cube -')
+        for move in solve_sequence:
+            dyn_move(cube, move)
+        print(cube)
 
-    solve_sequence = group_solve_mk_two(db, position)
-    # print(solve_sequence)
+        if robot_on:
+            robot_sequence = convert_sequence(cube, solve_sequence)
+            print(robot_sequence)
 
-    print('\n\n- Final Cube -')
-    for move in solve_sequence:
-        dyn_move(cube, move)
-    print(cube)
-
-    # robot_sequence = convert_sequence(cube, solve_sequence)
-    # print(robot_sequence)
-
-    # conn.send(pickle.dumps(robot_sequence))
-    # conn.close()
+            conn.send(pickle.dumps(robot_sequence))
+            conn.close()
 
 
 if __name__ == '__main__':
     colorama.init()
+    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     main()
