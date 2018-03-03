@@ -1,6 +1,7 @@
-from multiprocessing import Pool
 import json
+from multiprocessing import Pool
 from sqlite3 import IntegrityError
+
 from cube.color_class import Color
 from cube.cube_class import Cube
 from cube.move_class import Move
@@ -94,10 +95,10 @@ def generate_lookup_table(db):
     db.query('INSERT INTO gs2p1 VALUES (?, ?, ?)', (depth, SOLVED_MONOCHROME, json.dumps([])))
 
     p = Pool(processes=4)
-    insert_count = 1
+    inserted = True
 
-    while insert_count > 0:
-        insert_count = 0
+    while inserted:
+        inserted = False
         depth += 1
         print(depth, end='.')
         pos_list = db.query('SELECT position, move_sequence FROM gs2p1 where depth = %i' % (depth - 1)).fetchall()
@@ -107,7 +108,7 @@ def generate_lookup_table(db):
             for r in result:
                 try:
                     db.query('INSERT INTO gs2p1 VALUES (?, ?, ?)', (depth, r[0], json.dumps(r[1])))
-                    insert_count += 1
+                    inserted = True
                 except IntegrityError:
                     pass
                     # print('\n\nIntegrity Error inserting %s into database' % str(r))
@@ -116,7 +117,6 @@ def generate_lookup_table(db):
         db.commit()
     print()
     p.close()
-
 
 
 def gen_next_level(pos_tuple):

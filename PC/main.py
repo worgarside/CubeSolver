@@ -13,6 +13,7 @@ import group_solver_mk_two.phase_four as gs2p4
 import group_solver_mk_two.phase_one as gs2p1
 import group_solver_mk_two.phase_three as gs2p3
 import group_solver_mk_two.phase_two as gs2p2
+import group_solver_mk_two.table_generator as table_gen
 from cube.cube_class import Cube
 from cube.moves import *
 from data.database_manager import DatabaseManager
@@ -201,9 +202,13 @@ def main():
     # position = get_current_position(conn)
     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     db = init_db(True)
-    time_function(gs2p3.generate_lookup_table, db)
+    # time_function(gs2p1.generate_lookup_table, db)
+
+    for i in range(4):
+        table_gen.generate_lookup_table(db, i)
+
     print('DB Size: %0.2fMB' % (os.path.getsize('PC/data/db.sqlite')/1000000))
-    print('DB Row Count: %i' % (db.query('select count(*) from gs2p3').fetchone()[0]))
+    # print('DB Row Count: %i' % (db.query('select count(*) from gs2p1').fetchone()[0]))
 
 
     exit()

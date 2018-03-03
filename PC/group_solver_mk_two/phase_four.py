@@ -49,8 +49,10 @@ def generate_lookup_table(db):
     db.query('INSERT INTO gs2p4 VALUES (?, ?, ?)', (depth, SOLVED_POS, json.dumps([])))
 
     p = Pool(processes=4)
+    inserted = True
 
-    while depth < 18:
+    while inserted:
+        inserted = False
         depth += 1
         print(depth, end='.')
         pos_list = db.query('SELECT position, move_sequence FROM gs2p4 where depth = %i' % (depth - 1)).fetchall()
@@ -60,6 +62,7 @@ def generate_lookup_table(db):
             for r in result:
                 try:
                     db.query('INSERT INTO gs2p4 VALUES (?, ?, ?)', (depth, r[0], json.dumps(r[1])))
+                    inserted = True
                 except IntegrityError:
                     pass
                     # print('\n\nIntegrity Error inserting %s into database' % str(r))
