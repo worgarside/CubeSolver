@@ -1,6 +1,8 @@
 import datetime
+import getopt
 import pickle
 import socket
+import sys
 import time
 from _tkinter import TclError
 from multiprocessing import Process
@@ -193,10 +195,25 @@ def get_robot_scan(conn):
     return position
 
 
-def main():
+def main(options):
     robot_on = False
     db_generation = False
-    solving = True
+    solving = False
+
+    if '-r' in opts:
+        robot_on = True
+
+    if '-d' in opts:
+        db_generation = True
+
+    if '-s' in opts:
+        solving = True
+
+    print(robot_on)
+    print(db_generation)
+    print(solving)
+
+    exit()
 
     conn = None
     position = None
@@ -220,7 +237,6 @@ def main():
             gs2generator.generate_lookup_table(db, i)
 
     if solving:
-
         cube = Cube(position)
         print(cube)
 
@@ -242,4 +258,8 @@ def main():
 if __name__ == '__main__':
     colorama.init()
     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-    main()
+
+    opts, args = getopt.getopt(sys.argv[1:], 'rds')  # eventually s:[algorithm]
+    opts = dict(opts)
+
+    main(opts)
