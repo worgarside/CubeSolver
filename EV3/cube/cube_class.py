@@ -35,10 +35,11 @@ EDGES = [(1, 19), (3, 10), (5, 16), (7, 13),
 
 
 class Cube:
-    def __init__(self, position=SOLVED_POS):
+    def __init__(self, position=SOLVED_POS, temporary=False):
         self.position = position
         self.position_reduced = ''
         self.color_position = ''
+        self.temporary = temporary
 
         self.up = ''
         self.down = ''
@@ -46,6 +47,8 @@ class Cube:
         self.right = ''
         self.front = ''
         self.back = ''
+
+        self.robot_solve_sequence = []
 
         self.reduction_dict = {Color.ORANGE: Color.RED, Color.YELLOW: Color.WHITE, Color.GREEN: Color.BLUE,
                                Color.RED: Color.RED, Color.WHITE: Color.WHITE, Color.BLUE: Color.BLUE}
@@ -63,7 +66,7 @@ class Cube:
                                   48: Side.DOWN, 49: Side.DOWN, 50: Side.DOWN, 51: Side.DOWN, 52: Side.DOWN,
                                   53: Side.DOWN}
         self._color_print_dict = {Color.RED: '\033[31m', Color.BLUE: '\033[34m', Color.GREEN: '\033[32m',
-                                  Color.ORANGE: '\033[35m', Color.WHITE: '\033[37m', Color.YELLOW: '\033[33m'}
+                                  Color.ORANGE: '\033[35m', Color.WHITE: '\033[37m', Color.YELLOW: '\033[33m', Color.DARK: '\033[30m', Color.NONE: '\033[36m'}
 
         self.update_fields()
 
@@ -71,7 +74,7 @@ class Cube:
         """ Returns a colored net of the Cube """
         linebreak_dict = {2: '\n      ', 5: '\n      ', 8: '\n', 20: '\n', 32: '\n', 44: '\n      ', 47: '\n      ',
                           50: '\n      '}
-        char_net = '      '
+        char_net = '\n      '
         for index, color in enumerate(self.position):
             char_net += self._color_print_dict[Color(color)] + color + '\033[0m' + linebreak_dict.get(index, ' ')
         char_net += '\n'
@@ -82,8 +85,10 @@ class Cube:
     def update_fields(self):
         """Updates all fields of Cube from position"""
         self.update_sides()
-        self.update_pos_colors()
-        self.update_reduced_cube()
+        if not self.temporary:
+            self.update_reduced_cube()
+            self.update_pos_colors()
+
 
     def update_sides(self):
         """ Updates the sides of the cube from the main position variable """
@@ -103,7 +108,7 @@ class Cube:
     def update_reduced_cube(self):
         self.position_reduced = ''
         for color in self.position:
-            self.position_reduced += self.reduction_dict[Color(color)].value
+            self.position_reduced += self.reduction_dict.get(Color(color), Color(color)).value
 
     # ------------------ Setter Methods ------------------ #
     """Each of these sets the relevant face facelets to the given string and updates the relevant fields"""
