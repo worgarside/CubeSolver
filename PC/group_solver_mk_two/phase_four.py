@@ -1,4 +1,7 @@
+import json
 import pickle
+from multiprocessing import Pool
+from sqlite3 import IntegrityError
 
 from cube.cube_class import Cube
 from cube.move_class import Move
@@ -40,35 +43,40 @@ def generate_lookup_table(db):
                     move_sequence BLOB NOT NULL)
                 ''')
 
-    count = 0
     print(' - Generating Table... -')
-    position_set = {SOLVED_POS}
     position_dict = {}  # depth: set(position)
     depth = 0
-    position_dict[depth] = [Position(depth, SOLVED_POS, [Move.NONE])]
+    position_dict[depth] = [(depth, SOLVED_POS, [Move.NONE])]
+    db.query('INSERT INTO gs2p4 VALUES (?, ?, ?)', (depth, SOLVED_POS, json.dumps([])))
 
-    while depth <= 18:
+    while depth <= 5:
         depth += 1
         print(depth, end='.')
-
-        position_dict[depth] = []
-        for p in position_dict[depth - 1]:
-            for m in MOVE_GROUP_CCW:
-
-                c = Cube(p.position, True)
-                dyn_move(c, m)
-
-                if c.position not in position_set:
-                    count += 1
-                    position_dict[depth].append(Position(depth, c.position, p.move_sequence + [m]))
-                    position_set.add(c.position)
+        pos_list = db.query('SELECT position, move_sequence FROM gs2p4 where depth = %i' % (depth - 1)).fetchall()
+        p = Pool(processes=4)
+        pool_result = p.map(gen_next_level, pos_list)
 
         print('.', end='')
-        for position in position_dict[depth]:
-            db.query('INSERT INTO gs2p4 VALUES (?, ?, ?)',
-                     (position.depth, position.position, pickle.dumps(position.move_sequence[1:])))
-        db.commit()
-        print('. ', end='')
+        for result in pool_result:
+            for r in result:
+                try:
+                    db.query('INSERT INTO gs2p4 VALUES (?, ?, ?)', (depth, r[0], json.dumps(r[1])))
+                except IntegrityError:
+                    pass
+
+        print('.', end=' ')
+
+    db.commit()
+
+
+def gen_next_level(n):
+    result_list = []
+    for m in MOVE_GROUP_CCW:
+        c = Cube(n[0], True)
+        dyn_move(c, m)
+        result_list.append((c.position, json.loads(n[1]) + [m.value]))
+
+    return result_list
 
 
 def gen_phase_four_sequence(position):
