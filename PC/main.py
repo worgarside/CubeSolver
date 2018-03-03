@@ -5,7 +5,7 @@ from _tkinter import TclError
 from multiprocessing import Process
 from multiprocessing.managers import BaseManager
 from queue import LifoQueue
-
+import os
 import colorama
 
 import group_solver_mk_one as gs1
@@ -28,12 +28,7 @@ def init_db(clear=False):
     db = DatabaseManager('PC/data/db.sqlite')
 
     if clear:
-        # db.query('DROP TABLE IF EXISTS g_solve_mk1_p4')
-        db.query('''CREATE TABLE IF NOT EXISTS g_solve_mk1_p4 (
-                        depth INTEGER NOT NULL,
-                        position TEXT PRIMARY KEY,
-                        move_sequence BLOB NOT NULL)
-                    ''')
+        db.query('VACUUM')
 
     return db
 
@@ -205,8 +200,12 @@ def main():
     # conn = create_socket()
     # position = get_current_position(conn)
     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M"))
-    db = init_db()
-    gs2p4.generate_lookup_table(db)
+    db = init_db(True)
+    time_function(gs2p4.generate_lookup_table, db)
+    print('DB Size: %0.2fMB' % (os.path.getsize('PC/data/db.sqlite')/1000000))
+    print('DB Row Count: %i' % (db.query('select count(*) from gs2p4').fetchone()[0]))
+
+
     exit()
 
     # position = 'OBROWROGRWWWBRBWWWGOGWOYGGGWRYBBBYYYBOBYYYGRGOGROYROBR'

@@ -49,13 +49,14 @@ def generate_lookup_table(db):
     position_dict[depth] = [(depth, SOLVED_POS, [Move.NONE])]
     db.query('INSERT INTO gs2p4 VALUES (?, ?, ?)', (depth, SOLVED_POS, json.dumps([])))
 
-    while depth <= 5:
+    p = Pool(processes=4)
+
+
+    while depth < 5:
         depth += 1
         print(depth, end='.')
         pos_list = db.query('SELECT position, move_sequence FROM gs2p4 where depth = %i' % (depth - 1)).fetchall()
-        p = Pool(processes=4)
         pool_result = p.map(gen_next_level, pos_list)
-
         print('.', end='')
         for result in pool_result:
             for r in result:
@@ -66,7 +67,9 @@ def generate_lookup_table(db):
 
         print('.', end=' ')
 
-    db.commit()
+        db.commit()
+    print()
+    p.close()
 
 
 def gen_next_level(n):
