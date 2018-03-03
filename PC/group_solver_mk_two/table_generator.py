@@ -34,7 +34,7 @@ def generate_lookup_table(db, phase):
                     move_sequence BLOB NOT NULL)
                 ''' % TABLES[phase])
 
-    print('\n - Generating Table %s... -' % TABLES[phase])
+    print('\n  - Generating Table %s... -' % TABLES[phase])
     position_dict = {}  # depth: set(position)
     depth = 0
     position_dict[depth] = [(depth, TARGET_POS, [Move.NONE])]
@@ -47,7 +47,7 @@ def generate_lookup_table(db, phase):
         start_time = int(round(time.time() * 1000))
         inserted = False
         depth += 1
-        print(depth, end='.')
+        print('%2i' % depth, end='.')
         pos_list = db.query('SELECT position, move_sequence FROM %s where depth = %i' %
                             (TABLES[phase], depth - 1)).fetchall()
 

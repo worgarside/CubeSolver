@@ -23,17 +23,22 @@ def lookup_position(db, position, phase):
     try:
         orig_sequence = json.loads(db.query("SELECT move_sequence FROM %s where position = '%s'"
                                             % (TABLES[phase], lookup_pos)).fetchone()[0])
+
+        reverse_sequence = orig_sequence[::-1]
+
+        inverted_sequence = []
+        for move in reverse_sequence:
+            inverted_sequence.append(INVERSION_DICT[Move(move)])
+
+        return inverted_sequence
     except OperationalError as err:
         print(err)
         exit()
+    except TypeError:
+        print('Position not found in table %s (%s)' % (TABLES[phase], lookup_pos))
+        exit()
 
-    reverse_sequence = orig_sequence[::-1]
 
-    inverted_sequence = []
-    for move in reverse_sequence:
-        inverted_sequence.append(INVERSION_DICT[Move(move)])
-
-    return inverted_sequence
 
 
 def _color_to_monochrome(position, phase):

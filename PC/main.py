@@ -92,41 +92,20 @@ def group_solve_mk_one(db, cube):
 def group_solve_mk_two(db, position):
     sequence_list = []
 
-    print('- Phase One -')
-    phase_one_sequence = gs2lookup.lookup_position(db, position, 0)
-    sequence_list.append(phase_one_sequence)
+    phase_name = ['One', 'Two', 'Three', 'Four']
+    cube_list = []
+    position_list = [position]
 
-    phase_one_cube = Cube(position)
-    for move in phase_one_sequence:
-        dyn_move(phase_one_cube, move)
-        print(move.name, end=' ')
 
-    print('\n\n- Phase Two -')
-    phase_two_sequence = gs2lookup.lookup_position(db, phase_one_cube.position, 1)
-    sequence_list.append(phase_two_sequence)
-
-    phase_two_cube = Cube(phase_one_cube.position)
-    for move in phase_two_sequence:
-        dyn_move(phase_two_cube, move)
-        print(move.name, end=' ')
-
-    print('\n\n- Phase Three -')
-    phase_three_sequence = gs2lookup.lookup_position(db, phase_two_cube.position, 2)
-    sequence_list.append(phase_three_sequence)
-
-    phase_three_cube = Cube(phase_two_cube.position)
-    for move in phase_three_sequence:
-        dyn_move(phase_three_cube, move)
-        print(move.name, end=' ')
-
-    print('\n\n- Phase Four -')
-    phase_four_sequence = gs2lookup.lookup_position(db, phase_three_cube.position, 3)
-    sequence_list.append(phase_four_sequence)
-
-    phase_four_cube = Cube(phase_three_cube.position)
-    for move in phase_four_sequence:
-        dyn_move(phase_four_cube, move)
-        print(move.name, end=' ')
+    for phase in range(3):
+        print(' - Phase %s -' % phase_name[phase])
+        sequence_list.append(gs2lookup.lookup_position(db, position_list[phase], phase))
+        cube_list.append(Cube(position_list[phase]))
+        for move in sequence_list[phase]:
+            dyn_move(cube_list[phase], move)
+            print(move.name, end=' ')
+        position_list.append(cube_list[phase].position)
+        print('\n')
 
     total_sequence = []
     for sequence in sequence_list:
@@ -195,25 +174,10 @@ def get_robot_scan(conn):
     return position
 
 
-def main(options):
-    robot_on = False
-    db_generation = False
-    solving = False
-
-    if '-r' in opts:
-        robot_on = True
-
-    if '-d' in opts:
-        db_generation = True
-
-    if '-s' in opts:
-        solving = True
-
-    print(robot_on)
-    print(db_generation)
-    print(solving)
-
-    exit()
+def main():
+    robot_on = '-r' in opts
+    db_generation = '-d' in opts
+    solving = '-s' in opts
 
     conn = None
     position = None
@@ -233,8 +197,9 @@ def main(options):
         print('Scanned position: %s' % position)
 
     if db_generation:
-        for i in range(4):
-            gs2generator.generate_lookup_table(db, i)
+        phase_list = [0, 1, 2, 3]
+        for phase in phase_list:
+            gs2generator.generate_lookup_table(db, phase)
 
     if solving:
         cube = Cube(position)
@@ -242,7 +207,7 @@ def main(options):
 
         solve_sequence = group_solve_mk_two(db, position)
 
-        print('\n\n- Final Cube -')
+        print(' - Final Cube -')
         for move in solve_sequence:
             dyn_move(cube, move)
         print(cube)
@@ -262,4 +227,14 @@ if __name__ == '__main__':
     opts, args = getopt.getopt(sys.argv[1:], 'rds')  # eventually s:[algorithm]
     opts = dict(opts)
 
-    main(opts)
+    if len(opts) == 0:
+        print("""
+------------------------------------
+  OPTIONS:
+    -r : run with robot connection
+    -d : generate the database
+    -s : solve the Cube
+------------------------------------
+        """)
+
+    main()
