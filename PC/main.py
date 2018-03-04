@@ -28,10 +28,7 @@ GROUP_COMPLETE = [MOVE.U, MOVE.NOT_U, MOVE.U2, MOVE.D, MOVE.NOT_D, MOVE.D2,
 
 def init_db(clear=False):
     db = DatabaseManager('PC/data/db.sqlite')
-
-    if clear:
-        db.query('VACUUM')
-
+    db.query('VACUUM')
     return db
 
 
@@ -96,7 +93,6 @@ def group_solve_mk_two(db, position):
     cube_list = []
     position_list = [position]
 
-
     for phase in range(3):
         print(' - Phase %s -' % phase_name[phase])
         sequence_list.append(gs2lookup.lookup_position(db, position_list[phase], phase))
@@ -145,9 +141,9 @@ def tree_solve():
         p.terminate()  # kill process when window is closed
 
 
-def time_function(func, *args):
+def time_function(func, *arguments):
     start = int(round(time.time() * 1000))
-    result = func(*args)
+    result = func(*arguments)
     end = int(round(time.time() * 1000))
     total = (end - start) / 1000
     print('Time: %0.03fs' % total)
@@ -197,7 +193,7 @@ def main():
         print('Scanned position: %s' % position)
 
     if db_generation:
-        phase_list = [0, 1, 2, 3]
+        phase_list = [0, 1, 2]  # , 3]
         for phase in phase_list:
             gs2generator.generate_lookup_table(db, phase)
 
