@@ -404,27 +404,26 @@
     
     The play in the motor will reduce the accuracy of the cradle, as it effectively introduces a zero error for each rotation. If the cradle only rotates in one direction then the zero error would only have to be offset at the very start of the program because the cradle would \enquote{sit} at one end of the region of play. However, this will reduce the moveset by 50\% and thus have a worst case runtime increase of 100\% (Sequentially, $|D' X| = 2 \rightarrow |D D D X| = 4 $).
     
-    A worm gear \legopiece{4716} will solve both of these problems: it will be combined with a large gear \legopiece{3649} to create a gear ratio of 1:40, increasing the accuracy of the motor by a factor of forty (see \ref{fig:wormgear}). This will also slow the maximum rotational velocity of the cradle to 2RPM, so a 90\degree turn will take 7.5 seconds\footnote{This figure is the result of a measurement of the maximum rotational velocity of a large motor, and will fluctuate depending on the voltage supplied by the batteries in the EV3 brick}. A compromise between maximum rotational velocity and accuracy will be found by adding more gears to reduce the ratio. The problem presented by the play in the motors will be reduced to an acceptable level due to the unidirectional nature of the worm gear.
+    A worm gear \legopiece{4716} will solve both of these problems: it will be combined with a large gear \legopiece{3649} to create a gear ratio of 1:40, increasing the accuracy of the motor by a factor of forty (see Figure \ref{fig:cradle-wormgear}). This will also slow the maximum rotational velocity of the cradle to 2RPM, so a 90\degree turn will take 7.5 seconds\footnote{This figure is the result of a measurement of the maximum rotational velocity of a large motor, and will fluctuate depending on the voltage supplied by the batteries in the EV3 brick}. A compromise between maximum rotational velocity and accuracy will be found by adding more gears to reduce the ratio. The problem presented by the play in the motors will be reduced to an acceptable level due to the unidirectional nature of the worm gear.
     
-    The sides of the cradle will only be 1 stud high, but will have a semi-circular profile to allow the Cube to rotate out of the base of the cradle as demonstrated in \ref{fig:cradle}. The curved edge will also cause the Cube to slide back into the cradle completely, rather than resting on the upper corner of the edge piece. This movement back into the cradle after an X-axis rotation will be assisted by the X-Move Arm.
-    
-   	\begin{figure}[h]
-    	\begin{center}
-    		\includegraphics[width=0.5\textwidth]{Resources/Images/CradleWormGear.png}
-    		\caption{The rotation of the worm gear drives the cradle's rotation}
-    		\label{fig:wormgear}
-    	\end{center}
-    \end{figure}
+    The sides of the cradle will only be 1 stud high, but will have a semi-circular profile to allow the Cube to rotate out of the base of the cradle as demonstrated in Figures \ref{fig:cradle-resting} and \ref{fig:cradle-rotating}. The curved edge will also cause the Cube to slide back into the cradle completely, rather than resting on the upper corner of the edge piece. This movement back into the cradle after an X-axis rotation will be assisted by the X-Move Arm.
     
 	\begin{figure}[h!]
 		\centering
-		\begin{subfigure}[b]{0.4\linewidth}
-			\includegraphics[width=\linewidth]{Resources/Images/CradleCurvedEdgeNormal.png}
-			\caption{Cube resting in the cradle}
+		\begin{subfigure}[b]{0.25\linewidth}
+			\includegraphics[width=\linewidth]{Resources/Images/CradleWormGear.png}
+			\caption{The rotation of the worm gear drives the cradle's rotation}
+			\label{fig:cradle-wormgear}
 		\end{subfigure}
-		\begin{subfigure}[b]{0.4\linewidth}
+		\begin{subfigure}[b]{0.25\linewidth}
+			\includegraphics[width=\linewidth]{Resources/Images/CradleCurvedEdgeNormal.png}
+			\caption{Resting in the cradle}
+			\label{fig:cradle-resting}
+		\end{subfigure}
+		\begin{subfigure}[b]{0.25\linewidth}
 			\includegraphics[width=\linewidth]{Resources/Images/CradleCurvedEdgeTilted.png}
-			\caption{Cube being rotated out of the cradle}
+			\caption{Starting an X rotation}
+			\label{fig:cradle-rotating}
 		\end{subfigure}
 		\caption{A cross-section of the cradle and Cube}
 		\label{fig:cradle}
@@ -432,18 +431,33 @@
     
     \subsubsection{X-Move Arm}
     
-    To rotate the Cube about the X axis, a swinging arm will push the Cube up and out of the cradle and cause it to pivot about the edge of the cradle. The Cube will then slide back into the cradle to complete the rotation. A large motor will be directly connected to the shaft which the arm will rotate about, with no need for gears. One end of the arm will have a wheel with a rubber tire to provide enough friction to tip the Cube over, and the other side will have a set of guards which can hold the top two slices of the Cube in place when performing a $D$ or $D'$ move.
+    To rotate the Cube about the X axis, a rotating arm will push the Cube up and out of the cradle and cause it to pivot about the edge of the cradle. The Cube will then slide back into the cradle to complete the rotation. A large motor will be directly connected to the shaft which the arm will rotate about, with no need for gears. One end of the arm will have a wheel with a rubber tire to provide enough friction to tip the Cube over, and the other side will have a set of guards which can hold the top two slices of the Cube in place when performing a $D$ or $D'$ move. The design of the swing arm and its positioning relative to the cradle can be seen in Figure \ref{fig:xmovearm}.
     
+    \begin{figure}[h]
+    	\begin{center}
+    		\includegraphics[width=0.4\textwidth]{Resources/Images/RotatingArm.png}
+    		\caption{The rotating arm used to flip the Cube}
+    		\label{fig:xmovearm}
+    	\end{center}
+    \end{figure}
     
     
     \subsection{Color Sensor}
-    The color sensor will be attached to the end of an extending arm. The medium sized motor will be used for this, as it produces less torque than the large motors and this is the least strenuous task. The color sensor will be in a fixed position relative to the arm, and will centred on the Cube. In order to scan a full Cube, the sequence $X X X Y X X X$ will be followed to iteratively scan each face. The scanning process is as follows:
+    The color sensor will be attached to the end of an extending arm, which will be moved by a rack and worm gear to ensure the sensor can be accurately placed above the correct facelet. The worm gears will be driven by the medium sized motor, which produces less torque than the large motors but has a larger maximum rotational velocity - making it ideal for overcoming the speed reduction of the worm gears. The color sensor will be in a fixed position relative to the arm, and will be centred on the Cube's x-axis. In order to scan a full Cube, the sequence $X X X Y X X X$ will be followed, and the Up side scanned everytime a new face is seen as shown by algorithms \ref{alg:scancube} and \ref{alg:scanupface}.
+    
+    \begin{figure}[h]
+    	\begin{center}
+    		\includegraphics[width=0.5\textwidth]{Resources/Images/ColorSensor.png}
+    		\caption{The color sensor mounting arm is driven by a set of worm gears}
+    		\label{fig:colorsensor}
+    	\end{center}
+    \end{figure}
     
 	\begin{algorithm}
-		\caption{Euclid’s algorithm}\label{alg:scanupface}
+		\caption{Scanning the Up-Face of a Cube}\label{alg:scanupface}
 		\begin{algorithmic}[1]
 			\Function{ScanUpFace}{}
-				\State $faceletList\gets [ ]$\Comment{Initialise as empty list}
+				\State $faceletList\gets [\;]$\Comment{Initialise as empty list}
 				
 				\For{$i \gets 0$ \textbf{to} $4$}\Comment{4 Corner-Edge pairs}
 					\State \Call{MoveColorSensor}{edgeCubie}
@@ -461,7 +475,28 @@
 		\end{algorithmic}
 	\end{algorithm}
 
-    When a new color is on the Up face, the color sensor will be moved forwards until it is above the first edge cubie
+	\begin{algorithm}
+		\caption{Scanning an entire Cube}\label{alg:scancube}
+		\begin{algorithmic}[1]
+			\Function{ScanCube}{}
+				\State $sides\gets [\;[\;], [\;], [\;], [\;], [\;], [\;]\;]$\Comment{Initialise as 6 empty lists}
+				\For{$i \gets 0$ \textbf{to} \Call{Length}{sides}}
+					\State $sides[i] \gets$ \Call{ScanUpFace}{}
+					\If{$i == 3$} 
+						\State \Call{RotateCradle}{90}\Comment{Allows Left/Right sides to be scanned after $X$-Move}
+					\EndIf
+					\If{$i < 5$} 
+						\State \Call{XMoveCube}{}\Comment{$X$-Move the Cube to get a new Color on the Up-Side}
+					\EndIf
+					\If{$i == 4$} 
+						\State \Call{XMoveCube}{}\Comment{Extra $X$-Move to get to Down-Side}
+					\EndIf
+				\EndFor
+				\State \textbf{return} $sides$
+			\EndFunction
+		\end{algorithmic}
+	\end{algorithm}
+
     
     \subsection{Move Sequence Translation}
     \section{Codebase}
