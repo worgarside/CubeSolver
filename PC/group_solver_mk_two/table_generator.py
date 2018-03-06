@@ -1,12 +1,13 @@
 import json
 import os
 import time
-from multiprocessing import Pool, cpu_count, Manager
+from multiprocessing import Manager, Process
 from sqlite3 import IntegrityError, OperationalError
 
 from cube.cube_class import Cube
 from cube.move_class import Move
 from cube.moves import dyn_move
+from data.database_manager import DatabaseManager
 
 TABLES = ['gs2p1', 'gs2p2', 'gs2p3', 'gs2p4']
 
@@ -31,12 +32,14 @@ def generate_lookup_table(db, phase):
     db.query('''CREATE TABLE IF NOT EXISTS %s (depth INTEGER NOT NULL, position TEXT PRIMARY KEY,
              move_sequence BLOB NOT NULL)''' % TABLES[phase])
 
+    db.commit()
+
     print('\n  - Generating Table %s... -' % TABLES[phase])
     position_dict = {}  # depth: set(position)
     depth = 0
     position_dict[depth] = [(depth, TARGET_POS, [Move.NONE])]
     db.query('INSERT INTO %s VALUES (?, ?, ?)' % TABLES[phase], (depth, TARGET_POS[phase], json.dumps([])))
-
+    db.commit()
     inserted = True
 
     while inserted:
@@ -46,30 +49,30 @@ def generate_lookup_table(db, phase):
 def generate_next_depth(db, depth, phase):
     position_set = gen_position_set(db)
     start_time = int(round(time.time() * 1000))
-    inserted = False
     depth += 1
     print('%2i' % depth, end='.')
     pos_list = db.query('SELECT position, move_sequence FROM %s where depth = %i' %
                         (TABLES[phase], depth - 1)).fetchall()
 
+    db.commit()
+
     queue = Manager().Queue()
-    iterable = map(lambda e: (e, phase, position_set, queue), pos_list)
 
-    p = Pool(processes=cpu_count()-1)
-    p.starmap(generate_pos_children, iterable)
+    process_list = []
+    generator_process = Process(target=generate_pos_children, args=(pos_list, phase, position_set, queue,))
+    process_list.append(generator_process)
+
+    db_process = Process(target=queue_getter, args=(queue,phase,depth,))
+    process_list.append(db_process)
+
+    for p in process_list:
+        p.start()
+        p.join()
+
     print('.', end='')
-    time.sleep(1)
-    duplication_count = 0
-    while not queue.empty():
-        result = queue.get()
-        try:
-            db.query('INSERT INTO %s VALUES (?, ?, ?)' % TABLES[phase], (depth, result[0], json.dumps(result[1])))
-            inserted = True
-        except IntegrityError:
-            duplication_count += 1
 
-    p.close()
-    # p.join()
+    time.sleep(0.5)
+
     db.commit()
 
     print('.', end='   ')
@@ -77,11 +80,34 @@ def generate_next_depth(db, depth, phase):
     total = (end_time - start_time) / 1000
     print('Time: %10.3fs' % total, end='  |  ')
     print('DB Size: %7.2fMB' % (os.path.getsize('PC/data/db.sqlite') / 1000000), end='  |  ')
-    print('Rows Added: %10i' % (
-        db.query('select count(*) from %s WHERE depth = %i' % (TABLES[phase], depth)).fetchone()[0]), end='  |  ')
-    print('Duplications: %8i' % duplication_count)
+    new_rows = db.query('select count(*) from %s WHERE depth = %i' % (TABLES[phase], depth)).fetchone()[0]
+    print('Rows Added: %10i' % (new_rows), end='  |  ')
+    print('Duplications: %8i' % -1)
 
-    return inserted, depth
+    return new_rows > 0, depth
+
+
+def queue_getter(queue, phase, depth):
+    db = DatabaseManager('PC/data/db.sqlite')
+
+    while not queue.empty():
+        result = queue.get()
+        try:
+            db.query('INSERT INTO %s VALUES (?, ?, ?)' % TABLES[phase], (depth, result[0], json.dumps(result[1])))
+            db.commit()
+        except IntegrityError:
+            pass
+
+
+
+
+def generate_pos_children(pos_list, phase, position_set, queue):
+    for pos_tuple in pos_list:
+        for m in MOVE_GROUPS[phase]:
+            c = Cube(pos_tuple[0], True)
+            dyn_move(c, m)
+            if c.position not in position_set:
+                queue.put((c.position, json.loads(pos_tuple[1]) + [m.value]))
 
 
 def gen_position_set(db):
@@ -96,12 +122,3 @@ def gen_position_set(db):
             pass
 
     return position_set
-
-
-def generate_pos_children(pos_tuple, phase, position_set, queue):
-    for m in MOVE_GROUPS[phase]:
-        c = Cube(pos_tuple[0], True)
-        dyn_move(c, m)
-
-        if c.position not in position_set:
-            queue.put((c.position, json.loads(pos_tuple[1]) + [m.value]))
