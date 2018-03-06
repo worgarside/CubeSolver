@@ -1,4 +1,3 @@
-% !TeX spellcheck = <none>
 \documentclass{report}
 
 \title{Solving Rubik's Cube with Lego Mindstorms}
@@ -22,8 +21,8 @@
 \usepackage{titlesec}			% used in chapter titles
 \usepackage{subcaption}			% allows subfigures
 %\usepackage[ruled,vlined,linesnumbered,lined,boxed,commentsnumbered]{algorithm2e}		% formatting algorithms
-\usepackage{algorithm}
-\usepackage{algpseudocode}
+\usepackage{algorithm}			% algorithms
+\usepackage{algpseudocode}		% algorithm formatting
 
 \titleformat{\chapter}{\normalfont\Huge\bfseries}{\thechapter}{1em}{}
 \titlespacing*{\chapter}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
@@ -36,7 +35,6 @@
 \newcommand{\legopiece}[1]{(\#\textbf{#1})}
 
 \begin{document}
-		
 	\pagenumbering{gobble}
 	\maketitle
 	\newpage
@@ -497,8 +495,15 @@
 		\end{algorithmic}
 	\end{algorithm}
 
-    
     \subsection{Move Sequence Translation}
+    
+    The algorithms considered and discussed in the Literature Review (as well as others used in determining God's Number) are designed to work with a standard moveset $\{L\;R\;U\;D\;F\;B\}$ (as well as half turns and counter-clockwise turns). The design of the robot means that it is restricted to permutations of the moveset $\{X\;Y\;D\}$ - and will therefore require any incompatible sequences to be translated to the robot's moveset.
+    
+	When the entire Cube is rotated, the \textbf{color} of the sides will change but the sides' orientations will not (analogous to when one turns on the spot: left and right have changed, but east and west have not). This means that the frame of reference for the moves will have to remain invariant throughout a sequence by compensating for any full Cube rotations. This is best explained with an example: the first step in performing the sequence $U\;F$ would be to do the sequence $X2\;D$ in order to complete the $U$ move; but now the original $F$ face has moved (due to the $X2$) - it must be located, the Cube must be rotated to get the original $F$ face into the cradle, and then the sequence can be completed. The simplest method of overcoming this complication is to translate the original move sequence to a sequence of color-based moves: $U\;F\;\rightarrow\;W\;G$.
+
+    The first step of translation is to turn the move sequence into a sequence of moves dictated by the color of the face. 
+    
+    
     \section{Codebase}
     \subsection{Object Classes}
     \subsubsection{Cube}
