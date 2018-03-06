@@ -1,7 +1,7 @@
 import json
 import os
 import time
-from multiprocessing import Pool, cpu_count
+from multiprocessing import Pool, cpu_count, Manager
 from sqlite3 import IntegrityError, OperationalError
 
 from cube.cube_class import Cube
@@ -52,25 +52,24 @@ def generate_next_depth(db, depth, phase):
     pos_list = db.query('SELECT position, move_sequence FROM %s where depth = %i' %
                         (TABLES[phase], depth - 1)).fetchall()
 
-    iterable = map(lambda e: (e, phase, position_set), pos_list)
+    queue = Manager().Queue()
+    iterable = map(lambda e: (e, phase, position_set, queue), pos_list)
 
-    p = Pool(processes=cpu_count())
-    pool_result = p.starmap(generate_pos_children, iterable)
-    p.close()
+    p = Pool(processes=cpu_count()-1)
+    p.starmap(generate_pos_children, iterable)
     print('.', end='')
-
+    time.sleep(1)
     duplication_count = 0
-    for result_list in pool_result:
-        result_list_length = len(result_list)
-        for r in range(result_list_length):
-            try:
-                result = result_list.pop()
-                db.query('INSERT INTO %s VALUES (?, ?, ?)' % TABLES[phase],
-                         (depth, result[0], json.dumps(result[1])))
-                inserted = True
-            except IntegrityError:
-                duplication_count += 1
+    while not queue.empty():
+        result = queue.get()
+        try:
+            db.query('INSERT INTO %s VALUES (?, ?, ?)' % TABLES[phase], (depth, result[0], json.dumps(result[1])))
+            inserted = True
+        except IntegrityError:
+            duplication_count += 1
 
+    p.close()
+    # p.join()
     db.commit()
 
     print('.', end='   ')
@@ -99,13 +98,10 @@ def gen_position_set(db):
     return position_set
 
 
-def generate_pos_children(pos_tuple, phase, position_set):
-    result_list = []
+def generate_pos_children(pos_tuple, phase, position_set, queue):
     for m in MOVE_GROUPS[phase]:
         c = Cube(pos_tuple[0], True)
         dyn_move(c, m)
 
         if c.position not in position_set:
-            result_list.append((c.position, json.loads(pos_tuple[1]) + [m.value]))
-
-    return result_list
+            queue.put((c.position, json.loads(pos_tuple[1]) + [m.value]))

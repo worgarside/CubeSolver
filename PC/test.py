@@ -1,9 +1,23 @@
-pos_list = [x for x in range(10)]
-phase = 69
-pos_set = {1,2,3,4,5,6,7,8,9}
+import time
+from multiprocessing import Pool, Manager
 
 
-iterable = map(lambda e: (e, phase, pos_set), pos_list)
+def task(args):
+    count = args[0]
+    queue = args[1]
+    queue.put(count * count)
 
-for i in iterable:
-    print(i)
+
+def main():
+    test_list = [x * 3 for x in range(100000)]
+    q = Manager().Queue()
+    pool = Pool()
+    pool.map(task, [(x, q) for x in test_list])
+    time.sleep(1)
+    while not q.empty():
+        print(q.get())
+    # print(result.get())
+
+
+if __name__ == "__main__":
+    main()

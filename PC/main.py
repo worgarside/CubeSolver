@@ -193,7 +193,7 @@ def main():
         print('Scanned position: %s' % position)
 
     if db_generation:
-        phase_list = [0, 1, 2, 3]
+        phase_list = [0, 1, 2]#, 3]
         for phase in phase_list:
             gs2generator.generate_lookup_table(db, phase)
 
