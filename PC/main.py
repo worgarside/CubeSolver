@@ -173,6 +173,7 @@ def get_robot_scan(conn):
 def main():
     robot_on = '-r' in opts
     db_generation = '-d' in opts
+    db_clear = '-c' in opts
     solving = '-s' in opts
 
     conn = None
@@ -192,8 +193,15 @@ def main():
         position = 'GYWBWRBOYWRWRWRGWBOGRBORYGRGRBOBWWGBYYOYOOGYORBBWYGGOY'
         print('Scanned position: %s' % position)
 
+    if db_clear:
+        print('Clearing Database', end='')
+        for table in ['gs2p1', 'gs2p2', 'gs2p3', 'gs2p4']:
+            db.query('DROP TABLE IF EXISTS %s' % table)
+            print('.', end='')
+        print('  Done!')
+
     if db_generation:
-        phase_list = [0, 1, 2]#, 3]
+        phase_list = [0, 1, 2, 3]
         for phase in phase_list:
             gs2generator.generate_lookup_table(db, phase)
 
@@ -220,7 +228,7 @@ if __name__ == '__main__':
     colorama.init()
     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
-    opts, args = getopt.getopt(sys.argv[1:], 'rds')  # eventually s:[algorithm]
+    opts, args = getopt.getopt(sys.argv[1:], 'rdsc')  # eventually s:[algorithm]
     opts = dict(opts)
 
     if len(opts) == 0:
@@ -228,7 +236,8 @@ if __name__ == '__main__':
 ------------------------------------
   OPTIONS:
     -r : run with robot connection
-    -d : generate the database
+    -d : continue database generation
+    -c : clear the database
     -s : solve the Cube
 ------------------------------------
         """)
