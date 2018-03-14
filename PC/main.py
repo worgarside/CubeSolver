@@ -30,7 +30,7 @@ def init_db(clear=False):
     print('Initialising DB')
     db = DatabaseManager('PC/data/db.sqlite')
     print('Vacuuming')
-    # db.query('VACUUM')
+    db.query('VACUUM')
     db.query("PRAGMA synchronous = off")
     db.query("BEGIN TRANSACTION")
     print('DB Initialised')
@@ -183,6 +183,8 @@ def main():
 
     conn = None
     position = None
+    phase_count = 5
+
 
     db = init_db(True)
 
@@ -200,14 +202,14 @@ def main():
 
     if db_clear:
         print('Clearing Database', end='')
-        for table in ['gs2p1', 'gs2p2', 'gs2p3', 'gs2p4']:
-            db.query('DROP TABLE IF EXISTS %s' % table)
+        for table in range(1, phase_count+1):
+            db.query('DROP TABLE IF EXISTS gs2p%i' % table)
             print('.', end='')
+        db.commit()
         print('  Done!')
 
     if db_generation:
-        phase_list = [0, 1, 2, 3]
-        for phase in phase_list:
+        for phase in range(1, phase_count+1):
             gs2generator.generate_lookup_table(db, phase)
 
     if solving:
