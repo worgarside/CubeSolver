@@ -27,8 +27,13 @@ GROUP_COMPLETE = [MOVE.U, MOVE.NOT_U, MOVE.U2, MOVE.D, MOVE.NOT_D, MOVE.D2,
 
 
 def init_db(clear=False):
+    print('Initialising DB')
     db = DatabaseManager('PC/data/db.sqlite')
-    db.query('VACUUM')
+    print('Vacuuming')
+    # db.query('VACUUM')
+    db.query("PRAGMA synchronous = off")
+    db.query("BEGIN TRANSACTION")
+    print('DB Initialised')
     return db
 
 
