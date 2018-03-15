@@ -6,8 +6,6 @@ from cube.cube_class import Cube
 from cube.move_class import Move
 from cube.side_class import Side
 
-TABLES = ['gs2p1', 'gs2p2', 'gs2p3', 'gs2p4']
-
 INVERSION_DICT = {
     Move.U: Move.NOT_U, Move.D: Move.NOT_D, Move.L: Move.NOT_L,
     Move.R: Move.NOT_R, Move.F: Move.NOT_F, Move.B: Move.NOT_B,
@@ -21,8 +19,8 @@ INVERSION_DICT = {
 def lookup_position(db, position, phase):
     lookup_pos = _color_to_monochrome(position, phase)
     try:
-        orig_sequence = json.loads(db.query("SELECT move_sequence FROM %s where position = '%s'"
-                                            % (TABLES[phase], lookup_pos)).fetchone()[0])
+        orig_sequence = json.loads(db.query("SELECT move_sequence FROM gs2p%i where position = '%s'"
+                                            % (phase, lookup_pos)).fetchone()[0])
 
         reverse_sequence = orig_sequence[::-1]
 
@@ -35,10 +33,8 @@ def lookup_position(db, position, phase):
         print(err)
         exit()
     except TypeError:
-        print('Position not found in table %s (%s)' % (TABLES[phase], lookup_pos))
+        print('Cube not found in table gs2p%i \n\n %s' % (phase, Cube(lookup_pos)))
         exit()
-
-
 
 
 def _color_to_monochrome(position, phase):
@@ -87,6 +83,8 @@ def _color_to_monochrome(position, phase):
         return monochrome_pos
 
     elif phase == 3:
+        return Cube(position).position_reduced
+    elif phase == 4:
         return position
     else:
         print('Invalid phase: %s' % str(phase))

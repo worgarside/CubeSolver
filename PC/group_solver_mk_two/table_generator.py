@@ -9,8 +9,6 @@ from cube.cube_class import Cube
 from cube.move_class import Move
 from cube.moves import dyn_move
 
-# TABLES = ['gs2p1', 'gs2p2', 'gs2p3', 'gs2p4']
-
 TARGET_POS = [
     'NDNDNDNDNNNNNNNNNNNNNNNNDNDNNNDNDNNNNNNNNNNNNNDNDNDNDN',
     'DDDDDDDDDNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNDDDDDDDDD',
@@ -24,7 +22,7 @@ MOVE_GROUPS = [
     [Move.NOT_U, Move.NOT_D, Move.NOT_L, Move.NOT_R, Move.F2, Move.B2],
     [Move.NOT_U, Move.NOT_D, Move.L2, Move.R2, Move.F2, Move.B2],
     [Move.NOT_U, Move.NOT_D, Move.L2, Move.R2, Move.F2, Move.B2],
-    [Move.U2, Move.D2, Move.L2, Move.R2, Move.F2, Move.B2]
+    [Move.U2, Move.D2, Move.L2, Move.R2, Move.NOT_F, Move.NOT_B]
 ]
 
 

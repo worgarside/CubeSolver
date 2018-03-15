@@ -30,7 +30,7 @@ def init_db(clear=False):
     print('Initialising DB')
     db = DatabaseManager('PC/data/db.sqlite')
     print('Vacuuming')
-    db.query('VACUUM')
+    # db.query('VACUUM')
     db.query("PRAGMA synchronous = off")
     db.query("BEGIN TRANSACTION")
     print('DB Initialised')
@@ -91,14 +91,14 @@ def group_solve_mk_one(db, cube):
     return total_sequence
 
 
-def group_solve_mk_two(db, position):
+def group_solve_mk_two(db, position, phase_count):
     sequence_list = []
 
-    phase_name = ['One', 'Two', 'Three', 'Four']
+    phase_name = ['Zero', 'One', 'Two', 'Three', 'Four']
     cube_list = []
     position_list = [position]
 
-    for phase in range(3):
+    for phase in range(phase_count):
         print(' - Phase %s -' % phase_name[phase])
         sequence_list.append(gs2lookup.lookup_position(db, position_list[phase], phase))
         cube_list.append(Cube(position_list[phase]))
@@ -207,7 +207,7 @@ def main():
             print('.', end='')
         db.commit()
         print('   Vacuuming...', end='')
-        db.query('VACUUM');
+        db.query('VACUUM')
         print('  Done!')
 
     if db_generation:
@@ -218,7 +218,7 @@ def main():
         cube = Cube(position)
         print(cube)
 
-        solve_sequence = group_solve_mk_two(db, position)
+        solve_sequence = group_solve_mk_two(db, position, phase_count)
 
         print(' - Final Cube -')
         for move in solve_sequence:
