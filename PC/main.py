@@ -209,7 +209,7 @@ def main():
         print('  Done!')
 
     if db_generation:
-        for phase in range(1, phase_count+1):
+        for phase in range(phase_count):
             gs2generator.generate_lookup_table(db, phase)
 
     if solving:

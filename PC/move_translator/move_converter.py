@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-import robot.primary_moves as pr_move
+import move_translator.primary_moves as pr_move
 
 from cube.color_class import Color
 from cube.move_class import Move
@@ -54,8 +54,8 @@ def convert_digital_to_colors(cube, sequence):
 # Uses the primary, secondary and tertiary move levels to create a robot-usable move sequence
 def create_robot_solve_sequence(cube, color_sequence):
     temp_cube = deepcopy(cube)
-    for pm in color_sequence:
-        method = getattr(pr_move, pm.lower())
+    for color in color_sequence:
+        method = getattr(pr_move, color.lower())
         method(temp_cube)
 
     return temp_cube.robot_solve_sequence
