@@ -18,7 +18,7 @@ from cube.cube_class import Cube
 from cube.moves import *
 from data.database_manager import DatabaseManager
 from gui.interface import Interface
-from robot.move_converter import convert_sequence
+from move_translator.move_converter import convert_sequence
 from tree_solver.tree_generator import generate_tree
 
 GROUP_COMPLETE = [MOVE.U, MOVE.NOT_U, MOVE.U2, MOVE.D, MOVE.NOT_D, MOVE.D2,
@@ -202,10 +202,12 @@ def main():
 
     if db_clear:
         print('Clearing Database', end='')
-        for table in range(1, phase_count+1):
+        for table in range(phase_count):
             db.query('DROP TABLE IF EXISTS gs2p%i' % table)
             print('.', end='')
         db.commit()
+        print('   Vacuuming...', end='')
+        db.query('VACUUM');
         print('  Done!')
 
     if db_generation:
