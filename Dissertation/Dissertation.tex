@@ -11,7 +11,7 @@
 \usepackage{gensymb}			% symbols
 \usepackage[british]{babel}		% sets language formatting to British
 \usepackage{csquotes}			% quoting commands
-\usepackage{xcolor}				% font coloring
+\usepackage{xcolor}				% font colouring
 \usepackage{epigraph}			% epigraphs in chapters
 \usepackage{parskip}			% better paragraph formatting
 \usepackage{graphicx}			% image package
@@ -19,10 +19,12 @@
 \usepackage{pgfgantt}			% Gantt Charts
 \usepackage{pgfplots}			% draw charts and graphs
 \usepackage{titlesec}			% used in chapter titles
-\usepackage{subcaption}			% allows subfigures
+\usepackage{subcaption}			% allows sub-figures
 %\usepackage[ruled,vlined,linesnumbered,lined,boxed,commentsnumbered]{algorithm2e}		% formatting algorithms
 \usepackage{algorithm}			% algorithms
 \usepackage{algpseudocode}		% algorithm formatting
+\usepackage[fleqn]{amsmath}		% multiline math
+\usepackage{amssymb}			% math symbols
 
 \titleformat{\chapter}{\normalfont\Huge\bfseries}{\thechapter}{1em}{}
 \titlespacing*{\chapter}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
@@ -43,7 +45,6 @@
 	\pagenumbering{roman}
 	\chapter{Signed Declaration}
 	All sentences or passages quoted in this report from other people's work have been specifically acknowledged by clear cross-referencing to author, work and page(s). Any illustrations which are not the work of the author of this report have been used with the explicit permission of the originator and are specifically acknowledged. I understand that failure to do this amounts to plagiarism and will be considered grounds for failure in this project and the degree examination as a whole.
-	\\
 	\\Name: Will Garside
 	\\Signature:
 	\\Date: 
@@ -182,7 +183,7 @@
 
 	\begin{figure}[h]
 		\begin{center}
-			\includegraphics[width=0.5\textwidth]{Resources/Images/EV3ProgrammingSoftware.jpg}
+			\includegraphics[width=0.5\textwidth]{Resources/Images/scrEV3ProgrammingSoftware.jpg}
 			\caption{A sample program in \propernoun{EV3 Programming Software}}
 			\label{fig:ev3software}
 		\end{center}
@@ -200,7 +201,7 @@
     	\centering
     	\caption{Morwen Thistlethwaite's five groups for his algorithm \cite{Singmaster1981}}
     	\label{tab:thistlethwaite}
-    	\begin{tabular}{M{0.15\textwidth}M{0.3\textwidth}m{0.525\textwidth}}
+    	\begin{tabular}{M{0.15\textwidth}M{0.3\textwidth}m{0.47\textwidth}}
     		\toprule
     		\textbf{Group Denotation} & \textbf{Mathematical Representation} & \textbf{Summary} \\
     		\midrule
@@ -270,7 +271,7 @@
 
     
     \section{Python as a Scientific Scripting Language}
-    Traditionally when performing large calculations and processes, compiled languages (C, C++, Fortran etc.) are the preferred choice over scripting languages such as Ruby, JavaScript, (pure) Python, etcetera. This is because compilation is done before run-time, allowing the program to run un-hindered by on-the-fly translation/interpretation \cite{Cai2005}.
+    Traditionally when performing large calculations and processes, compiled languages (C, C++, Fortran etc.) are the preferred choice over scripting languages such as Ruby, JavaScript, (pure) Python, etcetera. This is because compilation is done before run-time, allowing the program to run unhindered by on-the-fly translation/interpretation \cite{Cai2005}.
     
     For general purpose applications, scripting languages are preferable because they allow small changes to be made without re-compiling large classes before testing. In the thirteenth issue of \propernoun{Scientific Programming}, Cai, Langtangen and Moe \cite{Cai2005} explain how MATLAB is often a preferable choice for less intensive scientific computation due to its many features, such as: integrated simulation and visualisation tools; clear syntax; immediate feedback of commands; impressive documentation. They describe the use of MATLAB in computational science as paradoxical, as it is a scripting language which inherently is interpreted at run-time.
     
@@ -279,7 +280,7 @@
     As well as the multitude of available packages, Python has another major tool in its arsenal: it can be extended with a compiled language by design. This means that processor-intensive tasks like nested for loops can be migrated to a compiled language such as C++ or Fortran, increasing run speed up to a factor of ten. This extension process is now a trivial matter thanks to automated tools such as \propernoun{f2py}, which allows for automated calls to compiled Fortran code \cite{Oliphant2006}.
     
     \section{Conclusion}
-    Lego Mindstorms is a strong candidate for the construction of the robot: its variable morphology allows adaptation to a range of tasks; the uniformity between pieces means that the main EV3 kit can be supplemented with other kits to extend its ability; and previous studies have shown that it is ideal for stimulating analysis and observations. Instead of using a single algorithm to solve the Cube, a range will be implemented in sorder to find the strongest method for finding a solve sequence. This will allow cross-comparison between, and analysis of, individual algorithms with the intention of finding the algorithm best suited to this project. Tree and group based algorithms alike will be implemented.
+    Lego Mindstorms is a strong candidate for the construction of the robot: its variable morphology allows adaptation to a range of tasks; the uniformity between pieces means that the main EV3 kit can be supplemented with other kits to extend its ability; and previous studies have shown that it is ideal for stimulating analysis and observations. Instead of using a single algorithm to solve the Cube, a range will be implemented in order to find the strongest method for finding a solve sequence. This will allow cross-comparison between, and analysis of, individual algorithms with the intention of finding the algorithm best suited to this project. Tree and group based algorithms alike will be implemented.
     
     MATLAB is incompatible with the Lego EV3, so will not be used for this project. Python's wide compatibility, clear high-level syntax, and extendibility to compiled code for more complex calculations, makes is the ideal language for this project. The main program will be written in Python, with any intensive processing written in C++ to improve the speed of the algorithms.
    
@@ -297,12 +298,12 @@
     	\item Implement a system which successfully generates a solve sequence for any given position. \par The second primary objective ensures that any of the forty-three quintillion positions of Rubik's Cube can be solved correctly. The time taken to generate the solve sequence and the actual length of the solve sequence will both be used when measuring an algorithm's success.
     	\item When the robot is provided with a move sequence...
     	\begin{enumerate}
-    		\item Convert any input sequence to be robot-compatible \par All of the pre-exisiting algorithms return a solution which a human being can follow to solve a real-world Cube. In the context of this project the manipulation is done by the robot, which cannot perform all of the standard moves, so any sequences provided must be translated to one which the robot can follow.
+    		\item Convert any input sequence to be robot-compatible \par All of the pre-existing algorithms return a solution which a human being can follow to solve a real-world Cube. In the context of this project the manipulation is done by the robot, which cannot perform all of the standard moves, so any sequences provided must be translated to one which the robot can follow.
     		\item Correctly follow the sequence to achieve the intended output \par Once a robot-compatible move sequence has been generated, the robot must move the Cube in this exact sequence with no errors or move-failures. If a single move is performed incorrectly then the entire move sequence will produce an incorrect output.
     	\end{enumerate}
     	\item Ensure the runtime of the system is an acceptable length \par Previous solve sequence generator algorithms have had a run-time in the order of weeks: the desired run-time of the generation by this project will be in the order of minutes. This will require careful analysis of the trade off between generator efficiency and solve sequence length.
     	\item Implement a program to use a range of algorithms to generate a solve sequence \par In order to effectively compare the performance of several algorithms, there must be a method of running them under the same conditions and with the same overheads (e.g. transmission time to the robot). For this reason, there will be one main program with an option for the algorithm to use.
-    	\item Compare the performance of different algorithms, especially the difference between human-compatible and robot-compatible move sequences \par The performance of each algorithm will be tracked and compared fairly to show each one's merits and faults. This will allow the choice of one algorithm to be improved to create the most efficient method - or the potential combination of algorithms to form a stronger one.
+    	\item Compare the performance of different algorithms, especially the difference between human and robot compatible move sequences \par The performance of each algorithm will be tracked and compared fairly to show each one's merits and faults. This will allow the choice of one algorithm to be improved to create the most efficient method - or the potential combination of algorithms to form a stronger one.
     \end{enumerate}
     
     
@@ -394,7 +395,7 @@
     \epigraph{There are two ways of constructing a software design: One way is to make it so simple that there are obviously no deficiencies, and the other way is to make it so complicated that there are no obvious deficiencies. The first method is far more difficult.}{C.A.R. Hoare\cite{Hoare1981}}
     \section{Robot}
     \subsection{Sensors and Actuators}
-    The Lego EV3 comes with three DC motors (two large \legopiece{45502} and one medium \legopiece{45503}), a color sensor and a touch sensor amongst other peripherals. The medium motor will be used to move the color sensor to scan the Cube, and the large motors to rotate the Cube about the horizontal and vertical axes respectively. The quantity of the motors will be the largest restriction in designing the robot: the robot will only be able to rotate a Cube about two of the three axes; and the color sensor will only have one degree of freedom so will rely on the rotation of the Cube to scan all of the facelets.
+    The Lego EV3 comes with three DC motors (two large \legopiece{45502} and one medium \legopiece{45503}), a colour sensor and a touch sensor amongst other peripherals. The medium motor will be used to move the colour sensor to scan the Cube, and the large motors to rotate the Cube about the horizontal and vertical axes respectively. The quantity of the motors will be the largest restriction in designing the robot: the robot will only be able to rotate a Cube about two of the three axes; and the colour sensor will only have one degree of freedom so will rely on the rotation of the Cube to scan all of the facelets.
     
     \subsection{Cube Manipulation}
     \subsubsection{Cradle}
@@ -402,56 +403,58 @@
     
     The play in the motor will reduce the accuracy of the cradle, as it effectively introduces a zero error for each rotation. If the cradle only rotates in one direction then the zero error would only have to be offset at the very start of the program because the cradle would \enquote{sit} at one end of the region of play. However, this will reduce the moveset by 50\% and thus have a worst case runtime increase of 100\% (Sequentially, $|D' X| = 2 \rightarrow |D D D X| = 4 $).
     
-    A worm gear \legopiece{4716} will solve both of these problems: it will be combined with a large gear \legopiece{3649} to create a gear ratio of 1:40, increasing the accuracy of the motor by a factor of forty (see Figure \ref{fig:cradle-wormgear}). This will also slow the maximum rotational velocity of the cradle to 2RPM, so a 90\degree turn will take 7.5 seconds\footnote{This figure is the result of a measurement of the maximum rotational velocity of a large motor, and will fluctuate depending on the voltage supplied by the batteries in the EV3 brick}. A compromise between maximum rotational velocity and accuracy will be found by adding more gears to reduce the ratio. The problem presented by the play in the motors will be reduced to an acceptable level due to the unidirectional nature of the worm gear.
+    A worm gear \legopiece{4716} will solve both of these problems: it will be combined with a large gear \legopiece{3649} to create a gear ratio of 1:40, increasing the accuracy of the motor by a factor of forty (see Figure \ref{fig:dwgCradleWormGear}). This will also slow the maximum rotational velocity of the cradle to 2RPM, so a 90\degree turn will take 7.5 seconds\footnote{This figure is the result of a measurement of the maximum rotational velocity of a large motor, and will fluctuate depending on the voltage supplied by the batteries in the EV3 brick}. A compromise between maximum rotational velocity and accuracy will be found by adding more gears to reduce the ratio. The problem presented by the play in the motors will be reduced to an acceptable level due to the unidirectional nature of the worm gear.
     
-    The sides of the cradle will only be 1 stud high, but will have a semi-circular profile to allow the Cube to rotate out of the base of the cradle as demonstrated in Figures \ref{fig:cradle-resting} and \ref{fig:cradle-rotating}. The curved edge will also cause the Cube to slide back into the cradle completely, rather than resting on the upper corner of the edge piece. This movement back into the cradle after an X-axis rotation will be assisted by the X-Move Arm.
+    The sides of the cradle will only be 1 stud high, but will have a semi-circular profile to allow the Cube to rotate out of the base of the cradle as demonstrated in Figures \ref{fig:dwgCradleCurvedEdgeNormal} and \ref{fig:dwgCradleCurvedEdgeTilted}. The curved edge will also cause the Cube to slide back into the cradle completely, rather than resting on the upper corner of the edge piece. This movement back into the cradle after an X-axis rotation will be assisted by the X-Move Arm.
     
 	\begin{figure}[h!]
 		\centering
 		\begin{subfigure}[b]{0.25\linewidth}
-			\includegraphics[width=\linewidth]{Resources/Images/CradleWormGear.png}
+			\includegraphics[width=\linewidth]{Resources/Images/dwgCradleWormGear.png}
 			\caption{The rotation of the worm gear drives the cradle's rotation}
-			\label{fig:cradle-wormgear}
+			\label{fig:dwgCradleWormGear}
 		\end{subfigure}
 		\begin{subfigure}[b]{0.25\linewidth}
-			\includegraphics[width=\linewidth]{Resources/Images/CradleCurvedEdgeNormal.png}
+			\includegraphics[width=\linewidth]{Resources/Images/dwgCradleCurvedEdgeNormal.png}
 			\caption{Resting in the cradle}
-			\label{fig:cradle-resting}
+			\label{fig:dwgCradleCurvedEdgeNormal}
 		\end{subfigure}
 		\begin{subfigure}[b]{0.25\linewidth}
-			\includegraphics[width=\linewidth]{Resources/Images/CradleCurvedEdgeTilted.png}
+			\includegraphics[width=\linewidth]{Resources/Images/dwgCradleCurvedEdgeTilted.png}
 			\caption{Starting an X rotation}
-			\label{fig:cradle-rotating}
+			\label{fig:dwgCradleCurvedEdgeTilted}
 		\end{subfigure}
 		\caption{A cross-section of the cradle and Cube}
-		\label{fig:cradle}
+		\label{fig:CradleDrawings}
 	\end{figure}
     
     \subsubsection{X-Move Arm}
     
-    To rotate the Cube about the X axis, a rotating arm will push the Cube up and out of the cradle and cause it to pivot about the edge of the cradle. The Cube will then slide back into the cradle to complete the rotation. A large motor will be directly connected to the shaft which the arm will rotate about, with no need for gears. One end of the arm will have a wheel with a rubber tire to provide enough friction to tip the Cube over, and the other side will have a set of guards which can hold the top two slices of the Cube in place when performing a $D$ or $D'$ move. The design of the swing arm and its positioning relative to the cradle can be seen in Figure \ref{fig:xmovearm}.
+    To rotate the Cube about the X axis, a rotating arm will push the Cube up and out of the cradle and cause it to pivot about the edge of the cradle. The Cube will then slide back into the cradle to complete the rotation. A large motor will be directly connected to the shaft which the arm will rotate about, with no need for gears. One end of the arm will have a wheel with a rubber tire to provide enough friction to tip the Cube over, and the other side will have a set of guards which can hold the top two slices of the Cube in place when performing a $D$ or $D'$ move. The design of the swing arm and its positioning relative to the cradle can be seen in Figure \ref{fig:dwgRotatingArm}.
     
-    \begin{figure}[h]
+    \begin{figure}[h!]
     	\begin{center}
-    		\includegraphics[width=0.4\textwidth]{Resources/Images/RotatingArm.png}
+    		\includegraphics[width=0.4\textwidth]{Resources/Images/dwgRotatingArm.png}
     		\caption{The rotating arm used to flip the Cube}
-    		\label{fig:xmovearm}
+    		\label{fig:dwgRotatingArm}
     	\end{center}
     \end{figure}
+    
+    \subsection{First Iteration}
     
     
     \subsection{Color Sensor}
-    The color sensor will be attached to the end of an extending arm, which will be moved by a rack and worm gear to ensure the sensor can be accurately placed above the correct facelet. The worm gears will be driven by the medium sized motor, which produces less torque than the large motors but has a larger maximum rotational velocity - making it ideal for overcoming the speed reduction of the worm gears. The color sensor will be in a fixed position relative to the arm, and will be centred on the Cube's x-axis. In order to scan a full Cube, the sequence $X X X Y X X X$ will be followed, and the Up side scanned everytime a new face is seen as shown by algorithms \ref{alg:scancube} and \ref{alg:scanupface}.
+    The colour sensor will be attached to the end of an extending arm, which will be moved by a rack and worm gear to ensure the sensor can be accurately placed above the correct facelet. The worm gears will be driven by the medium sized motor, which produces less torque than the large motors but has a larger maximum rotational velocity - making it ideal for overcoming the speed reduction of the worm gears. The colour sensor will be in a fixed position relative to the arm, and will be centred on the Cube's x-axis. In order to scan a full Cube, the sequence $X X X Y X X X$ will be followed, and the Up side scanned every time a new face is seen as shown by algorithms \ref{alg:scancube} and \ref{alg:scanupface}.
     
-    \begin{figure}[h]
+    \begin{figure}[h!]
     	\begin{center}
-    		\includegraphics[width=0.5\textwidth]{Resources/Images/ColorSensor.png}
-    		\caption{The color sensor mounting arm is driven by a set of worm gears}
-    		\label{fig:colorsensor}
+    		\includegraphics[width=0.5\textwidth]{Resources/Images/dwgColorSensor.png}
+    		\caption{The colour sensor mounting arm is driven by a set of worm gears}
+    		\label{fig:dwgColorSensor}
     	\end{center}
     \end{figure}
     
-	\begin{algorithm}
+	\begin{algorithm}[h!]
 		\caption{Scanning the Up-Face of a Cube}\label{alg:scanupface}
 		\begin{algorithmic}[1]
 			\Function{ScanUpFace}{}
@@ -473,7 +476,7 @@
 		\end{algorithmic}
 	\end{algorithm}
 
-	\begin{algorithm}
+	\begin{algorithm}[h!]
 		\caption{Scanning an entire Cube}\label{alg:scancube}
 		\begin{algorithmic}[1]
 			\Function{ScanCube}{}
@@ -495,15 +498,20 @@
 		\end{algorithmic}
 	\end{algorithm}
 
-    \subsection{Move Sequence Translation}
-    
-    The algorithms considered and discussed in the Literature Review (as well as others used in determining God's Number) are designed to work with a standard moveset $\{L\;R\;U\;D\;F\;B\}$ (as well as half turns and counter-clockwise turns). The design of the robot means that it is restricted to permutations of the moveset $\{X\;Y\;D\}$ - and will therefore require any incompatible sequences to be translated to the robot's moveset.
-    
-	When the entire Cube is rotated, the \textbf{color} of the sides will change but the sides' orientations will not (analogous to when one turns on the spot: left and right have changed, but east and west have not). This means that the frame of reference for the moves will have to remain invariant throughout a sequence by compensating for any full Cube rotations. This is best explained with an example: the first step in performing the sequence $U\;F$ would be to do the sequence $X2\;D$ in order to complete the $U$ move; but now the original $F$ face has moved (due to the $X2$) - it must be located, the Cube must be rotated to get the original $F$ face into the cradle, and then the sequence can be completed. The simplest method of overcoming this complication is to translate the original move sequence to a sequence of color-based moves: $U\;F\;\rightarrow\;W\;G$.
+	\subsection{3D Model}
+	
+	The drawings above show how each component will work and be built out of Lego, however a design for the whole robot is difficult to represent in drawings. For this reason, a 3-dimensional model of the robot was created in BrickLink's Stud.io software \cite{BrickLink} to create a full model representative of the final design. The components drawn above are rendered below for comparison and clarification on specific details and some parts may be hidden in the renders to show a clearer view of the parts.
+	
+	\begin{figure}[h]
+		\begin{center}
+			\includegraphics[width=0.5\textwidth]{Resources/Images/rdrWormGear.png}
+			\caption{A render showing how a large motor will rotate the cradle and the gears used}
+			\label{fig:rdrWormGear}
+		\end{center}
+	\end{figure}
 
-    The first step of translation is to turn the move sequence into a sequence of moves dictated by the color of the face. 
-    
-    
+	Two large gears \legopiece{arg1} Figure \ref{fig:rdrWormGear} 
+   
     \section{Codebase}
     \subsection{Object Classes}
     \subsubsection{Cube}
@@ -512,12 +520,32 @@
     \subsubsection{Group Based}
     \subsubsection{Tree Based}
     \subsection{Database}
+	\subsection{Move Sequence Translation}
+    
+    The algorithms considered and discussed in the Literature Review (as well as others used in determining God's Number) are designed to work with a standard moveset $\{L\;R\;U\;D\;F\;B\}$ (as well as half turns and counter-clockwise turns). The design of the robot means that it is restricted to permutations of the moveset $\{X\;Y\;D\}$ - and will therefore require any incompatible sequences to be translated to the robot's moveset.
+    
+    When the entire Cube is rotated, the \textbf{colour} of the sides will change but the sides' \textbf{orientations} will not (analogous to when one turns on the spot: left and right have changed, but east and west have not). This means that the frame of reference for the moves will have to remain invariant throughout a sequence by compensating for any full Cube rotations.
+    
+    This is best explained with an example: the first step in performing the sequence $U\;F$ would be to do the sequence $X2\;D$ in order to complete the $U$ move; but now the original $F$ face has moved (due to the $X2$) - it must be located, the Cube must be rotated to get the original $F$ face into the cradle, and then the sequence can be completed. The simplest method of overcoming this complication is to convert the original move sequence to an equivalent sequence of colour-based moves: $U\;F\;\equiv\;W\;G$.
+    
+    Once the original sequence has been converted to a colour-based sequence, a deep copy of the original Cube is made and the coloured sequence is iteratively translated and applied to this Cube. On each element of the sequence, the colour is converted back to a side move (allowing preservation of the correct frame of reference). Once this new side-based move is found, it is converted to a short move sequence that will move the face into the cradle and rotate the side correctly to match the original move. This short sequence comprises moves compatible with the robot.
+    
+    Each of the moves in the short sequence is applied to the copied Cube, and appended to a list of moves which is returned once the original sequence is processed. The application of the moves to the Cube allows following moves to be translated correctly (as the Cube will have changed orientation in real life so needs to in this simulation). Continuing the previous example of $U\;F$, the translation is as follows:
+    \begin{align*}
+    U\;F\;&\rightarrow\;\underline{W\;G}\\
+    \underline{W}\;&\rightarrow\;U\\
+    U\;&\rightarrow\;X2\;D\;\rightarrow\;\boldsymbol{X\;X\;D}&\implies\;U\;F\;\rightarrow\;\boldsymbol{X\;X\;D}\;\underline{G}\\
+    \underline{G}\;&\rightarrow\;B\\
+    B\;&\rightarrow\;\boldsymbol{X\;D}&\implies\;U\;F\;\rightarrow\;\boldsymbol{X\;X\;D\;X\;D}
+    \end{align*}
+    
+    This final move sequence will then be transmitted to the robot and used to control the motors to manipulate the Cube. % TODO: do some analysis about runtime of translation
     
     \newpage
     \chapter{Implementation and Testing}
     \epigraph{To those who say that \enquote{if you need \#testing at the end, you're doing it wrong}, would you prefer a Boeing, or are you going Air Icarus?}{Michael Bolton \cite{Bolton2016}}
     \section{Building the Robot}
-    \subsection{The Color Scanner}
+    \subsection{The Colour Sensor}
     \subsection{The Cradle}
     \subsection{X-Move Arm}
     \section{Coding a Solver}
