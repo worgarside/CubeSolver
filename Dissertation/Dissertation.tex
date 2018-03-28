@@ -628,7 +628,7 @@
 
 	Figure \ref{fig:rdrFullRobotV1} demonstrates the full assembly of the robot, including the main EV3 control brick. The build of the robot is quite compact, and the design is largely influenced by the pieces available: during the modelling process, small sections of the model were built with actual Lego to check functionality translated from the virtual model to the physical model as intended. Due to the limited quantity of Lego pieces, some less-than-optimal sections arose where two parts had to be connected but the necessary liftarm was not available. This situation is visible behind the cradle, where six small red pieces \legopiece{32062} are being used to connect two right-angled liftarms. Another example of \enquote{design by necessity} is in the colour sensor's gear train: one medium and two small gears were used consecutively instead of two medium, or one large and one small. The functional impact of some of these sections is minimised by workarounds and extra pieces, however the aesthetics have unfortunately suffered minor setbacks in places.
 
-	A touch sensor \legopiece{95648} is mounted on the side of the frame that surrounds the cradle and the 
+	A touch sensor \legopiece{95648} is mounted on the side of the frame that surrounds the cradle and the X-Move Arm. This adds the ability for user input when the program is running without needing to access the operating system through the control brick. This means that simple tasks can be bound to the button at each stage of the program (e.g. pause the scanning process if a move fails or confirm initialisation).
 
     \section{Codebase}
     \subsection{Object Classes}

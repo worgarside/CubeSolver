@@ -12,8 +12,10 @@ from queue import LifoQueue
 import colorama
 
 import group_solver_mk_one as gs1
-import group_solver_mk_two.table_generator as gs2generator
-import group_solver_mk_two.table_lookup as gs2lookup
+import group_solver_mk_two.table_generator as gs2_generator
+import group_solver_mk_two.table_lookup as gs2_lookup
+import group_solver_mk_three.table_generator as gs3_generator
+import group_solver_mk_three.table_lookup as gs3_lookup
 from cube.cube_class import Cube
 from cube.moves import *
 from data.database_manager import DatabaseManager
@@ -26,11 +28,9 @@ GROUP_COMPLETE = [MOVE.U, MOVE.NOT_U, MOVE.U2, MOVE.D, MOVE.NOT_D, MOVE.D2,
                   MOVE.F, MOVE.NOT_F, MOVE.F2, MOVE.B, MOVE.NOT_B, MOVE.B2]
 
 
-def init_db(clear=False):
+def init_db():
     print('Initialising DB')
     db = DatabaseManager('PC/data/db.sqlite')
-    print('Vacuuming')
-    # db.query('VACUUM')
     db.query("PRAGMA synchronous = off")
     db.query("BEGIN TRANSACTION")
     print('DB Initialised')
@@ -100,7 +100,7 @@ def group_solve_mk_two(db, position, phase_count):
 
     for phase in range(phase_count):
         print(' - Phase %s -' % phase_name[phase])
-        sequence_list.append(gs2lookup.lookup_position(db, position_list[phase], phase))
+        sequence_list.append(gs2_lookup.lookup_position(db, position_list[phase], phase))
         cube_list.append(Cube(position_list[phase]))
         for move in sequence_list[phase]:
             dyn_move(cube_list[phase], move)
@@ -183,10 +183,9 @@ def main():
 
     conn = None
     position = None
-    phase_count = 5
+    phase_count = 1
 
-
-    db = init_db(True)
+    db = init_db()
 
     if robot_on:
         conn = create_socket()
@@ -203,7 +202,7 @@ def main():
     if db_clear:
         print('Clearing Database', end='')
         for table in range(phase_count):
-            db.query('DROP TABLE IF EXISTS gs2p%i' % table)
+            db.query('DROP TABLE IF EXISTS gs3p%i' % table)
             print('.', end='')
         db.commit()
         print('   Vacuuming...', end='')
@@ -212,7 +211,7 @@ def main():
 
     if db_generation:
         for phase in range(phase_count):
-            gs2generator.generate_lookup_table(db, phase)
+            gs3_generator.generate_lookup_table(db, phase)
 
     if solving:
         cube = Cube(position)

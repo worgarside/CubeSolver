@@ -10,31 +10,23 @@ from cube.move_class import Move
 from cube.moves import dyn_move
 
 TARGET_POS = [
-    'NDNDNDNDNNNNNNNNNNNNNNNNDNDNNNDNDNNNNNNNNNNNNNDNDNDNDN',
-    'DDDDDDDDDNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNDDDDDDDDD',
-    'DDDDDDDDDWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWNNNNNNNNN',
-    'WWWWWWWWWRRRBBBRRRBBBRRRBBBRRRBBBRRRBBBRRRBBBWWWWWWWWW',
     'WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY'
 ]
 
 MOVE_GROUPS = [
-    [Move.NOT_U, Move.NOT_D, Move.NOT_L, Move.NOT_R, Move.NOT_F, Move.NOT_B],
-    [Move.NOT_U, Move.NOT_D, Move.NOT_L, Move.NOT_R, Move.F2, Move.B2],
-    [Move.NOT_U, Move.NOT_D, Move.L2, Move.R2, Move.F2, Move.B2],
-    [Move.NOT_U, Move.NOT_D, Move.L2, Move.R2, Move.F2, Move.B2],
-    [Move.U2, Move.D2, Move.L2, Move.R2, Move.NOT_F, Move.NOT_B]
+    [Move.U2, Move.D2, Move.L2, Move.R2, Move.F2, Move.B2]
 ]
 
 
 def generate_lookup_table(db, phase):
-    print('\n- - Generating Table gs2p%i... - -' % phase)
+    print('\n- - Generating Table gs3p%i... - -' % phase)
 
-    db.query('''CREATE TABLE IF NOT EXISTS gs2p%i (depth INTEGER NOT NULL, position TEXT PRIMARY KEY,
+    db.query('''CREATE TABLE IF NOT EXISTS gs3p%i (depth INTEGER NOT NULL, position TEXT PRIMARY KEY,
              move_sequence BLOB NOT NULL)''' % phase)
 
     print('  Getting previous depth... ', end='')
     try:
-        depth = db.query('SELECT MAX(depth) from gs2p%i' % phase).fetchone()[0]  # - 1
+        depth = db.query('SELECT MAX(depth) from gs3p%i' % phase).fetchone()[0]  # - 1
         if depth is None:
             depth = 0
     except TypeError:
@@ -43,7 +35,7 @@ def generate_lookup_table(db, phase):
     print(depth)
 
     try:
-        db.query('INSERT INTO gs2p%i VALUES (?, ?, ?)' % phase, (depth, TARGET_POS[phase], json.dumps([])))
+        db.query('INSERT INTO gs3p%i VALUES (?, ?, ?)' % phase, (depth, TARGET_POS[phase], json.dumps([])))
     except IntegrityError:
         pass
 
@@ -64,7 +56,7 @@ def generate_next_depth(db, depth, phase):
     print('%2i' % depth, end='.')
 
     iterable = map(lambda e: (e, phase, position_set),
-                   db.query('SELECT position, move_sequence FROM gs2p%i '
+                   db.query('SELECT position, move_sequence FROM gs3p%i '
                             'where depth = %i' % (phase, depth - 1)).fetchall())
     print('.', end='')
 
@@ -80,7 +72,7 @@ def generate_next_depth(db, depth, phase):
         for r in range(result_list_length):
             try:
                 result = result_list.pop()
-                db.query('INSERT INTO gs2p%i VALUES (?, ?, ?)' % phase,
+                db.query('INSERT INTO gs3p%i VALUES (?, ?, ?)' % phase,
                          (depth, result[0], json.dumps(result[1])))
                 insert_count += 1
             except IntegrityError:
@@ -108,7 +100,7 @@ def gen_position_set(db, depth, phase):
         a pos_set from previous depths to allow further generation if this depth is complete
         (and therefore in the set) but the next may not be complete
         """
-        result = db.query('SELECT position FROM gs2p%i WHERE depth <= %i' % (phase, depth)).fetchall()
+        result = db.query('SELECT position FROM gs3p%i WHERE depth <= %i' % (phase, depth)).fetchall()
         for r in result:
             position_set.add(r[0])
     except OperationalError:
