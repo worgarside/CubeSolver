@@ -346,7 +346,7 @@
 			Python 3.6	&	Windows Vista (or newer)	& &	& \\
 			MinGW & \\
 			\midrule
-			\textit{Main Development Computer}	&	\textit{Windows 10 Pro 64-bit}	&	\textit{Quad Core i5 6500 3.6GHz}	&	\textit{32GB}	&	\textit{WiFi, Bluetooth, 12 x USB Port}\\
+			\textit{Main Development Computer}	&	\textit{Windows 10 Pro 64-bit}	&	\textit{Quad Core i5 6500 3.6GHz}	&	\textit{32GB}	&	\textit{WiFi, Bluetooth, 12 $\times$ USB Port}\\
 			\bottomrule
 		\end{tabular}
 	\end{table}
@@ -399,11 +399,11 @@
     
     \subsection{Cube Manipulation}
     \subsubsection{Cradle}
-    The Cube will sit in a cradle which rotates about the Y axis. This will provide the movement needed for the moveset $ \{Y, Y', D, D'\}$. This will have an inner dimension of 7 studs x 7 studs (56 mm x 56 mm) to provide a close match to the dimensions of the Valk 3: 55.5 mm x 55.5 mm. The 0.5 mm tolerance means that the Cube doesn't have to perfectly aligned when it is rotated - a difficult task considering the play in the motors. The cradle must rotate accurately to 90\degree increments to ensure the success of the X rotations and avoid the Cube falling out of the cradle. 
+    The Cube will sit in a cradle which rotates about the Y axis. This will provide the movement needed for the moveset $ \{Y, Y', D, D'\}$. This will have an inner dimension of 7 studs $\times$ 7 studs (56 mm $\times$ 56 mm) to provide a close match to the dimensions of the Valk 3: 55.5 mm $\times$ 55.5 mm. The 0.5 mm tolerance means that the Cube doesn't have to perfectly aligned when it is rotated - a difficult task considering the play in the motors. The cradle must rotate accurately to 90\degree increments to ensure the success of the X rotations and avoid the Cube falling out of the cradle. 
     
     The play in the motor will reduce the accuracy of the cradle, as it effectively introduces a zero error for each rotation. If the cradle only rotates in one direction then the zero error would only have to be offset at the very start of the program because the cradle would \enquote{sit} at one end of the region of play. However, this will reduce the moveset by 50\% and thus have a worst case runtime increase of 100\% (Sequentially, $|D' X| = 2 \rightarrow |D D D X| = 4 $).
     
-    A worm gear \legopiece{4716} will solve both of these problems: it will be combined with a large gear \legopiece{3649} to create a gear ratio of 1:40, increasing the accuracy of the motor by a factor of forty (see Figure \ref{fig:dwgCradleWormGear}). This will also slow the maximum rotational velocity of the cradle to 2RPM, so a 90\degree turn will take 7.5 seconds\footnote{This figure is the result of a measurement of the maximum rotational velocity of a large motor, and will fluctuate depending on the voltage supplied by the batteries in the EV3 brick}. A compromise between maximum rotational velocity and accuracy will be found by adding more gears to reduce the ratio. The problem presented by the play in the motors will be reduced to an acceptable level due to the unidirectional nature of the worm gear.
+    A worm gear \legopiece{4716} will solve both of these problems: it will be combined with a large gear \legopiece{3649} to create a gear ratio of 1:40, increasing the accuracy of the motor by a factor of forty (see Figure \ref{fig:dwgCradleWormGear}). This will also slow the maximum rotational velocity of the cradle to 0.209rad/s (2RPM) at 7.5V, so a 90\degree turn will take 7.5 seconds\footnote{This figure is the result of a measurement of the maximum rotational velocity of a large motor, and will fluctuate depending on the voltage supplied by the batteries in the EV3 brick}. A compromise between maximum rotational velocity and accuracy will be found by adding more gears to reduce the ratio. The problem presented by the play in the motors will be reduced to an acceptable level due to the unidirectional nature of the gear train.
     
     The sides of the cradle will only be 1 stud high, but will have a semi-circular profile to allow the Cube to rotate out of the base of the cradle as demonstrated in Figures \ref{fig:dwgCradleCurvedEdgeNormal} and \ref{fig:dwgCradleCurvedEdgeTilted}. The curved edge will also cause the Cube to slide back into the cradle completely, rather than resting on the upper corner of the edge piece. This movement back into the cradle after an X-axis rotation will be assisted by the X-Move Arm.
     
@@ -440,8 +440,6 @@
     	\end{center}
     \end{figure}
     
-    \subsection{First Iteration}
-    
     
     \subsection{Color Sensor}
     The colour sensor will be attached to the end of an extending arm, which will be moved by a rack and worm gear to ensure the sensor can be accurately placed above the correct facelet. The worm gears will be driven by the medium sized motor, which produces less torque than the large motors but has a larger maximum rotational velocity - making it ideal for overcoming the speed reduction of the worm gears. The colour sensor will be in a fixed position relative to the arm, and will be centred on the Cube's x-axis. In order to scan a full Cube, the sequence $X X X Y X X X$ will be followed, and the Up side scanned every time a new face is seen as shown by algorithms \ref{alg:scancube} and \ref{alg:scanupface}.
@@ -459,7 +457,6 @@
 		\begin{algorithmic}[1]
 			\Function{ScanUpFace}{}
 				\State $faceletList\gets [\;]$\Comment{Initialise as empty list}
-				
 				\For{$i \gets 0$ \textbf{to} $4$}\Comment{4 Corner-Edge pairs}
 					\State \Call{MoveColorSensor}{edgeCubie}
 					\State $faceletList\gets colorValue$
@@ -498,11 +495,12 @@
 		\end{algorithmic}
 	\end{algorithm}
 
+	\newpage
 	\subsection{3D Model}
 	
-	The drawings above show how each component will work and be built out of Lego, however a design for the whole robot is difficult to represent in drawings. For this reason, a 3-dimensional model of the robot was created in BrickLink's Stud.io software \cite{BrickLink} to create a full model representative of the final design. The components drawn above are rendered below for comparison and clarification on specific details and some parts may be hidden in the renders to show a clearer view of the parts.
+	The drawings above show how each component will work and be built out of Lego, however a design for the whole robot is difficult to represent in 2-dimensional drawings. For this reason, a 3-dimensional model of the robot was created in BrickLink's Stud.io software \cite{BrickLink} to create a full model representative of the final design. The components drawn above are rendered below for comparison and clarification on specific details. Some parts may be hidden in the renders to show a clearer view.
 	
-	\begin{figure}[h]
+	\begin{figure}[h!]
 		\begin{center}
 			\includegraphics[width=0.5\textwidth]{Resources/Images/rdrWormGear.png}
 			\caption{A render showing how a large motor will rotate the cradle and the gears used}
@@ -510,7 +508,9 @@
 		\end{center}
 	\end{figure}
 
-	Two large gears \legopiece{arg1} Figure \ref{fig:rdrWormGear} 
+	Figure \ref{fig:rdrWormGear} shows how the cradle will be driven by a large motor. A large 36-tooth gear \legopiece{32498} is directly attached to the rotor with two small pins to reduce the need for an extended shaft which will flex when placed under strain (i.e. at the start of a rotation). This gear drives a 12-tooth gear \legopiece{32270} to triple the rotational velocity at that point of the gear train. This connection is immediately repeated and used to create a 90\degree turn onto the shaft with the worm gear. At this point the speed of the worm gear has a ratio of 9:1 when compared to the motor's output, which is then decreased forty times by the large 40-tooth gear to create a final ratio of 1:4.444. This means the maximum rotational velocity of the cradle will be 1.843rad/s (17.6 RPM) at 7.5V and the original torque is increased from 17.3Nm to 76.8Nm, which will allow a face of the Cube to be rotated with ease. The vertical black shaft seen at the top of the image provides a mounting point for the cradle.
+	
+	The cradle is a solid base of 7 studs $\times$ 7 studs $\times$ 2 studs (length $\times$ breadth $\times$ height) with a surrounding wall with a height and depth of 1 stud. This ensures that the weight of the cradle uniformly distributed and the centre of gravity is low. These are important factors in the design of the cradle because it is mounted on a singular vertical shaft, which is quite flexible under relatively low amounts of strain\footnote{The cause of any excess strain is discussed in the Implementation and Testing section}. The upper layer of the cradle's base has a smooth surface to allow the Cube to slide properly when moved out of the crade for a X rotation; and the lower layer provides an inteface to allow mounting on the vertical shaft. It uses two pins \legopiece{2780} to connect to another of the large gears \legopiece{32498} which has the female axle-type connection for connecting to the gear train discussed above.
    
     \section{Codebase}
     \subsection{Object Classes}
