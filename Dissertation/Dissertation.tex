@@ -25,6 +25,9 @@
 \usepackage{algpseudocode}		% algorithm formatting
 \usepackage[fleqn]{amsmath}		% multiline math
 \usepackage{amssymb}			% math symbols
+\usepackage{xparse}				% adds string substitution for moveset command
+\usepackage{courier}			% adds inline Courier font
+\usepackage{siunitx}			% SI unit support
 
 \titleformat{\chapter}{\normalfont\Huge\bfseries}{\thechapter}{1em}{}
 \titlespacing*{\chapter}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
@@ -33,14 +36,48 @@
 \pgfplotsset{compat=1.8}
 
 \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
-\newcommand{\propernoun}[1]{\enquote{\textit{#1}}}
-\newcommand{\legopiece}[1]{(\#\textbf{#1})}
+\newcommand{\tbo}[1]{\textbf{#1}}
+\newcommand{\tit}[1]{\textit{#1}}
+\newcommand{\tun}[1]{\underline{#1}}
+\newcommand{\propernoun}[1]{\enquote{\tit{#1}}}
+\newcommand{\legopiece}[1]{(\#\tbo{#1})}
+\newcommand{\moveset}[1]{\uppercase{\texttt{\{\formatmoves{#1}\}}}}
+\newcommand{\movesequence}[1]{\uppercase{\texttt{:\formatmoves{#1}:}}}
+\newcommand{\movegroup}[1]{\uppercase{\texttt{\formatmoves{#1}}}}
+\newcommand{\face}[1]{\uppercase{\texttt{\formatmovesnospace{#1}}}-face}
+\newcommand{\move}[1]{\uppercase{\texttt{\formatmovesnospace{#1}}}-move}
+\newcommand{\colour}[1]{\uppercase{\tit{\texttt{\formatmoves{#1}}}}}
+\newcommand{\slice}[1]{\uppercase{\texttt{\formatmovesnospace{#1}}}-slice}
+
+\ExplSyntaxOn
+\NewDocumentCommand{\formatmoves}{m}
+{
+	\tl_set:Nn \l__maxd_argument_tl { #1 }
+	\tl_replace_all:Nnn \l__maxd_argument_tl { ' } { '\; }
+	\tl_replace_all:Nnn \l__maxd_argument_tl { . } { \;\; }
+	\tl_replace_all:Nnn \l__maxd_argument_tl { ~ } { \; }
+	\tl_replace_all:Nnn \l__maxd_argument_tl { 2 } { \textsuperscript{2}\; }
+	\tl_use:N \l__maxd_argument_tl
+}
+
+\NewDocumentCommand{\formatmovesnospace}{m}
+{
+	\tl_set:Nn \l__maxd_argument_tl { #1 }
+	\tl_replace_all:Nnn \l__maxd_argument_tl { ' } { ' }
+	\tl_replace_all:Nnn \l__maxd_argument_tl { . } { \; }
+	\tl_replace_all:Nnn \l__maxd_argument_tl { ~ } { \; }
+	\tl_replace_all:Nnn \l__maxd_argument_tl { 2 } { \textsuperscript{2} }
+	\tl_use:N \l__maxd_argument_tl
+}
+
+\tl_new:N \l__maxd_argument_tl
+\ExplSyntaxOff
 
 \begin{document}
 	\pagenumbering{gobble}
 	\maketitle
 	\newpage
-
+	
 	\renewcommand{\thechapter}{\Roman{chapter}}
 	\pagenumbering{roman}
 	\chapter{Signed Declaration}
@@ -67,10 +104,10 @@
 		\label{tab:abbrev}
 		\begin{tabular}{m{0.25\textwidth}m{0.65\textwidth}}
 			\toprule
-			\textbf{Abbreviation/Word} & \textbf{Definition} \\
+			\tbo{Abbreviation/Word} & \tbo{Definition} \\
 			\midrule
 			{[Rubik's]} Cube 		& 	A standard 3x3x3 Rubik's Cube\textsuperscript{\ref{footnote:cube}}. \\
-			Face 				& 	One of the size faces on a Cube. Denoted by position (UDLRFB) or colour.\\
+			Face 				& 	One of the size faces on a Cube, Denoted by position or colour. e.g. \face{u}\\
 			Slice				&	A central layer between two faces. Usually referenced by the faces it spans. \\
 			Quarter Turn		&	A clockwise rotation of a face or slice by 90\degree \\
 			Half Turn			&	A clockwise rotation of a face or slice by 180\degree \\
@@ -80,38 +117,41 @@
 			Facelet				&	One of the fifty-four coloured squares on the sides of the Cube. \\
 			Goal State			&	All the cubies on a given face match the colour of the centre cubie. i.e. a solved Cube. \\
 			Position			&	A Cube's state (mixed or solved). \\
-			Valid Position		&	A position that can be achieved with a real-world Cube without dismantling it. \\
-			\multirow{ 2}{*}{Move Sequence}		&	A series of moves performed consecutively. \\
-			&	e.g. $F\;D\;F'\;D2\;L'\;B'\;U\;L\;D\;R\;U\;L'\;F'\;U\;L\;U2$ \\
+%			Valid Position		&	A position that can be achieved with a real-world Cube without dismantling it. \\
+			
+			\multirow{ 2}{*}{Moveset}		&	A set of moves, denoted with curly braces. \\
+			&	e.g. \moveset{u. d' l2} \\
+			\multirow{ 2}{*}{Move Sequence}		&	A series of moves \tbo{performed consecutively}, enclosed by colons . \\
+			&	e.g. \movesequence{f.d.f'd2l'b'u.l.d.r.u.l'f'u.l.u2} \\
 			Solve Sequence		&	A move sequence which leads to the goal state. \\
 			Depth $n$			&	A Cube which has been moved $n$ times away from the goal state. \\
 			\bottomrule
 		\end{tabular}
 	\end{table}
 
-	% TODO talk about Singmaster notation
-	\addcontentsline{toc}{section}{Notation}
-	\begin{table}[htbp]
-		\def\arraystretch{1.2}
-		\centering
-		\caption{Notation used in this document}
-		\label{tab:notation}
-		\begin{tabular}{m{0.25\textwidth}m{0.2\textwidth}m{0.425\textwidth}}
-			\toprule
-			\textbf{Symbol Notation} & \textbf{Meaning} \\
-			\midrule
-			$L$	&	Left			&	\multirow{9}{*}{\parbox{0.425\textwidth}{This notation is used to show a quarter turn of a face. It can have a single quote or a \enquote{2} appended to show a counter-clockwise quarter turn or a half turn respectively.}} \\
-			$R$	&	Right			&	\\
-			$F$	&	Front			&	\\
-			$B$	&	Back			&	\\
-			$U$	&	Up (Top)		&	\\
-			$D$	&	Down (Bottom)	&	\\
-			$X$ &	\multirow{ 3}{*}{\parbox{0.2\textwidth}{Clockwise 90\degree{} rotation of a Cube about the relevant axis.}} & \\
-			$Y$ & & \\
-			$Z$ & & \\
-			\bottomrule
-		\end{tabular}
-	\end{table}
+%	% TODO talk about Singmaster notation
+%	\addcontentsline{toc}{section}{Notation}
+%	\begin{table}[htbp]
+%		\def\arraystretch{1.2}
+%		\centering
+%		\caption{Notation used in this document}
+%		\label{tab:notation}
+%		\begin{tabular}{m{0.25\textwidth}m{0.2\textwidth}m{0.425\textwidth}}
+%			\toprule
+%			\tbo{Symbol Notation} & \tbo{Meaning} \\
+%			\midrule
+%			$L$	&	Left			&	\multirow{9}{*}{\parbox{0.425\textwidth}{This notation is used to show a quarter turn of a face. It can have a single quote or a \enquote{2} appended to show a counter-clockwise quarter turn or a half turn respectively.}} \\
+%			$R$	&	Right			&	\\
+%			$F$	&	Front			&	\\
+%			$B$	&	Back			&	\\
+%			$U$	&	Up (Top)		&	\\
+%			$D$	&	Down (Bottom)	&	\\
+%			$X$ &	\multirow{ 3}{*}{\parbox{0.2\textwidth}{Clockwise 90\degree{} rotation of a Cube about the relevant axis.}} & \\
+%			$Y$ & & \\
+%			$Z$ & & \\
+%			\bottomrule
+%		\end{tabular}
+%	\end{table}
 	% Content for footnote is here because it wouldn't display from table %
 	\textcolor{white}{
 		\footnote{\label{footnote:cube}This Dissertation is only dealing with 3x3x3 Rubik's Cubes, and any discussion of alternative dimensions will be explicitly stated.}
@@ -136,7 +176,7 @@
     
     In an unpublished manuscript \cite{Rubik1986}, Rubik described first randomising his new cube, 
     
-    \blockquote{\textit{It was wonderful to see how, after only a few turns, the colors became mixed, apparently in random fashion. Like after a nice walk when you have seen many lovely sights you decide to go home, after a while I decided it was time to go home, let us put the cubes back in order. And it was at that moment that I came face to face with the Big Challenge: What is the way home?}}
+    \blockquote{\tit{It was wonderful to see how, after only a few turns, the colors became mixed, apparently in random fashion. Like after a nice walk when you have seen many lovely sights you decide to go home, after a while I decided it was time to go home, let us put the cubes back in order. And it was at that moment that I came face to face with the Big Challenge: What is the way home?}}
     
     It took Rubik over a month to solve this first cube - he knew intuitively that there must be a method to solving the cube, but lacked the finer methodology \cite{RubiksCube}. Since Rubik devised the first method, hobbyists and mathematicians alike have been immersed in solving the Cube as quickly and efficiently as possible. Whilst many solutions are markedly successful when it comes to optimisation, others only better them in quirkiness or internet fame \cite{Chan2016}.
     
@@ -190,7 +230,7 @@
 	\end{figure}
     
     \section{Solving Puzzles with Algorithms}
-    When it comes to playing games and solving puzzles, Google's \propernoun{AlphaGo Zero} is the clear winner. Whilst Google's first Go-playing program defeated the world champion at Go, it took months of supervised learning from experts and reinforcement learning from self-play. The new version started \textit{tabula rasa} and was completely self-taught - it had no interaction with any humans, and used no historical data. Through reinforced learning alone by simulating games against itself, it took three days to reach the level of AlphaGo and in forty days had surpassed any Go player's performance - human or artificial \cite{Silver2017}, \cite{Cellan-Jones2017}.
+    When it comes to playing games and solving puzzles, Google's \propernoun{AlphaGo Zero} is the clear winner. Whilst Google's first Go-playing program defeated the world champion at Go, it took months of supervised learning from experts and reinforcement learning from self-play. The new version started \tit{tabula rasa} and was completely self-taught - it had no interaction with any humans, and used no historical data. Through reinforced learning alone by simulating games against itself, it took three days to reach the level of AlphaGo and in forty days had surpassed any Go player's performance - human or artificial \cite{Silver2017}, \cite{Cellan-Jones2017}.
     
     When a computer solves a Cube (or any other similar puzzle), it does so by following set algorithms and rules until the solved state is achieved. Computers cannot use humanlike instincts, so we often try to provide a heuristic to make the task simpler. These heuristics can be pre-computed data tables to reduce the amount of processing at run time, or a reduction in the original data set by eliminating certain elements according to a set of rules.
     
@@ -203,12 +243,12 @@
     	\label{tab:thistlethwaite}
     	\begin{tabular}{M{0.15\textwidth}M{0.3\textwidth}m{0.47\textwidth}}
     		\toprule
-    		\textbf{Group Denotation} & \textbf{Mathematical Representation} & \textbf{Summary} \\
+    		\tbo{Group Denotation} & \tbo{Mathematical Representation} & \tbo{Summary} \\
     		\midrule
-   			$G_0$	&	$\langle L,\;R,\;F,\;B,\;U,\;D \rangle$	&	All valid positions \\    		
-	    	$G_1$	&	$\langle L,\;R,\;F,\;B,\;U2,\;D2 \rangle$	&	All positions that can be reached with quarter turns of the $L,\;R,\;F,\;B$ faces and half turns of the $U,\;D$ faces \\
-	    	$G_2$	&	$\langle L,\;R,\;F2,\;B2,\;U2,\;D2 \rangle$	&	Positions reachable from quarter turns of $L,\;R$ faces and half turns of the $F,\;B,\;U,\;D$ faces \\
-	    	$G_3$	&	$\langle L2,\;R2,\;F2,\;B2,\;U2,\;D2 \rangle$	&	Positions only reachable from half turns of any face \\
+   			$G_0$	&	\moveset{l.r.f.b.u.d}	&	All valid positions \\    		
+	    	$G_1$	&	\moveset{l.r.f.b.u2d2}	&	All positions that can be reached with quarter turns of the \movegroup{l.r.f.b} faces and half turns of the \movegroup{u.d} faces \\
+	    	$G_2$	&	\moveset{l.r.f2b2u2d2}	&	Positions reachable from quarter turns of \movegroup{l.r} faces and half turns of the \movegroup{f.b.u.d} faces \\
+	    	$G_3$	&	\moveset{L2R2F2B2U2D2}	&	Positions only reachable from half turns of any face \\
 	    	$G_4$	&	$ \{I\}$	&	The goal state \\
     		\bottomrule
     	\end{tabular}
@@ -337,8 +377,8 @@
 		\label{tab:win_software}
 		\begin{tabular}{M{0.18\textwidth}M{0.18\textwidth}M{0.18\textwidth}M{0.18\textwidth}M{0.18\textwidth}}
 			\toprule
-			\multirow{2}{*}{\textbf{Software}} & \multicolumn{4}{c}{\textbf{Requirements/Capabilities}} \\
-			& \textbf{Minimum OS} & \textbf{Processor} & \textbf{Memory} & \textbf{Connectivity} \\
+			\multirow{2}{*}{\tbo{Software}} & \multicolumn{4}{c}{\tbo{Requirements/Capabilities}} \\
+			& \tbo{Minimum OS} & \tbo{Processor} & \tbo{Memory} & \tbo{Connectivity} \\
 			\midrule
 			PyCharm	&	Windows 2003 (or newer)	&		&	\normalsize{1GB} \scriptsize{minimum} \par \normalsize{2GB} \scriptsize{recommended} & \\
 			CLion	&	Windows 7 64-bit (or newer)	&		&	\normalsize{2GB} \scriptsize{minimum}  & \\
@@ -346,7 +386,7 @@
 			Python 3.6	&	Windows Vista (or newer)	& &	& \\
 			MinGW & \\
 			\midrule
-			\textit{Main Development Computer}	&	\textit{Windows 10 Pro 64-bit}	&	\textit{Quad Core i5 6500 3.6GHz}	&	\textit{32GB}	&	\textit{WiFi, Bluetooth, 12 $\times$ USB Port}\\
+			\tit{Main Development Computer}	&	\tit{Windows 10 Pro 64-bit}	&	\tit{Quad Core i5 6500 3.6GHz}	&	\tit{32GB}	&	\tit{WiFi, Bluetooth, 12 $\times$ USB Port}\\
 			\bottomrule
 		\end{tabular}
 	\end{table}
@@ -399,28 +439,30 @@
     
     \subsection{Cube Manipulation}
     \subsubsection{Cradle}
-    The Cube will sit in a cradle which rotates about the Y axis. This will provide the movement needed for the moveset $ \{Y, Y', D, D'\}$. This will have an inner dimension of 7 studs $\times$ 7 studs (56 mm $\times$ 56 mm) to provide a close match to the dimensions of the Valk 3: 55.5 mm $\times$ 55.5 mm. The 0.5 mm tolerance means that the Cube doesn't have to perfectly aligned when it is rotated - a difficult task considering the play in the motors. The cradle must rotate accurately to 90\degree increments to ensure the success of the X rotations and avoid the Cube falling out of the cradle. 
+    The Cube will sit in a cradle which rotates about the Y axis. This will provide the movement needed for the moveset \moveset{Y.Y'y2D.D'd2}. This will have an inner dimension of 7 studs $\times$ 7 studs (56 mm $\times$ 56 mm) to provide a close match to the dimensions of the Valk 3: 55.5 mm $\times$ 55.5 mm. The 0.5 mm tolerance means that the Cube doesn't have to perfectly aligned when it is rotated - a difficult task considering the play in the motors. The cradle must rotate accurately to 90\degree increments to ensure the success of the X rotations and avoid the Cube falling out of the cradle. 
     
-    The play in the motor will reduce the accuracy of the cradle, as it effectively introduces a zero error for each rotation. If the cradle only rotates in one direction then the zero error would only have to be offset at the very start of the program because the cradle would \enquote{sit} at one end of the region of play. However, this will reduce the moveset by 50\% and thus have a worst case runtime increase of 100\% (Sequentially, $|D' X| = 2 \rightarrow |D D D X| = 4 $).
+    The play in the motor will reduce the accuracy of the cradle, as it effectively introduces a zero error for each rotation. If the cradle only rotates in one direction then the zero error would only have to be offset at the very start of the program because the cradle would \enquote{sit} at one end of the region of play. However, this will reduce the size of the available moveset by 50\% and thus have a worst case runtime increase of 100\% (Sequentially, $|\movesequence{D'X}| = 2$ which would change to $|\movesequence{D.D.D.X}| = 4 $).
     
-    A worm gear \legopiece{4716} will solve both of these problems: it will be combined with a large gear \legopiece{3649} to create a gear ratio of 1:40, increasing the accuracy of the motor by a factor of forty (see Figure \ref{fig:dwgCradleWormGear}). This will also slow the maximum rotational velocity of the cradle to 0.209rad/s (2RPM) at 7.5V, so a 90\degree turn will take 7.5 seconds\footnote{This figure is the result of a measurement of the maximum rotational velocity of a large motor, and will fluctuate depending on the voltage supplied by the batteries in the EV3 brick}. A compromise between maximum rotational velocity and accuracy will be found by adding more gears to reduce the ratio. The problem presented by the play in the motors will be reduced to an acceptable level due to the unidirectional nature of the gear train.
+    A worm gear \legopiece{4716} will solve both of these problems: it will be combined with a large gear \legopiece{3649} to create a gear ratio of 1:40, increasing the accuracy of the motor by a factor of forty (see Figure \ref{fig:dwgCradleWormGear}). This will also slow the maximum rotational velocity of the cradle to 0.209 \si{\radian\per\second} (2RPM) at 7.5V, so a 90\degree turn will take 7.5 seconds\footnote{This figure is the result of a measurement of the maximum rotational velocity of a large motor, and will fluctuate depending on the voltage supplied by the batteries in the EV3 brick}. A compromise between maximum rotational velocity and accuracy will be found by adding more gears to reduce the ratio. The problem presented by the play in the motors will be reduced to an acceptable level due to the unidirectional nature of the gear train.
     
-    The sides of the cradle will only be 1 stud high, but will have a semi-circular profile to allow the Cube to rotate out of the base of the cradle as demonstrated in Figures \ref{fig:dwgCradleCurvedEdgeNormal} and \ref{fig:dwgCradleCurvedEdgeTilted}. The curved edge will also cause the Cube to slide back into the cradle completely, rather than resting on the upper corner of the edge piece. This movement back into the cradle after an X-axis rotation will be assisted by the X-Move Arm.
+    The sides of the cradle will only be 1 stud high, and will have a semi-circular profile to allow the Cube to rotate out of the base of the cradle as demonstrated in Figures \ref{fig:dwgCradleCurvedEdgeNormal} and \ref{fig:dwgCradleCurvedEdgeTilted}. The curved edge will also cause the Cube to slide back into the cradle completely, rather than resting on the upper corner of the edge piece. This movement back into the cradle after an X-axis rotation will be assisted by the X-Move Arm.
     
-	\begin{figure}[h!]
+	\begin{figure}[H]
 		\centering
-		\begin{subfigure}[b]{0.25\linewidth}
-			\includegraphics[width=\linewidth]{Resources/Images/dwgCradleWormGear.png}
+		\begin{subfigure}[b]{0.25\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/dwgCradleWormGear.png}
 			\caption{The rotation of the worm gear drives the cradle's rotation}
 			\label{fig:dwgCradleWormGear}
 		\end{subfigure}
-		\begin{subfigure}[b]{0.25\linewidth}
-			\includegraphics[width=\linewidth]{Resources/Images/dwgCradleCurvedEdgeNormal.png}
+		\hspace{10mm}
+		\begin{subfigure}[b]{0.25\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/dwgCradleCurvedEdgeNormal.png}
 			\caption{Resting in the cradle}
 			\label{fig:dwgCradleCurvedEdgeNormal}
 		\end{subfigure}
-		\begin{subfigure}[b]{0.25\linewidth}
-			\includegraphics[width=\linewidth]{Resources/Images/dwgCradleCurvedEdgeTilted.png}
+		\hspace{10mm}
+		\begin{subfigure}[b]{0.25\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/dwgCradleCurvedEdgeTilted.png}
 			\caption{Starting an X rotation}
 			\label{fig:dwgCradleCurvedEdgeTilted}
 		\end{subfigure}
@@ -430,9 +472,9 @@
     
     \subsubsection{X-Move Arm}
     
-    To rotate the Cube about the X axis, a rotating arm will push the Cube up and out of the cradle and cause it to pivot about the edge of the cradle. The Cube will then slide back into the cradle to complete the rotation. A large motor will be directly connected to the shaft which the arm will rotate about, with no need for gears. One end of the arm will have a wheel with a rubber tire to provide enough friction to tip the Cube over, and the other side will have a set of guards which can hold the top two slices of the Cube in place when performing a $D$ or $D'$ move. The design of the swing arm and its positioning relative to the cradle can be seen in Figure \ref{fig:dwgRotatingArm}.
+    To rotate the Cube about the X axis, a rotating arm will push the Cube up and out of the cradle and cause it to pivot about the edge of the cradle. The Cube will then slide back into the cradle to complete the rotation. A large motor will be directly connected to the shaft which the arm will rotate about, with no need for gears. One end of the arm will have a wheel with a rubber tire to provide enough friction to tip the Cube over, and the other side will have a set of guards which can hold the top two slices of the Cube in place when performing a \move{D} or \move{d'}. The design of the swing arm and its positioning relative to the cradle can be seen in Figure \ref{fig:dwgRotatingArm}.
     
-    \begin{figure}[h!]
+    \begin{figure}[H]
     	\begin{center}
     		\includegraphics[width=0.4\textwidth]{Resources/Images/dwgRotatingArm.png}
     		\caption{The rotating arm used to flip the Cube}
@@ -441,10 +483,10 @@
     \end{figure}
     
     
-    \subsection{Color Sensor}
-    The colour sensor will be attached to the end of an extending arm, which will be moved by a rack and worm gear to ensure the sensor can be accurately placed above the correct facelet. The worm gears will be driven by the medium sized motor, which produces less torque than the large motors but has a larger maximum rotational velocity - making it ideal for overcoming the speed reduction of the worm gears. The colour sensor will be in a fixed position relative to the arm, and will be centred on the Cube's x-axis. In order to scan a full Cube, the sequence $X X X Y X X X$ will be followed, and the Up side scanned every time a new face is seen as shown by algorithms \ref{alg:scancube} and \ref{alg:scanupface}.
+    \subsection{Colour Sensor}
+    The colour sensor will be attached to the end of an extending arm, which will be moved by a rack and worm gear to ensure the sensor can be accurately placed above the correct facelet. The worm gears will be driven by the medium sized motor, which produces less torque than the large motors but has a larger maximum rotational velocity - making it ideal for overcoming the speed reduction of the worm gears. The colour sensor will be in a fixed position relative to the arm, and will be centred on the Cube's x-axis. In order to scan a full Cube, the sequence \movesequence{X.X.X.Y.X.X.X} will be followed, and the \face{u} scanned every time a new face is seen as shown by algorithms \ref{alg:scancube} and \ref{alg:scanupface}.
     
-    \begin{figure}[h!]
+    \begin{figure}[H]
     	\begin{center}
     		\includegraphics[width=0.5\textwidth]{Resources/Images/dwgColorSensor.png}
     		\caption{The colour sensor mounting arm is driven by a set of worm gears}
@@ -452,12 +494,12 @@
     	\end{center}
     \end{figure}
     
-	\begin{algorithm}[h!]
+	\begin{algorithm}[H]
 		\caption{Scanning the Up-Face of a Cube}\label{alg:scanupface}
 		\begin{algorithmic}[1]
 			\Function{ScanUpFace}{}
 				\State $faceletList\gets [\;]$\Comment{Initialise as empty list}
-				\For{$i \gets 0$ \textbf{to} $4$}\Comment{4 Corner-Edge pairs}
+				\For{$i \gets 0$ \tbo{to} $4$}\Comment{4 Corner-Edge pairs}
 					\State \Call{MoveColorSensor}{edgeCubie}
 					\State $faceletList\gets colorValue$
 					\State \Call{RotateCradle}{45}
@@ -468,17 +510,17 @@
 				\EndFor
 				\State \Call{MoveColorSensor}{centreCubie}
 				\State $faceletList\gets colorValue$
-				\State \textbf{return} $faceletList$
+				\State \tbo{return} $faceletList$
 			\EndFunction
 		\end{algorithmic}
 	\end{algorithm}
 
-	\begin{algorithm}[h!]
+	\begin{algorithm}[H]
 		\caption{Scanning an entire Cube}\label{alg:scancube}
 		\begin{algorithmic}[1]
 			\Function{ScanCube}{}
 				\State $sides\gets [\;[\;], [\;], [\;], [\;], [\;], [\;]\;]$\Comment{Initialise as 6 empty lists}
-				\For{$i \gets 0$ \textbf{to} \Call{Length}{sides}}
+				\For{$i \gets 0$ \tbo{to} \Call{Length}{sides}}
 					\State $sides[i] \gets$ \Call{ScanUpFace}{}
 					\If{$i == 3$} 
 						\State \Call{RotateCradle}{90}\Comment{Allows Left/Right sides to be scanned after $X$-Move}
@@ -490,7 +532,7 @@
 						\State \Call{XMoveCube}{}\Comment{Extra $X$-Move to get to Down-Side}
 					\EndIf
 				\EndFor
-				\State \textbf{return} $sides$
+				\State \tbo{return} $sides$
 			\EndFunction
 		\end{algorithmic}
 	\end{algorithm}
@@ -500,7 +542,7 @@
 	
 	The drawings above show how each component will work and be built out of Lego, however a design for the whole robot is difficult to represent in 2-dimensional drawings. For this reason, a 3-dimensional model of the robot was created in BrickLink's Stud.io software \cite{BrickLink} to create a full model representative of the final design. The components drawn above are rendered below for comparison and clarification on specific details. Some parts may be hidden in the renders to show a clearer view.
 	
-	\begin{figure}[h!]
+	\begin{figure}[H]
 		\begin{center}
 			\includegraphics[width=0.5\textwidth]{Resources/Images/rdrWormGear.png}
 			\caption{A render showing how a large motor will rotate the cradle and the gears used}
@@ -508,10 +550,86 @@
 		\end{center}
 	\end{figure}
 
-	Figure \ref{fig:rdrWormGear} shows how the cradle will be driven by a large motor. A large 36-tooth gear \legopiece{32498} is directly attached to the rotor with two small pins to reduce the need for an extended shaft which will flex when placed under strain (i.e. at the start of a rotation). This gear drives a 12-tooth gear \legopiece{32270} to triple the rotational velocity at that point of the gear train. This connection is immediately repeated and used to create a 90\degree turn onto the shaft with the worm gear. At this point the speed of the worm gear has a ratio of 9:1 when compared to the motor's output, which is then decreased forty times by the large 40-tooth gear to create a final ratio of 1:4.444. This means the maximum rotational velocity of the cradle will be 1.843rad/s (17.6 RPM) at 7.5V and the original torque is increased from 17.3Nm to 76.8Nm, which will allow a face of the Cube to be rotated with ease. The vertical black shaft seen at the top of the image provides a mounting point for the cradle.
+	Figure \ref{fig:rdrWormGear} shows how the cradle will be driven by a large motor. A large 36-tooth gear \legopiece{32498} is directly attached to the rotor with two small pins to reduce the need for an extended shaft which will flex when placed under strain (i.e. at the start of a rotation). This gear drives a 12-tooth gear \legopiece{32270} to triple the rotational velocity at that point of the gear train. This connection is immediately repeated and used to create a 90\degree turn onto the shaft with the worm gear. At this point the speed of the worm gear has a ratio of 9:1 when compared to the motor's output, which is then decreased forty times by the large 40-tooth gear to create a final ratio of 1:4.444. This means the maximum rotational velocity of the cradle will be 1.843 \si{\radian\per\second} (17.6 RPM) at 7.5V and the original torque is increased from 17.3Nm to 76.8Nm, which will allow a face of the Cube to be rotated with ease. The vertical black shaft seen at the top of the image provides a mounting point for the cradle.
 	
-	The cradle is a solid base of 7 studs $\times$ 7 studs $\times$ 2 studs (length $\times$ breadth $\times$ height) with a surrounding wall with a height and depth of 1 stud. This ensures that the weight of the cradle uniformly distributed and the centre of gravity is low. These are important factors in the design of the cradle because it is mounted on a singular vertical shaft, which is quite flexible under relatively low amounts of strain\footnote{The cause of any excess strain is discussed in the Implementation and Testing section}. The upper layer of the cradle's base has a smooth surface to allow the Cube to slide properly when moved out of the crade for a X rotation; and the lower layer provides an inteface to allow mounting on the vertical shaft. It uses two pins \legopiece{2780} to connect to another of the large gears \legopiece{32498} which has the female axle-type connection for connecting to the gear train discussed above.
-   
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[width=0.4\textwidth]{Resources/Images/rdrCradle.png}
+			\caption{A view of the cradle with some parts removed}
+			\label{fig:rdrCradle}
+		\end{center}
+	\end{figure}
+	
+	The cradle is a solid base of 7 studs $\times$ 7 studs $\times$ 2 studs (length $\times$ breadth $\times$ height) with a surrounding wall with a height and depth of 1 stud. This ensures that the weight of the cradle uniformly distributed and the centre of gravity is low. These are important factors in the design of the cradle because it is mounted on a singular vertical shaft, which is quite flexible under relatively low amounts of strain\footnote{The cause of any excess strain is discussed in the Implementation and Testing section}. The upper layer of the cradle's base has a smooth surface to allow the Cube to slide properly when moved out of the cradle for an \move{x}; and the lower layer provides an interface to allow mounting on the vertical shaft. It uses two pins \legopiece{2780} to connect to another of the large gears \legopiece{32498} which has the female axle-type connection for connecting to the gear train discussed above.
+	
+	\begin{figure}[H]
+		\centering
+		\begin{subfigure}[b]{0.21688\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/rdrXMoveArmV1_1.png}
+			\caption{Guarded position}
+			\label{fig:rdrXMoveArmV1_1}
+		\end{subfigure}
+		\hspace{10mm}
+		\begin{subfigure}[b]{0.21688\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/rdrXMoveArmV1_2.png}
+			\caption{Starting the \move{X}}
+			\label{fig:rdrXMoveArmV1_2}
+		\end{subfigure}
+		\hspace{10mm}
+		\begin{subfigure}[b]{0.31623\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/rdrXMoveArmV1_3.png}
+			\caption{Unguarded position}
+			\label{fig:rdrXMoveArmV1_3}
+		\end{subfigure}
+		\caption{Three different positions of the X-Move Arm}
+		\label{fig:rdrXMoveArmV1}
+	\end{figure}
+	
+	Figure \ref{fig:rdrXMoveArmV1} shows where the arm is positioned in relation to the cradle. Figure \ref{fig:rdrXMoveArmV1_1} shows the \enquote{guarded} position of the arm, where the guards are either side of the Cube to hold the \slice{l-r} and the \face{U} in place when peforming a \move{D}, \move{D'} or \move{D2}. The rotation of the Cube will undoubtedly try to separate the guards, so two liftarms \legopiece{40490} have been attached to the upper part of the guards to hold them together. The guard assembly is attached to a central axle which is rotated by the large motor visible at the far side of the model. Also attached to the axle is a second liftarm to hold the wheel in place to rotate the Cube. The entire assembly's weight is balanced sufficiently well to ensure that there is a smooth rotation about the axle and no unnecessary strain is placed on the motor. The play in the motor that proved an issue with the cradle, whilst still being present, is not a concern for this assembly because accuracy is of much less importance. As long as the arm moves by \tit{at least} the correct angle to rotate the Cube or place the guard in position, the exact position is unimportant. The accuracy of the large motor's rotor is therefore accepted for this assembly.
+	
+	\begin{figure}[H]
+		\centering
+		\begin{subfigure}[b]{0.35\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/rdrColorSensorAssembly.png}
+			\caption{A full view of the mechanics}
+			\label{fig:rdrColorSensorAssembly}
+		\end{subfigure}
+		\hspace{10mm}
+		\begin{subfigure}[b]{0.35\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/rdrColorSensorShaftDetail.png}
+			\caption{The assembly's mounting structure}
+			\label{fig:rdrColorSensorShaftDetail}
+		\end{subfigure}
+		\caption{The colour sensor assembly}
+		\label{fig:rdrColorSensor}
+	\end{figure}
+
+	The colour sensor is powered by the medium motor and a gear train which ends with a worm gear and rack \legopiece{3743}. The rack is directly connected to a liftarm which has two long parallel shafts \legopiece{3708} mounted above it, which feed through a liftarm attached to the main frame of the robot. These shafts are the only fixed mounting points for the whole colour sensor assembly - the worm gears and rack provide lateral movement but little to no structural support.
+	
+	The medium motor powers a 24-tooth gear \legopiece{3648}, which then transmits power to an 8-tooth gear \legopiece{3647}, which is on the same axle as the worm gears. The rotational velocity of the worm gear is 63.75 \si{\radian\per\second} (608 RPM), which means that a large 40-tooth gear would have a rotational velocity of 1.59 \si{\radian\per\second} (15.2 RPM). Using this rotational velocity, the surface velocity of the large gear and therefore the lateral velocity of the rack can be calculated to be $\sim$0.0662 \si{\meter\per\second}. Given that the range of the colour sensor assembly's moveable distance is 80\si{\milli\metre}, the time taken for the colour sensor to travel from its neutral position to above the centre facelet is 1.21\si{\second}. Whilst this may seem like a relatively long time for the motor to move a light load, the assembly will only have to make the full journey between each face.
+	
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[width=0.3\textwidth]{Resources/Images/dwgCubeProfileCentreArcs.png}
+			\caption{A Cube, with arcs drawn at the centre points of the cubies}
+			\label{fig:dwgCubeProfileCentreArcs}
+		\end{center}
+	\end{figure}
+
+	Figure \ref{fig:dwgCubeProfileCentreArcs} shows that the radial distance between the centre points of the middle and corner cubies is 15.33\si{\milli\metre}. The colour sensor will have to travel this distance forty-two times during the scanning process, as well as the distance to the centre six times, making the total theoretical travelling time of the colour sensor $\sim$21.26\si{\second}.
+
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[width=0.9\textwidth]{Resources/Images/rdrFullRobotV1.png}
+			\caption{The full robot assembly}
+			\label{fig:rdrFullRobotV1}
+		\end{center}
+	\end{figure}
+
+	Figure \ref{fig:rdrFullRobotV1} demonstrates the full assembly of the robot, including the main EV3 control brick. The build of the robot is quite compact, and the design is largely influenced by the pieces available: during the modelling process, small sections of the model were built with actual Lego to check functionality translated from the virtual model to the physical model as intended. Due to the limited quantity of Lego pieces, some less-than-optimal sections arose where two parts had to be connected but the necessary liftarm was not available. This situation is visible behind the cradle, where six small red pieces \legopiece{32062} are being used to connect two right-angled liftarms. Another example of \enquote{design by necessity} is in the colour sensor's gear train: one medium and two small gears were used consecutively instead of two medium, or one large and one small. The functional impact of some of these sections is minimised by workarounds and extra pieces, however the aesthetics have unfortunately suffered minor setbacks in places.
+
+	A touch sensor \legopiece{95648} is mounted on the side of the frame that surrounds the cradle and the 
+
     \section{Codebase}
     \subsection{Object Classes}
     \subsubsection{Cube}
@@ -522,22 +640,25 @@
     \subsection{Database}
 	\subsection{Move Sequence Translation}
     
-    The algorithms considered and discussed in the Literature Review (as well as others used in determining God's Number) are designed to work with a standard moveset $\{L\;R\;U\;D\;F\;B\}$ (as well as half turns and counter-clockwise turns). The design of the robot means that it is restricted to permutations of the moveset $\{X\;Y\;D\}$ - and will therefore require any incompatible sequences to be translated to the robot's moveset.
+    The algorithms considered and discussed in the Literature Review (as well as others used in determining God's Number) are designed to work with a standard moveset \moveset{L.R.U.D.F.B} (as well as half turns and counter-clockwise turns). The design of the robot means that it is restricted to the moveset \moveset{X.Y.y'y2D.d'd2} - and will therefore require any incompatible sequences to be translated to the robot's moveset.
     
-    When the entire Cube is rotated, the \textbf{colour} of the sides will change but the sides' \textbf{orientations} will not (analogous to when one turns on the spot: left and right have changed, but east and west have not). This means that the frame of reference for the moves will have to remain invariant throughout a sequence by compensating for any full Cube rotations.
+    When the entire Cube is rotated, the \tbo{colour} of the sides will change but the sides' \tbo{orientations} will not (analogous to when one turns on the spot: left and right have changed, but east and west have not). This means that the frame of reference for the moves will have to remain invariant throughout a sequence by compensating for any full Cube rotations.
     
-    This is best explained with an example: the first step in performing the sequence $U\;F$ would be to do the sequence $X2\;D$ in order to complete the $U$ move; but now the original $F$ face has moved (due to the $X2$) - it must be located, the Cube must be rotated to get the original $F$ face into the cradle, and then the sequence can be completed. The simplest method of overcoming this complication is to convert the original move sequence to an equivalent sequence of colour-based moves: $U\;F\;\equiv\;W\;G$.
+    This is best explained with an example: the first step in performing the sequence \movesequence{u.f} would be to do perform \movesequence{x2d} in order to complete the \move{u}; but now that the original \face{f} has moved (due to the \movesequence{x2}) - it must be located, the Cube must be rotated to get the original \face{f} into the cradle, and then the sequence can be completed. The simplest method of overcoming this complication is to convert the original move sequence to an equivalent sequence of colour-based moves: \movesequence{u.f} $\equiv$ \movesequence{W.G}.
     
     Once the original sequence has been converted to a colour-based sequence, a deep copy of the original Cube is made and the coloured sequence is iteratively translated and applied to this Cube. On each element of the sequence, the colour is converted back to a side move (allowing preservation of the correct frame of reference). Once this new side-based move is found, it is converted to a short move sequence that will move the face into the cradle and rotate the side correctly to match the original move. This short sequence comprises moves compatible with the robot.
     
-    Each of the moves in the short sequence is applied to the copied Cube, and appended to a list of moves which is returned once the original sequence is processed. The application of the moves to the Cube allows following moves to be translated correctly (as the Cube will have changed orientation in real life so needs to in this simulation). Continuing the previous example of $U\;F$, the translation is as follows:
+    Each of the moves in the short \u{sequence} is applied to the copied Cube, and appended to a list of moves which is returned once the original sequence is processed. The application of the moves to the Cube allows following moves to be translated correctly (as the Cube will have changed orientation in real life so needs to in this simulation). Continuing the previous example of \movesequence{u.f}, the translation is writeen below. Colours are underlined and the output sequence is emboldened for clarity:
     \begin{align*}
-    U\;F\;&\rightarrow\;\underline{W\;G}\\
-    \underline{W}\;&\rightarrow\;U\\
-    U\;&\rightarrow\;X2\;D\;\rightarrow\;\boldsymbol{X\;X\;D}&\implies\;U\;F\;\rightarrow\;\boldsymbol{X\;X\;D}\;\underline{G}\\
-    \underline{G}\;&\rightarrow\;B\\
-    B\;&\rightarrow\;\boldsymbol{X\;D}&\implies\;U\;F\;\rightarrow\;\boldsymbol{X\;X\;D\;X\;D}
+    \movesequence{U.F}		\;	&\rightarrow	\;	\movesequence{\tun{w}.\tun{G}}															\\
+    \movesequence{\tun{w}}	\;	&\rightarrow	\;	\movesequence{U}															\\
+    \movesequence{U}		\;	&\rightarrow	\;	\movesequence{X2D}	\;	\rightarrow	\;	\movesequence{\tbo{X}.\tbo{X}.\tbo{d}}				\\
+    							&\implies		\;	\movesequence{U.F}	\;	\rightarrow	\;	\movesequence{\tbo{X}.\tbo{X}.\tbo{d}.\tun{G}}	\\
+    \movesequence{\tun{G}}	\;	&\rightarrow	\;	\movesequence{B}															\\
+    \movesequence{B}		\;	&\rightarrow	\;	\movesequence{X.D}															\\
+   								&\implies		\;	\movesequence{U.F}	\;	\rightarrow	\;	\movesequence{\tbo{X}.\tbo{X}.\tbo{d}.\tbo{X}.\tbo{d}}			\\
     \end{align*}
+    
     
     This final move sequence will then be transmitted to the robot and used to control the motors to manipulate the Cube. % TODO: do some analysis about runtime of translation
     
