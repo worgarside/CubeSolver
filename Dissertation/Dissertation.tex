@@ -28,12 +28,41 @@
 \usepackage{xparse}				% adds string substitution for moveset command
 \usepackage{courier}			% adds inline Courier font
 \usepackage{siunitx}			% SI unit support
+\usepackage{listings}			% code formatting
 
 \titleformat{\chapter}{\normalfont\Huge\bfseries}{\thechapter}{1em}{}
 \titlespacing*{\chapter}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
 
 \usepgfplotslibrary{dateplot}	% use date in pgfplot
 \pgfplotsset{compat=1.8}
+
+\lstset{ 
+%	backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
+	basicstyle=\footnotesize\ttfamily,        % the size of the fonts that are used for the code
+%	breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+%	breaklines=true,                 % sets automatic line breaking
+%	captionpos=b,                    % sets the caption-position to bottom
+	commentstyle=\color{mygreen},    % comment style
+%	deletekeywords={...},            % if you want to delete keywords from the given language
+%	escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+%	extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+%	frame=single,	                   % adds a frame around the code
+	keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+	keywordstyle=\color{blue},       % keyword style
+	language=Python,                 % the language of the code
+%	morekeywords={*,...},            % if you want to add more keywords to the set
+%	numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+%	numbersep=5pt,                   % how far the line-numbers are from the code
+%	numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+%	rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+%	showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+%	showstringspaces=false,          % underline spaces within strings only
+%	showtabs=false,                  % show tabs within strings adding particular underscores
+%	stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+%	stringstyle=\color{mymauve},     % string literal style
+%	tabsize=2,	                   % sets default tabsize to 2 spaces
+%	title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
 
 \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
 \newcommand{\tbo}[1]{\textbf{#1}}
@@ -48,6 +77,7 @@
 \newcommand{\move}[1]{\uppercase{\texttt{\formatmovesnospace{#1}}}-move}
 \newcommand{\colour}[1]{\uppercase{\tit{\texttt{\formatmoves{#1}}}}}
 \newcommand{\slice}[1]{\uppercase{\texttt{\formatmovesnospace{#1}}}-slice}
+\newcommand{\uscore}{\texttt{\char`_}}
 
 \ExplSyntaxOn
 \NewDocumentCommand{\formatmoves}{m}
@@ -114,7 +144,7 @@
 			Quarter Turn Metric	&	When counting moves, a Quarter Turn is counted as a single move and a half is two moves. \\
 			Half Turn Metric\textsuperscript{\ref{footnote:metric}}	&	Quarter turns and half turns are both counted as single moves. \\
 			Cubie				&	One of the twenty-six smaller cubes that make up a Cube. \\
-			Facelet				&	One of the fifty-four coloured squares on the sides of the Cube. \\
+			Facelet				&	One of the fifty-four coloured squares on the faces of the Cube. \\
 			Goal State			&	All the cubies on a given face match the colour of the centre cubie. i.e. a solved Cube. \\
 			Position			&	A Cube's state (mixed or solved). \\
 %			Valid Position		&	A position that can be achieved with a real-world Cube without dismantling it. \\
@@ -441,7 +471,9 @@
     \subsubsection{Cradle}
     The Cube will sit in a cradle which rotates about the Y axis. This will provide the movement needed for the moveset \moveset{Y.Y'y2D.D'd2}. This will have an inner dimension of 7 studs $\times$ 7 studs (56 mm $\times$ 56 mm) to provide a close match to the dimensions of the Valk 3: 55.5 mm $\times$ 55.5 mm. The 0.5 mm tolerance means that the Cube doesn't have to perfectly aligned when it is rotated - a difficult task considering the play in the motors. The cradle must rotate accurately to 90\degree increments to ensure the success of the X rotations and avoid the Cube falling out of the cradle. 
     
-    The play in the motor will reduce the accuracy of the cradle, as it effectively introduces a zero error for each rotation. If the cradle only rotates in one direction then the zero error would only have to be offset at the very start of the program because the cradle would \enquote{sit} at one end of the region of play. However, this will reduce the size of the available moveset by 50\% and thus have a worst case runtime increase of 100\% (Sequentially, $|\movesequence{D'X}| = 2$ which would change to $|\movesequence{D.D.D.X}| = 4 $).
+	The intial design for the cradle is for it to be mounted directly on the rotor of a large motor. This will give it stability from the secure mount, high rotational velocity because there will be no gearing down, and it will be accurate due to the in-built tachometer which provides \enquote{precise control to within one degree of acccuracy} \cite{lego}. \tit{This design was quickly abandoned due to an inherent play in the rotor which meant when any resistance was provided (i.e. when performing a \move{D}) the accuracy quickly dropped.}
+	
+	The play in the motor will reduce the accuracy of the cradle, as it effectively introduces a zero error for each rotation. If the cradle only rotates in one direction then the zero error would only have to be offset at the very start of the program because the cradle would \enquote{sit} at one end of the region of play. However, this will reduce the size of the available moveset by 50\% and thus have a worst case runtime increase of 100\% (Sequentially, $|\movesequence{D'X}| = 2$ which would change to $|\movesequence{D.D.D.X}| = 4 $).
     
     A worm gear \legopiece{4716} will solve both of these problems: it will be combined with a large gear \legopiece{3649} to create a gear ratio of 1:40, increasing the accuracy of the motor by a factor of forty (see Figure \ref{fig:dwgCradleWormGear}). This will also slow the maximum rotational velocity of the cradle to 0.209 \si{\radian\per\second} (2RPM) at 7.5V, so a 90\degree turn will take 7.5 seconds\footnote{This figure is the result of a measurement of the maximum rotational velocity of a large motor, and will fluctuate depending on the voltage supplied by the batteries in the EV3 brick}. A compromise between maximum rotational velocity and accuracy will be found by adding more gears to reduce the ratio. The problem presented by the play in the motors will be reduced to an acceptable level due to the unidirectional nature of the gear train.
     
@@ -484,7 +516,7 @@
     
     
     \subsection{Colour Sensor}
-    The colour sensor will be attached to the end of an extending arm, which will be moved by a rack and worm gear to ensure the sensor can be accurately placed above the correct facelet. The worm gears will be driven by the medium sized motor, which produces less torque than the large motors but has a larger maximum rotational velocity - making it ideal for overcoming the speed reduction of the worm gears. The colour sensor will be in a fixed position relative to the arm, and will be centred on the Cube's x-axis. In order to scan a full Cube, the sequence \movesequence{X.X.X.Y.X.X.X} will be followed, and the \face{u} scanned every time a new face is seen as shown by algorithms \ref{alg:scancube} and \ref{alg:scanupface}.
+    The colour sensor will be attached to the end of an extending arm, which will be moved by a rack and worm gear to ensure the sensor can be accurately placed above the correct facelet. The worm gears will be driven by the medium sized motor, which produces less torque than the large motors but has a larger maximum rotational velocity - making it ideal for overcoming the speed reduction of the worm gears. The colour sensor will be in a fixed position relative to the arm, and will be centred on the Cube's x-axis. In order to scan a full Cube, the sequence \movesequence{X.X.X.Y.X.X.X} will be followed, and the \face{u} scanned every time a new face is seen as shown by algorithms \ref{alg:scanupface} and \ref{alg:scancube}.
     
     \begin{figure}[H]
     	\begin{center}
@@ -497,47 +529,51 @@
 	\begin{algorithm}[H]
 		\caption{Scanning the Up-Face of a Cube}\label{alg:scanupface}
 		\begin{algorithmic}[1]
-			\Function{ScanUpFace}{}
-				\State $faceletList\gets [\;]$\Comment{Initialise as empty list}
+			\Function{scan\uscore up\uscore face}{}
+				\State facelet\uscore list$\gets [\;]$\Comment{Initialise as empty list}
 				\For{$i \gets 0$ \tbo{to} $4$}\Comment{4 Corner-Edge pairs}
-					\State \Call{MoveColorSensor}{edgeCubie}
-					\State $faceletList\gets colorValue$
-					\State \Call{RotateCradle}{45}
+					\State \Call{move\uscore color\uscore sensor}{edge\uscore cubie}
+					\State facelet\uscore list$\gets$ color\uscore value
+					\State \Call{rotate\uscore cradle}{45}
 					\State
-					\State \Call{MoveColorSensor}{cornerCubie}
-					\State $faceletList\gets colorValue$
-					\State \Call{RotateCradle}{45}
+					\State \Call{move\uscore color\uscore sensor}{corner\uscore cubie}
+					\State facelet\uscore list$\gets$ color\uscore value
+					\State \Call{rotate\uscore cradle}{45}
 				\EndFor
-				\State \Call{MoveColorSensor}{centreCubie}
-				\State $faceletList\gets colorValue$
-				\State \tbo{return} $faceletList$
+				\State \Call{move\uscore color\uscore sensor}{centre\uscore cubie}
+				\State facelet\uscore list$\gets$ color\uscore value
+				\State \tbo{return} facelet\uscore list
 			\EndFunction
 		\end{algorithmic}
 	\end{algorithm}
+
+	Algorithm \ref{alg:scanupface} is called six times by the main scanning process, and is used to move the colour sensor to the correct position to scan each facelet in turn. In the algorithm, an empty list is declared for the nine facelets to be appended to. \lstinline|move_color_sensor| takes a single parameter: the stopping point for the motor. The variables \lstinline|edge_cubie|, \lstinline|corner_cubie| and \lstinline|centre_cubie| are all integer values which are used as these stopping points. The motor is rotated until the tachometer value is greater than or equal to the variable - or less than if it is rotating backwards - so that if it is rotating faster than one \enquote{tacho-unit} at a time, it will not skip the stopping variable and continue indefinitely.
+	
+	Similarly to \lstinline|move_color_sensor|, \lstinline|rotate_cradle| takes a single parameter - but not a stopping point. Rather, it is the value which is to be added to the current position of the motor in degrees. This value will then be multiplied as necessary to account for the gear ratios to create an output rotation matching the provided angle.
+	
 
 	\begin{algorithm}[H]
 		\caption{Scanning an entire Cube}\label{alg:scancube}
 		\begin{algorithmic}[1]
-			\Function{ScanCube}{}
-				\State $sides\gets [\;[\;], [\;], [\;], [\;], [\;], [\;]\;]$\Comment{Initialise as 6 empty lists}
-				\For{$i \gets 0$ \tbo{to} \Call{Length}{sides}}
-					\State $sides[i] \gets$ \Call{ScanUpFace}{}
-					\If{$i == 3$} 
-						\State \Call{RotateCradle}{90}\Comment{Allows Left/Right sides to be scanned after $X$-Move}
+			\Function{scan\uscore cube}{}
+				\State faces$\gets [\;[\;], [\;], [\;], [\;], [\;], [\;]\;]$\Comment{Initialise as 6 empty lists}
+				\For{i $\gets$ 0 \tbo{to} \Call{length}{faces}}
+					\State faces[i] $\gets$ \Call{scan\uscore up\uscore face}{}
+					\If{i == 3} 
+						\State \Call{rotate\uscore cradle}{90}\Comment{Allows \face{l} and \face{r} to be scanned after \move{x}}
 					\EndIf
-					\If{$i < 5$} 
-						\State \Call{XMoveCube}{}\Comment{$X$-Move the Cube to get a new Color on the Up-Side}
+					\If{i $<$ 5} 
+						\State \Call{x\uscore move\uscore cube}{}\Comment{\move{x} the Cube to get a new Color on the \face{u}}
 					\EndIf
-					\If{$i == 4$} 
-						\State \Call{XMoveCube}{}\Comment{Extra $X$-Move to get to Down-Side}
-					\EndIf
+					\If{i == 4} 
+						\State \Call{x\uscore move\uscore cube}{}\Comment{Extra \move{x} to get to \face{d}}
+					\EndIf0
 				\EndFor
-				\State \tbo{return} $sides$
+				\State \tbo{return} faces
 			\EndFunction
 		\end{algorithmic}
 	\end{algorithm}
 
-	\newpage
 	\subsection{3D Model}
 	
 	The drawings above show how each component will work and be built out of Lego, however a design for the whole robot is difficult to represent in 2-dimensional drawings. For this reason, a 3-dimensional model of the robot was created in BrickLink's Stud.io software \cite{BrickLink} to create a full model representative of the final design. The components drawn above are rendered below for comparison and clarification on specific details. Some parts may be hidden in the renders to show a clearer view.
@@ -629,6 +665,8 @@
 	Figure \ref{fig:rdrFullRobotV1} demonstrates the full assembly of the robot, including the main EV3 control brick. The build of the robot is quite compact, and the design is largely influenced by the pieces available: during the modelling process, small sections of the model were built with actual Lego to check functionality translated from the virtual model to the physical model as intended. Due to the limited quantity of Lego pieces, some less-than-optimal sections arose where two parts had to be connected but the necessary liftarm was not available. This situation is visible behind the cradle, where six small red pieces \legopiece{32062} are being used to connect two right-angled liftarms. Another example of \enquote{design by necessity} is in the colour sensor's gear train: one medium and two small gears were used consecutively instead of two medium, or one large and one small. The functional impact of some of these sections is minimised by workarounds and extra pieces, however the aesthetics have unfortunately suffered minor setbacks in places.
 
 	A touch sensor \legopiece{95648} is mounted on the side of the frame that surrounds the cradle and the X-Move Arm. This adds the ability for user input when the program is running without needing to access the operating system through the control brick. This means that simple tasks can be bound to the button at each stage of the program (e.g. pause the scanning process if a move fails or confirm initialisation).
+	
+	The EV3 control brick is mounted on the side of the robot to allow easy access to the controls which allow navigation of the file system and turning the brick on and off. It is held in place by several long pins \legopiece{32054} which can be easily retracted to allow quick removal of the brick so the batteries can be changed.
 
     \section{Codebase}
     \subsection{Object Classes}
@@ -642,11 +680,11 @@
     
     The algorithms considered and discussed in the Literature Review (as well as others used in determining God's Number) are designed to work with a standard moveset \moveset{L.R.U.D.F.B} (as well as half turns and counter-clockwise turns). The design of the robot means that it is restricted to the moveset \moveset{X.Y.y'y2D.d'd2} - and will therefore require any incompatible sequences to be translated to the robot's moveset.
     
-    When the entire Cube is rotated, the \tbo{colour} of the sides will change but the sides' \tbo{orientations} will not (analogous to when one turns on the spot: left and right have changed, but east and west have not). This means that the frame of reference for the moves will have to remain invariant throughout a sequence by compensating for any full Cube rotations.
+    When the entire Cube is rotated, the \tbo{colour} of the faces will change but the faces' \tbo{orientations} will not (analogous to when one turns on the spot: left and right have changed, but east and west have not). This means that the frame of reference for the moves will have to remain invariant throughout a sequence by compensating for any full Cube rotations.
     
     This is best explained with an example: the first step in performing the sequence \movesequence{u.f} would be to do perform \movesequence{x2d} in order to complete the \move{u}; but now that the original \face{f} has moved (due to the \movesequence{x2}) - it must be located, the Cube must be rotated to get the original \face{f} into the cradle, and then the sequence can be completed. The simplest method of overcoming this complication is to convert the original move sequence to an equivalent sequence of colour-based moves: \movesequence{u.f} $\equiv$ \movesequence{W.G}.
     
-    Once the original sequence has been converted to a colour-based sequence, a deep copy of the original Cube is made and the coloured sequence is iteratively translated and applied to this Cube. On each element of the sequence, the colour is converted back to a side move (allowing preservation of the correct frame of reference). Once this new side-based move is found, it is converted to a short move sequence that will move the face into the cradle and rotate the side correctly to match the original move. This short sequence comprises moves compatible with the robot.
+    Once the original sequence has been converted to a colour-based sequence, a deep copy of the original Cube is made and the coloured sequence is iteratively translated and applied to this Cube. On each element of the sequence, the colour is converted back to a face move (allowing preservation of the correct frame of reference). Once this new face-based move is found, it is converted to a short move sequence that will move the face into the cradle and rotate the face correctly to match the original move. This short sequence comprises moves compatible with the robot.
     
     Each of the moves in the short \u{sequence} is applied to the copied Cube, and appended to a list of moves which is returned once the original sequence is processed. The application of the moves to the Cube allows following moves to be translated correctly (as the Cube will have changed orientation in real life so needs to in this simulation). Continuing the previous example of \movesequence{u.f}, the translation is writeen below. Colours are underlined and the output sequence is emboldened for clarity:
     \begin{align*}
@@ -666,6 +704,9 @@
     \chapter{Implementation and Testing}
     \epigraph{To those who say that \enquote{if you need \#testing at the end, you're doing it wrong}, would you prefer a Boeing, or are you going Air Icarus?}{Michael Bolton \cite{Bolton2016}}
     \section{Building the Robot}
+    
+    
+    
     \subsection{The Colour Sensor}
     \subsection{The Cradle}
     \subsection{X-Move Arm}
