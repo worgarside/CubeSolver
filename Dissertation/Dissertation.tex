@@ -218,7 +218,7 @@
     Secondary objectives include implementing other algorithms from various sources, devising and refining my own algorithms, and comparing the performance, efficiency and solve-length of the algorithm. The robot will have to be of sound construction, with little-to-no room for error when manipulating the Cube.
     
     \section{Limitations and Constraints}
-    The first problem which will be encountered will undoubtedly be during the design and build of the robot: the number of Lego pieces supplied in the EV3 set is quite limited at only six-hundred-and-one pieces - approximately a quarter of which are only for aesthetics. The design will  be supplemented by sets sourced externally, thus allowing a robot of sufficient quality to be built.
+    The first problem which will be encountered will undoubtedly be during the design and build of the robot: the number of Lego pieces supplied in the EV3 set is quite limited at only six-hundred-and-one pieces - approximately a quarter of which are only for aesthetics. The design will be supplemented by sets sourced externally, thus allowing a robot of sufficient quality to be built.
     
     Despite being of high quality and uniform across all sets, Lego is still fundamentally a toy - which will lead to errors with the precision of the robot \cite{Cook2017}. An example of this is the motors: there is a somewhat significant degree of freedom/play in the motors, which means that they can't be relied on to move to accurate positions. A worm gear is the ideal solution to this problem: despite reducing the speed, it provides a considerable increase in motor accuracy.
     
@@ -275,7 +275,7 @@
     		\toprule
     		\tbo{Group Denotation} & \tbo{Mathematical Representation} & \tbo{Summary} \\
     		\midrule
-   			$G_0$	&	\moveset{l.r.f.b.u.d}	&	All valid positions \\    		
+   			$G_0$	&	\moveset{l.r.f.b.u.d}	&	All valid positions \\	
 	    	$G_1$	&	\moveset{l.r.f.b.u2d2}	&	All positions that can be reached with quarter turns of the \movegroup{l.r.f.b} faces and half turns of the \movegroup{u.d} faces \\
 	    	$G_2$	&	\moveset{l.r.f2b2u2d2}	&	Positions reachable from quarter turns of \movegroup{l.r} faces and half turns of the \movegroup{f.b.u.d} faces \\
 	    	$G_3$	&	\moveset{L2R2F2B2U2D2}	&	Positions only reachable from half turns of any face \\
@@ -384,7 +384,7 @@
     \subsection{Software}
     
     \subsubsection{PyCharm/CLion}
-    An Integrated Development Environment (IDE) makes development, running programs, and testing and debugging much easier than using a simple text editor and command line. PyCharm and CLion by JetBrains \cite{JetBrains} will be used for developing in Python and C++ respectively. PyCharm and CLion provide strong code completion abilities, project-wide refactoring, and software development kit (SDK) modification amongst many other abilities. This will allow more time to be allocated to tasks of higher value rather than struggling with relatively minor issues.  
+    An Integrated Development Environment (IDE) makes development, running programs, and testing and debugging much easier than using a simple text editor and command line. PyCharm and CLion by JetBrains \cite{JetBrains} will be used for developing in Python and C++ respectively. PyCharm and CLion provide strong code completion abilities, project-wide refactoring, and software development kit (SDK) modification amongst many other abilities. This will allow more time to be allocated to tasks of higher value rather than struggling with relatively minor issues.
     
 	\subsubsection{Python 3.6 Runtime Environment}
     As discussed in the Literature Review, Python is the ideal language for this project. It requires a native runtime environment for programs to be run: this consists of the Python interpreter, libraries, and any packages used in the development process.
@@ -458,7 +458,7 @@
 			\ganttmilestone{Conclusions}{2018-04-20} \\
 			\ganttmilestone{Deadline}{2018-05-02}
 		\end{ganttchart}
-	\end{center}    
+	\end{center}
     
     \newpage
     
@@ -467,17 +467,25 @@
     
 	\section{Introduction}
 	
-	The nature of this project lends itself to a spiral design cycle, where both the robot and the solver can be designed, implemented, tested and then optimised to re-start the cycle. This non-linearity of the Design $\rightarrow$ Implementation $\rightarrow$ Testing process means that the structure of this dissertation must follow the process. Consequentially this chapter's structure is split into two main parts - \enquote{Robot} and \enquote{Codebase} - each with introductory sections for fundamental components that are invariant through the different designs, and further sections to discuss each design.
+	The nature of this project lends itself to a spiral design cycle, where both the robot and the solver can be designed, implemented, tested and then optimised to re-start the cycle. This non-linearity of the \tit{Design $\rightarrow$ Implementation $\rightarrow$ Testing} process means that the structure of this dissertation must follow the progress of the project, rather than having distinct sections for \enquote{Design} and \enquote{Implementation and Testing}. Consequentially this chapter's structure is split into two main parts - \enquote{Robot} and \enquote{Codebase} - each with introductory sections for fundamental components that are invariant through the different designs, and further sections to discuss each design.
 
-    \section{Robot}
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[width=0.3\textwidth]{Resources/Images/diagSpiralModel.png}
+			\caption{The spiral model used for this project}
+			\label{fig:diagSpiralModel}
+		\end{center}
+	\end{figure}
+
+    \section{Robot Fundamentals and Prototyping}
     
     \subsection{Sensors and Actuators}
     
-    The Lego EV3 comes with three DC motors (two large \legopiece{45502} and one medium \legopiece{45503}), a colour sensor and a touch sensor amongst other peripherals. The medium motor will be used to move the colour sensor to scan the Cube, and the large motors to rotate the Cube about the horizontal and vertical axes respectively. The quantity of the motors will be the largest restriction in designing the robot: it will only be able to rotate a Cube about two of the three axes; and the colour sensor will only have one degree of freedom so will rely on the rotation of the Cube to scan all of the facelets. The touch sensor can be used to allow limited user input to the robot at runtime, such as an emergency stop if the Cube becomes dislodged, or to confirm that the Cube is in place.
+    The Lego EV3 comes with three DC motors (two large \legopiece{45502} and one medium \legopiece{45503}), a colour sensor and a touch sensor amongst other peripherals\footnote{The other peripherals are an infrared sensor and an infrared beacon, and are not used in this project.}. The quantity of the motors will be the largest restriction in designing the robot: it will only be able to rotate a Cube about two of the three axes; and the colour sensor will only have one degree of freedom so will rely on the rotation of the Cube to scan all of the facelets. The touch sensor can be used to allow limited user input to the robot at runtime, such as an emergency stop if the Cube becomes dislodged, or to confirm that the Cube is in place.
     
     \subsection{Prototyping with Lego}
     
-    The first step in designing the robot was to prototype some simple designs for holding a Cube and successfully manipulating it. The first concept design was to grip each face of the Cube, and use a large motor to power the \enquote{grippers}. The second large motor could control which gripper was being powered at any time. This would allow a strong manipulation of the Cube and mean no delay between the movement of different faces. Figure \ref{fig:imgPrototype} shows the initial prototype that was built to fit this design. Once it was built, it became apparent that it was actually an impossible design (or at least, impossible with Lego) because if one of the grippers rotated by a quarter turn, it would block two of the other faces from turning. This is shown in Figure \ref{fig:imgPrototype}, where the upper gripper is blocking the right-hand one from turning. The solution to this would be to have the grippers retract when they are not in use, however this would be very difficult if not impossible to achieve with the available Lego pieces.
+    The first step in designing the robot was to prototype some simple designs for holding a Cube and successfully manipulating it. The first concept design was to grip each face of the Cube, and use a large motor to power the \enquote{grippers}. The second large motor could control which gripper was being powered at any time. This would allow a strong manipulation of the Cube and mean no delay between the movement of different faces. Figure \ref{fig:imgPrototype} shows the initial prototype that was built to fit this design. Once it was built, it became apparent that it was actually an impossible design (or at least, impossible with Lego) because if one of the grippers rotated by a quarter turn, it would block two of the other faces from turning. This can been seen below, where the upper gripper is blocking the left-hand one from turning. The solution to this would be to have the grippers retract when they are not in use, however this would be very difficult - if not impossible - to achieve with the available Lego pieces.
     
     \begin{figure}[H]
 		\centering
@@ -498,23 +506,23 @@
 
 	One of the other problems with the first prototype was that the Cube was unbalanced and would often fall out of the robot. This led to the design to have a \enquote{cradle} for the Cube to sit in. This is a good support mechanism for the Cube, and also handle the rotation about the Y axis. Once the cradle was built, it was a good milestone to check that the large motors had enough torque to rotate the face of a Cube against the friction between faces and slices. The motor was set to rotate indefinitely with the Cube in the cradle (as seen in Figure \ref{fig:imgCradleTest}) and the \slice{l-r} manually held in place. There was no visible reduction in the rotational velocity of the motor, so this first small test was passed.
 	
-	Although the cradle was a good solution to the problem outlined above,  it also meant that only the \face{d} could be rotated, therefore requiring a mechanism to \enquote{flip} the Cube in place so different faces could sit in the cradle. The most obvious design for this was to apply a force at the upper corner to create a resultant force to pivot about the wall of the cradle. This is shown by the free body digram in Figure \ref{fig:dwgCubeFreeBodyDiagram}: the force $F$ will be applied by a mechanism powered by the second large motor; this will be combined with the resistive force $R$ of the cradle wall; the resultant force (shown in red) will be about the pivot point (also in red) to rotate the Cube. Once the Cube is partially out of the cradle, it will slide back into place due to the height difference between the wall and the base of the cradle, and the low friction coefficient between the plastic of the Cube and the Lego pieces.
+	Although the cradle was a good solution to the problem outlined above, it also meant that only the \face{d} could be rotated, therefore requiring a mechanism to \enquote{flip} the Cube in place so different faces could sit in the cradle. The most obvious design for this was to apply a force at the upper corner to create a resultant force to pivot about the wall of the cradle. This is shown by the free body diagram in Figure \ref{fig:dwgCubeFreeBodyDiagram}: the force $F$ will be applied by a mechanism powered by the second large motor; this will be combined with the resistive force $R$ of the cradle wall; the resultant force (shown in red) will be about the pivot point (also in red) to rotate the Cube. Once the Cube is partially out of the cradle, it will slide back into place due to the height difference between the wall and the base of the cradle, and the low coefficient of friction between the plastic of the Cube and the Lego pieces.
     
 	\begin{figure}[H]
     	\begin{center}
-    		\includegraphics[width=0.5\textwidth]{Resources/Images/dwgCubeFreeBodyDiagram.png}
+    		\includegraphics[width=0.35\textwidth]{Resources/Images/dwgCubeFreeBodyDiagram.png}
     		\caption{A free body diagram showing how the Cube will be rotated}
     		\label{fig:dwgCubeFreeBodyDiagram}
     	\end{center}
     \end{figure}
     
-    \subsection{Cube Manipulation}
+    \subsection{Fundamental Component Definition}
     
-    Following the construction and analysis of small Lego prototypes, it becamse apparent that there would be three fundamental components for an archetype of the robot: a cradle would be needed to hold the Cube and rotate about the Y axis; an arm to rotate the Cube about the X axis and hold it in place for performing \move{d}s; and a moving arm for the colour sensor to scan the Cube. The essential requirements for these components are described  below.
+    Following the construction and analysis of small Lego prototypes, it became apparent that there would be three fundamental components for the archetypal robot: a cradle would be needed to hold the Cube and rotate about the Y axis; an arm to rotate the Cube about the X axis and hold it in place for performing \move{d}s; and a moving arm for the colour sensor to scan the Cube. The essential requirements for these components are described below.
     
     \subsubsection{Cradle}
     
-    The Cube will sit in a cradle which rotates about the Y axis to provide the movement needed for the moveset \moveset{Y.Y'y2D.D'd2}. This will have an inner dimension of 7 studs $\times$ 7 studs (56 \si{\milli\metre} $\times$ 56 \si{\milli\metre} $\times$ 56 \si{\milli\metre}) to closely match the dimensions of the Valk 3: 55.5 \si{\milli\metre} $\times$ 55.5 \si{\milli\metre}. The 0.5 \si{\milli\metre} tolerance means that the Cube doesn't have to perfectly aligned when it is rotated (i.e. the program won't fail if the cube is a degree out of line). The cradle must rotate as accurately as possible to 90$\degree$ increments to ensure the success of the X rotations and avoid the Cube falling out of the cradle. 
+    The Cube will sit in a cradle which rotates about the Y axis to provide the movement needed for the moveset \moveset{Y.Y'y2D.D'd2}. This will have an inner dimension of 7 studs $\times$ 7 studs (56 \si{\milli\metre} $\times$ 56 \si{\milli\metre}) to closely match the dimensions of the Valk 3: 55.5 \si{\milli\metre} $\times$ 55.5 \si{\milli\metre} $\times$ 55.5 \si{\milli\metre}. The 0.5 \si{\milli\metre} tolerance means that the Cube doesn't have to be absolutely perfectly aligned when it is rotated (i.e. the program won't fail if the cube is a degree out of line). The cradle must rotate as accurately as possible to 90$\degree$ increments to ensure the success of the \move{x}s and avoid the Cube falling out of the cradle. 
     
     \subsubsection{X-Move Arm}
     To perform an \move{x}, some kind of arm will need to \enquote{flip} the Cube about its X axis. This should be a quick movement, with high reliability and good structural soundness. The arm must not interfere with the other components of the robot at any point. Furthermore the arm will also need to incorporate functionality to hold the \slice{l-r} and the \face{u} in place whilst the cradle rotates to perform a permutation of the \move{d}.
@@ -522,40 +530,40 @@
     \subsubsection{Colour Sensor}
     The colour sensor will be attached to the end of an extending arm which can be moved by a rack and worm gear to ensure the sensor can be accurately placed above the correct facelet. The worm gears will have to be driven by the medium sized motor, which produces less torque than the large motors but has a larger maximum rotational velocity - making it ideal for overcoming the inherent speed reduction of the worm gears. The colour sensor will be in a fixed position relative to the arm, and will be centred relative to the Cube.
     
-    \subsection{Robot Design MkI}
+    \section{Robot Design MkI}
     
-	When designing the robot, there was a clear hierarchy of components and an inherent build order: the \move{x} arm relied on the cradle to rotate the cube, and the colour sensor needs the arm and the cradle to rotate the cube for the scanning process. The design process for the components comprised a real-world build and the concurrent creation of a virtual 3D model using BrickLink's Stud.io software \cite{BrickLink}. Rendered images of the virtual model are displayed below to show the finer details of the mechanism and as evidence of the consideration used in the design of the robot.    
+	When designing the robot, there was a clear hierarchy of components and an inherent build order: the \move{x} arm relied on the cradle to rotate the cube; and the colour sensor relied on both the arm and the cradle to rotate the cube for the scanning process. The design process for the components comprised a real-world build and the concurrent creation of a virtual 3D model using BrickLink's Stud.io software \cite{BrickLink}. Rendered images of the virtual model are displayed below to show the finer details of the mechanism and as evidence of the consideration used in the design of the robot.
     
-    \subsubsection{Cradle}
-    
-    The sides of the cradle will only be 1 stud high, and will have a semi-circular profile to allow the Cube to rotate out of the base of the cradle as demonstrated in Figures \ref{fig:dwgCradleCurvedEdgeNormal} and \ref{fig:dwgCradleCurvedEdgeTilted}. The curved edge will also cause the Cube to slide back into the cradle completely, rather than resting on the upper corner of the edge piece.
+	\subsection{Cradle}
+	
+	There will be a 1 stud high wall surrounding the base of the cradle on all sides, which will have a semi-circular profile to allow the Cube to rotate smoothly out of the base of the cradle as demonstrated in Figures \ref{fig:dwgCradleCurvedEdgeNormal} and \ref{fig:dwgCradleCurvedEdgeTilted}. The curved edge will also cause the Cube to slide back into the cradle completely, rather than resting on the upper corner of the edge piece. The method for rotating the cradle is for it to be mounted directly onto the rotor of a large motor. This gives it stability from the secure mount, high rotational velocity because there is no gearing down, and it will be accurate due to the in-built tachometer which provides \enquote{precise control to within one degree of accuracy} \cite{Lego}. Figure \ref{fig:dwgCradleProfileV1} shows the cradle mounted on the rotor via a large gear, which allows a strong interface with the motor.
     
     \begin{figure}[H]
     	\centering
-    	\begin{subfigure}[b]{0.25\textwidth}
-    		\includegraphics[width=\textwidth]{Resources/Images/dwgCradleWormGear.png}
-    		\caption{The rotation of the worm gear drives the cradle's rotation}
-    		\label{fig:dwgCradleWormGear}
+    	\begin{subfigure}[b]{0.4\textwidth}
+    		\includegraphics[width=\textwidth]{Resources/Images/dwgCradleProfileV1.png}
+    		\caption{The cradle is mounted on a motor}
+    		\label{fig:dwgCradleProfileV1}
     	\end{subfigure}
     	\hspace{10mm}
-    	\begin{subfigure}[b]{0.25\textwidth}
+    	\begin{subfigure}[b]{0.2\textwidth}
     		\includegraphics[width=\textwidth]{Resources/Images/dwgCradleCurvedEdgeNormal.png}
-    		\caption{Resting in the cradle}
+    		\caption{Resting position}
     		\label{fig:dwgCradleCurvedEdgeNormal}
     	\end{subfigure}
     	\hspace{10mm}
-    	\begin{subfigure}[b]{0.25\textwidth}
+    	\begin{subfigure}[b]{0.2\textwidth}
     		\includegraphics[width=\textwidth]{Resources/Images/dwgCradleCurvedEdgeTilted.png}
-    		\caption{Starting an X rotation}
+    		\caption{Starting an \move{x}}
     		\label{fig:dwgCradleCurvedEdgeTilted}
     	\end{subfigure}
     	\caption{A cross-section of the cradle and Cube}
     	\label{fig:CradleDrawings}
-    \end{figure}
+    \end{figure}    
     
-    \subsubsection{X-Move Arm}
+    \subsection{X-Move Arm}
     
-    To rotate the Cube about the X axis, a rotating arm will push the Cube up and out of the cradle and cause it to pivot about the edge of the cradle. The Cube will then slide back into the cradle to complete the rotation. A large motor will be directly connected to the shaft which the arm will rotate about, with no need for gears. One end of the arm will have a wheel with a rubber tire to provide enough friction to tip the Cube over, and the other side will have a set of guards which can hold the top two slices of the Cube in place when performing a \move{D} or \move{d'}. The design of the swing arm and its positioning relative to the cradle can be seen in Figure \ref{fig:dwgRotatingArm}.
+    To rotate the Cube about the X axis, a rotating arm will push it up and out of the cradle and cause it to pivot about the opposite cradle wall. The Cube will then slide back into the cradle to complete the rotation. A large motor will be directly connected to the shaft which the arm will rotate about, with no need for gears. On one end of the arm, there will be a wheel with a rubber tire to provide enough friction to tip the Cube over, and the other side will have a set of guards which can hold the top two slices of the Cube in place when performing a \move{D} or \move{d'}. The length of the guards will be staggered so that they don't collide with the cradle mid-rotation. Small right-angled pieces have been used to reinforced the corners of the arm, and liftarms will be used to hold the guards together to resist the outwards pushing force exerted on them by the rotating Cube. The design of the arm and its positioning relative to the cradle can be seen in Figure \ref{fig:dwgRotatingArm}.
     
     \begin{figure}[H]
     	\begin{center}
@@ -594,7 +602,7 @@
 
 
     
-    The initial design for the cradle was for it to be mounted directly on the rotor of a large motor. This gave it stability from the secure mount, high rotational velocity because there would be no gearing down, and it would be accurate due to the in-built tachometer which provides \enquote{precise control to within one degree of acccuracy} \cite{Lego}. Figure \ref{fig:rdrCradleMountedRotor} shows the large motor, the mechanism and the framework to support them. The large black gear underneath the rotor has no mechanical use. Rather, it is used throughout the robot to flag where the motors are and to allow the user to manually rotate them to the correct positions on initialisation.
+   
     
    	\begin{figure}[H]
     	\begin{center}
@@ -604,7 +612,7 @@
     	\end{center}
     \end{figure}
     
-    
+    , the mechanism and the framework to support them. The large black gear underneath the rotor has no mechanical use. Rather, it is used throughout the robot to flag where the motors are and to allow the user to manually rotate them to the correct positions on initialisation.
     
     
     
@@ -619,7 +627,7 @@
     
     The play in the motor will reduce the accuracy of the cradle, as it effectively introduces a zero error for each rotation. If the cradle only rotates in one direction then the zero error would only have to be offset at the very start of the program because the cradle would \enquote{sit} at one end of the region of play. However, this will reduce the size of the available moveset by 50\% and thus have a worst case runtime increase of 100\% (Sequentially, $|\movesequence{D'X}| = 2$ which would change to $|\movesequence{D.D.D.X}| = 4 $).
     
-    A worm gear \legopiece{4716} will solve both of these problems: it will be combined with a large gear \legopiece{3649} to create a gear ratio of 1:40, increasing the accuracy of the motor by a factor of forty (see Figure \ref{fig:dwgCradleWormGear}). This will also slow the maximum rotational velocity of the cradle to 0.209 \si{\radian\per\second} (2RPM) at 7.5V, so a 90$\degree$ turn will take 7.5 seconds\footnote{This figure is the result of a measurement of the maximum rotational velocity of a large motor, and will fluctuate depending on the voltage supplied by the batteries in the EV3 brick}. A compromise between maximum rotational velocity and accuracy will be found by adding more gears to reduce the ratio. The problem presented by the play in the motors will be reduced to an acceptable level due to the unidirectional nature of the gear train.
+    A worm gear \legopiece{4716} will solve both of these problems: it will be combined with a large gear \legopiece{3649} to create a gear ratio of 1:40, increasing the accuracy of the motor by a factor of forty (see Figure \ref{fig:dwgCradleWormGear}). This will also slow the maximum rotational velocity of the cradle to 0.209 \si{\radian\per\second} (2 RPM) at 7.5V, so a 90$\degree$ turn will take 7.5 seconds\footnote{This figure is the result of a measurement of the maximum rotational velocity of a large motor, and will fluctuate depending on the voltage supplied by the batteries in the EV3 brick}. A compromise between maximum rotational velocity and accuracy will be found by adding more gears to reduce the ratio. The problem presented by the play in the motors will be reduced to an acceptable level due to the unidirectional nature of the gear train.
     
     
     
@@ -696,7 +704,7 @@
     	\end{center}
     \end{figure}
     
-    Figure \ref{fig:rdrWormGear} shows how the cradle will be driven by a large motor. A large 36-tooth gear \legopiece{32498} is directly attached to the rotor with two small pins to reduce the need for an extended shaft which will flex when placed under strain (i.e. at the start of a rotation). This gear drives a 12-tooth gear \legopiece{32270} to triple the rotational velocity at that point of the gear train. This connection is immediately repeated and used to create a 90$\degree$ turn onto the shaft with the worm gear. At this point the speed of the worm gear has a ratio of 9:1 when compared to the motor's output, which is then decreased forty times by the large 40-tooth gear to create a final ratio of 1:4.444. This means the maximum rotational velocity of the cradle will be 1.843 \si{\radian\per\second} (17.6 RPM) at 7.5V and the original torque is increased from 17.3Nm to 76.8Nm, which will allow a face of the Cube to be rotated with ease. The vertical black shaft seen at the top of the image provides a mounting point for the cradle.
+    Figure \ref{fig:rdrWormGear} shows how the cradle will be driven by a large motor. A large 36-tooth gear \legopiece{32498} is directly attached to the rotor with two small pins to reduce the need for an extended shaft which will flex when placed under strain (i.e. at the start of a rotation). This gear drives a 12-tooth gear \legopiece{32270} to triple the rotational velocity at that point of the gear train. This connection is immediately repeated and used to create a 90$\degree$ turn onto the shaft with the worm gear. At this point the speed of the worm gear has a ratio of 9:1 when compared to the motor's output, which is then decreased forty times by the large 40-tooth gear to create a final ratio of 1:4.444. This means the maximum rotational velocity of the cradle will be 1.843 \si{\radian\per\second} (17.6 RPM) at 7.5V and the original torque is increased from 17.3\si{\newton\metre} to 76.8\si{\newton\metre}, which will allow a face of the Cube to be rotated with ease. The vertical black shaft seen at the top of the image provides a mounting point for the cradle.
     
     \begin{figure}[H]
     	\begin{center}
@@ -731,7 +739,7 @@
     	\label{fig:rdrXMoveArmV1}
     \end{figure}
     
-    Figure \ref{fig:rdrXMoveArmV1} shows where the arm is positioned in relation to the cradle. Figure \ref{fig:rdrXMoveArmV1_1} shows the \enquote{guarded} position of the arm, where the guards are either side of the Cube to hold the \slice{l-r} and the \face{U} in place when peforming a \move{D}, \move{D'} or \move{D2}. The rotation of the Cube will undoubtedly try to separate the guards, so two liftarms \legopiece{40490} have been attached to the upper part of the guards to hold them together. The guard assembly is attached to a central axle which is rotated by the large motor visible at the far side of the model. Also attached to the axle is a second liftarm to hold the wheel in place to rotate the Cube. The entire assembly's weight is balanced sufficiently well to ensure that there is a smooth rotation about the axle and no unnecessary strain is placed on the motor. The play in the motor that proved an issue with the cradle, whilst still being present, is not a concern for this assembly because accuracy is of much less importance. As long as the arm moves by \tit{at least} the correct angle to rotate the Cube or place the guard in position, the exact position is unimportant. The accuracy of the large motor's rotor is therefore accepted for this assembly.
+    Figure \ref{fig:rdrXMoveArmV1} shows where the arm is positioned in relation to the cradle. Figure \ref{fig:rdrXMoveArmV1_1} shows the \enquote{guarded} position of the arm, where the guards are either side of the Cube to hold the \slice{l-r} and the \face{U} in place when performing a \move{D}, \move{D'} or \move{D2}. The rotation of the Cube will undoubtedly try to separate the guards, so two liftarms \legopiece{40490} have been attached to the upper part of the guards to hold them together. The guard assembly is attached to a central axle which is rotated by the large motor visible at the far side of the model. Also attached to the axle is a second liftarm to hold the wheel in place to rotate the Cube. The entire assembly's weight is balanced sufficiently well to ensure that there is a smooth rotation about the axle and no unnecessary strain is placed on the motor. The play in the motor that proved an issue with the cradle, whilst still being present, is not a concern for this assembly because accuracy is of much less importance. As long as the arm moves by \tit{at least} the correct angle to rotate the Cube or place the guard in position, the exact position is unimportant. The accuracy of the large motor's rotor is therefore accepted for this assembly.
     
     \begin{figure}[H]
     	\centering
@@ -799,7 +807,7 @@
     
     Once the original sequence has been converted to a colour-based sequence, a deep copy of the original Cube is made and the coloured sequence is iteratively translated and applied to this Cube. On each element of the sequence, the colour is converted back to a face move (allowing preservation of the correct frame of reference). Once this new face-based move is found, it is converted to a short move sequence that will move the face into the cradle and rotate the face correctly to match the original move. This short sequence comprises moves compatible with the robot.
     
-    Each of the moves in the short \u{sequence} is applied to the copied Cube, and appended to a list of moves which is returned once the original sequence is processed. The application of the moves to the Cube allows following moves to be translated correctly (as the Cube will have changed orientation in real life so needs to in this simulation). Continuing the previous example of \movesequence{u.f}, the translation is writeen below. Colours are underlined and the output sequence is emboldened for clarity:
+    Each of the moves in the short \u{sequence} is applied to the copied Cube, and appended to a list of moves which is returned once the original sequence is processed. The application of the moves to the Cube allows following moves to be translated correctly (as the Cube will have changed orientation in real life so needs to in this simulation). Continuing the previous example of \movesequence{u.f}, the translation is written below. Colours are underlined and the output sequence is emboldened for clarity:
     \begin{align*}
     \movesequence{U.F}		\;	&\rightarrow		\;	\movesequence{\tun{w}.\tun{G}}													\\
     \movesequence{\tun{w}}	\;	&\rightarrow		\;	\movesequence{U}																\\
