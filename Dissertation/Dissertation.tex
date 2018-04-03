@@ -532,21 +532,26 @@
     
     \section{Robot Design MkI}
     
-	When designing the robot, there was a clear hierarchy of components and an inherent build order: the \move{x} arm relied on the cradle to rotate the cube; and the colour sensor relied on both the arm and the cradle to rotate the cube for the scanning process. The design process for the components comprised a real-world build and the concurrent creation of a virtual 3D model using BrickLink's Stud.io software \cite{BrickLink}. Rendered images of the virtual model are displayed below to show the finer details of the mechanism and as evidence of the consideration used in the design of the robot.
+	When designing the robot, there was a clear hierarchy of components and an inherent build order: the \move{x} arm relied on the cradle to rotate the cube; and the colour sensor relied on both the arm and the cradle to rotate the cube for the scanning process. The design process for the components comprised technical drawings, followed by a real-world build and the concurrent creation of a virtual 3D model using BrickLink's Stud.io software \cite{BrickLink}. Rendered images of the virtual model are displayed below alongside the technical drawings to show the finer details of the mechanism and as evidence of the consideration used in the design of the robot.
     
 	\subsection{Cradle}
 	
-	There will be a 1 stud high wall surrounding the base of the cradle on all sides, which will have a semi-circular profile to allow the Cube to rotate smoothly out of the base of the cradle as demonstrated in Figures \ref{fig:dwgCradleCurvedEdgeNormal} and \ref{fig:dwgCradleCurvedEdgeTilted}. The curved edge will also cause the Cube to slide back into the cradle completely, rather than resting on the upper corner of the edge piece. The method for rotating the cradle is for it to be mounted directly onto the rotor of a large motor. This gives it stability from the secure mount, high rotational velocity because there is no gearing down, and it will be accurate due to the in-built tachometer which provides \enquote{precise control to within one degree of accuracy} \cite{Lego}. Figure \ref{fig:dwgCradleProfileV1} shows the cradle mounted on the rotor via a large gear, which allows a strong interface with the motor.
+	The cradle is a solid base of 7 studs $\times$ 7 studs $\times$ 2 studs (length $\times$ breadth $\times$ height) with a surrounding wall with a height and depth of 1 stud. This ensures that the weight of the cradle is uniformly distributed and the centre of gravity is low. These are important factors in the design of the cradle because a potential design is for it to be mounted on a singular vertical shaft, which is quite flexible under relatively low amounts of strain. The upper layer of the cradle's base has a smooth solid surface - as opposed to the sides of Lego Technic pieces which have lots of holes - to allow the Cube to slide properly when moved out of the cradle for an \move{x}; and the lower layer provides an interface to allow mounting on either a vertical shaft or otherwise.
+	
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[width=0.4\textwidth]{Resources/Images/rdrCradle.png}
+			\caption{A view of the cradle with some parts removed}
+			\label{fig:rdrCradle}
+		\end{center}
+	\end{figure}
+	
+	
+	The wall will have a semi-circular profile to allow the Cube to rotate smoothly out of the base of the cradle as demonstrated in Figures \ref{fig:dwgCradleCurvedEdgeNormal} and \ref{fig:dwgCradleCurvedEdgeTilted}. The curved edge will also allow the Cube to slide back into the cradle completely, rather than resting on the upper corner of the edge piece. The method for rotating the cradle is for it to be mounted directly (with no gear train or intermediary mechanism) onto the rotor of a large motor. This gives it stability from the secure mount, high rotational velocity because there is no gearing down, and it will be accurate due to the in-built tachometer which provides \enquote{precise control to within one degree of accuracy} \cite{Lego}. Figure \ref{fig:dwgCradleProfileV1} shows the cradle mounted on the rotor via a large gear, which allows a strong interface with the motor and gives the cradle sufficient clearance from the motor to make a full rotation without collision.
     
     \begin{figure}[H]
     	\centering
-    	\begin{subfigure}[b]{0.4\textwidth}
-    		\includegraphics[width=\textwidth]{Resources/Images/dwgCradleProfileV1.png}
-    		\caption{The cradle is mounted on a motor}
-    		\label{fig:dwgCradleProfileV1}
-    	\end{subfigure}
-    	\hspace{10mm}
-    	\begin{subfigure}[b]{0.2\textwidth}
+ 	   	\begin{subfigure}[b]{0.2\textwidth}
     		\includegraphics[width=\textwidth]{Resources/Images/dwgCradleCurvedEdgeNormal.png}
     		\caption{Resting position}
     		\label{fig:dwgCradleCurvedEdgeNormal}
@@ -557,13 +562,30 @@
     		\caption{Starting an \move{x}}
     		\label{fig:dwgCradleCurvedEdgeTilted}
     	\end{subfigure}
-    	\caption{A cross-section of the cradle and Cube}
+	    \hspace{10mm}
+	    \begin{subfigure}[b]{0.4\textwidth}
+	    	\includegraphics[width=\textwidth]{Resources/Images/dwgCradleProfileV1.png}
+	    	\caption{The cradle is mounted on a motor}
+	    	\label{fig:dwgCradleProfileV1}
+	    \end{subfigure}
+    	\caption{Technical drawgins showing the the Cube, the cradle, and its mounting}
     	\label{fig:CradleDrawings}
     \end{figure}    
     
+    Figure \ref{fig:rdrCradleMountedRotor}, below, is a rendered image of the 3D aforementioned model. It shows how the cradle and the motor will be supported by a framework which will link to the rest of the robot. The main body of the motor is supported both vertically and horizontally to stop it from leaning under its own weight and also to prevent the motor rotating due to the inertia of the Cube.
+    
+    \begin{figure}[H]
+    	REDO
+    	\begin{center}
+    		\includegraphics[width=0.5\textwidth]{Resources/Images/rdrCradleMountedRotor.png}
+    		\caption{A render showing the original cradle mount design}
+    		\label{fig:rdrCradleMountedRotor}
+    	\end{center}
+    \end{figure}
+    
     \subsection{X-Move Arm}
     
-    To rotate the Cube about the X axis, a rotating arm will push it up and out of the cradle and cause it to pivot about the opposite cradle wall. The Cube will then slide back into the cradle to complete the rotation. A large motor will be directly connected to the shaft which the arm will rotate about, with no need for gears. On one end of the arm, there will be a wheel with a rubber tire to provide enough friction to tip the Cube over, and the other side will have a set of guards which can hold the top two slices of the Cube in place when performing a \move{D} or \move{d'}. The length of the guards will be staggered so that they don't collide with the cradle mid-rotation. Small right-angled pieces have been used to reinforced the corners of the arm, and liftarms will be used to hold the guards together to resist the outwards pushing force exerted on them by the rotating Cube. The design of the arm and its positioning relative to the cradle can be seen in Figure \ref{fig:dwgRotatingArm}.
+    To rotate the Cube about the X axis, a rotating arm will apply the force $F$ shown in \ref{fig:dwgCubeFreeBodyDiagram} to cause the Cube to pivot about the opposite cradle wall. The Cube will then slide back into the cradle to complete the rotation. On one end of the arm there will be a wheel with a rubber tire to provide enough friction to tip the Cube over, and the other end will have a set of guards which can hold the top two slices of the Cube in place when performing a \move{D} or \move{d'}. The length of the guards will be staggered so that they don't collide with the cradle mid-rotation. Small right-angled pieces have been used to reinforced the corners of the arm, and liftarms will be used to hold the guards together to resist the outwards pushing force exerted on them by the rotating Cube. The design of the arm and its positioning relative to the cradle can be seen in Figure \ref{fig:dwgRotatingArm}.
     
     \begin{figure}[H]
     	\begin{center}
@@ -573,76 +595,110 @@
     	\end{center}
     \end{figure}
 
+	Three primary positions of the arm can be seen below in Figure \ref{fig:rdrXMoveArmV1}. Figure \ref{fig:rdrXMoveArmV1_1} shows the \enquote{guarded} position of the arm, where the guards are positioned either side of the Cube to hold the \slice{l-r} and the \face{U} in place when performing a \move{D}, \move{D'} or \move{D2}. The two liftarms \legopiece{40490} that have been attached to the upper part of the guards to hold them together are visible just above the right-angled connectors \legopiece{55615} used to attach the guards to the arm. The guard assembly is attached to a central axle which is rotated by the large motor visible at the far side of the model. The entire assembly's weight is balanced sufficiently well to ensure that there is a smooth rotation about the axle and no unnecessary strain is placed on the motor.
+
+	\begin{figure}[H]
+		\centering
+		\begin{subfigure}[b]{0.21688\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/rdrXMoveArmV1_1.png}
+			\caption{Guarded position}
+			\label{fig:rdrXMoveArmV1_1}
+		\end{subfigure}
+		\hspace{10mm}
+		\begin{subfigure}[b]{0.21688\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/rdrXMoveArmV1_2.png}
+			\caption{Starting the \move{X}}
+			\label{fig:rdrXMoveArmV1_2}
+		\end{subfigure}
+		\hspace{10mm}
+		\begin{subfigure}[b]{0.31623\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/rdrXMoveArmV1_3.png}
+			\caption{Unguarded position}
+			\label{fig:rdrXMoveArmV1_3}
+		\end{subfigure}
+		\caption{Three different positions of the X-Move Arm}
+		\label{fig:rdrXMoveArmV1}
+	\end{figure}
+	
+
+	\subsection{Colour Sensor}
+	
+	The colour sensor will be powered by the medium motor and a gear train which ends with a worm gear and rack \legopiece{3743}. The rack will be directly connected to a liftarm which has two long parallel shafts \legopiece{3708} mounted above it, both of which feed through a liftarm attached to the main frame of the robot. These shafts are the only fixed mounting points for the whole colour sensor assembly - the worm gears and rack provide lateral movement but little to no structural support.
+	
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[width=0.5\textwidth]{Resources/Images/dwgColorSensor.png}
+			\caption{The colour sensor mounting arm is driven by a set of worm gears}
+			\label{fig:dwgColorSensor}
+		\end{center}
+	\end{figure}
+	
+	
+	\begin{figure}[H]
+		\centering
+		\begin{subfigure}[b]{0.35\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/rdrColorSensorAssembly.png}
+			\caption{A full view of the mechanics}
+			\label{fig:rdrColorSensorAssembly}
+		\end{subfigure}
+		\hspace{10mm}
+		\begin{subfigure}[b]{0.35\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/rdrColorSensorShaftDetail.png}
+			\caption{The assembly's mounting structure}
+			\label{fig:rdrColorSensorShaftDetail}
+		\end{subfigure}
+		\caption{The colour sensor assembly}
+		\label{fig:rdrColorSensor}
+	\end{figure}
+	
+	
+	
+	The medium motor powers a 24-tooth gear \legopiece{3648}, which then transmits power to an 8-tooth gear \legopiece{3647}, which is on the same axle as the worm gears. The rotational velocity of the worm gear is 63.75 \si{\radian\per\second} (608 RPM), which means that a large 40-tooth gear would have a rotational velocity of 1.59 \si{\radian\per\second} (15.2 RPM). Using this rotational velocity, the surface velocity of the large gear and therefore the lateral velocity of the rack can be calculated to be $\sim$0.0662 \si{\meter\per\second}. Given that the range of the colour sensor assembly's moveable distance is 80\si{\milli\metre}, the time taken for the colour sensor to travel from its neutral position to above the centre facelet is 1.21\si{\second}. Whilst this may seem like a relatively long time for the motor to move a light load, the assembly will only have to make the full journey between each face.
+	
+	\begin{figure}[H]
+		\begin{center}
+			\includegraphics[width=0.3\textwidth]{Resources/Images/dwgCubeProfileCentreArcs.png}
+			\caption{A Cube, with arcs drawn at the centre points of the cubies}
+			\label{fig:dwgCubeProfileCentreArcs}
+		\end{center}
+	\end{figure}
+	
+	Figure \ref{fig:dwgCubeProfileCentreArcs} shows that the radial distance between the centre points of the middle and corner cubies is 15.33\si{\milli\metre}. The colour sensor will have to travel this distance forty-two times during the scanning process, as well as the distance to the centre six times, making the total theoretical travelling time of the colour sensor $\sim$21.26\si{\second}.
 
 
 
 
 
 
+	\subsection{Implementation and Testing}
+	
 
 
 
 
+	\newpage
+    \section{Robot Design MkII}
+	\subsection{Improvements on MkI}
+	\subsection{Cradle}
+	The play in the motor will reduce the accuracy of the cradle, as it effectively introduces a zero error for each rotation. If the cradle only rotates in one direction then the zero error would only have to be offset at the very start of the program because the cradle would \enquote{sit} at one end of the region of play. However, this will reduce the size of the available moveset by 50\% and thus have a worst case runtime increase of 100\% (Sequentially, $|\movesequence{D'X}| = 2$ which would change to $|\movesequence{D.D.D.X}| = 4 $).
+	
+	A worm gear \legopiece{4716} will solve both of these problems: it will be combined with a large gear \legopiece{3649} to create a gear ratio of 1:40, increasing the accuracy of the motor by a factor of forty (see Figure \ref{fig:dwgCradleWormGear}). This will also slow the maximum rotational velocity of the cradle to 0.209 \si{\radian\per\second} (2 RPM) at 7.5V, so a 90$\degree$ turn will take 7.5 seconds\footnote{This figure is the result of a measurement of the maximum rotational velocity of a large motor, and will fluctuate depending on the voltage supplied by the batteries in the EV3 brick}. A compromise between maximum rotational velocity and accuracy will be found by adding more gears to reduce the ratio. The problem presented by the play in the motors will be reduced to an acceptable level due to the unidirectional nature of the gear train.
+	
+	\subsection{X-Move Arm}
+	
+	\subsection{Implementation and Analysis}
+	
+	\newpage
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-   
-    
-   	\begin{figure}[H]
-    	\begin{center}
-    		\includegraphics[width=0.5\textwidth]{Resources/Images/rdrCradleMountedRotor.png}
-    		\caption{A render showing the original cradle mount design}
-    		\label{fig:rdrCradleMountedRotor}
-    	\end{center}
-    \end{figure}
-    
-    , the mechanism and the framework to support them. The large black gear underneath the rotor has no mechanical use. Rather, it is used throughout the robot to flag where the motors are and to allow the user to manually rotate them to the correct positions on initialisation.
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    The play in the motor will reduce the accuracy of the cradle, as it effectively introduces a zero error for each rotation. If the cradle only rotates in one direction then the zero error would only have to be offset at the very start of the program because the cradle would \enquote{sit} at one end of the region of play. However, this will reduce the size of the available moveset by 50\% and thus have a worst case runtime increase of 100\% (Sequentially, $|\movesequence{D'X}| = 2$ which would change to $|\movesequence{D.D.D.X}| = 4 $).
-    
-    A worm gear \legopiece{4716} will solve both of these problems: it will be combined with a large gear \legopiece{3649} to create a gear ratio of 1:40, increasing the accuracy of the motor by a factor of forty (see Figure \ref{fig:dwgCradleWormGear}). This will also slow the maximum rotational velocity of the cradle to 0.209 \si{\radian\per\second} (2 RPM) at 7.5V, so a 90$\degree$ turn will take 7.5 seconds\footnote{This figure is the result of a measurement of the maximum rotational velocity of a large motor, and will fluctuate depending on the voltage supplied by the batteries in the EV3 brick}. A compromise between maximum rotational velocity and accuracy will be found by adding more gears to reduce the ratio. The problem presented by the play in the motors will be reduced to an acceptable level due to the unidirectional nature of the gear train.
-    
-    
     
     
     \subsection{Colour Sensor}
     
+    
+    
      In order to scan a full Cube, the sequence \movesequence{X.X.X.Y.X.X.X} will be followed, and the \face{u} scanned every time a new face is seen as shown by algorithms \ref{alg:scanupface} and \ref{alg:scancube}.
     
-    \begin{figure}[H]
-    	\begin{center}
-    		\includegraphics[width=0.5\textwidth]{Resources/Images/dwgColorSensor.png}
-    		\caption{The colour sensor mounting arm is driven by a set of worm gears}
-    		\label{fig:dwgColorSensor}
-    	\end{center}
-    \end{figure}
+
     
     \begin{algorithm}[H]
     	\caption{Scanning the Up-Face of a Cube}\label{alg:scanupface}
@@ -668,7 +724,6 @@
     Algorithm \ref{alg:scanupface} is called six times by the main scanning process, and is used to move the colour sensor to the correct position to scan each facelet in turn. In the algorithm, an empty list is declared for the nine facelets to be appended to. \lstinline|move_color_sensor| takes a single parameter: the stopping point for the motor. The variables \lstinline|edge_cubie|, \lstinline|corner_cubie| and \lstinline|centre_cubie| are all integer values which are used as these stopping points. The motor is rotated until the tachometer value is greater than or equal to the variable - or less than if it is rotating backwards - so that if it is rotating faster than one \enquote{tacho-unit} at a time, it will not skip the stopping variable and continue indefinitely.
     
     Similarly to \lstinline|move_color_sensor|, \lstinline|rotate_cradle| takes a single parameter - but not a stopping point. Rather, it is the value which is to be added to the current position of the motor in degrees. This value will then be multiplied as necessary to account for the gear ratios to create an output rotation matching the provided angle.
-    
     
     \begin{algorithm}[H]
     	\caption{Scanning an entire Cube}\label{alg:scancube}
@@ -706,71 +761,11 @@
     
     Figure \ref{fig:rdrWormGear} shows how the cradle will be driven by a large motor. A large 36-tooth gear \legopiece{32498} is directly attached to the rotor with two small pins to reduce the need for an extended shaft which will flex when placed under strain (i.e. at the start of a rotation). This gear drives a 12-tooth gear \legopiece{32270} to triple the rotational velocity at that point of the gear train. This connection is immediately repeated and used to create a 90$\degree$ turn onto the shaft with the worm gear. At this point the speed of the worm gear has a ratio of 9:1 when compared to the motor's output, which is then decreased forty times by the large 40-tooth gear to create a final ratio of 1:4.444. This means the maximum rotational velocity of the cradle will be 1.843 \si{\radian\per\second} (17.6 RPM) at 7.5V and the original torque is increased from 17.3\si{\newton\metre} to 76.8\si{\newton\metre}, which will allow a face of the Cube to be rotated with ease. The vertical black shaft seen at the top of the image provides a mounting point for the cradle.
     
-    \begin{figure}[H]
-    	\begin{center}
-    		\includegraphics[width=0.4\textwidth]{Resources/Images/rdrCradle.png}
-    		\caption{A view of the cradle with some parts removed}
-    		\label{fig:rdrCradle}
-    	\end{center}
-    \end{figure}
     
-    The cradle is a solid base of 7 studs $\times$ 7 studs $\times$ 2 studs (length $\times$ breadth $\times$ height) with a surrounding wall with a height and depth of 1 stud. This ensures that the weight of the cradle uniformly distributed and the centre of gravity is low. These are important factors in the design of the cradle because it is mounted on a singular vertical shaft, which is quite flexible under relatively low amounts of strain\footnote{The cause of any excess strain is discussed in the Implementation and Testing section}. The upper layer of the cradle's base has a smooth surface to allow the Cube to slide properly when moved out of the cradle for an \move{x}; and the lower layer provides an interface to allow mounting on the vertical shaft. It uses two pins \legopiece{2780} to connect to another of the large gears \legopiece{32498} which has the female axle-type connection for connecting to the gear train discussed above.
     
-    \begin{figure}[H]
-    	\centering
-    	\begin{subfigure}[b]{0.21688\textwidth}
-    		\includegraphics[width=\textwidth]{Resources/Images/rdrXMoveArmV1_1.png}
-    		\caption{Guarded position}
-    		\label{fig:rdrXMoveArmV1_1}
-    	\end{subfigure}
-    	\hspace{10mm}
-    	\begin{subfigure}[b]{0.21688\textwidth}
-    		\includegraphics[width=\textwidth]{Resources/Images/rdrXMoveArmV1_2.png}
-    		\caption{Starting the \move{X}}
-    		\label{fig:rdrXMoveArmV1_2}
-    	\end{subfigure}
-    	\hspace{10mm}
-    	\begin{subfigure}[b]{0.31623\textwidth}
-    		\includegraphics[width=\textwidth]{Resources/Images/rdrXMoveArmV1_3.png}
-    		\caption{Unguarded position}
-    		\label{fig:rdrXMoveArmV1_3}
-    	\end{subfigure}
-    	\caption{Three different positions of the X-Move Arm}
-    	\label{fig:rdrXMoveArmV1}
-    \end{figure}
+
     
-    Figure \ref{fig:rdrXMoveArmV1} shows where the arm is positioned in relation to the cradle. Figure \ref{fig:rdrXMoveArmV1_1} shows the \enquote{guarded} position of the arm, where the guards are either side of the Cube to hold the \slice{l-r} and the \face{U} in place when performing a \move{D}, \move{D'} or \move{D2}. The rotation of the Cube will undoubtedly try to separate the guards, so two liftarms \legopiece{40490} have been attached to the upper part of the guards to hold them together. The guard assembly is attached to a central axle which is rotated by the large motor visible at the far side of the model. Also attached to the axle is a second liftarm to hold the wheel in place to rotate the Cube. The entire assembly's weight is balanced sufficiently well to ensure that there is a smooth rotation about the axle and no unnecessary strain is placed on the motor. The play in the motor that proved an issue with the cradle, whilst still being present, is not a concern for this assembly because accuracy is of much less importance. As long as the arm moves by \tit{at least} the correct angle to rotate the Cube or place the guard in position, the exact position is unimportant. The accuracy of the large motor's rotor is therefore accepted for this assembly.
-    
-    \begin{figure}[H]
-    	\centering
-    	\begin{subfigure}[b]{0.35\textwidth}
-    		\includegraphics[width=\textwidth]{Resources/Images/rdrColorSensorAssembly.png}
-    		\caption{A full view of the mechanics}
-    		\label{fig:rdrColorSensorAssembly}
-    	\end{subfigure}
-    	\hspace{10mm}
-    	\begin{subfigure}[b]{0.35\textwidth}
-    		\includegraphics[width=\textwidth]{Resources/Images/rdrColorSensorShaftDetail.png}
-    		\caption{The assembly's mounting structure}
-    		\label{fig:rdrColorSensorShaftDetail}
-    	\end{subfigure}
-    	\caption{The colour sensor assembly}
-    	\label{fig:rdrColorSensor}
-    \end{figure}
-    
-    The colour sensor is powered by the medium motor and a gear train which ends with a worm gear and rack \legopiece{3743}. The rack is directly connected to a liftarm which has two long parallel shafts \legopiece{3708} mounted above it, which feed through a liftarm attached to the main frame of the robot. These shafts are the only fixed mounting points for the whole colour sensor assembly - the worm gears and rack provide lateral movement but little to no structural support.
-    
-    The medium motor powers a 24-tooth gear \legopiece{3648}, which then transmits power to an 8-tooth gear \legopiece{3647}, which is on the same axle as the worm gears. The rotational velocity of the worm gear is 63.75 \si{\radian\per\second} (608 RPM), which means that a large 40-tooth gear would have a rotational velocity of 1.59 \si{\radian\per\second} (15.2 RPM). Using this rotational velocity, the surface velocity of the large gear and therefore the lateral velocity of the rack can be calculated to be $\sim$0.0662 \si{\meter\per\second}. Given that the range of the colour sensor assembly's moveable distance is 80\si{\milli\metre}, the time taken for the colour sensor to travel from its neutral position to above the centre facelet is 1.21\si{\second}. Whilst this may seem like a relatively long time for the motor to move a light load, the assembly will only have to make the full journey between each face.
-    
-    \begin{figure}[H]
-    	\begin{center}
-    		\includegraphics[width=0.3\textwidth]{Resources/Images/dwgCubeProfileCentreArcs.png}
-    		\caption{A Cube, with arcs drawn at the centre points of the cubies}
-    		\label{fig:dwgCubeProfileCentreArcs}
-    	\end{center}
-    \end{figure}
-    
-    Figure \ref{fig:dwgCubeProfileCentreArcs} shows that the radial distance between the centre points of the middle and corner cubies is 15.33\si{\milli\metre}. The colour sensor will have to travel this distance forty-two times during the scanning process, as well as the distance to the centre six times, making the total theoretical travelling time of the colour sensor $\sim$21.26\si{\second}.
+   
     
     \begin{figure}[H]
     	\begin{center}
@@ -788,7 +783,11 @@
     
     The EV3 control brick is mounted on the side of the robot to allow easy access to the controls which allow navigation of the file system and turning the brick on and off. It is held in place by several long pins \legopiece{32054} which can be easily retracted to allow quick removal of the brick so the batteries can be changed.
     
-    \subsection{Version 2}
+    
+    
+    xmove arm
+    The play in the motor that proved an issue with the cradle, whilst still being present, is not a concern for this assembly because accuracy is of much less importance. As long as the arm moves by \tit{at least} the correct angle to rotate the Cube or place the guard in position, the exact position is unimportant. The accuracy of the large motor's rotor is therefore accepted for this assembly.
+    
     \section{Codebase}
     \subsection{Object Classes}
     \subsubsection{Cube}
