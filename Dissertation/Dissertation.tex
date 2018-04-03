@@ -575,7 +575,6 @@
     Figure \ref{fig:rdrCradleMountedRotor}, below, is a rendered image of the 3D aforementioned model. It shows how the cradle and the motor will be supported by a framework which will link to the rest of the robot. The main body of the motor is supported both vertically and horizontally to stop it from leaning under its own weight and also to prevent the motor rotating due to the inertia of the Cube.
     
     \begin{figure}[H]
-    	REDO
     	\begin{center}
     		\includegraphics[width=0.5\textwidth]{Resources/Images/rdrCradleMountedRotor.png}
     		\caption{A render showing the original cradle mount design}
@@ -599,19 +598,19 @@
 
 	\begin{figure}[H]
 		\centering
-		\begin{subfigure}[b]{0.21688\textwidth}
+		\begin{subfigure}[b]{0.22193\textwidth}
 			\includegraphics[width=\textwidth]{Resources/Images/rdrXMoveArmV1_1.png}
 			\caption{Guarded position}
 			\label{fig:rdrXMoveArmV1_1}
 		\end{subfigure}
 		\hspace{10mm}
-		\begin{subfigure}[b]{0.21688\textwidth}
+		\begin{subfigure}[b]{0.22\textwidth}
 			\includegraphics[width=\textwidth]{Resources/Images/rdrXMoveArmV1_2.png}
 			\caption{Starting the \move{X}}
 			\label{fig:rdrXMoveArmV1_2}
 		\end{subfigure}
 		\hspace{10mm}
-		\begin{subfigure}[b]{0.31623\textwidth}
+		\begin{subfigure}[b]{0.30811\textwidth}
 			\includegraphics[width=\textwidth]{Resources/Images/rdrXMoveArmV1_3.png}
 			\caption{Unguarded position}
 			\label{fig:rdrXMoveArmV1_3}
@@ -654,6 +653,9 @@
 	
 	
 	The medium motor powers a 24-tooth gear \legopiece{3648}, which then transmits power to an 8-tooth gear \legopiece{3647}, which is on the same axle as the worm gears. The rotational velocity of the worm gear is 63.75 \si{\radian\per\second} (608 RPM), which means that a large 40-tooth gear would have a rotational velocity of 1.59 \si{\radian\per\second} (15.2 RPM). Using this rotational velocity, the surface velocity of the large gear and therefore the lateral velocity of the rack can be calculated to be $\sim$0.0662 \si{\meter\per\second}. Given that the range of the colour sensor assembly's moveable distance is 80\si{\milli\metre}, the time taken for the colour sensor to travel from its neutral position to above the centre facelet is 1.21\si{\second}. Whilst this may seem like a relatively long time for the motor to move a light load, the assembly will only have to make the full journey between each face.
+	
+	
+	TALK ABOUT SPECIAL GEAR
 	
 	\begin{figure}[H]
 		\begin{center}
