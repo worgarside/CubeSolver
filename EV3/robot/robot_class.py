@@ -41,7 +41,7 @@ class Robot:
 
         self.color_sensor.mode = self.color_sensor.MODE_COL_COLOR
         self.color_scan_dict = {0: Color.NONE, 1: Color.DARK, 2: Color.BLUE, 3: Color.GREEN, 4: Color.YELLOW,
-                                5: Color.RED, 6: Color.WHITE, 7: Color.ORANGE, }
+                                5: Color.RED, 6: Color.WHITE, 7: Color.ORANGE}
 
         self.cs_mid_pos = -1650
         self.cs_cor_pos = -1350

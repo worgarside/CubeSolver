@@ -13,11 +13,12 @@ INVERSION_DICT = {
     Move.R2: Move.R2, Move.F2: Move.F2, Move.B2: Move.B2,
 }
 
-def lookup_position(db, position, phase):
+
+def lookup_position(db, position):
     lookup_pos = position
     try:
-        orig_sequence = json.loads(db.query("SELECT move_sequence FROM gs3p%i where position = '%s'"
-                                            % (phase, lookup_pos)).fetchone()[0])
+        orig_sequence = json.loads(
+            db.query("SELECT move_sequence FROM gs3p0 where position = '%s'" % lookup_pos).fetchone()[0])
 
         reverse_sequence = orig_sequence[::-1]
 
@@ -30,5 +31,5 @@ def lookup_position(db, position, phase):
         print(err)
         exit()
     except TypeError:
-        print('Cube not found in table gs3p%i \n\n %s' % (phase, Cube(lookup_pos)))
+        print('Cube not found in table gs3p0 \n\n %s' % Cube(lookup_pos))
         exit()

@@ -12,10 +12,10 @@ from queue import LifoQueue
 import colorama
 
 import group_solver_mk_one as gs1
-import group_solver_mk_two.table_generator as gs2_generator
-import group_solver_mk_two.table_lookup as gs2_lookup
 import group_solver_mk_three.table_generator as gs3_generator
 import group_solver_mk_three.table_lookup as gs3_lookup
+import group_solver_mk_two.table_generator as gs2_generator
+import group_solver_mk_two.table_lookup as gs2_lookup
 from cube.cube_class import Cube
 from cube.moves import *
 from data.database_manager import DatabaseManager
@@ -114,6 +114,18 @@ def group_solve_mk_two(db, position, phase_count):
     return total_sequence
 
 
+def group_solve_mk_three(db, position):
+    print(' - Table Lookup -')
+    solve_sequence = gs3_lookup.lookup_position(db, position)
+    temp_cube = Cube(position)
+    for move in solve_sequence:
+        dyn_move(temp_cube, move)
+        print(move.name, end=' ')
+    print('\n')
+
+    return solve_sequence
+
+
 def tree_solve():
     BaseManager.register('LifoQueue', LifoQueue)
     manager = BaseManager()
@@ -180,44 +192,57 @@ def main():
     db_generation = '-d' in opts
     db_clear = '-c' in opts
     solving = '-s' in opts
+    method_two = '-2' in opts
+    method_three = '-3' in opts
 
     conn = None
     position = None
-    phase_count = 1
+    phase_count = 0
 
     db = init_db()
+
+    if method_two:
+        phase_count = 4
+
+    if method_three:
+        phase_count = 1
 
     if robot_on:
         conn = create_socket()
         position = get_robot_scan(conn)
         print('Scanned position: %s' % position)
     elif solving:
-        # position = 'OBROWROGRWWWBRBWWWGOGWOYGGGWRYBBBYYYBOBYYYGRGOGROYROBR'
-        # position = 'WBWWWWWGWOOOGWGRRRBWBBOGOGRGRBRBOOOOGYGRRRBYBYGYYYYYBY'
-        # position = 'YWRBWYOOWOOBYYOGBYBRGGOGWGWBRYGBOWRRGWBRRYGRBWOWYYBOGR'
-        # position = 'OGOYWYRBRWOWGOBWRWBRGGOBWGYBRGWBYYOYBRGYRYGOBOBOWYWRGR'
-        position = 'GYWBWRBOYWRWRWRGWBOGRBORYGRGRBOBWWGBYYOYOOGYORBBWYGGOY'
-        print('Scanned position: %s' % position)
+        position = input('Enter a sequence:').upper()
 
     if db_clear:
         print('Clearing Database', end='')
-        for table in range(phase_count):
-            db.query('DROP TABLE IF EXISTS gs3p%i' % table)
-            print('.', end='')
+        for table in range(5):
+            for method in range(2):
+                db.query('DROP TABLE IF EXISTS gs%ip%i' % (method, table))
+                print('.', end='')
         db.commit()
         print('   Vacuuming...', end='')
         db.query('VACUUM')
         print('  Done!')
 
     if db_generation:
-        for phase in range(phase_count):
-            gs3_generator.generate_lookup_table(db, phase)
+        if method_two:
+            for phase in range(phase_count):
+                gs2_generator.generate_lookup_table(db, phase)
+        if method_three:
+            for phase in range(phase_count):
+                gs3_generator.generate_lookup_table(db, phase)
 
     if solving:
         cube = Cube(position)
         print(cube)
 
-        solve_sequence = group_solve_mk_two(db, position, phase_count)
+        if method_two:
+            solve_sequence = group_solve_mk_two(db, position, phase_count)
+        elif method_three:
+            solve_sequence = group_solve_mk_three(db, position)
+        else:
+            solve_sequence = []
 
         print(' - Final Cube -')
         for move in solve_sequence:
@@ -236,7 +261,7 @@ if __name__ == '__main__':
     colorama.init()
     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
-    opts, args = getopt.getopt(sys.argv[1:], 'rdsc')  # eventually s:[algorithm]
+    opts, args = getopt.getopt(sys.argv[1:], 'rdsc23')  # eventually s:[algorithm]
     opts = dict(opts)
 
     if len(opts) == 0:
@@ -247,7 +272,22 @@ if __name__ == '__main__':
     -d : continue database generation
     -c : clear the database
     -s : solve the Cube
+    -2 : use method 2 (all moves, limited solve)
+    -3 : use method 3 (only half turns, full solve)
 ------------------------------------
         """)
+
+    if '-d' in opts or '-r' in opts:
+
+        if '-2' in opts and '-3' in opts:
+            print("Can't do method 2 and 3")
+            exit(0)
+        elif '-2' not in opts and '-3' not in opts:
+            print('Choose a method')
+            exit(0)
+
+        if '-s' in opts and '-2' not in opts and '-3' not in opts:
+            print('Choose a solve method')
+            exit(0)
 
     main()
