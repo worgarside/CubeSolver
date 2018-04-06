@@ -2,7 +2,7 @@ from copy import deepcopy
 
 from cube.rotation_class import Rotation
 from cube.side_class import Side
-from cube.move_class import Move as MOVE
+from cube.move_class import Move
 
 
 def u(self, print_flag=False):
@@ -315,42 +315,42 @@ def z2(self, print_flag=False):
 
 def dyn_move(self, move, print_flag=False):
     move_dict = {
-        MOVE.U: u,
-        MOVE.NOT_U: not_u,
-        MOVE.U2: u2,
-        MOVE.D: d,
-        MOVE.NOT_D: not_d,
-        MOVE.D2: d2,
-        MOVE.L: l,
-        MOVE.NOT_L: not_l,
-        MOVE.L2: l2,
-        MOVE.R: r,
-        MOVE.NOT_R: not_r,
-        MOVE.R2: r2,
-        MOVE.F: f,
-        MOVE.NOT_F: not_f,
-        MOVE.F2: f2,
-        MOVE.B: b,
-        MOVE.NOT_B: not_b,
-        MOVE.B2: b2,
-        MOVE.M: m,
-        MOVE.NOT_M: not_m,
-        MOVE.M2: m2,
-        MOVE.E: e,
-        MOVE.NOT_E: not_e,
-        MOVE.E2: e2,
-        MOVE.S: s,
-        MOVE.NOT_S: not_s,
-        MOVE.S2: s2,
-        MOVE.X: x,
-        MOVE.NOT_X: not_x,
-        MOVE.X2: x2,
-        MOVE.Y: y,
-        MOVE.NOT_Y: not_y,
-        MOVE.Y2: y2,
-        MOVE.Z: z,
-        MOVE.NOT_Z: not_z,
-        MOVE.Z2: z2
+        Move.U: u,
+        Move.NOT_U: not_u,
+        Move.U2: u2,
+        Move.D: d,
+        Move.NOT_D: not_d,
+        Move.D2: d2,
+        Move.L: l,
+        Move.NOT_L: not_l,
+        Move.L2: l2,
+        Move.R: r,
+        Move.NOT_R: not_r,
+        Move.R2: r2,
+        Move.F: f,
+        Move.NOT_F: not_f,
+        Move.F2: f2,
+        Move.B: b,
+        Move.NOT_B: not_b,
+        Move.B2: b2,
+        Move.M: m,
+        Move.NOT_M: not_m,
+        Move.M2: m2,
+        Move.E: e,
+        Move.NOT_E: not_e,
+        Move.E2: e2,
+        Move.S: s,
+        Move.NOT_S: not_s,
+        Move.S2: s2,
+        Move.X: x,
+        Move.NOT_X: not_x,
+        Move.X2: x2,
+        Move.Y: y,
+        Move.NOT_Y: not_y,
+        Move.Y2: y2,
+        Move.Z: z,
+        Move.NOT_Z: not_z,
+        Move.Z2: z2
     }
-
-    move_dict[move](self)
+    if move is not None:
+        move_dict[move](self)

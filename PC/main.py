@@ -23,9 +23,13 @@ from gui.interface import Interface
 from move_translator.move_converter import convert_sequence
 from tree_solver.tree_generator import generate_tree
 
-GROUP_COMPLETE = [MOVE.U, MOVE.NOT_U, MOVE.U2, MOVE.D, MOVE.NOT_D, MOVE.D2,
-                  MOVE.L, MOVE.NOT_L, MOVE.L2, MOVE.R, MOVE.NOT_R, MOVE.R2,
-                  MOVE.F, MOVE.NOT_F, MOVE.F2, MOVE.B, MOVE.NOT_B, MOVE.B2]
+from cube.move_class import Move
+from cube.side_class import Side
+from cube.color_class import Color
+
+GROUP_COMPLETE = [Move.U, Move.NOT_U, Move.U2, Move.D, Move.NOT_D, Move.D2,
+                  Move.L, Move.NOT_L, Move.L2, Move.R, Move.NOT_R, Move.R2,
+                  Move.F, Move.NOT_F, Move.F2, Move.B, Move.NOT_B, Move.B2]
 
 
 def init_db():
@@ -187,6 +191,42 @@ def get_robot_scan(conn):
     return position
 
 
+def orient_cube(cube):
+    orient_sequence = []
+
+    white_side = cube.get_side_with_color(color=Color.WHITE)
+    white_to_up = {
+        Side.UP: [None],
+        Side.DOWN: [Move.X2],
+        Side.LEFT: [Move.NOT_Y, Move.X],
+        Side.RIGHT: [Move.Y, Move.X],
+        Side.FRONT: [Move.X],
+        Side.BACK: [Move.Y2, Move.X]
+    }
+    orient_sequence.extend(white_to_up[white_side])
+    for move in orient_sequence:
+        dyn_move(cube, move)
+
+    green_side = cube.get_side_with_color(color=Color.GREEN)
+
+    green_to_front = {
+        Side.LEFT: [Move.NOT_Y],
+        Side.RIGHT: [Move.Y],
+        Side.FRONT: [None],
+        Side.BACK: [Move.Y2]
+    }
+    orient_sequence.extend(green_to_front[green_side])
+    dyn_move(cube, green_to_front[green_side][0])
+
+    print(cube)
+
+    return_sequence = []
+    for move in orient_sequence:
+        return_sequence.append(move.name.lower())
+
+    return return_sequence
+
+
 def main():
     robot_on = '-r' in opts
     db_generation = '-d' in opts
@@ -202,7 +242,7 @@ def main():
     db = init_db()
 
     if method_two:
-        phase_count = 4
+        phase_count = 5
 
     if method_three:
         phase_count = 1
@@ -212,7 +252,7 @@ def main():
         position = get_robot_scan(conn)
         print('Scanned position: %s' % position)
     elif solving:
-        position = input('Enter a sequence:').upper()
+        position = input('Enter a position: ').upper()
 
     if db_clear:
         print('Clearing Database', end='')
@@ -237,21 +277,26 @@ def main():
         cube = Cube(position)
         print(cube)
 
-        if method_two:
-            solve_sequence = group_solve_mk_two(db, position, phase_count)
-        elif method_three:
-            solve_sequence = group_solve_mk_three(db, position)
-        else:
-            solve_sequence = []
+        solve_sequence = []
+        orient_sequence = orient_cube(cube)
 
-        print(' - Final Cube -')
+        if method_two:
+            solve_sequence = group_solve_mk_two(db, cube.position, phase_count)
+            print('Total Sequence: ', end='')
+        elif method_three:
+            solve_sequence = group_solve_mk_three(db, cube.position)
+        else:
+            print('No valid solve method found')
+
+        print('\n\n - Final Cube -')
         for move in solve_sequence:
             dyn_move(cube, move)
         print(cube)
 
         if robot_on:
             robot_sequence = convert_sequence(cube, solve_sequence)
-            print(robot_sequence)
+            total_sequence = orient_sequence + robot_sequence
+            print(total_sequence)
 
             conn.send(pickle.dumps(robot_sequence))
             conn.close()
@@ -276,18 +321,18 @@ if __name__ == '__main__':
     -3 : use method 3 (only half turns, full solve)
 ------------------------------------
         """)
+    else:
+        if '-d' in opts or '-r' in opts:
 
-    if '-d' in opts or '-r' in opts:
+            if '-2' in opts and '-3' in opts:
+                print("Can't do method 2 and 3")
+                exit(0)
+            elif '-2' not in opts and '-3' not in opts:
+                print('Choose a method')
+                exit(0)
 
-        if '-2' in opts and '-3' in opts:
-            print("Can't do method 2 and 3")
-            exit(0)
-        elif '-2' not in opts and '-3' not in opts:
-            print('Choose a method')
-            exit(0)
+            if '-s' in opts and '-2' not in opts and '-3' not in opts:
+                print('Choose a solve method')
+                exit(0)
 
-        if '-s' in opts and '-2' not in opts and '-3' not in opts:
-            print('Choose a solve method')
-            exit(0)
-
-    main()
+        main()

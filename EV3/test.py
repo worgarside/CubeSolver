@@ -1,27 +1,15 @@
 from time import sleep
+from ev3dev.ev3 import Sound, OUTPUT_A
+from ev3dev.helper import LargeMotor
 
-from ev3dev.ev3 import Sound
-from ev3dev.helper import ColorSensor
+motor = LargeMotor(OUTPUT_A)
+motor.stop_action = 'hold'
 
-
-color_sensor = ColorSensor()
-color_scan_dict = {0: 'NONE', 1: 'DARK', 2: 'BLUE', 3: 'GREEN', 4: 'YELLOW',
-                   5: 'RED', 6: 'WHITE', 7: 'ORANGE'}
-
-while True:
-    print('\n')
+for i in range(16):
+    motor.run_to_rel_pos(position_sp=200, speed_sp=510)
+    motor.wait_until_not_moving()
+    sleep(0.05)
     Sound.beep()
-    color_sensor.mode = color_sensor.MODE_RGB_RAW
-    print('%i %i %i' % (color_sensor.red, color_sensor.green, color_sensor.blue))
 
-    color_sensor.mode = color_sensor.MODE_COL_COLOR
-    print(color_scan_dict[color_sensor.value()])
-    sleep(2.5)
-
-
-
-
-
-
-
-
+motor.stop_action = 'coast'
+motor.run_timed(time_sp=1, speed_sp=1)

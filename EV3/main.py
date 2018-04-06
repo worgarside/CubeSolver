@@ -9,14 +9,17 @@ from robot.robot_class import Robot
 IP_DICT = {
     'WILLS-SURFACE @ ONEPLUS 3': '192.168.43.188',
     'WILLS-DESKTOP @ HOME': '192.168.0.21',
+    'WILLS-SURFACE @ EDGE LANE': '192.168.1.84'
 }
+
+CURRENT_IP = IP_DICT['WILLS-SURFACE @ EDGE LANE']
 
 
 def create_socket():
     conn = socket.socket()
 
-    print('Connecting to %s:%s' % (IP_DICT['WILLS-DESKTOP @ HOME'], 3000))
-    conn.connect((IP_DICT['WILLS-DESKTOP @ HOME'], 3000))
+    print('Connecting to %s:%s' % (CURRENT_IP, 3000))
+    conn.connect((CURRENT_IP, 3000))
     print('Connected!')
     Sound.speak('connected to server')
     sleep(1.5)
