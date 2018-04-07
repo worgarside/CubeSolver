@@ -855,16 +855,105 @@
 	
 	\subsubsection{Motor Initialisation}
 	
+	During the testing and general usage of the MkI, there were many occurrences of a fatal runtime error which would leave the motors out of their starting position. The usual cause of this was a \lstinline|StallError| from one of the motors or the voltage supply from the batteries becoming too low. The incorrect positioning required the motors to be initialised when restarting the program. To assist in this procedure, large black gears were added to the motors which allows them to be returned to their respective initial positions. A method was also added to the program disable the active braking on the motors so they weren't damaged when being rotated.
 	
-	\subsubsection{Fragility and Transportability}
+	\begin{figure}[H]
+		\centering
+		\begin{subfigure}[b]{0.25\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/rdrInitialiser1.png}
+			\caption{Colour Sensor initialiser}
+			\label{fig:rdrInitialiser1}
+		\end{subfigure}
+		\hspace{10mm}
+		\begin{subfigure}[b]{0.25\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/rdrInitialiser2.png}
+			\caption{Cradle initialiser}
+			\label{fig:rdrInitialiser2}
+		\end{subfigure}
+		\hspace{10mm}
+		\begin{subfigure}[b]{0.25\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/rdrInitialiser3.png}
+			\caption{\move{x} Arm initialiser}
+			\label{fig:rdrInitialiser3}
+		\end{subfigure}
+		\caption{The initialising gears used for each motor}
+		\label{fig:rdrInitialiser}
+	\end{figure}
+	
+	\subsubsection{Fragility and Adaptability}
+	
+	One of the MkI's greatest flaws was the fragility of the frame that held the \move{x} arm in place. It was also very difficult to make any adjustments to the MkI because of the complexity of the design. With this in mind the MkII was constructed of two main modules, each of which could be structurally tested independently. These modules were then connected with seven red pins \legopiece{32054} that are easily accessible. If any modifications need to be made to the MkII, the pins can be removed and the modules separated for quick and efficient modification.
+	
+	\begin{figure}[H]
+		\centering
+		\begin{subfigure}[b]{0.25\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/rdrModulePins1.png}
+			\label{fig:rdrModulePins1}
+		\end{subfigure}
+		\hspace{10mm}
+		\begin{subfigure}[b]{0.25\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/rdrModulePins2.png}
+			\label{fig:rdrModulePins2}
+		\end{subfigure}
+		\hspace{10mm}
+		\begin{subfigure}[b]{0.25\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/rdrModulePins3.png}
+			\label{fig:rdrModulePins3}
+		\end{subfigure}
+		\caption{The pins used for connecting the modules}
+		\label{fig:rdrModulePins}
+	\end{figure}
+	
 	\subsubsection{Battery Usage}
-	\subsubsection{?????????????}
+	
+	The final of the issues discovered by repeated testing of the MkI was how power-hungry the EV3 control brick really is. After only one to one and a half hours of testing, it would run six AA 2500 \si{\milli\ampere\hour} batteries completely flat. Lego do sell a rechargeable battery for the EV3, however is is only 2050 \si{\milli\ampere\hour} by itself and its costs £81.99 \cite{Lego2018}. A cheaper (and higher capacity) option was to purchase twelve rechargeable 2500 \si{\milli\ampere\hour} batteries and a charger for approximately £25. Whilst the EV3 was voraciously consuming the power from siz of the batteries, the other six could either be charging or waiting ready. This led to the design and creation of a battery holder attached to the MkII. It holds six AA batteries and has two pins which can be removed to release the batteries, as shown in Figure \ref{fig:imgBatteryHolderOpen}.
+	
+	\begin{figure}[H]
+		\centering
+		\begin{subfigure}[b]{0.27665\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/rdrBatteryHolder.png}
+			\caption{The design of the battery holder, rendered}
+			\label{fig:rdrBatteryHolder}
+		\end{subfigure}
+		\hspace{10mm}
+		\begin{subfigure}[b]{0.21082\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/imgBatteryHolder.jpg}
+			\caption{Six AA batteries ready for use}
+			\label{fig:imgBatteryHolder}
+		\end{subfigure}
+		\hspace{10mm}
+		\begin{subfigure}[b]{0.26253\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/imgBatteryHolderOpen.jpg}
+			\caption{The battery holder is opened by removing the pins}
+			\label{fig:imgBatteryHolderOpen}
+		\end{subfigure}
+		\caption{The battery holder, as a rendered model and in real life}
+		\label{fig:batteryHolder}
+	\end{figure}
 	
 	\subsection{Cradle}
 
-	A worm gear \legopiece{4716} will solve both of these problems: it will be combined with a large gear \legopiece{3649} to create a gear ratio of 1:40, increasing the accuracy of the motor by a factor of forty (see Figure \ref{fig:dwgCradleWormGear}). This will also slow the maximum rotational velocity of the cradle to 0.209 \si{\radian\per\second} (2 RPM) at 7.5V, so a 90$\degree$ turn will take 7.5 seconds\footnote{This figure is the result of a measurement of the maximum rotational velocity of a large motor, and will fluctuate depending on the voltage supplied by the batteries in the EV3 brick}. A compromise between maximum rotational velocity and accuracy will be found by adding more gears to reduce the ratio. The problem presented by the play in the motors will be reduced to an acceptable level due to the unidirectional nature of the gear train.
+	The MkI implementation of the cradle largely failed because of the play in the large motor upon which it was mounted. The play reduced the accuracy of the motor and made the rotations unreliable. A worm gear \legopiece{4716} will solve both of these problems: it will be combined with a large gear \legopiece{3649} to create a gear ratio of 1:40, increasing the accuracy of the motor by a factor of forty (see Figure \ref{fig:dwgCradleWormGear}). This will also slow the maximum rotational velocity of the cradle to 0.209 \si{\radian\per\second} (2 RPM) at 7.5V, so a 90$\degree$ turn will take 7.5 seconds\footnote{This figure is the result of a measurement of the maximum rotational velocity of a large motor, and will fluctuate depending on the voltage supplied by the batteries in the EV3 brick}. A compromise between maximum rotational velocity and accuracy will be found by adding more gears to reduce the ratio. The problem presented by the play in the motor will be reduced to an acceptable level due to the unidirectional nature of the gear train.
 	
-	Figure \ref{fig:rdrWormGear} shows how the cradle will be driven by a large motor. A large 36-tooth gear \legopiece{32498} is directly attached to the rotor with two small pins to reduce the need for an extended shaft which will flex when placed under strain (i.e. at the start of a rotation). This gear drives a 12-tooth gear \legopiece{32270} to triple the rotational velocity at that point of the gear train. This connection is immediately repeated and used to create a 90$\degree$ turn onto the shaft with the worm gear. At this point the speed of the worm gear has a ratio of 9:1 when compared to the motor's output, which is then decreased forty times by the large 40-tooth gear to create a final ratio of 1:4.444. This means the maximum rotational velocity of the cradle will be 1.843 \si{\radian\per\second} (17.6 RPM) at 7.5V and the original torque is increased from 17.3\si{\newton\centi\metre} to 76.8\si{\newton\centi\metre}, which will allow a face of the Cube to be rotated with ease. The vertical black shaft seen at the top of the image provides a mounting point for the cradle.
+	\begin{figure}[H]
+		\centering
+		\begin{subfigure}[b]{0.37999\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/dwgCradleWormGear.png}
+			\caption{The rotation of the worm
+				gear drives the cradle’s rotation}
+			\label{fig:dwgCradleWormGear}
+		\end{subfigure}
+		\hspace{10mm}
+		\begin{subfigure}[b]{0.42014\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/rdrCradleWormGear.png}
+			\caption{The gear train which provides power to the cradle}
+			\label{fig:rdrCradleWormGear}
+		\end{subfigure}
+		\caption{The battery holder, as a rendered model and in real life}
+		\label{fig:cradleWormGear}
+	\end{figure}
+	
+	Figure \ref{fig:rdrCradleWormGear} shows how the cradle will be driven by a large motor. A large 36-tooth gear \legopiece{32498} is directly attached to the rotor with two small pins to reduce the need for an extended shaft which will flex when placed under strain (i.e. at the start of a rotation). This gear drives a 12-tooth gear \legopiece{32270} to triple the rotational velocity at that point of the gear train. This connection is immediately repeated and used to create a 90$\degree$ turn onto the shaft with the worm gear. At this point the speed of the worm gear has a ratio of 9:1 when compared to the motor's output, which is then decreased forty times by the large 40-tooth gear to create a final ratio of 1:4.444. This means the maximum rotational velocity of the cradle will be 1.843 \si{\radian\per\second} (17.6 RPM) at 7.5V and the original torque is increased from 17.3 \si{\newton\centi\metre} to 76.8 \si{\newton\centi\metre}, which will allow a face of the Cube to be rotated with ease. The vertical black shaft seen at the top of the image provides a mounting point for the cradle.
 	
 	\subsection{X-Move Arm}
     
