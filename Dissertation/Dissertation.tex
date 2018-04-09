@@ -20,7 +20,6 @@
 \usepackage{pgfplots}			% draw charts and graphs
 \usepackage{titlesec}			% used in chapter titles
 \usepackage{subcaption}			% allows sub-figures
-%\usepackage[ruled,vlined,linesnumbered,lined,boxed,commentsnumbered]{algorithm2e}		% formatting algorithms
 \usepackage{algorithm}			% algorithms
 \usepackage{algpseudocode}		% algorithm formatting
 \usepackage[fleqn]{amsmath}		% multiline math
@@ -29,6 +28,7 @@
 \usepackage{courier}			% adds inline Courier font
 \usepackage{siunitx}			% SI unit support
 \usepackage{listings}			% code formatting
+\usepackage{enumitem}			% Lettered enumerations
 
 \titleformat{\chapter}{\normalfont\Huge\bfseries}{\thechapter}{1em}{}
 \titlespacing*{\chapter}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
@@ -648,7 +648,7 @@
 		\label{fig:rdrColorSensor}
 	\end{figure}
 	
-	Where the motors used for the cradle and the \move{x} arm can both rotate indefinitely without a mechanical issue (colliding with other parts of the MkI, for instance), the one powering the colour sensor cannot rotate indefinitely due to the limited freedom of the colour sensor assembly. When the assembly reaches the end of its travel, it will be stopped by the liftarm that holds the shafts, causing it to stop the gear train and in turn provide a level of resistance to the motor that could either damage the motor or force the MkI to break apart. For this reason, the 24-tooth gear \legopiece{60c01} ()which is the first in the gear train) is a special type of \enquote{clutch gear}, shown in Figure \ref{fig:imgClutchGear}. This means that it will only transmit a maximum torque value of between 2.5 \si{\newton\centi\metre} and 5.0 \si{\newton\centi\metre}. The theoretical output torque of the gear train is 2.21 \si{\newton\centi\metre}, so the clutch gear will function as a regular gear for the duration of colour sensor movement. When the assembly reaches its limit, the resistance to the gear train will cause the clutch gear to slip and the motor can continue turning without damaging itself or the MkI. This all ensures that if an error occurs which causes the motor to remain in a running state, no components will be damaged. Clearly an error of that magnitude should never occur if \lstinline|try...except| statements are used correctly, but this is a final fail-safe measure.
+	Where the motors used for the cradle and the \move{x} arm can both rotate indefinitely without a mechanical issue (colliding with other parts of the MkI, for instance), the one powering the colour sensor cannot rotate indefinitely due to the limited freedom of the colour sensor assembly. When the assembly reaches the end of its travel, it will be stopped by the liftarm that holds the shafts, causing it to stop the gear train and in turn provide a level of resistance to the motor that could either damage the motor or force the MkI to break apart. For this reason, the 24-tooth gear \legopiece{60c01} (which is the first in the gear train) is a special type of \enquote{clutch gear}, shown in Figure \ref{fig:imgClutchGear}. This means that it will only transmit a maximum torque value of between 2.5 \si{\newton\centi\metre} and 5.0 \si{\newton\centi\metre}. The theoretical output torque of the gear train is 2.21 \si{\newton\centi\metre}, so the clutch gear will function as a regular gear for the duration of colour sensor movement. When the assembly reaches its limit, the resistance to the gear train will cause the clutch gear to slip and the motor can continue turning without damaging itself or the MkI. This all ensures that if an error occurs which causes the motor to remain in a running state, no components will be damaged. Clearly an error of that magnitude should never occur if \lstinline|try...except| statements are used correctly, but this is a final fail-safe measure.
 	
 	\begin{figure}
 		\centering
@@ -939,8 +939,7 @@
 		\centering
 		\begin{subfigure}[b]{0.37999\textwidth}
 			\includegraphics[width=\textwidth]{Resources/Images/dwgCradleWormGear.png}
-			\caption{The rotation of the worm
-				gear drives the cradle’s rotation}
+			\caption{The rotation of the worm gear drives the cradle’s rotation}
 			\label{fig:dwgCradleWormGear}
 		\end{subfigure}
 		\hspace{10mm}
@@ -953,22 +952,68 @@
 		\label{fig:cradleWormGear}
 	\end{figure}
 	
-<<<<<<< HEAD
 	Figure \ref{fig:rdrCradleWormGear} shows how the cradle is driven by a large motor. A large 36-tooth gear \legopiece{32498} is directly attached to the rotor with two small pins to reduce the need for an extended shaft which will flex when placed under strain (i.e. at the start of a rotation). This gear drives a 12-tooth gear \legopiece{32270} to triple the rotational velocity at that point of the gear train. This connection is immediately repeated and used to create a 90$\degree$ turn onto the shaft with the worm gear. At this point the speed ratio between the worm gear and the motor is 9:1, which is then decreased forty times by the large 40-tooth gear to create a final ratio of 1:4.444. This means the maximum rotational velocity of the cradle will be 1.843 \si{\radian\per\second} (17.6 RPM) at 7.5\si{\volt} and the original torque is increased from 17.3 \si{\newton\centi\metre} to 76.8 \si{\newton\centi\metre}, which will allow a face of the Cube to be rotated with ease. The vertical black shaft seen at the top of the image provides a mounting point for the cradle.
-=======
-	Figure \ref{fig:rdrCradleWormGear} shows how the cradle will be driven by a large motor. A large 36-tooth gear \legopiece{32498} is directly attached to the rotor with two small pins to reduce the need for an extended shaft which will flex when placed under strain (i.e. at the start of a rotation). This gear drives a 12-tooth gear \legopiece{32270} to triple the rotational velocity at that point of the gear train. This connection is immediately repeated and used to create a 90$\degree$ turn onto the shaft with the worm gear. At this point the ratio of the gear train is 9:1, which is then decreased forty times by the large 40-tooth gear to create a final ratio of 1:4.444. This means the maximum rotational velocity of the cradle will be 1.843 \si{\radian\per\second} (17.6 RPM) at 7.5 \si{\volt} and the original torque is increased from 17.3 \si{\newton\centi\metre} to 76.8 \si{\newton\centi\metre}, which will allow a face of the Cube to be rotated with ease. The vertical black shaft seen at the top of the image provides a mounting point for the cradle.
->>>>>>> e78dcdb812b5fcae2051cdc10d398e7506e8540c
 	
 	\subsection{X-Move Arm}
     
-    The largest change between the two design iterations was the complete update of the \move{x} arm - in functionality, aesthetics, and reliability. Where the MkI \move{x} arm relied on pushing the Cube, the MkII \tit{pulls} the Cube towards it. This creates a much more controlled movement, albeit slightly more violent, as the Cube is bound on all four sides at all times. The pulling motion causes the Cube's rotation, then the Cube is immediately pushed away and back into the cradle.
+    The largest change between the two design iterations was the complete update of the \move{x} arm - in functionality, aesthetics, and reliability. Where the MkI \move{x} arm relied on pushing the Cube, the MkII \tit{pulls} the Cube towards it. This creates a much more controlled movement, as the Cube is bound on all four sides at all times. As shown in Figure \ref{fig:rdrXMoveBlock}, the Cube cannot fall out of the cradle during the \enquote{pull} part of the rotation due to the small right-angled piece behind the cradle. The pulling motion causes the Cube's rotation, then the Cube is immediately pushed back into the cradle to complete the move.
+   	
+	\begin{figure}[H]
+   		\begin{center}
+   			\includegraphics[width=0.4\textwidth]{Resources/Images/rdrXMoveBlock.png}
+   			\caption{A side elevation to show the pieces which block the Cube from falling}
+   			\label{fig:rdrXMoveBlock}
+   		\end{center} 
+   	\end{figure}
+   
+    The arm is controlled by a single large motor, and is suspended from a tall frame by a liftarm which is free to pivot at both ends. This means that the arm can move \tit{along} the Z-axis as well as about the X-axis - albeit with limited freedom. Figure \ref{fig:rdrXMoveRenders} show the incremental steps for an \move{x}: 
     
+    \begin{enumerate}[label=\alph*]
+    	\item Starting position, the front of the arm is just touching the \face{f}
+    	\item Maximum pull position, the Cube has rotated and is resting on the block piece from Figure \ref{fig:rdrXMoveBlock}
+    	\item The Cube is pushed back into the cradle
+    	\item Push is completed
+    	\item The arm moves out of the way to end the \move{x}
+    \end{enumerate}
     
+   	\begin{figure}[H]
+    	\centering
+    	\begin{subfigure}[b]{0.25\textwidth}
+    		\includegraphics[width=\textwidth]{Resources/Images/rdrXMoveArmLowered.png}
+    		\caption{}
+    		\label{fig:rdrXMoveArmLowered}
+    	\end{subfigure}
+    	\hspace{10mm}
+    	\begin{subfigure}[b]{0.25\textwidth}
+    		\includegraphics[width=\textwidth]{Resources/Images/rdrXMoveArmPulling.png}
+    		\caption{}
+    		\label{fig:rdrXMoveArmPulling}
+    	\end{subfigure}
+    	\hspace{10mm}
+    	\begin{subfigure}[b]{0.25\textwidth}
+    		\includegraphics[width=\textwidth]{Resources/Images/rdrXMoveArmLowered.png}
+    		\caption{}
+    		\label{fig:rdrXMoveArmLowered2}
+    	\end{subfigure}
+    	\begin{subfigure}[b]{0.25\textwidth}
+    		\includegraphics[width=\textwidth]{Resources/Images/rdrXMoveArmPostPush.png}
+    		\caption{}
+    		\label{fig:rdrXMoveArmPostPush}
+    	\end{subfigure}
+    	\hspace{10mm}
+    	\begin{subfigure}[b]{0.25\textwidth}
+    		\includegraphics[width=\textwidth]{Resources/Images/rdrXMoveArmRaised.png}
+    		\caption{}
+    		\label{fig:rdrXMoveArmRaised}
+    	\end{subfigure}
+    	\caption{The steps of an \move{x}, in order}
+    	\label{fig:rdrXMoveRenders}
+    \end{figure}
     
-    
-    As shown in Figure ??, the Cube cannot fall out of the cradle during the \enquote{pull} part of the rotation due to the small right-angled piece behind the cradle.
     
     \subsection{Colour Sensor}
+    
+    The colour sensor was undoubtedly the most successful component of the MkI, and very little has been changed between design iterations. The clutch gear \legopiece{60c01} used in preventing any damage to the motor of the MkI framework actually became a hindrance: if the assembly encountered any resistance when moving (e.g. when the rack moves onto the second worm gear), then the clutch would slip and then the whole assembly would be out of line. This rarely caused incorrect scanning results, however it is easier to restrict damage by following good coding practices - which were developed with the use of the MkI. The only other functional change to the colour sensor was the shortening of the axle which it rested on. The worm gear closest to the cradle was superfluous so was removed to avoid over-complicating the mechanism.
     
     \newpage
     \section{Codebase}
