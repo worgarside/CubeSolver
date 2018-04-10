@@ -840,15 +840,15 @@
 	\begin{figure}[H]
 		\centering
 		\begin{subfigure}[b]{0.25\textwidth}
-			\includegraphics[width=\textwidth]{Resources/Images/mkIArmCollapse1.png}
+			\includegraphics[width=\textwidth]{Resources/Images/imgMkIArmCollapse1.png}
 		\end{subfigure}
 		\hspace{5mm}
 		\begin{subfigure}[b]{0.25\textwidth}
-			\includegraphics[width=\textwidth]{Resources/Images/mkIArmCollapse2.png}
+			\includegraphics[width=\textwidth]{Resources/Images/imgMkIArmCollapse2.png}
 		\end{subfigure}
 		\hspace{5mm}
 		\begin{subfigure}[b]{0.25\textwidth}
-			\includegraphics[width=\textwidth]{Resources/Images/mkIArmCollapse3.png}
+			\includegraphics[width=\textwidth]{Resources/Images/imgMkIArmCollapse3.png}
 		\end{subfigure}
 		\caption{The MkI \move{x} arm broke under greater resistance}
 		\label{fig:mkIArmCollapse}
@@ -1122,24 +1122,26 @@
 	    
 	\node (start) [startstop] {Start};
 	\node (ioScanCube) [io, below of=start] {Scan Cube};
-	\node (decValidCube) [decision, below of=pro1, yshift=-0.5cm] {Is Cube valid?};
+	\node (decValidCube) [decision, below of=ioScanCube, yshift=-0.5cm] {Is Cube valid?};
+	\node (decFirstScan) [decision, right of=decValidCube] {Is this the first scan?};
+	
+	\draw [arrow] (decValidCube) -- node[anchor=east] {yes} (decFirstScan);
 	
 	
-	
-	\node (pro1) [process, below of=in1] {Process 1};
-	\node (pro2a) [process, below of=dec1, yshift=-0.5cm] {Process 2a text text text text text text text text text text};
-	\node (pro2b) [process, right of=dec1, xshift=2cm] {Process 2b};
-	\node (out1) [io, below of=pro2a] {Output};
-	\node (stop) [startstop, below of=out1] {Stop};
-	
-	\draw [arrow] (start) -- (in1);
-	\draw [arrow] (in1) -- (pro1);
-	\draw [arrow] (pro1) -- (dec1);
-	\draw [arrow] (dec1) -- node[anchor=east] {yes} (pro2a);
-	\draw [arrow] (dec1) -- node[anchor=south] {no} (pro2b);
-	\draw [arrow] (pro2b) |- (pro1);
-	\draw [arrow] (pro2a) -- (out1);
-	\draw [arrow] (out1) -- (stop);
+%	\node (pro1) [process, below of=ioScanCube] {Process 1};
+%	\node (pro2a) [process, below of=decValidCube, yshift=-0.5cm] {Process 2a text text text text text text text text text text};
+%	\node (pro2b) [process, right of=decValidCube, xshift=2cm] {Process 2b};
+%	\node (out1) [io, below of=pro2a] {Output};
+%	\node (stop) [startstop, below of=out1] {Stop};
+
+	\draw [arrow] (start) -- (ioScanCube);
+	\draw [arrow] (ioScanCube) -- (decValidCube);
+%	\draw [arrow] (pro1) -- (decValidCube);
+%	
+%	\draw [arrow] (decValidCube) -- node[anchor=south] {no} (pro2b);
+%	\draw [arrow] (pro2b) |- (pro1);
+%	\draw [arrow] (pro2a) -- (out1);
+%	\draw [arrow] (out1) -- (stop);
     
     \end{tikzpicture}
     

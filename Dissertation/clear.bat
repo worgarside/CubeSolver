@@ -7,3 +7,4 @@ del /S *.lot
 del /S *.gz
 del /S *.toc
 del /S *.synctex(busy)
+del /S Sheena.bib
