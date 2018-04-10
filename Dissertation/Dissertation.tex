@@ -26,9 +26,17 @@
 \usepackage{amssymb}			% math symbols
 \usepackage{xparse}				% adds string substitution for moveset command
 \usepackage{courier}			% adds inline Courier font
-\usepackage{siunitx}			% SI unit support
+\usepackage[binary-units]{siunitx}	% SI unit support
 \usepackage{listings}			% code formatting
 \usepackage{enumitem}			% Lettered enumerations
+\usepackage{tikz}				% flowcharts
+
+\usetikzlibrary{shapes.geometric, arrows}
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=blue!30]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=orange!30]
+\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=green!30]
+\tikzstyle{arrow} = [thick,->,>=stealth]
 
 \titleformat{\chapter}{\normalfont\Huge\bfseries}{\thechapter}{1em}{}
 \titlespacing*{\chapter}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
@@ -457,12 +465,12 @@
     
     \newpage
     
-    \chapter[Design, Implementation and Testing]{Design, Implementation \\ and Testing}
-    \epigraph{There are two ways of constructing a software design: One way is to make it so simple that there are obviously no deficiencies, and the other way is to make it so complicated that there are no obvious deficiencies. The first method is far more difficult.}{C.A.R. Hoare\cite{Hoare1981}}
+    \chapter[Design, Implementation and Testing: The Robot]{Design, Implementation \\ and Testing: The Robot} \label{chp:designRobot}
+    \epigraph{I don’t spend my time pontificating about high-concept things. I spend my time solving engineering and manufacturing problems}{Elon Musk\cite{Ohnsman2013}}
     
 	\section{Introduction}
 	
-	The nature of this project lends itself to a spiral design cycle, where both the robot and the solver can be designed, implemented, tested and then optimised to re-start the cycle. This non-linearity of the \tit{Design $\rightarrow$ Implementation $\rightarrow$ Testing} process means that the structure of this dissertation must follow the progress of the project, rather than having distinct sections for \enquote{Design} and \enquote{Implementation and Testing}. Consequentially this chapter's structure is split into two main parts - \enquote{Robot} and \enquote{Codebase} - each with introductory sections for fundamental components that are invariant through the different designs, and further sections to discuss each design.
+	The nature of this project lends itself to a spiral design cycle, where both the robot and the solving program can be designed, implemented, tested and then optimised to re-start the cycle. This non-linearity of the \tit{Design $\rightarrow$ Implementation $\rightarrow$ Testing} process means that the structure of this dissertation must follow the progress of the project, rather than having distinct sections for \enquote{Design} and \enquote{Implementation and Testing}. Consequentially the Design, Implementation and Testing component of this document is split into two chapters - \enquote{Robot} and \enquote{Codebase} - each with introductory sections for fundamental components that are invariant through the different iterations, and further sections to discuss each iteration individually.
 
 	\begin{figure}[H]
 		\begin{center}
@@ -517,7 +525,7 @@
     
     \subsubsection{Cradle}
     
-    The Cube will sit in a cradle which rotates about the Y axis to provide the movement needed for the moveset \moveset{Y.Y'y2D.D'd2}. This will have an inner dimension of 7 studs $\times$ 7 studs (56 \si{\milli\metre} $\times$ 56 \si{\milli\metre}) to closely match the dimensions of the Valk 3: 55.5 \si{\milli\metre} $\times$ 55.5 \si{\milli\metre} $\times$ 55.5 \si{\milli\metre}. The 0.5 \si{\milli\metre} tolerance means that the Cube doesn't have to be absolutely perfectly aligned when it is rotated (i.e. the program won't fail if the cube is a degree out of line). The cradle must rotate as accurately as possible to 90$\degree$ increments to ensure the success of the \move{x}s and avoid the Cube falling out of the cradle. 
+    The Cube will sit in a cradle which rotates about the Y axis to provide the movement needed for the moveset \moveset{Y.Y'y2D.D'd2}. This will have an inner dimension of 7 studs $\times$ 7 studs (56 \si{\milli\metre} $\times$ 56 \si{\milli\metre}) to closely match the dimensions of the Valk 3: 55.5 \si{\milli\metre} $\times$ 55.5 \si{\milli\metre} $\times$ 55.5 \si{\milli\metre}. The 0.5 \si{\milli\metre} tolerance means that the Cube doesn't have to be absolutely perfectly aligned when it is rotated (i.e. the program won't fail if the cube is a degree out of line). The cradle must rotate as accurately as possible to \ang{90} increments to ensure the success of the \move{x}s and avoid the Cube falling out of the cradle. 
     
     \subsubsection{X-Move Arm}
     To perform an \move{x}, some kind of arm will need to \enquote{flip} the Cube about its X axis. This should be a quick movement, with high reliability and good structural soundness. The arm must not interfere with the other components of the robot at any point. Furthermore the arm will also need to incorporate functionality to hold the \slice{l-r} and the \face{u} in place whilst the cradle rotates to perform a permutation of the \move{d}.
@@ -933,7 +941,7 @@
 	
 	\subsection{Cradle}
 
-	The MkI implementation of the cradle largely failed because of the play in the large motor upon which it was mounted. The accuracy of the motor was reduced and the rotations made unreliable. A worm gear \legopiece{4716} has solved both of these problems: it has been combined with a large gear \legopiece{3649} to create a gear ratio of 1:40, increasing the accuracy of the motor by a factor of forty (see Figure \ref{fig:dwgCradleWormGear}). This also slowed the maximum rotational velocity of the cradle to 0.209 \si{\radian\per\second} (2 RPM) at 7.5\si{\volt}, so a 90$\degree$ turn will take 7.5 seconds\footnote{This figure is the result of a measurement of the maximum rotational velocity of a large motor, and will fluctuate depending on the voltage supplied by the batteries in the EV3 brick}. A compromise between maximum rotational velocity and accuracy has been found by adding more gears to reduce the ratio. The problem presented by the play in the motor has been successfully minimised due to the unidirectional nature of the gear train.
+	The MkI implementation of the cradle largely failed because of the play in the large motor upon which it was mounted. The accuracy of the motor was reduced and the rotations made unreliable. A worm gear \legopiece{4716} has solved both of these problems: it has been combined with a large gear \legopiece{3649} to create a gear ratio of 1:40, increasing the accuracy of the motor by a factor of forty (see Figure \ref{fig:dwgCradleWormGear}). This also slowed the maximum rotational velocity of the cradle to 0.209 \si{\radian\per\second} (2 RPM) at 7.5\si{\volt}, so a \ang{90} turn will take 7.5 seconds\footnote{This figure is the result of a measurement of the maximum rotational velocity of a large motor, and will fluctuate depending on the voltage supplied by the batteries in the EV3 brick}. A compromise between maximum rotational velocity and accuracy has been found by adding more gears to reduce the ratio. The problem presented by the play in the motor has been successfully minimised due to the unidirectional nature of the gear train.
 	
 	\begin{figure}[H]
 		\centering
@@ -952,7 +960,7 @@
 		\label{fig:cradleWormGear}
 	\end{figure}
 	
-	Figure \ref{fig:rdrCradleWormGear} shows how the cradle is driven by a large motor. A large 36-tooth gear \legopiece{32498} is directly attached to the rotor with two small pins to reduce the need for an extended shaft which will flex when placed under strain (i.e. at the start of a rotation). This gear drives a 12-tooth gear \legopiece{32270} to triple the rotational velocity at that point of the gear train. This connection is immediately repeated and used to create a 90$\degree$ turn onto the shaft with the worm gear. At this point the speed ratio between the worm gear and the motor is 9:1, which is then decreased forty times by the large 40-tooth gear to create a final ratio of 1:4.444. This means the maximum rotational velocity of the cradle will be 1.843 \si{\radian\per\second} (17.6 RPM) at 7.5\si{\volt} and the original torque is increased from 17.3 \si{\newton\centi\metre} to 76.8 \si{\newton\centi\metre}, which will allow a face of the Cube to be rotated with ease. The vertical black shaft seen at the top of the image provides a mounting point for the cradle.
+	Figure \ref{fig:rdrCradleWormGear} shows how the cradle is driven by a large motor. A large 36-tooth gear \legopiece{32498} is directly attached to the rotor with two small pins to reduce the need for an extended shaft which will flex when placed under strain (i.e. at the start of a rotation). This gear drives a 12-tooth gear \legopiece{32270} to triple the rotational velocity at that point of the gear train. This connection is immediately repeated and used to create a \ang{90} turn onto the shaft with the worm gear. At this point the speed ratio between the worm gear and the motor is 9:1, which is then decreased forty times by the large 40-tooth gear to create a final ratio of 1:4.444. This means the maximum rotational velocity of the cradle will be 1.843 \si{\radian\per\second} (17.6 RPM) at 7.5\si{\volt} and the original torque is increased from 17.3 \si{\newton\centi\metre} to 76.8 \si{\newton\centi\metre}, which will allow a face of the Cube to be rotated with ease. The vertical black shaft seen at the top of the image provides a mounting point for the cradle.
 	
 	\subsection{X-Move Arm}
     
@@ -1077,7 +1085,7 @@
 
 	\begin{enumerate}
 		\item The cradle should rotate about the Y axis to perform the moveset \moveset{Y.Y'y2D.D'd2} \label{lst:cr1}
-		\item The cradle must rotate as accurately as possible to 90$\degree$ increments \label{lst:cr2}
+		\item The cradle must rotate as accurately as possible to \ang{90} increments \label{lst:cr2}
 		\item The Cube must not fall out of the cradle \label{lst:cr3}
 	\end{enumerate}
 	
@@ -1096,23 +1104,60 @@
 		\item The sensor must be able to be accurately positioned above the correct facelet \label{lst:cs1}
 	\end{enumerate}
 
-	Each of these definitions have been followed in the design of the robot, through thorough consideration of hardware capabilities and giving leaving plenty of room for improvement with both hardware and software. The MkI did not achieve items Cradle \ref{lst:cr2} and \ref{lst:cr3}, and \move{x} Arm \ref{lst:x2} so these were the largest changes as the spiral model progressed. The MkII, however, has successfully fulfilled all of the definitions with a very small margin of error. It has therefore been marked as a success, and will not be developed further.
+	Each of these definitions have been followed in the design of the robot, through thorough consideration of hardware capabilities and leaving plenty of room for improvement with both hardware and software. The MkI did not achieve items Cradle \ref{lst:cr2} and \ref{lst:cr3}, and \move{x} Arm \ref{lst:x2} so these were the largest changes as the spiral model progressed. The MkII, however, has successfully fulfilled all of the definitions with a very small margin of error. It has therefore been marked as a success, and will not be developed further.
     
     \newpage
-    \section{Codebase}
-    \subsection{EV3 Components} \label{sec:ev3components}
-    \subsection{Object Classes}
-    \subsubsection{Cube}
-    \subsubsection{Position}
-    \subsection{Solve Methods}
-    \subsection{Method 1: Tree Solving}
-	\subsection{Method 2: Group Solving}
-    \subsection{Database}
-    \subsection{Move Sequence Translation}
+    
+    \chapter[Design, Implementation and Testing: The Codebase]{Design, Implementation \\ and Testing: The Codebase}
+    \epigraph{There are two ways of constructing a software design: One way is to make it so simple that there are obviously no deficiencies, and the other way is to make it so complicated that there are no obvious deficiencies. The first method is far more difficult.}{C.A.R. Hoare\cite{Hoare1981}}
+    
+    \section{Introduction}
+    
+	This is the second of the two chapters on the Design, Implementation and Testing of the project. This chapter covers the methods used, code written, and algorithms implemented to solve a Cube with the robot built in Chapter \ref{chp:designRobot}. Three main methods were implemented, with varying degrees of success, and will be discussed in their own sections. Prior to the details of the solve methods, the general structure of the software is explained to aid in understanding the methods' advantages and disadvantages.
+    
+    The general outline of the software is show
+    
+    
+    \begin{tikzpicture}[node distance=2cm]
+	    
+	\node (start) [startstop] {Start};
+	\node (ioScanCube) [io, below of=start] {Scan Cube};
+	\node (decValidCube) [decision, below of=pro1, yshift=-0.5cm] {Is Cube valid?};
+	
+	
+	
+	\node (pro1) [process, below of=in1] {Process 1};
+	\node (pro2a) [process, below of=dec1, yshift=-0.5cm] {Process 2a text text text text text text text text text text};
+	\node (pro2b) [process, right of=dec1, xshift=2cm] {Process 2b};
+	\node (out1) [io, below of=pro2a] {Output};
+	\node (stop) [startstop, below of=out1] {Stop};
+	
+	\draw [arrow] (start) -- (in1);
+	\draw [arrow] (in1) -- (pro1);
+	\draw [arrow] (pro1) -- (dec1);
+	\draw [arrow] (dec1) -- node[anchor=east] {yes} (pro2a);
+	\draw [arrow] (dec1) -- node[anchor=south] {no} (pro2b);
+	\draw [arrow] (pro2b) |- (pro1);
+	\draw [arrow] (pro2a) -- (out1);
+	\draw [arrow] (out1) -- (stop);
+    
+    \end{tikzpicture}
+    
+    
+    
+    
+    \section{Device-Specific Software}
+    
+    The hardware capabilities of the EV3 control brick are perfectly adequate for controlling the EV3's sensors and actuators, performing non-processor intensive tasks, and managing wireless connections. However, it is absolutely inadequate for solving Rubik's Cube: one of the computers used by Richard Korf to generate a solution had an (at best) 167 \si{\mega\hertz} processor, with 64 \si{\mega\byte} of RAM, and he gave estimates of four weeks to search to depth-18 \cite{Korf1997}. The control brick has a 300 \si{\mega\hertz} processor and 64 \si{\mega\byte} of RAM - not much better than Korf's computer from 1997. The computer (referred to as the DevPC) that is being used for developing this project has a 3.6 \si{\giga\hertz} processor and 32 \si{\giga\byte} of RAM, meaning that the processing will be performed much quicker on it than on the EV3. If both the EV3 and the DevPC are to be used, two programs which connect to each other need to be written.
+    
+    Python's socket module is used to connect the two programs together: the DevPC creates a socket and binds it to port 3000 on its local IP address to listen for connections, and the program hangs until a device connects; the EV3 creates a socket and attempts to connect to a hard-coded constant IP address. The timeout on the EV3's socket is ???, so the programs do not have to be started simultaneously. The methods used to establish the connection both return a connection object, which can be used to send and receive data at any point in the program. The sockets can be run asynchronously, but there is no advantage to this as the entire process is liner, as shown above.
+    
+    
+    \section{Move Sequence Translation}
     
     The algorithms considered and discussed in the Literature Review (as well as others used in determining God's Number) are designed to work with a standard moveset \moveset{L.R.U.D.F.B} (as well as half turns and counter-clockwise turns). The design of the robot means that it is restricted to the moveset \moveset{X.Y.y'y2D.d'd2} - and will therefore require any incompatible sequences to be translated to the robot's moveset.
     
-    When the entire Cube is rotated, the \tbo{colour} of the faces will change but the faces' \tbo{orientations} will not (analogous to when one turns on the spot: left and right have changed, but east and west have not). This means that the frame of reference for the moves will have to remain invariant throughout a sequence by compensating for any full Cube rotations.
+    When the entire Cube is rotated, the \tit{colour} of the faces will change but the faces' \tit{orientations} will not (analogous to when one turns on the spot: left and right have changed, but east and west have not). This means that the frame of reference for the moves will have to remain invariant throughout a sequence by compensating for any full Cube rotations.
     
     This is best explained with an example: the first step in performing the sequence \movesequence{u.f} would be to do perform \movesequence{x2d} in order to complete the \move{u}; but now that the original \face{f} has moved (due to the \movesequence{x2}) - it must be located, the Cube must be rotated to get the original \face{f} into the cradle, and then the sequence can be completed. The simplest method of overcoming this complication is to convert the original move sequence to an equivalent sequence of colour-based moves: \movesequence{u.f} $\equiv$ \movesequence{W.G}.
     
@@ -1131,6 +1176,20 @@
     
     
     This final move sequence will then be transmitted to the robot and used to control the motors to manipulate the Cube. % TODO: do some analysis about runtime of translation
+    
+    \section{EV3 Components} \label{sec:ev3components}
+    
+    
+    
+    \section{Object Classes}
+    \subsection{Robot}
+    \subsection{Cube}
+    \subsubsection{Position}
+    \section{Solve Methods}
+    \subsection{Method 1: Tree Solving}
+	\subsection{Method 2: Group Solving}
+    \section{Database}
+    
     
     
     

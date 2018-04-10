@@ -1,9 +1,11 @@
-import pickle, os
+import os
+import pickle
 import socket
 from time import sleep, time
 
 from ev3dev.ev3 import Sound
 from ev3dev.helper import MotorStall
+
 from robot.robot_class import Robot
 
 IP_DICT = {
@@ -12,15 +14,15 @@ IP_DICT = {
     'WILLS-SURFACE @ EDGE LANE': '192.168.1.84'
 }
 
-CURRENT_IP = IP_DICT['WILLS-SURFACE @ EDGE LANE']
+CURRENT_IP = IP_DICT['WILLS-DESKTOP @ HOME']
 
 
 def create_socket():
     conn = socket.socket()
 
-    print('Connecting to %s:%s' % (CURRENT_IP, 3000))
+    print('Connecting to %s:%s...' % (CURRENT_IP, 3000), end='')
     conn.connect((CURRENT_IP, 3000))
-    print('Connected!')
+    print('!')
     Sound.speak('connected to server')
     sleep(1.5)
     return conn
