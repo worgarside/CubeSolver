@@ -511,7 +511,7 @@
     	\end{center}
     \end{figure}
     
-    \subsection{Fundamental Component Definition}
+    \subsection{Fundamental Component Definitions} \label{sec:componentDefinitions}
     
     Following the construction and analysis of small Lego prototypes, it became apparent that there would be three fundamental components for the archetypal robot: a cradle would be needed to hold the Cube and rotate about the Y axis; an arm to rotate the Cube about the X axis and hold it in place for performing \move{d}s; and a moving arm for the colour sensor to scan the Cube. The essential requirements for these components are described below.
     
@@ -1013,7 +1013,90 @@
     
     \subsection{Colour Sensor}
     
-    The colour sensor was undoubtedly the most successful component of the MkI, and very little has been changed between design iterations. The clutch gear \legopiece{60c01} used in preventing any damage to the motor of the MkI framework actually became a hindrance: if the assembly encountered any resistance when moving (e.g. when the rack moves onto the second worm gear), then the clutch would slip and then the whole assembly would be out of line. This rarely caused incorrect scanning results, however it is easier to restrict damage by following good coding practices - which were developed with the use of the MkI. The only other functional change to the colour sensor was the shortening of the axle which it rested on. The worm gear closest to the cradle was superfluous so was removed to avoid over-complicating the mechanism.
+    The colour sensor was undoubtedly the most successful component of the MkI, and very little has been changed between design iterations. The clutch gear \legopiece{60c01} used in preventing any damage to the motor of the MkI framework actually became a hindrance: if the assembly encountered any resistance when moving (e.g. when the rack moves onto the second worm gear), then the clutch would slip and then the whole assembly would be out of line. This rarely caused incorrect scanning results, however it is easier to restrict damage by following good coding practices - which were developed with the use of the MkI - than with the clutch gear. The only other functional change to the colour sensor was the shortening of the axle which it rested on: the worm gear closest to the cradle was superfluous so was removed to avoid over-complicating the mechanism.
+    
+    \subsection{Full Model}
+    
+   	\begin{figure}[H]
+    	\begin{center}
+    		\includegraphics[width=0.9\textwidth]{Resources/Images/rdrMkIIFull.png}
+    		\caption{The full MkII robot assembly}
+    		\label{fig:rdrMkIIFull}
+    	\end{center} 
+    \end{figure}
+    
+    Figure \ref{fig:rdrMkIIFull} is the full assembly of the MkII. As with the full render of the MkI, the model has been updated to reflect any modifications made during the building process. The construction of the MkII is of much higher quality, with fewer shortcuts and workarounds used to make up for missing pieces. It is also considerably larger than the MkI due to the increased size of the \move{x} arm. The extended framework initially caused some flexing across the body of the MkII simply due to it's size and the forces exerted by the movement of the \move{x} arm. A very simple solution to this was to mount the entire MkII on \enquote{feet} made from wheels on their sides. The flexibility of the tyres allows the feet to act as dampers for the \move{x} arm, and the high friction between the tyres and the surface they sit on means that the MkII will not move around. The framework which the EV3 control brick is mounted on is actually mostly the same design as the MkI: this was one part there truly were no issues with. Reusing the framework meant less time had to be spent on the more mundane parts of the build, and more time could be spent getting the core components right. Once again, the touch sensor has been mounted on the front of the robot for easy access at runtime.
+    
+    \begin{figure}[H]
+    	\centering
+    	\begin{subfigure}[b]{0.275\textwidth}
+    		\includegraphics[width=\textwidth]{Resources/Images/rdrMkIIElevation1.png}
+    		\caption{}
+    		\label{fig:rdrMkIIElevation1}
+    	\end{subfigure}
+    	\hspace{10mm}
+    	\begin{subfigure}[b]{0.275\textwidth}
+    		\includegraphics[width=\textwidth]{Resources/Images/rdrMkIIElevation2.png}
+    		\caption{}
+    		\label{fig:rdrMkIIElevation2}
+    	\end{subfigure}
+    	\hspace{10mm}
+    	\begin{subfigure}[b]{0.275\textwidth}
+    		\includegraphics[width=\textwidth]{Resources/Images/rdrMkIIElevation3.png}
+    		\caption{}
+    		\label{fig:rdrMkIIElevation3}
+    	\end{subfigure}
+    	\begin{subfigure}[b]{0.275\textwidth}
+    		\includegraphics[width=\textwidth]{Resources/Images/rdrMkIIElevation4.png}
+    		\caption{}
+    		\label{fig:rdrMkIIElevation4}
+    	\end{subfigure}
+    	\hspace{10mm}
+    	\begin{subfigure}[b]{0.275\textwidth}
+    		\includegraphics[width=\textwidth]{Resources/Images/rdrMkIIElevation5.png}
+    		\caption{}
+    		\label{fig:rdrMkIIElevation5}
+    	\end{subfigure}
+		\hspace{10mm}
+		\begin{subfigure}[b]{0.275\textwidth}
+			\includegraphics[width=\textwidth]{Resources/Images/rdrMkIIElevation6.png}
+			\caption{}
+			\label{fig:rdrMkIIElevation6}
+		\end{subfigure}
+    	\caption{Elevation and plan views of the MkII}
+    	\label{fig:rdrMkIIElevations}
+    \end{figure}
+
+    \subsection{Implementation and Testing}
+    
+	The implementation/building process of the MkII was fairly straightforward following the MkI's implementation. The more common errors and weaknesses in the design were easier to spot, and the knowledge gained from the previous design iteration greatly aided in making the MkII an all-round strong design. The use of the spiral model in designing the robot has generated a clear process from the design stage through to the testing stage, producing a robot with very few, if any, hardware-based bugs or issues.
+	
+	The definitions described in section \ref{sec:componentDefinitions} have been briefly quantified below for quick referencing:
+
+	\subsubsection{Cradle}
+
+	\begin{enumerate}
+		\item The cradle should rotate about the Y axis to perform the moveset \moveset{Y.Y'y2D.D'd2} \label{lst:cr1}
+		\item The cradle must rotate as accurately as possible to 90$\degree$ increments \label{lst:cr2}
+		\item The Cube must not fall out of the cradle \label{lst:cr3}
+	\end{enumerate}
+	
+	\subsubsection{X-Move Arm}
+	
+	\begin{enumerate}
+		\item The \move{x} should be a quick movement \label{lst:x1}
+		\item The \move{x} needs to be highly reliable and structurally sound \label{lst:x2}
+		\item The arm must no interfere with other components \label{lst:x3}
+		\item It must hold the \slice{l-r} and the \face{u} in place to perform a permutation of the \move{d} \label{lst:x4}
+	\end{enumerate}
+	
+	\subsubsection{Colour Sensor}
+	
+	\begin{enumerate}
+		\item The sensor must be able to be accurately positioned above the correct facelet \label{lst:cs1}
+	\end{enumerate}
+
+	Each of these definitions have been followed in the design of the robot, through thorough consideration of hardware capabilities and giving leaving plenty of room for improvement with both hardware and software. The MkI did not achieve items Cradle \ref{lst:cr2} and \ref{lst:cr3}, and \move{x} Arm \ref{lst:x2} so these were the largest changes as the spiral model progressed. The MkII, however, has successfully fulfilled all of the definitions with a very small margin of error. It has therefore been marked as a success, and will not be developed further.
     
     \newpage
     \section{Codebase}
