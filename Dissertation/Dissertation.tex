@@ -30,13 +30,15 @@
 \usepackage{listings}			% code formatting
 \usepackage{enumitem}			% Lettered enumerations
 \usepackage{tikz}				% flowcharts
+%\usepackage{varwidth}			% flowchart node width
 
-\usetikzlibrary{shapes.geometric, arrows}
-\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black, fill=red!30]
-\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=blue!30]
-\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=orange!30]
-\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=green!30]
+\usetikzlibrary{shapes.geometric, arrows, positioning}
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black]
+\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=1cm, text centered, draw=black, text width=3cm]
+\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black, text width=2cm]
 \tikzstyle{arrow} = [thick,->,>=stealth]
+\tikzstyle{line} = [thick,-,>=stealth]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, text width=3cm, draw=black]
 
 \titleformat{\chapter}{\normalfont\Huge\bfseries}{\thechapter}{1em}{}
 \titlespacing*{\chapter}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
@@ -1115,45 +1117,93 @@
     
 	This is the second of the two chapters on the Design, Implementation and Testing of the project. This chapter covers the methods used, code written, and algorithms implemented to solve a Cube with the robot built in Chapter \ref{chp:designRobot}. Three main methods were implemented, with varying degrees of success, and will be discussed in their own sections. Prior to the details of the solve methods, the general structure of the software is explained to aid in understanding the methods' advantages and disadvantages.
     
-    The general outline of the software is show
+    The general outline of the software is shown in Figure \ref{fig:flwBasic}. Regarding the decision \enquote{Is Cube valid?}, the most thorough method of validating a Cube is to check each individual cubie for correctness and validity - for this purpose, this is unnecessary because an invalid Cube is outside the parameters of the project's objectives. The validation used after scanning the Cube is simply to check the right number of colours have been scanned, to double check there were no issues with the colour sensor. If the Cube is invalid, it will only be rescanned once: after the second attempt, an invalid Cube will be rejected so that the program doesn't get caught in an infinite loop.
     
-    
-    \begin{tikzpicture}[node distance=2cm]
-	    
-	\node (start) [startstop] {Start};
-	\node (ioScanCube) [io, below of=start] {Scan Cube};
-	\node (decValidCube) [decision, below of=ioScanCube, yshift=-0.5cm] {Is Cube valid?};
-	\node (decFirstScan) [decision, right of=decValidCube] {Is this the first scan?};
-	
-	\draw [arrow] (decValidCube) -- node[anchor=east] {yes} (decFirstScan);
-	
-	
-%	\node (pro1) [process, below of=ioScanCube] {Process 1};
-%	\node (pro2a) [process, below of=decValidCube, yshift=-0.5cm] {Process 2a text text text text text text text text text text};
-%	\node (pro2b) [process, right of=decValidCube, xshift=2cm] {Process 2b};
-%	\node (out1) [io, below of=pro2a] {Output};
-%	\node (stop) [startstop, below of=out1] {Stop};
-
-	\draw [arrow] (start) -- (ioScanCube);
-	\draw [arrow] (ioScanCube) -- (decValidCube);
-%	\draw [arrow] (pro1) -- (decValidCube);
-%	
-%	\draw [arrow] (decValidCube) -- node[anchor=south] {no} (pro2b);
-%	\draw [arrow] (pro2b) |- (pro1);
-%	\draw [arrow] (pro2a) -- (out1);
-%	\draw [arrow] (out1) -- (stop);
-    
-    \end{tikzpicture}
-    
-    
-    
+    \begin{figure}[H]
+    	\centering
+    	\begin{tikzpicture}[node distance=1.5cm]
+	    	\node (start) [startstop] {Start};
+	    	\node (ioScanCube) [io, below of=start] {Scan Cube's Position};
+	    	\node (decValidCube) [decision, below of=ioScanCube, yshift=-1cm] {Is Cube valid?};
+	    	\node (decFirstScan) [decision, right of=decValidCube, xshift=3cm] {Is this the first scan?};
+	    	\node (proGenSolve) [process, left of=decValidCube, xshift=-3cm] {Generate solve sequence};
+	    	\node (ioApplySolve) [io, below of=proGenSolve] {Apply solve sequence to Cube};
+	    	\node (exitSuccess) [startstop, below of=ioApplySolve] {Exit};
+	    	\node (exitFail) [startstop, below of=decFirstScan, yshift=-1.5cm] {Raise InvalidCubeError};
+	    	
+	    	\draw [arrow] (decValidCube) -- node[anchor=south] {No} (decFirstScan);
+	    	\draw [arrow] (start) -- (ioScanCube);
+	    	\draw [arrow] (ioScanCube) -- (decValidCube);
+	    	\draw [arrow] (decFirstScan) |- node[anchor=south] {Yes} (ioScanCube);
+	    	\draw [arrow] (decValidCube) -- node[anchor=south] {Yes} (proGenSolve);
+	    	\draw [arrow] (proGenSolve) -- (ioApplySolve);
+	    	\draw [arrow] (ioApplySolve) -- (exitSuccess);
+	    	\draw [arrow] (decFirstScan) -- node[anchor=west] {No} (exitFail);
+    	\end{tikzpicture}
+    	\caption{Flowchart to show the processing in the software}
+    	\label{fig:flwBasic}
+    \end{figure}
     
     \section{Device-Specific Software}
     
-    The hardware capabilities of the EV3 control brick are perfectly adequate for controlling the EV3's sensors and actuators, performing non-processor intensive tasks, and managing wireless connections. However, it is absolutely inadequate for solving Rubik's Cube: one of the computers used by Richard Korf to generate a solution had an (at best) 167 \si{\mega\hertz} processor, with 64 \si{\mega\byte} of RAM, and he gave estimates of four weeks to search to depth-18 \cite{Korf1997}. The control brick has a 300 \si{\mega\hertz} processor and 64 \si{\mega\byte} of RAM - not much better than Korf's computer from 1997. The computer (referred to as the DevPC) that is being used for developing this project has a 3.6 \si{\giga\hertz} processor and 32 \si{\giga\byte} of RAM, meaning that the processing will be performed much quicker on it than on the EV3. If both the EV3 and the DevPC are to be used, two programs which connect to each other need to be written.
+    The hardware capabilities of the EV3 control brick are perfectly adequate for controlling the EV3's sensors and actuators, performing non-processor intensive tasks, and managing wireless connections. However, it is absolutely inadequate for solving a Cube: one of the computers used by Richard Korf to generate a solution had an (at best) 167 \si{\mega\hertz} processor, with 64 \si{\mega\byte} of RAM, and he gave estimates of four weeks to search to depth-18 \cite{Korf1997}. The control brick has a 300 \si{\mega\hertz} processor and 64 \si{\mega\byte} of RAM - not much better than Korf's computer from 1997. The computer (referred to as the DevPC) that is being used for developing this project has a 3.6 \si{\giga\hertz} processor and 32 \si{\giga\byte} of RAM, meaning that the processing will be performed much quicker on it than on the EV3. If both the EV3 and the DevPC are to be used, two programs which connect to each other need to be written.
     
-    Python's socket module is used to connect the two programs together: the DevPC creates a socket and binds it to port 3000 on its local IP address to listen for connections, and the program hangs until a device connects; the EV3 creates a socket and attempts to connect to a hard-coded constant IP address. The timeout on the EV3's socket is ???, so the programs do not have to be started simultaneously. The methods used to establish the connection both return a connection object, which can be used to send and receive data at any point in the program. The sockets can be run asynchronously, but there is no advantage to this as the entire process is liner, as shown above.
+    Python's \propernoun{socket} module is used to connect the two programs: the DevPC creates a socket and binds it to a set port on its local IP address to listen for connections, and the program waits until a device connects; the EV3 creates a socket and attempts to connect to a hard-coded constant IP address. The timeout on the sockets is over two minutes, so the programs do not have to be started simultaneously. The methods used to establish the connection both return a connection object, which can be used to send and receive data at any point in the program. The sockets can be run asynchronously, but there is no advantage to this as there are no processes which can be run concurrently in the software, as shown above.
     
+    With the introduction of a second program, the flow chart in Figure \ref{fig:flwBasic} has been updated to reflect this in Figure \ref{fig:flwTwoPrograms} (overleaf). The flowchart is divided into the processes performed by the EV3 and those performed by the DevPC. The first process on each side is \enquote{Connect to [other device]}: to be accurate, these should be followed by a decision to check if the connection has been completed successfully, and if not, the chart should go back to the connection process. This has been omitted to avoid overcomplicating the diagram, and can be assumed to be in place on both sides.
+    
+    One of the processes added to this flowchart that wasn't mentioned in Figure \ref{fig:flwBasic} is \enquote{Translate solve sequence}. This is a vital step in solving a Cube with a Lego Robot, and is explained below.
+    
+	\begin{figure}[h!]
+    	\centering
+    	\begin{tikzpicture}[node distance=1.5cm]
+	    	\node (dividerStart) {};
+    	
+	    	\node (startEV3) [startstop, left of=dividerStart, xshift=-5.5cm, yshift=-1cm] {EV3};
+	    	\node (proConnectDevPC) [process, below of=startEV3] {Connect to DevPC};
+	    	\node (ioScanCube) [io, below of=proConnectDevPC] {Scan Cube's Position};
+	    	\node (decValidCube) [decision, below of=ioScanCube, yshift=-1cm] {Is Cube valid?};
+	    	\node (decFirstScan) [decision, right of=decValidCube, xshift=2.5cm] {Is this the first scan?};
+	    	\node (stopEV3Fail) [startstop, below of=decFirstScan, yshift=-1.25cm] {Raise InvalidCubeError};
+	    	\node (ioTransmitCube) [io, below of=decValidCube, yshift=-2.75cm] {Transmit Cube position};
+    		\node (ioReceiveSolve) [io, below of=ioTransmitCube, yshift=-3cm] {Receive solve sequence};
+    		\node (proPerformSolve) [process, below of=ioReceiveSolve] {Perform solve sequence on Cube};
+    		\node (stopEV3) [startstop, below of=proPerformSolve] {Stop EV3};
+	    	
+	    	\node (startDevPC) [startstop, right of=dividerStart, xshift=1.5cm, yshift=-1cm] {DevPC};
+	    	\node (proConnectEV3) [process, below of=startDevPC] {Connect to EV3};
+	    	\node (ioReceiveCube) [io, below of=proConnectEV3, yshift=-6.75cm] {Receive Cube position};
+	    	\node (proGenerateSolve) [process, below of=ioReceiveCube] {Generate solve sequence};
+	    	\node (proTranslateSolve) [process, below of=proGenerateSolve] {Translate solve sequence};
+	    	\node (ioTransmitSolve) [io, below of=proTranslateSolve] {Transmit solve sequence};
+	    	\node (stopDevPC) [startstop, below of=ioTransmitSolve, yshift=-1.5cm] {Stop DevPC};
+    		
+    		\node (dividerEnd) [below of=dividerStart, yshift=-17.5cm] {};
+    	
+    		\draw [line] (dividerStart) -- (dividerEnd);
+    		
+    		\draw [arrow] (startEV3) -- (proConnectDevPC);
+    		\draw [arrow] (proConnectDevPC) -- (ioScanCube);
+    		\draw [arrow] (ioScanCube) -- (decValidCube);
+    		\draw [arrow] (decValidCube) -- node[anchor=south] {No} (decFirstScan);
+    		\draw [arrow] (decFirstScan) |- node[anchor=south] {Yes} (ioScanCube);
+    		\draw [arrow] (decFirstScan) -- node[anchor=west] {No} (stopEV3Fail);
+    		\draw [arrow] (decValidCube) -- node[anchor=east] {Yes} (ioTransmitCube);
+    		\draw [arrow] (ioReceiveSolve) -- (proPerformSolve);
+    		\draw [arrow] (proPerformSolve) -- (stopEV3);
+
+    		\draw [arrow, dashed] (ioTransmitCube) -- (ioReceiveCube);
+    		\draw [arrow, dashed] (ioTransmitSolve) -- (ioReceiveSolve);
+    	
+    		\draw [arrow] (startDevPC) -- (proConnectEV3);
+    		\draw [arrow] (ioReceiveCube) -- (proGenerateSolve);
+    		\draw [arrow] (proGenerateSolve) -- (proTranslateSolve);
+    		\draw [arrow] (proTranslateSolve) -- (ioTransmitSolve);
+    		\draw [arrow] (ioTransmitSolve) -- (stopDevPC);
+    	\end{tikzpicture}
+    	\caption{The EV3 and DevPC work synchronously but separately}
+    	\label{fig:flwTwoPrograms}
+    \end{figure}
     
     \section{Move Sequence Translation}
     
@@ -1165,7 +1215,7 @@
     
     Once the original sequence has been converted to a colour-based sequence, a deep copy of the original Cube is made and the coloured sequence is iteratively translated and applied to this Cube. On each element of the sequence, the colour is converted back to a face move (allowing preservation of the correct frame of reference). Once this new face-based move is found, it is converted to a short move sequence that will move the face into the cradle and rotate the face correctly to match the original move. This short sequence comprises moves compatible with the robot.
     
-    Each of the moves in the short \u{sequence} is applied to the copied Cube, and appended to a list of moves which is returned once the original sequence is processed. The application of the moves to the Cube allows following moves to be translated correctly (as the Cube will have changed orientation in real life so needs to in this simulation). Continuing the previous example of \movesequence{u.f}, the translation is written below. Colours are underlined and the output sequence is emboldened for clarity:
+    Each of the moves in the short sequence is applied to the copied Cube, and appended to a list of moves which is returned once the original sequence is processed. The application of the moves to the Cube allows following moves to be translated correctly (as the Cube will have changed orientation in real life so needs to in this simulation). Continuing the previous example of \movesequence{u.f}, the translation is written below. Colours are underlined and the output sequence is emboldened for clarity:
     \begin{align*}
     \movesequence{U.F}		\;	&\rightarrow		\;	\movesequence{\tun{w}.\tun{G}}													\\
     \movesequence{\tun{w}}	\;	&\rightarrow		\;	\movesequence{U}																\\
@@ -1176,11 +1226,9 @@
     &\implies				\;	\movesequence{U.F}	\;	\rightarrow			\;	\movesequence{\tbo{X}.\tbo{X}.\tbo{d}.\tbo{X}.\tbo{d}}	\\
     \end{align*}
     
-    
     This final move sequence will then be transmitted to the robot and used to control the motors to manipulate the Cube. % TODO: do some analysis about runtime of translation
     
     \section{EV3 Components} \label{sec:ev3components}
-    
     
     
     \section{Object Classes}
