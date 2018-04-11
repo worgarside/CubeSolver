@@ -17,6 +17,8 @@ class Color(Enum):
 
 @unique
 class Move(Enum):
+    """Enum for all possible moves on a Cube"""
+
     NONE = '-'
     U = 'U '
     NOT_U = "U'"
@@ -36,15 +38,6 @@ class Move(Enum):
     B = 'B '
     NOT_B = "B'"
     B2 = 'B2'
-    M = 'M '
-    NOT_M = "M'"
-    M2 = 'M2'
-    E = 'E '
-    NOT_E = "E'"
-    E2 = 'E2'
-    S = 'S '
-    NOT_S = "S'"
-    S2 = 'S2'
     X = 'X '
     NOT_X = "X'"
     X2 = 'X2'
@@ -58,6 +51,7 @@ class Move(Enum):
 
 @unique
 class Face(Enum):
+    """All Cube faces """
     UP = 'U'
     DOWN = 'D'
     LEFT = 'L'
@@ -68,30 +62,37 @@ class Face(Enum):
 
 @unique
 class Rotation(Enum):
+    """Used for specifying rotational direction in virtual moves"""
     CLOCKWISE = 0
     COUNTER_CLOCKWISE = 1
 
 
 class Position:
+    """
+    Used in the Tree solve method for storing positional data
+    Parameters are self explanatory
+    """
     def __init__(self, depth, position, move_sequence, pos_id=0):
         self.depth = depth
         self.position = position
         self.move_sequence = move_sequence
         self.pos_id = pos_id
 
-    def __str__(self):
-        return self.position + ' ' + str(self.move_sequence)
-
 
 class Cube:
+    """
+    A Python representation of Rubik's Cube
+    """
     SOLVED_POS = 'WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY'
 
+    # Used in creating the color-reduced position
     REDUCTION_DICT = {Color.ORANGE: Color.RED, Color.YELLOW: Color.WHITE, Color.GREEN: Color.BLUE,
                       Color.RED: Color.RED, Color.WHITE: Color.WHITE, Color.BLUE: Color.BLUE}
 
     OPPOSITE_FACES_DICT = {Face.UP: Face.DOWN, Face.DOWN: Face.UP, Face.LEFT: Face.RIGHT,
                            Face.RIGHT: Face.LEFT, Face.FRONT: Face.BACK, Face.BACK: Face.FRONT}
 
+    # Shows which face each facelet is on
     FACELET_FACE_DICT = {0: Face.UP, 1: Face.UP, 2: Face.UP, 3: Face.UP, 4: Face.UP, 5: Face.UP, 6: Face.UP,
                          7: Face.UP, 8: Face.UP, 9: Face.LEFT, 10: Face.LEFT, 11: Face.LEFT, 12: Face.FRONT,
                          13: Face.FRONT, 14: Face.FRONT, 15: Face.RIGHT, 16: Face.RIGHT, 17: Face.RIGHT,
@@ -104,11 +105,16 @@ class Cube:
                          48: Face.DOWN, 49: Face.DOWN, 50: Face.DOWN, 51: Face.DOWN, 52: Face.DOWN,
                          53: Face.DOWN}
 
+    # ANSI escape codes for the colored print (orange = magenta)
     COLOR_PRINT_DICT = {Color.RED: '\033[31m', Color.BLUE: '\033[34m', Color.GREEN: '\033[32m',
                         Color.ORANGE: '\033[35m', Color.WHITE: '\033[37m', Color.YELLOW: '\033[33m',
                         Color.DARK: '\033[30m', Color.NONE: '\033[36m'}
 
     def __init__(self, position=SOLVED_POS, temporary=False):
+        """
+        :param position: Current position of the Cube, defaults to solved
+        :param temporary: Flag to say if it's a temporary Cube - reduced amount of processing and memory
+        """
         self.position = position
         self.position_reduced = ''
         self.color_position = ''
@@ -126,7 +132,9 @@ class Cube:
         self.update_fields()
 
     def __str__(self):
-        """ Returns a colored net of the Cube """
+        """
+        :return: Net of the Cube, complete with escaped color sequences
+        """
         linebreak_dict = {2: '\n      ', 5: '\n      ', 8: '\n', 20: '\n', 32: '\n', 44: '\n      ', 47: '\n      ',
                           50: '\n      '}
         char_net = '\n      '
@@ -138,7 +146,7 @@ class Cube:
     # ------------------ Update Methods ------------------ #
 
     def update_fields(self):
-        """Updates all fields of Cube from position"""
+        """ Updates all fields of Cube from self.position """
         self.update_faces()
         if not self.temporary:
             self.update_reduced_cube()
@@ -154,18 +162,21 @@ class Cube:
         self.back = self.position[18:21] + self.position[30:33] + self.position[42:45]
 
     def update_pos_colors(self):
-        """Updates position field with colored output"""
+        """ Updates position field with colored output """
         self.color_position = ''
         for color in self.position:
             self.color_position += self.COLOR_PRINT_DICT[Color(color)] + color + '\033[0m'
 
     def update_reduced_cube(self):
+        """ Updates color-reduced string """
         self.position_reduced = ''
         for color in self.position:
             self.position_reduced += self.REDUCTION_DICT.get(Color(color), Color(color)).value
 
     # ------------------ Setter Methods ------------------ #
-    """Each of these sets the relevant face facelets to the given string and updates the relevant fields"""
+    """
+    Each of these sets the relevant face's facelets to the given string and updates the relevant fields.
+    """
 
     def set_up(self, pos):
         if len(pos) == 9:
@@ -220,7 +231,11 @@ class Cube:
             exit()
 
     def rotate_face(self, direction, face):
-        """Rotates the 9 facelets of a face"""
+        """
+        Rotates the 9 facelets of a face in a set direction
+        :param direction: Direction of rotation using Rotation class
+        :param face: the face that is being rotated, using Face class
+        """
         c = Cube(self.position)
 
         if direction == Rotation.CLOCKWISE:
@@ -246,7 +261,6 @@ class Cube:
                 print('\nrotate_face_cw: invalid face')
                 exit()
         elif direction == Rotation.COUNTER_CLOCKWISE:
-
             if face == Face.LEFT:
                 self.set_left(c.left[2:3] + c.left[5:6] + c.left[8:9] + c.left[1:2] + c.left[4:5]
                               + c.left[7:8] + c.left[0:1] + c.left[3:4] + c.left[6:7])
@@ -276,6 +290,13 @@ class Cube:
 
     # noinspection PyMethodMayBeStatic
     def get_color_of_face(self, **kwargs):
+        """
+        Get the color of a face of the Cube
+        :param kwargs: use of kwargs to allow different lookup types:
+            facelet: can select specific facelets to check their face's color
+            face: select general face to find its color
+        :return: Color object, specific to that face
+        """
         if 'facelet' in kwargs:
             facelet = kwargs['facelet']
             try:
@@ -292,6 +313,12 @@ class Cube:
                 print('Invalid Face passed to method')
 
     def get_face_with_color(self, **kwargs):
+        """
+        Finds which face has specific color (at centre)
+        :param kwargs: only keyword is color, and this is used to lookup the face direction.
+            kwargs are still used here for consistency
+        :return: Face object with the parameterised Color
+        """
         if 'color' in kwargs:
             color = kwargs['color']
             faces = {Face.UP: self.up, Face.DOWN: self.down,

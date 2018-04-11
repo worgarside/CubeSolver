@@ -14,21 +14,31 @@ INVERSION_DICT = {
 
 
 def lookup_position(db, position):
+    """
+    Looks for position in table to find solve sequence
+    :param db: Database Cursor object
+    :param position: the position being searched for
+    :return: solve sequence
+    """
     lookup_pos = position
     try:
         orig_sequence = json.loads(
             db.query("SELECT move_sequence FROM half_turn where position = '%s'" % lookup_pos).fetchone()[0])
 
+
         reverse_sequence = orig_sequence[::-1]
 
+        # Need to invert the moves to go back from mixed -> solved as the moves are one way
         inverted_sequence = []
         for move in reverse_sequence:
             inverted_sequence.append(INVERSION_DICT[Move(move)])
 
         return inverted_sequence
     except OperationalError as err:
+        # Usually if table doesn't exist
         print(err)
         exit()
     except TypeError:
+        # If the position isn't in the table
         print('Cube not found in table gs3p0 \n\n %s' % Cube(lookup_pos))
         exit()

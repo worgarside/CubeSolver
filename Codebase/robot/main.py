@@ -8,16 +8,22 @@ from ev3dev.helper import MotorStall
 
 from robot.robot_class import Robot
 
+# Different IPs for different locations, saves having to re-enter them each time
 IP_DICT = {
     'WILLS-SURFACE @ ONEPLUS 3': '192.168.43.188',
     'WILLS-DESKTOP @ HOME': '192.168.0.21',
     'WILLS-SURFACE @ EDGE LANE': '192.168.1.84'
 }
 
+# the IP currently in use by the host computer
 CURRENT_IP = IP_DICT['WILLS-DESKTOP @ HOME']
 
 
 def create_socket():
+    """
+    Creates a socket object, and waits for it to connect to the host computer
+    :return: Socket connection object
+    """
     conn = socket.socket()
 
     print('Connecting to %s:%s...' % (CURRENT_IP, 3000), end='')
@@ -29,11 +35,20 @@ def create_socket():
 
 
 def create_robot():
+    """
+    Creates Robot object for later use
+    :return: Robot object
+    """
     robot = Robot()
     return robot
 
 
 def scan_cube(robot):
+    """
+    Call Robot's scan_cube method, and finds the average time of all successful scans for analysis
+    :param robot: the Robot object which scans the Cube
+    :return: Cube position string (54 chars, each one of the Color object names)
+    """
     start_time = time()
     pos = robot.scan_cube()
     end_time = time()
@@ -64,6 +79,9 @@ def main():
     conn = create_socket()
     robot = create_robot()
 
+    """
+    Scans the Cube and transmits the position back to the host computer for processing
+    """
     try:
         pos = scan_cube(robot)
         pos_str = ''.join(pos)
@@ -83,7 +101,7 @@ def main():
     except MotorStall as err:
         print('\n\n %s' % err)
 
-    robot.exit()
+    robot.shutdown()
 
 
 if __name__ == '__main__':

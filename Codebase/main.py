@@ -255,8 +255,7 @@ def main():
                 for phase in range(5):
                     mphase_generator.generate_lookup_table(db, phase)
                 half_turn_generator.generate_lookup_table(db)
-
-    if multiphase or half_turn or tree:
+    elif multiphase or half_turn or tree:
         solve_sequence = []
         cube = Cube(position)
         print('Cube: \n%s' % cube)
