@@ -1,9 +1,113 @@
 from enum import Enum, unique
 
-SOLVED_POS = 'WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY'
+
+@unique
+class Color(Enum):
+    """An Enum Class to hold potential colors scanned by the LEGO Color Sensor"""
+
+    NONE = 'N'
+    DARK = 'D'  # DARK (not 'BLACK') to show up with any color reading errors (differentiates it from BLUE)
+    BLUE = 'B'
+    GREEN = 'G'
+    YELLOW = 'Y'
+    RED = 'R'
+    WHITE = 'W'
+    ORANGE = 'O'  # Color Sensor actually reads BROWN but ORANGE is used to avoid confusion
+
+
+@unique
+class Move(Enum):
+    NONE = '-'
+    U = 'U '
+    NOT_U = "U'"
+    U2 = 'U2'
+    D = 'D '
+    NOT_D = "D'"
+    D2 = 'D2'
+    L = 'L '
+    NOT_L = "L'"
+    L2 = 'L2'
+    R = 'R '
+    NOT_R = "R'"
+    R2 = 'R2'
+    F = 'F '
+    NOT_F = "F'"
+    F2 = 'F2'
+    B = 'B '
+    NOT_B = "B'"
+    B2 = 'B2'
+    M = 'M '
+    NOT_M = "M'"
+    M2 = 'M2'
+    E = 'E '
+    NOT_E = "E'"
+    E2 = 'E2'
+    S = 'S '
+    NOT_S = "S'"
+    S2 = 'S2'
+    X = 'X '
+    NOT_X = "X'"
+    X2 = 'X2'
+    Y = 'Y '
+    NOT_Y = "Y'"
+    Y2 = 'Y2'
+    Z = 'Z '
+    NOT_Z = "Z'"
+    Z2 = 'Z2'
+
+
+@unique
+class Face(Enum):
+    UP = 'U'
+    DOWN = 'D'
+    LEFT = 'L'
+    RIGHT = 'R'
+    FRONT = 'F'
+    BACK = 'B'
+
+
+@unique
+class Rotation(Enum):
+    CLOCKWISE = 0
+    COUNTER_CLOCKWISE = 1
+
+
+class Position:
+    def __init__(self, depth, position, move_sequence, pos_id=0):
+        self.depth = depth
+        self.position = position
+        self.move_sequence = move_sequence
+        self.pos_id = pos_id
+
+    def __str__(self):
+        return self.position + ' ' + str(self.move_sequence)
 
 
 class Cube:
+    SOLVED_POS = 'WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY'
+
+    REDUCTION_DICT = {Color.ORANGE: Color.RED, Color.YELLOW: Color.WHITE, Color.GREEN: Color.BLUE,
+                      Color.RED: Color.RED, Color.WHITE: Color.WHITE, Color.BLUE: Color.BLUE}
+
+    OPPOSITE_FACES_DICT = {Face.UP: Face.DOWN, Face.DOWN: Face.UP, Face.LEFT: Face.RIGHT,
+                           Face.RIGHT: Face.LEFT, Face.FRONT: Face.BACK, Face.BACK: Face.FRONT}
+
+    FACELET_FACE_DICT = {0: Face.UP, 1: Face.UP, 2: Face.UP, 3: Face.UP, 4: Face.UP, 5: Face.UP, 6: Face.UP,
+                         7: Face.UP, 8: Face.UP, 9: Face.LEFT, 10: Face.LEFT, 11: Face.LEFT, 12: Face.FRONT,
+                         13: Face.FRONT, 14: Face.FRONT, 15: Face.RIGHT, 16: Face.RIGHT, 17: Face.RIGHT,
+                         18: Face.BACK, 19: Face.BACK, 20: Face.BACK, 21: Face.LEFT, 22: Face.LEFT,
+                         23: Face.LEFT, 24: Face.FRONT, 25: Face.FRONT, 26: Face.FRONT, 27: Face.RIGHT,
+                         28: Face.RIGHT, 29: Face.RIGHT, 30: Face.BACK, 31: Face.BACK, 32: Face.BACK,
+                         33: Face.LEFT, 34: Face.LEFT, 35: Face.LEFT, 36: Face.FRONT, 37: Face.FRONT,
+                         38: Face.FRONT, 39: Face.RIGHT, 40: Face.RIGHT, 41: Face.RIGHT, 42: Face.BACK,
+                         43: Face.BACK, 44: Face.BACK, 45: Face.DOWN, 46: Face.DOWN, 47: Face.DOWN,
+                         48: Face.DOWN, 49: Face.DOWN, 50: Face.DOWN, 51: Face.DOWN, 52: Face.DOWN,
+                         53: Face.DOWN}
+
+    COLOR_PRINT_DICT = {Color.RED: '\033[31m', Color.BLUE: '\033[34m', Color.GREEN: '\033[32m',
+                        Color.ORANGE: '\033[35m', Color.WHITE: '\033[37m', Color.YELLOW: '\033[33m',
+                        Color.DARK: '\033[30m', Color.NONE: '\033[36m'}
+
     def __init__(self, position=SOLVED_POS, temporary=False):
         self.position = position
         self.position_reduced = ''
@@ -19,25 +123,6 @@ class Cube:
 
         self.robot_solve_sequence = []
 
-        self.reduction_dict = {Color.ORANGE: Color.RED, Color.YELLOW: Color.WHITE, Color.GREEN: Color.BLUE,
-                               Color.RED: Color.RED, Color.WHITE: Color.WHITE, Color.BLUE: Color.BLUE}
-        self.opposite_faces_dict = {Face.UP: Face.DOWN, Face.DOWN: Face.UP, Face.LEFT: Face.RIGHT,
-                                    Face.RIGHT: Face.LEFT, Face.FRONT: Face.BACK, Face.BACK: Face.FRONT}
-        self.facelet_face_dict = {0: Face.UP, 1: Face.UP, 2: Face.UP, 3: Face.UP, 4: Face.UP, 5: Face.UP, 6: Face.UP,
-                                  7: Face.UP, 8: Face.UP, 9: Face.LEFT, 10: Face.LEFT, 11: Face.LEFT, 12: Face.FRONT,
-                                  13: Face.FRONT, 14: Face.FRONT, 15: Face.RIGHT, 16: Face.RIGHT, 17: Face.RIGHT,
-                                  18: Face.BACK, 19: Face.BACK, 20: Face.BACK, 21: Face.LEFT, 22: Face.LEFT,
-                                  23: Face.LEFT, 24: Face.FRONT, 25: Face.FRONT, 26: Face.FRONT, 27: Face.RIGHT,
-                                  28: Face.RIGHT, 29: Face.RIGHT, 30: Face.BACK, 31: Face.BACK, 32: Face.BACK,
-                                  33: Face.LEFT, 34: Face.LEFT, 35: Face.LEFT, 36: Face.FRONT, 37: Face.FRONT,
-                                  38: Face.FRONT, 39: Face.RIGHT, 40: Face.RIGHT, 41: Face.RIGHT, 42: Face.BACK,
-                                  43: Face.BACK, 44: Face.BACK, 45: Face.DOWN, 46: Face.DOWN, 47: Face.DOWN,
-                                  48: Face.DOWN, 49: Face.DOWN, 50: Face.DOWN, 51: Face.DOWN, 52: Face.DOWN,
-                                  53: Face.DOWN}
-        self._color_print_dict = {Color.RED: '\033[31m', Color.BLUE: '\033[34m', Color.GREEN: '\033[32m',
-                                  Color.ORANGE: '\033[35m', Color.WHITE: '\033[37m', Color.YELLOW: '\033[33m',
-                                  Color.DARK: '\033[30m', Color.NONE: '\033[36m'}
-
         self.update_fields()
 
     def __str__(self):
@@ -46,7 +131,7 @@ class Cube:
                           50: '\n      '}
         char_net = '\n      '
         for index, color in enumerate(self.position):
-            char_net += self._color_print_dict[Color(color)] + color + '\033[0m' + linebreak_dict.get(index, ' ')
+            char_net += self.COLOR_PRINT_DICT[Color(color)] + color + '\033[0m' + linebreak_dict.get(index, ' ')
         char_net += '\n'
         return char_net
 
@@ -72,12 +157,12 @@ class Cube:
         """Updates position field with colored output"""
         self.color_position = ''
         for color in self.position:
-            self.color_position += self._color_print_dict[Color(color)] + color + '\033[0m'
+            self.color_position += self.COLOR_PRINT_DICT[Color(color)] + color + '\033[0m'
 
     def update_reduced_cube(self):
         self.position_reduced = ''
         for color in self.position:
-            self.position_reduced += self.reduction_dict.get(Color(color), Color(color)).value
+            self.position_reduced += self.REDUCTION_DICT.get(Color(color), Color(color)).value
 
     # ------------------ Setter Methods ------------------ #
     """Each of these sets the relevant face facelets to the given string and updates the relevant fields"""
@@ -189,11 +274,12 @@ class Cube:
 
     # ------------------ Getter Methods ------------------ #
 
+    # noinspection PyMethodMayBeStatic
     def get_color_of_face(self, **kwargs):
         if 'facelet' in kwargs:
             facelet = kwargs['facelet']
             try:
-                face = self.facelet_face_dict[facelet]
+                face = self.FACELET_FACE_DICT[facelet]
                 return Color(eval('self.%s' % face.name.lower())[4])
             except KeyError:
                 print('Invalid Facelet number passed to method')
@@ -217,85 +303,3 @@ class Cube:
                     return face
             print("No faces found with color '%s'" % str(color))
             raise AttributeError
-
-
-@unique
-class Color(Enum):
-    """An Enum Class to hold potential colors scanned by the LEGO Color Sensor"""
-
-    NONE = 'N'
-    DARK = 'D'  # DARK (not 'BLACK') to show up with any color reading errors (differentiates it from BLUE)
-    BLUE = 'B'
-    GREEN = 'G'
-    YELLOW = 'Y'
-    RED = 'R'
-    WHITE = 'W'
-    ORANGE = 'O'  # Color Sensor actually reads BROWN but ORANGE is used to avoid confusion
-
-
-@unique
-class Move(Enum):
-    NONE = '-'
-    U = 'U '
-    NOT_U = "U'"
-    U2 = 'U2'
-    D = 'D '
-    NOT_D = "D'"
-    D2 = 'D2'
-    L = 'L '
-    NOT_L = "L'"
-    L2 = 'L2'
-    R = 'R '
-    NOT_R = "R'"
-    R2 = 'R2'
-    F = 'F '
-    NOT_F = "F'"
-    F2 = 'F2'
-    B = 'B '
-    NOT_B = "B'"
-    B2 = 'B2'
-    M = 'M '
-    NOT_M = "M'"
-    M2 = 'M2'
-    E = 'E '
-    NOT_E = "E'"
-    E2 = 'E2'
-    S = 'S '
-    NOT_S = "S'"
-    S2 = 'S2'
-    X = 'X '
-    NOT_X = "X'"
-    X2 = 'X2'
-    Y = 'Y '
-    NOT_Y = "Y'"
-    Y2 = 'Y2'
-    Z = 'Z '
-    NOT_Z = "Z'"
-    Z2 = 'Z2'
-
-
-@unique
-class Face(Enum):
-    UP = 'U'
-    DOWN = 'D'
-    LEFT = 'L'
-    RIGHT = 'R'
-    FRONT = 'F'
-    BACK = 'B'
-
-
-@unique
-class Rotation(Enum):
-    CLOCKWISE = 0
-    COUNTER_CLOCKWISE = 1
-
-
-class Position:
-    def __init__(self, depth, position, move_sequence, pos_id=0):
-        self.depth = depth
-        self.position = position
-        self.move_sequence = move_sequence
-        self.pos_id = pos_id
-
-    def __str__(self):
-        return self.position + ' ' + str(self.move_sequence)

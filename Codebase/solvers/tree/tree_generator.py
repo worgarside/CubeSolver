@@ -1,4 +1,4 @@
-from cube.cube_class import Cube, Position, SOLVED_POS
+from cube.cube_class import Cube, Position
 from cube.moves import dyn_move
 import pickle
 
@@ -24,7 +24,7 @@ def generate_tree(cube, move_group, queue):
                     queue.put(new_pos)
                     positions[depth + 1].append(new_pos)
 
-                    if new_pos.position == SOLVED_POS:
+                    if new_pos.position == Cube.SOLVED_POS:
                         solved = True
                         queue.put('solved')
                         queue.put(new_pos)
@@ -35,7 +35,6 @@ def generate_tree(cube, move_group, queue):
             if solved:
                 break
         depth += 1
-
 
 
 def valid_pos(position, position_set):

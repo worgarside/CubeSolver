@@ -16,7 +16,7 @@ import solvers.half_turn.table_generator as half_turn_generator
 import solvers.half_turn.table_lookup as half_turn_lookup
 import solvers.multiphase.table_generator as mphase_generator
 import solvers.multiphase.table_lookup as mphase_lookup
-from cube.cube_class import Cube, Color, Move, Face, SOLVED_POS
+from cube.cube_class import Cube, Color, Move, Face
 from cube.moves import dyn_move
 from database.database_manager import DatabaseManager
 from solvers.tree.interface import Interface
@@ -266,7 +266,7 @@ def main():
         if multiphase:
             solve_sequence = multiphase_solve(db, cube.position, 5)
         if half_turn:
-            if cube.position_reduced != SOLVED_POS:
+            if cube.position_reduced != Cube.SOLVED_POS:
                 print('Invalid Half Turn Cube, reduced Cube should be solved but looks like this: \n%s' % Cube(
                     cube.position_reduced))
                 exit()
