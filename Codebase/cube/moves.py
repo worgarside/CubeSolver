@@ -1,8 +1,6 @@
 from copy import deepcopy
 
-from .cube_class import Face
-from .cube_class import Move
-from .cube_class import Rotation
+from cube.cube_class import Rotation, Face, Move
 
 
 def u(self, print_flag=False):

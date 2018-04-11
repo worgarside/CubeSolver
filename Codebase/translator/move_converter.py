@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-import move_translator.primary_moves as pr_move
+import translator.color_moves as pr_move
 from cube.cube_class import Color, Move
 
 

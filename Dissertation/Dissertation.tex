@@ -1238,11 +1238,12 @@
     
     The \lstinline|Robot| class has one class attribute for each peripheral (sensors and actuators) to allow individual control. Upon initialisation of the \lstinline|Robot|, each peripheral's connection is checked and the motors are then manually initialised. To do this, the braking method for the motors is set to \lstinline|coast|, which means that all resistance is removed from the rotor and they can be turned to the correct position using the large gears shown in Figure \ref{fig:rdrInitialiser} on page \pageref{fig:rdrInitialiser}. Once the motors are initialised, the touch sensor can be pressed to continue the program: this sets the braking method of the motors to \lstinline|hold|, providing an active resistance to the rotors to ensure there is no unwanted rotation.
     
-    The \lstinline|Robot| has a number of methods for controlling the core components: Algorithms \ref{alg:scanupface} and \ref{alg:scancube} have been implemented to scan the Cube; constant values are used to set the endpoints of an \move{x} performed by the arm; \lstinline|rotate_cradle| is a method which has an optional parameter (with a default value of 90) by which to rotate the cradle; and there are moves for each move in the moveset \moveset{x.x'x2y.y'y2d.d'd2} (The \move{x'} is interpreted as \movesequence{x.x.x}).
-    
-    
+    The \lstinline|Robot| has a number of methods for controlling the core components: Algorithms \ref{alg:scanupface} and \ref{alg:scancube} have been implemented to scan the Cube; constant values are used to set the endpoints of an \move{x} performed by the arm; \lstinline|rotate_cradle| is a method which has an optional parameter (with a default value of 90) by which to rotate the cradle; and there are moves for each method in the set \moveset{x.x'x2y.y'y2d.d'd2} (The \move{x'} is interpreted as \movesequence{x.x.x}).
     
     \subsection{Cube}
+    
+    The second object defined in the software is the \lstinline|Cube| object.
+    
     \subsubsection{Position}
     \section{Solve Methods}
     \subsection{Method 1: Tree Solving}

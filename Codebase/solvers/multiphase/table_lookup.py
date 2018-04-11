@@ -1,6 +1,8 @@
 import json
 from sqlite3 import OperationalError
 
+import kociemba
+
 from cube.cube_class import Cube, Color, Move, Face
 
 INVERSION_DICT = {
@@ -16,7 +18,7 @@ INVERSION_DICT = {
 def lookup_position(db, position, phase):
     lookup_pos = _color_to_monochrome(position, phase)
     try:
-        orig_sequence = json.loads(db.query("SELECT move_sequence FROM gs2p%i where position = '%s'"
+        orig_sequence = json.loads(db.query("SELECT move_sequence FROM multiphase_%i where position = '%s'"
                                             % (phase, lookup_pos)).fetchone()[0])
 
         reverse_sequence = orig_sequence[::-1]
@@ -30,8 +32,8 @@ def lookup_position(db, position, phase):
         print(err)
         exit()
     except TypeError:
-        print('Cube not found in table gs2p%i \n\n %s' % (phase, Cube(lookup_pos)))
-        exit()
+        print("Position '%s' not found in table multiphase_%i" % (lookup_pos, phase))
+        return LookupError, lookup_pos
 
 
 def _color_to_monochrome(position, phase):
@@ -86,3 +88,32 @@ def _color_to_monochrome(position, phase):
     else:
         print('Invalid phase: %s' % str(phase))
         exit()
+
+
+def kociemba_convert(position):
+    temp_cube = Cube(position)
+
+    temp_position = temp_cube.up + temp_cube.right + temp_cube.front + temp_cube.down + temp_cube.left + temp_cube.back
+
+    kociemba_dict = {'W': 'U', 'O': 'L', 'G': 'F', 'R': 'R', 'B': 'B', 'Y': 'D', }
+
+    kociemba_position = ''
+    for facelet in temp_position:
+        kociemba_position += kociemba_dict[facelet]
+    print('.', end='')
+    try:
+        kociemba_solution = kociemba.solve(kociemba_position)
+        print('!\n')
+        kociemba_moves = kociemba_solution.split()
+        solve_sequence = []
+        for index, move in enumerate(kociemba_moves):
+            if move[-1] == "'":
+                kociemba_moves[index] = 'NOT_' + move[0]
+            solve_sequence.append(Move[kociemba_moves[index]])
+        return solve_sequence
+    except ValueError:
+        print(".\nInvalid Cube, cannot be solved.\nYour position:       %s\nKociemba's position: %s\nBye :(" % (
+            position, kociemba_position))
+        exit()
+
+    exit()

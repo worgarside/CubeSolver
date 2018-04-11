@@ -38,7 +38,7 @@ def scan_cube(robot):
     pos = robot.scan_cube()
     end_time = time()
 
-    file_path = '%s/robot/scan_times.csv' % os.path.abspath(os.path.dirname(__file__))
+    file_path = '%s/scan_times.csv' % os.path.abspath(os.path.dirname(__file__))
     with open(file_path) as csv_read:
         (avg_time_str, scan_count_str) = csv_read.readline().split(',')
 

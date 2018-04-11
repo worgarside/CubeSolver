@@ -8,7 +8,7 @@ class Interface:
         self.queue = queue
         self.root = Tk()
         self.root.title("Rubik's Cube Solver")
-        self.root.iconbitmap('PC/solvers/tree/cube.ico')
+        self.root.iconbitmap('Codebase/solvers/tree/cube.ico')
         self.root.resizable(width=False, height=False)
         self.cubie = []
         self.height = 0.75 * self.root.winfo_screenheight()
@@ -100,6 +100,8 @@ class Interface:
                         self.canvas.itemconfig(self.cubie[index], fill=color_dict[color])
                     self.root.update_idletasks()
                     self.root.update()
+            input('Press enter to continue')
+            self.root.destroy()
         except TclError:
             # catches error when window is closed
             return

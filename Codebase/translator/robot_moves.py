@@ -1,4 +1,4 @@
-from move_translator import digital_moves as d_move
+import cube.moves as d_move
 
 """
 These are the lowest level moves, and are the only ones the robot is capable of actuating.

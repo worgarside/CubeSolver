@@ -16,28 +16,37 @@ import solvers.half_turn.table_generator as half_turn_generator
 import solvers.half_turn.table_lookup as half_turn_lookup
 import solvers.multiphase.table_generator as mphase_generator
 import solvers.multiphase.table_lookup as mphase_lookup
-from cube.cube_class import Cube, Color, Move, Face
+from cube.cube_class import Cube, Color, Move, Face, SOLVED_POS
 from cube.moves import dyn_move
-from data.database_manager import DatabaseManager
-from move_translator.move_converter import convert_sequence
+from database.database_manager import DatabaseManager
 from solvers.tree.interface import Interface
 from solvers.tree.tree_generator import generate_tree
-
-GROUP_COMPLETE = [Move.U, Move.NOT_U, Move.U2, Move.D, Move.NOT_D, Move.D2,
-                  Move.L, Move.NOT_L, Move.L2, Move.R, Move.NOT_R, Move.R2,
-                  Move.F, Move.NOT_F, Move.F2, Move.B, Move.NOT_B, Move.B2]
+from translator.move_converter import convert_sequence
 
 
 def init_db(prints=True):
-    print('Initialising DB') if prints else None
-    db = DatabaseManager('PC/data/db.sqlite')
+    print('Initialising DB.', end='') if prints else None
+    db = DatabaseManager('Codebase/database/db.sqlite')
     db.query("PRAGMA synchronous = off")
+    print('.', end='')
     db.query("BEGIN TRANSACTION")
-    print('DB Initialised') if prints else None
+    print('!') if prints else None
     return db
 
 
 def multiphase_solve(db, position, phase_count):
+    def end_solve():
+        total_sequence = []
+        for sequence in sequence_list:
+            total_sequence.extend(sequence)
+
+        print('- Final Sequence: ', end='')
+        for end_move in total_sequence:
+            print(end_move.name, end=' ')
+        print()
+
+        return total_sequence
+
     sequence_list = []
 
     phase_name = ['Zero', 'One', 'Two', 'Three', 'Four']
@@ -46,24 +55,37 @@ def multiphase_solve(db, position, phase_count):
 
     for phase in range(phase_count):
         print('- Phase %s: ' % phase_name[phase], end='')
-        sequence_list.append(mphase_lookup.lookup_position(db, position_list[phase], phase))
+
+        looked_up_sequence = mphase_lookup.lookup_position(db, position_list[phase], phase)
+        if len(looked_up_sequence) > 0 and looked_up_sequence[0] == LookupError:
+            print()
+            kociemba_choice = ''
+            while kociemba_choice != 'Y' and kociemba_choice != 'N':
+                kociemba_choice = input('Solve with kociemba package? (y/n) ').upper()
+            if kociemba_choice == 'Y':
+                print('Converting Cube to kociemba notation.', end='')
+                sequence_list = [mphase_lookup.kociemba_convert(position)]
+
+                return end_solve()
+            else:
+                print('Exiting program, you got as far as this: \n%s\n' % Cube(looked_up_sequence[1]))
+                transmit_choice = ''
+                while transmit_choice != 'Y' and transmit_choice != 'N':
+                    transmit_choice = input('Transmit to robot anyway? (y/n) ').upper()
+                if transmit_choice == 'Y':
+                    looked_up_sequence = []
+                else:
+                    print('Nice try, bye')
+                    exit()
+
+        sequence_list.append(looked_up_sequence)
         cube_list.append(Cube(position_list[phase]))
         for move in sequence_list[phase]:
             dyn_move(cube_list[phase], move)
             print(move.name, end=' ')
         position_list.append(cube_list[phase].position)
         print()
-
-    total_sequence = []
-    for sequence in sequence_list:
-        total_sequence.extend(sequence)
-
-    print('- Final Sequence: ', end='')
-    for move in total_sequence:
-        print(move.name, end=' ')
-    print()
-
-    return total_sequence
+    return end_solve()
 
 
 def half_turn_solve(db, position):
@@ -78,6 +100,10 @@ def half_turn_solve(db, position):
 
 
 def tree_solve(position):
+    move_group = [Move.U, Move.NOT_U, Move.U2, Move.D, Move.NOT_D, Move.D2,
+                  Move.L, Move.NOT_L, Move.L2, Move.R, Move.NOT_R, Move.R2,
+                  Move.F, Move.NOT_F, Move.F2, Move.B, Move.NOT_B, Move.B2]
+
     BaseManager.register('LifoQueue', LifoQueue)
     manager = BaseManager()
     manager.start()
@@ -86,7 +112,7 @@ def tree_solve(position):
     cube = Cube(position)
 
     tree_process = Process(target=time_function,
-                           args=(generate_tree, cube, GROUP_COMPLETE, position_queue,),
+                           args=(generate_tree, cube, move_group, position_queue,),
                            name='tree_process')
 
     tree_process.start()
@@ -98,10 +124,9 @@ def tree_solve(position):
     except TclError as err:
         print(err)
 
-    print('Terminating %s' % tree_process.name)
     tree_process.terminate()  # kill process when window is closed
 
-    with open('PC/solvers/tree/solution.pickle', 'rb') as solution_file:
+    with open('Codebase/solvers/tree/solution.pickle', 'rb') as solution_file:
         pickled_sequence = pickle.load(solution_file)
 
     solve_sequence = []
@@ -209,7 +234,7 @@ def main():
             confirm = input('Are you sure you want to wipe the database? (y/n) ').upper()
         if confirm == 'Y':
             print('Deleting Database.', end='')
-            os.remove('%s/PC/data/db.sqlite' % os.getcwd())
+            os.remove('%s/Codebase/database/db.sqlite' % os.getcwd())
             print('.', end='')
             db = init_db(False)  # Re-make db file to avoid errors
             print('!')
@@ -241,11 +266,15 @@ def main():
         if multiphase:
             solve_sequence = multiphase_solve(db, cube.position, 5)
         if half_turn:
+            if cube.position_reduced != SOLVED_POS:
+                print('Invalid Half Turn Cube, reduced Cube should be solved but looks like this: \n%s' % Cube(
+                    cube.position_reduced))
+                exit()
             solve_sequence = half_turn_solve(db, cube.position)
         if tree:
             solve_sequence = tree_solve(position)
 
-        print('\n\n- Final Cube -')
+        print('\n- Final Cube -')
         for move in solve_sequence:
             dyn_move(cube, move)
         print(cube)

@@ -2,6 +2,7 @@ from cube.cube_class import Cube, Position, SOLVED_POS
 from cube.moves import dyn_move
 import pickle
 
+
 def generate_tree(cube, move_group, queue):
     solved = False
     positions = {}
@@ -28,12 +29,13 @@ def generate_tree(cube, move_group, queue):
                         queue.put('solved')
                         queue.put(new_pos)
 
-                        with open('PC/solvers/tree/solution.pickle', 'wb') as solution:
+                        with open('Codebase/solvers/tree/solution.pickle', 'wb') as solution:
                             pickle.dump(new_pos.move_sequence, solution, protocol=pickle.HIGHEST_PROTOCOL)
                         break
             if solved:
                 break
         depth += 1
+
 
 
 def valid_pos(position, position_set):
