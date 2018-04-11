@@ -769,7 +769,7 @@
 	
 	\subsubsection{Major Issues}
 	
-	The first major issue with the functionality of the MkI was actually software-based - however it is discussed here because it produced a hardware issue which affected the MkI's design. The details of the code used are discussed in section \ref{sec:ev3components}. In Algorithm \ref{alg:mkITest}, the stopping condition for the main loop is a comparison between the virtual Cube and the real-world Cube. This comparison was a manual one, where the position of the Cube was checked against an on-screen printout. The colour sensor has different modes to read colours: \lstinline|COL_COLOR|, which returns an integer between zero and seven (inc.) to represent a specific colour; \lstinline|RGB_RAW|, which returns the RGB values read by the sensor; and other modes which read light intensity rather than the colour. For this application, the \lstinline|COL_COLOR| is the most suitable mode because it will not require the RGB values to be parsed into one of the six colours.
+	The first major issue with the functionality of the MkI was actually software-based - however it is discussed here because it produced a hardware issue which affected the MkI's design. The details of the code used are discussed in section \ref{sec:robotObject}. In Algorithm \ref{alg:mkITest}, the stopping condition for the main loop is a comparison between the virtual Cube and the real-world Cube. This comparison was a manual one, where the position of the Cube was checked against an on-screen printout. The colour sensor has different modes to read colours: \lstinline|COL_COLOR|, which returns an integer between zero and seven (inc.) to represent a specific colour; \lstinline|RGB_RAW|, which returns the RGB values read by the sensor; and other modes which read light intensity rather than the colour. For this application, the \lstinline|COL_COLOR| is the most suitable mode because it will not require the RGB values to be parsed into one of the six colours.
 	
 	The only problem was, the on-screen printout was always a mix of blue, red and white rather than the expected mix of the usual six colours. The first solution to this problem was to change the magnitude of the space between the colour sensor and the top of the Cube: testing a number of distances between 5 \si{\milli\metre} and 25 \si{\milli\metre} produced the same colours, with slight variances in darkness and little else. To properly debug this problem, the mode was set to \lstinline|RGB_RAW| and the RGB values returned by the colour sensor were compared with values read by the camera on a OnePlus 3\footnote{A simple RGB colour picking app was used \cite{RangoApps2015}}.
 	
@@ -1103,7 +1103,7 @@
 	\subsubsection{Colour Sensor}
 	
 	\begin{enumerate}
-		\item The sensor must be able to be accurately positioned above the correct facelet \label{lst:cs1}
+		\item The sensor must be accurately positioned above the correct facelet \label{lst:cs1}
 	\end{enumerate}
 
 	Each of these definitions have been followed in the design of the robot, through thorough consideration of hardware capabilities and leaving plenty of room for improvement with both hardware and software. The MkI did not achieve items Cradle \ref{lst:cr2} and \ref{lst:cr3}, and \move{x} Arm \ref{lst:x2} so these were the largest changes as the spiral model progressed. The MkII, however, has successfully fulfilled all of the definitions with a very small margin of error. It has therefore been marked as a success, and will not be developed further.
@@ -1228,11 +1228,20 @@
     
     This final move sequence will then be transmitted to the robot and used to control the motors to manipulate the Cube. % TODO: do some analysis about runtime of translation
     
-    \section{EV3 Components} \label{sec:ev3components}
-    
-    
     \section{Object Classes}
-    \subsection{Robot}
+    
+    This project has two main object classes, which are created at the start of the program and used throughout. These classes are both discussed, explained and examined below as an introduction to the methods used in solving a Cube.
+    
+    \subsection{Robot} \label{sec:robotObject}
+    
+    The first class is the \lstinline|Robot|: an object which is used to represent the real world Lego robot, provide a controller for the actuators, and read real world data using the sensors. 
+    
+    The \lstinline|Robot| class has one class attribute for each peripheral (sensors and actuators) to allow individual control. Upon initialisation of the \lstinline|Robot|, each peripheral's connection is checked and the motors are then manually initialised. To do this, the braking method for the motors is set to \lstinline|coast|, which means that all resistance is removed from the rotor and they can be turned to the correct position using the large gears shown in Figure \ref{fig:rdrInitialiser} on page \pageref{fig:rdrInitialiser}. Once the motors are initialised, the touch sensor can be pressed to continue the program: this sets the braking method of the motors to \lstinline|hold|, providing an active resistance to the rotors to ensure there is no unwanted rotation.
+    
+    The \lstinline|Robot| has a number of methods for controlling the core components: Algorithms \ref{alg:scanupface} and \ref{alg:scancube} have been implemented to scan the Cube; constant values are used to set the endpoints of an \move{x} performed by the arm; \lstinline|rotate_cradle| is a method which has an optional parameter (with a default value of 90) by which to rotate the cradle; and there are moves for each move in the moveset \moveset{x.x'x2y.y'y2d.d'd2} (The \move{x'} is interpreted as \movesequence{x.x.x}).
+    
+    
+    
     \subsection{Cube}
     \subsubsection{Position}
     \section{Solve Methods}

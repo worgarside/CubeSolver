@@ -1,9 +1,7 @@
 from copy import deepcopy
 
 import move_translator.primary_moves as pr_move
-
-from cube.color_class import Color
-from cube.move_class import Move
+from cube.cube_class import Color, Move
 
 
 def convert_sequence(cube, sequence):
@@ -16,7 +14,7 @@ def convert_sequence(cube, sequence):
 
 
 """
-Converts each of the SIDE based moves into COLOR based moves
+Converts each of the FACE based moves into COLOR based moves
 This means that even though the robot rotates the cube in order to perform 
 certain moves, the frame of reference remains unchanged
 """

@@ -6,9 +6,9 @@ from ev3dev.auto import OUTPUT_A, OUTPUT_B, OUTPUT_C
 from ev3dev.ev3 import *
 from ev3dev.helper import LargeMotor, MediumMotor, ColorSensor
 
-from cube.color_class import Color
+from cube.cube_class import Color
 
-SOLVED_SIDES = [(Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE,
+SOLVED_FACES = [(Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE,
                  Color.WHITE, Color.WHITE),
                 (Color.GREEN, Color.GREEN, Color.GREEN, Color.GREEN, Color.GREEN, Color.GREEN, Color.GREEN,
                  Color.GREEN, Color.GREEN),
@@ -19,6 +19,19 @@ SOLVED_SIDES = [(Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE
                 (Color.RED, Color.RED, Color.RED, Color.RED, Color.RED, Color.RED, Color.RED, Color.RED, Color.RED),
                 (Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.ORANGE, Color.ORANGE,
                  Color.ORANGE, Color.ORANGE)]
+
+CS_MID_POS = -1650
+CS_COR_POS = -1350
+CS_CEN_POS = -2300
+CRADLE_SPEED = 1020
+CS_SPEED = 1020
+GRABBER_SPEED = 325
+GBR_NO_GUARD_POS = 65
+GBR_GUARD_POS = -35
+GBR_GRAB_POS = -90
+
+COLOR_SCAN_DICT = {0: Color.NONE, 1: Color.DARK, 2: Color.BLUE, 3: Color.GREEN, 4: Color.YELLOW,
+                   5: Color.RED, 6: Color.WHITE, 7: Color.ORANGE}
 
 
 class Robot:
@@ -40,34 +53,16 @@ class Robot:
         self.peripherals.append(self.color_sensor)
 
         self.color_sensor.mode = self.color_sensor.MODE_COL_COLOR
-        self.color_scan_dict = {0: Color.NONE, 1: Color.DARK, 2: Color.BLUE, 3: Color.GREEN, 4: Color.YELLOW,
-                                5: Color.RED, 6: Color.WHITE, 7: Color.ORANGE}
-
-        self.cs_mid_pos = -1650
-        self.cs_cor_pos = -1350
-        self.cs_cen_pos = -2300
-        self.cradle_speed = 1020
-        self.cs_speed = 1020
-        self.grabber_speed = 325
         self._scanned_cubies = 0
 
-        self.gbr_no_guard_pos = 65
-        self.gbr_guard_pos = -35
-        self.gbr_grab_pos = -90
-
         self.check_peripherals()
+        self.init_motors()
 
-    def init_motors(self, override=False):
+    def init_motors(self):
         """
         Allows user to manually position the motors at their starting position
-        :param override: a flag to skip the initialisation for testing
         :return: None
         """
-
-        if override:
-            simulate_initialisation = False
-        else:
-            simulate_initialisation = self.simulated
 
         self.cradle.stop_action = 'coast'
         self.cradle.run_timed(time_sp=1, speed_sp=1)
@@ -76,7 +71,7 @@ class Robot:
         self.cs_arm.stop_action = 'coast'
         self.cs_arm.run_timed(time_sp=1, speed_sp=1)
 
-        if not simulate_initialisation:
+        if not self.simulated:
             wait_count = 0
             amber = True
             Sound.speak('initialise motors')
@@ -107,12 +102,13 @@ class Robot:
     def check_peripherals(self):
         """
         Checks all peripherals (sensors & motors) are connected properly
-        :return: boolean connection flag (if False then exit())
+        :return: None
         """
         all_connected = True
         for p in self.peripherals:
             if not p.connected:
                 print('%s not connected properly' % p)
+                # Doesn't exit immediately in case there is more than one problem
                 all_connected = False
 
         if not all_connected:
@@ -129,11 +125,11 @@ class Robot:
         Leds.set_color(Leds.RIGHT, Leds.GREEN)
 
         if not stall_flag:
-            self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=self.cs_speed)
+            self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=CS_SPEED)
             self.cs_arm.wait_for_position(0)
-            # self.cradle.run_to_abs_pos(position_sp=0, speed_sp=self.cradle_speed)
+            # self.cradle.run_to_abs_pos(position_sp=0, speed_sp=CRADLE_SPEED)
             # self.cradle.wait_for_position(0)
-            self.grabber.run_to_abs_pos(position_sp=0, speed_sp=self.grabber_speed, ramp_down_sp=50)
+            self.grabber.run_to_abs_pos(position_sp=0, speed_sp=GRABBER_SPEED, ramp_down_sp=50)
             self.grabber.wait_for_position(0)
 
         sleep(1)
@@ -156,13 +152,9 @@ class Robot:
         :return: None
         """
         # 400 is 1/4 turn - 13.333:1 gear ratio
-        mod_angle = (angle) * (40 / 9)
-        # pos = self.cradle.position + mod_angle
-        # self.cradle.run_to_abs_pos(position_sp=pos, speed_sp=self.cradle_speed)
-        # self.cradle.wait_for_position(pos)
-        # sleep(0.05)
+        mod_angle = angle * (40 / 9)
 
-        self.cradle.run_to_rel_pos(position_sp=mod_angle, speed_sp=self.cradle_speed)
+        self.cradle.run_to_rel_pos(position_sp=mod_angle, speed_sp=CRADLE_SPEED)
         self.cradle.wait_until_not_moving()
 
     def grab_cube(self):
@@ -170,14 +162,14 @@ class Robot:
         Rotates the cube in the x direction
         :return: None
         """
-        self.grabber.run_to_abs_pos(position_sp=self.gbr_grab_pos, speed_sp=self.grabber_speed * 1.5)
-        self.grabber.wait_for_position(self.gbr_grab_pos)
+        self.grabber.run_to_abs_pos(position_sp=GBR_GRAB_POS, speed_sp=GRABBER_SPEED * 1.5)
+        self.grabber.wait_for_position(GBR_GRAB_POS)
 
-        self.grabber.run_to_abs_pos(position_sp=20, speed_sp=self.grabber_speed)
+        self.grabber.run_to_abs_pos(position_sp=20, speed_sp=GRABBER_SPEED)
         self.grabber.wait_for_position(-50)
 
-        self.grabber.run_to_abs_pos(position_sp=self.gbr_guard_pos, speed_sp=self.grabber_speed)
-        self.grabber.wait_for_position(self.gbr_guard_pos)
+        self.grabber.run_to_abs_pos(position_sp=GBR_GUARD_POS, speed_sp=GRABBER_SPEED)
+        self.grabber.wait_for_position(GBR_GUARD_POS)
 
         sleep(0.05)
 
@@ -213,26 +205,26 @@ class Robot:
         corner = []
 
         # Moves the grabber out of the way
-        self.grabber.run_to_abs_pos(position_sp=self.gbr_no_guard_pos, speed_sp=self.grabber_speed)
-        self.grabber.wait_for_position(self.gbr_no_guard_pos)
+        self.grabber.run_to_abs_pos(position_sp=GBR_NO_GUARD_POS, speed_sp=GRABBER_SPEED)
+        self.grabber.wait_for_position(GBR_NO_GUARD_POS)
 
         for i in range(4):
             # Middle
-            self.cs_arm.run_to_abs_pos(position_sp=self.cs_mid_pos, speed_sp=self.cs_speed)
-            self.cs_arm.wait_for_position(self.cs_mid_pos)
-            middle.append(self.color_scan_dict[self.color_sensor.value()])
+            self.cs_arm.run_to_abs_pos(position_sp=CS_MID_POS, speed_sp=CS_SPEED)
+            self.cs_arm.wait_for_position(CS_MID_POS)
+            middle.append(COLOR_SCAN_DICT[self.color_sensor.value()])
 
             self.increment_progressbar()
 
             # Corner
             self.rotate_cradle(45)
 
-            self.cs_arm.run_to_abs_pos(position_sp=self.cs_cor_pos, speed_sp=self.cs_speed)
-            self.cs_arm.wait_for_position(self.cs_cor_pos)
+            self.cs_arm.run_to_abs_pos(position_sp=CS_COR_POS, speed_sp=CS_SPEED)
+            self.cs_arm.wait_for_position(CS_COR_POS)
 
             # Checks that the color sensor is not reading no color or too dark a value
             if self.color_sensor.value() != (0 or 1):
-                corner.append(self.color_scan_dict[self.color_sensor.value()])
+                corner.append(COLOR_SCAN_DICT[self.color_sensor.value()])
             else:
                 # Currently just exits the program if an extreme value is read
                 print('Extreme Color value: %s' % str(Color(self.color_sensor.value())))
@@ -243,9 +235,9 @@ class Robot:
             self.rotate_cradle(45)
 
         # Read centre cubie
-        self.cs_arm.run_to_abs_pos(position_sp=self.cs_cen_pos, speed_sp=self.cs_speed)
-        self.cs_arm.wait_for_position(self.cs_cen_pos)
-        centre = self.color_scan_dict[self.color_sensor.value()]
+        self.cs_arm.run_to_abs_pos(position_sp=CS_CEN_POS, speed_sp=CS_SPEED)
+        self.cs_arm.wait_for_position(CS_CEN_POS)
+        centre = COLOR_SCAN_DICT[self.color_sensor.value()]
 
         self.increment_progressbar()
 
@@ -272,19 +264,19 @@ class Robot:
 
         print("Scanning Rubik's Cube...")
 
-        sides = [[], [], [], [], [], []]
+        faces = [[], [], [], [], [], []]
 
         # The scanning process can be simulated for testing purposes
         if not self.simulated:
 
             # Move grabber out of the way
-            self.grabber.run_to_abs_pos(position_sp=self.gbr_no_guard_pos, speed_sp=self.grabber_speed / 2)
-            self.grabber.wait_for_position(self.gbr_no_guard_pos)
+            self.grabber.run_to_abs_pos(position_sp=GBR_NO_GUARD_POS, speed_sp=GRABBER_SPEED / 2)
+            self.grabber.wait_for_position(GBR_NO_GUARD_POS)
 
-            for i in range(len(sides)):
-                sides[i] = self.scan_up_face()
+            for i in range(len(faces)):
+                faces[i] = self.scan_up_face()
 
-                self.cs_arm.run_to_abs_pos(position_sp=-300, speed_sp=self.cs_speed)
+                self.cs_arm.run_to_abs_pos(position_sp=-300, speed_sp=CS_SPEED)
                 self.cs_arm.wait_for_position(-300)
 
                 if i == 3:
@@ -296,21 +288,21 @@ class Robot:
                 if i == 4:
                     self.grab_cube()
 
-            self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=self.cs_speed)
+            self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=CS_SPEED)
         else:
             for i in range(54):
                 sleep(0.005)
                 self.increment_progressbar()
 
-            sides = SOLVED_SIDES
+            faces = SOLVED_FACES
 
         color_validation_dict = {}
-        for s in sides:
-            for c in s:
+        for face in faces:
+            for color in face:
                 try:
-                    color_validation_dict[c] += 1
+                    color_validation_dict[color] += 1
                 except KeyError:
-                    color_validation_dict[c] = 1
+                    color_validation_dict[color] = 1
 
         for key, value in color_validation_dict.items():
             if value != 9:
@@ -320,26 +312,26 @@ class Robot:
                 self.exit()
                 exit()
 
-    # These transformations align the cubes faces correctly, as they are inherently rotated when scanning the cube
-        sides[0] = sides[0][6:7] + sides[0][3:4] + sides[0][0:1] + sides[0][7:8] + sides[0][4:5] + sides[0][1:2] + \
-            sides[0][8:9] + sides[0][5:6] + sides[0][2:3]
+        # These transformations align the cubes faces correctly, as they are inherently rotated when scanning the cube
+        faces[0] = faces[0][6:7] + faces[0][3:4] + faces[0][0:1] + faces[0][7:8] + faces[0][4:5] + faces[0][1:2] + \
+            faces[0][8:9] + faces[0][5:6] + faces[0][2:3]
 
-        sides[1] = sides[1][6:7] + sides[1][3:4] + sides[1][0:1] + sides[1][7:8] + sides[1][4:5] + sides[1][1:2] + \
-            sides[1][8:9] + sides[1][5:6] + sides[1][2:3]
+        faces[1] = faces[1][6:7] + faces[1][3:4] + faces[1][0:1] + faces[1][7:8] + faces[1][4:5] + faces[1][1:2] + \
+            faces[1][8:9] + faces[1][5:6] + faces[1][2:3]
 
-        sides[2] = sides[2][6:7] + sides[2][3:4] + sides[2][0:1] + sides[2][7:8] + sides[2][4:5] + sides[2][1:2] + \
-            sides[2][8:9] + sides[2][5:6] + sides[2][2:3]
+        faces[2] = faces[2][6:7] + faces[2][3:4] + faces[2][0:1] + faces[2][7:8] + faces[2][4:5] + faces[2][1:2] + \
+            faces[2][8:9] + faces[2][5:6] + faces[2][2:3]
 
-        sides[3] = sides[3][6:7] + sides[3][3:4] + sides[3][0:1] + sides[3][7:8] + sides[3][4:5] + sides[3][1:2] + \
-            sides[3][8:9] + sides[3][5:6] + sides[3][2:3]
+        faces[3] = faces[3][6:7] + faces[3][3:4] + faces[3][0:1] + faces[3][7:8] + faces[3][4:5] + faces[3][1:2] + \
+            faces[3][8:9] + faces[3][5:6] + faces[3][2:3]
 
         # Makes sure all the lists of colors are split down to form one list (Cube._pos)
         cube_pos = []
-        for side in sides:
-            for i in side:
+        for face in faces:
+            for i in face:
                 cube_pos.append(Color(i).value)
 
-        # Re-orders the cube sides to match the ordering of the cube position variable
+        # Re-orders the cube faces to match the ordering of the cube position variable
         corrected_cube_pos = cube_pos[45:] + cube_pos[0:3] + cube_pos[27:30] + cube_pos[18:21] + \
             cube_pos[9:12] + cube_pos[3:6] + cube_pos[30:33] + cube_pos[21:24] + \
             cube_pos[12:15] + cube_pos[6:9] + cube_pos[33:36] + cube_pos[24:27] + \
@@ -351,16 +343,16 @@ class Robot:
     # Robot moves
     def r_move_d(self):
         # Set guards to block position
-        self.grabber.run_to_abs_pos(position_sp=self.gbr_guard_pos, speed_sp=self.grabber_speed)
-        self.grabber.wait_for_position(self.gbr_guard_pos)
+        self.grabber.run_to_abs_pos(position_sp=GBR_GUARD_POS, speed_sp=GRABBER_SPEED)
+        self.grabber.wait_for_position(GBR_GUARD_POS)
 
         # Rotate Cradle -90
         self.rotate_cradle(-90)
 
     def r_move_not_d(self):
         # Set guards to block position
-        self.grabber.run_to_abs_pos(position_sp=self.gbr_guard_pos, speed_sp=self.grabber_speed)
-        self.grabber.wait_for_position(self.gbr_guard_pos)
+        self.grabber.run_to_abs_pos(position_sp=GBR_GUARD_POS, speed_sp=GRABBER_SPEED)
+        self.grabber.wait_for_position(GBR_GUARD_POS)
 
         # Rotate Cradle 90
         self.rotate_cradle()
@@ -380,22 +372,22 @@ class Robot:
 
     def r_move_y(self):
         # Remove guards
-        self.grabber.run_to_abs_pos(position_sp=self.gbr_no_guard_pos, speed_sp=self.grabber_speed)
-        self.grabber.wait_for_position(self.gbr_no_guard_pos)
+        self.grabber.run_to_abs_pos(position_sp=GBR_NO_GUARD_POS, speed_sp=GRABBER_SPEED)
+        self.grabber.wait_for_position(GBR_NO_GUARD_POS)
         # Rotate Cradle +90
         self.rotate_cradle()
 
     def r_move_not_y(self):
         # Remove guards
-        self.grabber.run_to_abs_pos(position_sp=self.gbr_no_guard_pos, speed_sp=self.grabber_speed)
-        self.grabber.wait_for_position(self.gbr_no_guard_pos)
+        self.grabber.run_to_abs_pos(position_sp=GBR_NO_GUARD_POS, speed_sp=GRABBER_SPEED)
+        self.grabber.wait_for_position(GBR_NO_GUARD_POS)
         # Rotate Cradle -90
         self.rotate_cradle(-90)
 
     def r_move_y2(self):
         # Remove guards
-        self.grabber.run_to_abs_pos(position_sp=self.gbr_no_guard_pos, speed_sp=self.grabber_speed)
-        self.grabber.wait_for_position(self.gbr_no_guard_pos)
+        self.grabber.run_to_abs_pos(position_sp=GBR_NO_GUARD_POS, speed_sp=GRABBER_SPEED)
+        self.grabber.wait_for_position(GBR_NO_GUARD_POS)
         # Rotate Cradle 180
         self.rotate_cradle(180)
 
@@ -409,27 +401,7 @@ class Robot:
             exit()
 
     # Allows valid lists of moves to be passed in and actuated
-    def run_move_sequence(self, move_chain):
-        for move in move_chain:
+    def run_move_sequence(self, move_sequence):
+        for move in move_sequence:
             self.run_move_method(move)
             print(move, end=', ')
-
-    def test(self):
-        for j in range(2):
-            self.grabber.run_to_abs_pos(position_sp=self.gbr_no_guard_pos, speed_sp=self.grabber_speed / 2)
-            self.grabber.wait_for_position(self.gbr_no_guard_pos)
-
-            self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=self.cs_speed)
-            self.cs_arm.wait_for_position(0)
-
-            self.grab_cube()
-            self.grab_cube()
-
-            self.grabber.run_to_abs_pos(position_sp=self.gbr_no_guard_pos, speed_sp=self.grabber_speed / 2)
-            self.grabber.wait_for_position(self.gbr_no_guard_pos)
-
-            self.cs_arm.run_to_abs_pos(position_sp=-350, speed_sp=self.cs_speed)
-            self.cs_arm.wait_for_position(-350)
-
-            self.grab_cube()
-            self.grab_cube()

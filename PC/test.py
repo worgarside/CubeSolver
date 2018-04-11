@@ -1,1 +1,9 @@
-print([1, 2, 3] + [4, 5, 6])
+from cube.cube_class import *
+from cube.moves import *
+cube = Cube()
+
+u(cube)
+l(cube)
+b(cube)
+
+print(cube.position)

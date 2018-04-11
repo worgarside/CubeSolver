@@ -30,7 +30,6 @@ def create_socket():
 
 def create_robot():
     robot = Robot()
-    robot.init_motors()
     return robot
 
 

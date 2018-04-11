@@ -1,5 +1,6 @@
 import datetime
 import getopt
+import os
 import pickle
 import socket
 import sys
@@ -11,91 +12,32 @@ from queue import LifoQueue
 
 import colorama
 
-import group_solver_mk_one as gs1
-import group_solver_mk_three.table_generator as gs3_generator
-import group_solver_mk_three.table_lookup as gs3_lookup
-import group_solver_mk_two.table_generator as gs2_generator
-import group_solver_mk_two.table_lookup as gs2_lookup
-from cube.cube_class import Cube
-from cube.moves import *
+import solvers.half_turn.table_generator as half_turn_generator
+import solvers.half_turn.table_lookup as half_turn_lookup
+import solvers.multiphase.table_generator as mphase_generator
+import solvers.multiphase.table_lookup as mphase_lookup
+from cube.cube_class import Cube, Color, Move, Face
+from cube.moves import dyn_move
 from data.database_manager import DatabaseManager
-from gui.interface import Interface
 from move_translator.move_converter import convert_sequence
-from tree_solver.tree_generator import generate_tree
-
-from cube.move_class import Move
-from cube.side_class import Side
-from cube.color_class import Color
+from solvers.tree.interface import Interface
+from solvers.tree.tree_generator import generate_tree
 
 GROUP_COMPLETE = [Move.U, Move.NOT_U, Move.U2, Move.D, Move.NOT_D, Move.D2,
                   Move.L, Move.NOT_L, Move.L2, Move.R, Move.NOT_R, Move.R2,
                   Move.F, Move.NOT_F, Move.F2, Move.B, Move.NOT_B, Move.B2]
 
 
-def init_db():
-    print('Initialising DB')
+def init_db(prints=True):
+    print('Initialising DB') if prints else None
     db = DatabaseManager('PC/data/db.sqlite')
     db.query("PRAGMA synchronous = off")
     db.query("BEGIN TRANSACTION")
-    print('DB Initialised')
+    print('DB Initialised') if prints else None
     return db
 
 
-def group_solve_mk_one(db, cube):
-    sequence_list = []
-
-    good_edge_pos = gs1.phase_one.make_all_edges_good(cube.position_reduced)
-    good_edge_sequence = good_edge_pos.move_sequence[1:]
-    sequence_list.append(good_edge_sequence)
-
-    good_edge_cube = deepcopy(cube)
-    for move in good_edge_sequence:
-        dyn_move(good_edge_cube, move)
-
-    print()
-    print(good_edge_cube)
-
-    good_corner_pos = gs1.phase_two.make_all_corners_good(good_edge_cube.position_reduced)
-    good_corner_sequence = good_corner_pos.move_sequence[1:]
-    sequence_list.append(good_corner_sequence)
-
-    good_corner_cube = deepcopy(good_edge_cube)
-    for move in good_corner_sequence:
-        dyn_move(good_corner_cube, move)
-
-    print()
-    print(good_corner_cube)
-
-    good_face_pos = gs1.phase_three.make_all_faces_good(good_corner_cube.position_reduced)
-    good_face_sequence = good_face_pos.move_sequence[1:]
-    sequence_list.append(good_face_sequence)
-
-    good_face_cube = deepcopy(good_corner_cube)
-    for move in good_face_sequence:
-        dyn_move(good_face_cube, move)
-
-    print()
-    print(good_face_cube)
-
-    final_sequence = gs1.phase_four.solve_cube(good_face_cube.position, db)
-    sequence_list.append(final_sequence)
-
-    solved_cube = deepcopy(good_face_cube)
-    for move in final_sequence:
-        dyn_move(solved_cube, move)
-
-    print()
-    print(solved_cube)
-
-    total_sequence = []
-    for sequence in sequence_list:
-        print(sequence)
-        total_sequence.extend(sequence)
-    print(len(total_sequence))
-    return total_sequence
-
-
-def group_solve_mk_two(db, position, phase_count):
+def multiphase_solve(db, position, phase_count):
     sequence_list = []
 
     phase_name = ['Zero', 'One', 'Two', 'Three', 'Four']
@@ -103,52 +45,51 @@ def group_solve_mk_two(db, position, phase_count):
     position_list = [position]
 
     for phase in range(phase_count):
-        print(' - Phase %s -' % phase_name[phase])
-        sequence_list.append(gs2_lookup.lookup_position(db, position_list[phase], phase))
+        print('- Phase %s: ' % phase_name[phase], end='')
+        sequence_list.append(mphase_lookup.lookup_position(db, position_list[phase], phase))
         cube_list.append(Cube(position_list[phase]))
         for move in sequence_list[phase]:
             dyn_move(cube_list[phase], move)
             print(move.name, end=' ')
         position_list.append(cube_list[phase].position)
-        print('\n')
+        print()
 
     total_sequence = []
     for sequence in sequence_list:
         total_sequence.extend(sequence)
+
+    print('- Final Sequence: ', end='')
+    for move in total_sequence:
+        print(move.name, end=' ')
+    print()
+
     return total_sequence
 
 
-def group_solve_mk_three(db, position):
-    print(' - Table Lookup -')
-    solve_sequence = gs3_lookup.lookup_position(db, position)
+def half_turn_solve(db, position):
+    print('- Table Lookup: ', end='')
+    solve_sequence = half_turn_lookup.lookup_position(db, position)
     temp_cube = Cube(position)
     for move in solve_sequence:
         dyn_move(temp_cube, move)
         print(move.name, end=' ')
-    print('\n')
 
     return solve_sequence
 
 
-def tree_solve():
+def tree_solve(position):
     BaseManager.register('LifoQueue', LifoQueue)
     manager = BaseManager()
     manager.start()
     position_queue = manager.LifoQueue()
 
-    process_list = []
+    cube = Cube(position)
 
-    cube = Cube()
-    u(cube)
-    not_r(cube)
-    not_b(cube)
-
-    tree_process = Process(target=time_function, args=(generate_tree, cube, GROUP_COMPLETE, position_queue,),
+    tree_process = Process(target=time_function,
+                           args=(generate_tree, cube, GROUP_COMPLETE, position_queue,),
                            name='tree_process')
-    process_list.append(tree_process)
 
-    for p in process_list:
-        p.start()
+    tree_process.start()
 
     try:
         window = Interface(position_queue)
@@ -157,9 +98,19 @@ def tree_solve():
     except TclError as err:
         print(err)
 
-    for p in process_list:
-        print('Terminating %s' % p.name)
-        p.terminate()  # kill process when window is closed
+    print('Terminating %s' % tree_process.name)
+    tree_process.terminate()  # kill process when window is closed
+
+    with open('PC/solvers/tree/solution.pickle', 'rb') as solution_file:
+        pickled_sequence = pickle.load(solution_file)
+
+    solve_sequence = []
+    print('\n- Solve Sequence: ', end='')
+    for move in pickled_sequence:
+        solve_sequence.append(move)
+        print(move.name, end=' ')
+
+    return solve_sequence
 
 
 def time_function(func, *arguments):
@@ -194,101 +145,107 @@ def get_robot_scan(conn):
 def orient_cube(cube):
     orient_sequence = []
 
-    white_side = cube.get_side_with_color(color=Color.WHITE)
-    white_to_up = {
-        Side.UP: [None],
-        Side.DOWN: [Move.X2],
-        Side.LEFT: [Move.NOT_Y, Move.X],
-        Side.RIGHT: [Move.Y, Move.X],
-        Side.FRONT: [Move.X],
-        Side.BACK: [Move.Y2, Move.X]
-    }
-    orient_sequence.extend(white_to_up[white_side])
-    for move in orient_sequence:
-        dyn_move(cube, move)
+    white_face = cube.get_face_with_color(color=Color.WHITE)
+    if white_face != Face.UP:
+        white_to_up = {
+            Face.DOWN: [Move.X2],
+            Face.LEFT: [Move.NOT_Y, Move.X],
+            Face.RIGHT: [Move.Y, Move.X],
+            Face.FRONT: [Move.X],
+            Face.BACK: [Move.Y2, Move.X]
+        }
+        orient_sequence.extend(white_to_up[white_face])
+        for move in orient_sequence:
+            dyn_move(cube, move)
 
-    green_side = cube.get_side_with_color(color=Color.GREEN)
+    green_face = cube.get_face_with_color(color=Color.GREEN)
+    if green_face != Face.FRONT:
+        green_to_front = {
+            Face.LEFT: [Move.NOT_Y],
+            Face.RIGHT: [Move.Y],
+            Face.BACK: [Move.Y2]
+        }
+        orient_sequence.extend(green_to_front[green_face])
+        dyn_move(cube, green_to_front[green_face][0])
 
-    green_to_front = {
-        Side.LEFT: [Move.NOT_Y],
-        Side.RIGHT: [Move.Y],
-        Side.FRONT: [None],
-        Side.BACK: [Move.Y2]
-    }
-    orient_sequence.extend(green_to_front[green_side])
-    dyn_move(cube, green_to_front[green_side][0])
+    if len(orient_sequence) > 0:
+        print('Orienting Cube: \n%s' % cube)
+        return_sequence = []
+        for move in orient_sequence:
+            return_sequence.append(move.name.lower())
 
-    print(cube)
+        return return_sequence
 
-    return_sequence = []
-    for move in orient_sequence:
-        return_sequence.append(move.name.lower())
-
-    return return_sequence
+    return []
 
 
 def main():
     robot_on = '-r' in opts
     db_generation = '-d' in opts
     db_clear = '-c' in opts
-    solving = '-s' in opts
-    method_two = '-2' in opts
-    method_three = '-3' in opts
+    half_turn = '-h' in opts
+    multiphase = '-m' in opts
+    tree = '-t' in opts
 
     conn = None
     position = None
-    phase_count = 0
 
     db = init_db()
-
-    if method_two:
-        phase_count = 5
-
-    if method_three:
-        phase_count = 1
 
     if robot_on:
         conn = create_socket()
         position = get_robot_scan(conn)
         print('Scanned position: %s' % position)
-    elif solving:
-        position = input('Enter a position: ').upper()
+
+    if not robot_on and not db_generation and (half_turn or multiphase or tree):  # Solving without robot
+        position = ''
+        while len(position) != 54:
+            position = input('Enter a position: ').upper()
+        print()
 
     if db_clear:
-        print('Clearing Database', end='')
-        for table in range(5):
-            for method in range(2):
-                db.query('DROP TABLE IF EXISTS gs%ip%i' % (method, table))
-                print('.', end='')
-        db.commit()
-        print('   Vacuuming...', end='')
-        db.query('VACUUM')
-        print('  Done!')
+        confirm = ''
+        while confirm != 'Y' and confirm != 'N':
+            confirm = input('Are you sure you want to wipe the database? (y/n) ').upper()
+        if confirm == 'Y':
+            print('Deleting Database.', end='')
+            os.remove('%s/PC/data/db.sqlite' % os.getcwd())
+            print('.', end='')
+            db = init_db(False)  # Re-make db file to avoid errors
+            print('!')
+        else:
+            print('Aborted')
 
     if db_generation:
-        if method_two:
-            for phase in range(phase_count):
-                gs2_generator.generate_lookup_table(db, phase)
-        if method_three:
-            for phase in range(phase_count):
-                gs3_generator.generate_lookup_table(db, phase)
+        if multiphase:
+            for phase in range(5):
+                mphase_generator.generate_lookup_table(db, phase)
+        elif half_turn:
+            half_turn_generator.generate_lookup_table(db)
+        else:
+            confirm = ''
+            while confirm != 'Y' and confirm != 'N':
+                confirm = input('Are you sure you want to generate the entire database? (y/n) ').upper()
+            if confirm == 'Y':
+                for phase in range(5):
+                    mphase_generator.generate_lookup_table(db, phase)
+                half_turn_generator.generate_lookup_table(db)
 
-    if solving:
-        cube = Cube(position)
-        print(cube)
-
+    if multiphase or half_turn or tree:
         solve_sequence = []
+        cube = Cube(position)
+        print('Cube: \n%s' % cube)
+
         orient_sequence = orient_cube(cube)
 
-        if method_two:
-            solve_sequence = group_solve_mk_two(db, cube.position, phase_count)
-            print('Total Sequence: ', end='')
-        elif method_three:
-            solve_sequence = group_solve_mk_three(db, cube.position)
-        else:
-            print('No valid solve method found')
+        if multiphase:
+            solve_sequence = multiphase_solve(db, cube.position, 5)
+        if half_turn:
+            solve_sequence = half_turn_solve(db, cube.position)
+        if tree:
+            solve_sequence = tree_solve(position)
 
-        print('\n\n - Final Cube -')
+        print('\n\n- Final Cube -')
         for move in solve_sequence:
             dyn_move(cube, move)
         print(cube)
@@ -306,7 +263,7 @@ if __name__ == '__main__':
     colorama.init()
     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
-    opts, args = getopt.getopt(sys.argv[1:], 'rdsc23')  # eventually s:[algorithm]
+    opts, args = getopt.getopt(sys.argv[1:], 'rdchmt')
     opts = dict(opts)
 
     if len(opts) == 0:
@@ -314,25 +271,16 @@ if __name__ == '__main__':
 ------------------------------------
   OPTIONS:
     -r : run with robot connection
-    -d : continue database generation
+    -d : (continue) database generation
     -c : clear the database
-    -s : solve the Cube
-    -2 : use method 2 (all moves, limited solve)
-    -3 : use method 3 (only half turns, full solve)
+    -h : half-turn generation/solve
+    -m : multiphase generation/solve
+    -t : tree solve
 ------------------------------------
         """)
     else:
-        if '-d' in opts or '-r' in opts:
-
-            if '-2' in opts and '-3' in opts:
-                print("Can't do method 2 and 3")
-                exit(0)
-            elif '-2' not in opts and '-3' not in opts:
-                print('Choose a method')
-                exit(0)
-
-            if '-s' in opts and '-2' not in opts and '-3' not in opts:
-                print('Choose a solve method')
-                exit(0)
+        if ('-h' in opts and '-m' in opts) or ('-h' in opts and '-t' in opts) or ('-m' in opts and '-t' in opts):
+            print('Please choose ONE method')
+            exit()
 
         main()
