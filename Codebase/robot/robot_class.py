@@ -1,10 +1,14 @@
 from os import get_terminal_size
-from sys import stdout
+from os.path import dirname
+from sys import stdout, path
 from time import sleep
 
 from ev3dev.auto import OUTPUT_A, OUTPUT_B, OUTPUT_C
 from ev3dev.ev3 import Sound, Leds, TouchSensor, ColorSensor
 from ev3dev.helper import LargeMotor, MediumMotor, ColorSensor
+
+path.append(dirname(path[0]))
+__package__ = "robot"
 
 from cube.cube_class import Color
 
@@ -76,12 +80,9 @@ class Robot:
         """
 
         # Removes all braking resistance by running in 'coast' mode for 1ms
-        self.cradle.stop_action = 'coast'
-        self.cradle.run_timed(time_sp=1, speed_sp=1)
-        self.grabber.stop_action = 'coast'
-        self.grabber.run_timed(time_sp=1, speed_sp=1)
-        self.cs_arm.stop_action = 'coast'
-        self.cs_arm.run_timed(time_sp=1, speed_sp=1)
+        self.set_motor_brakes(self.cradle, 'coast')
+        self.set_motor_brakes(self.grabber, 'coast')
+        self.set_motor_brakes(self.cs_arm, 'coast')
 
         wait_count = 0
         amber = True
@@ -123,15 +124,16 @@ class Robot:
 
         exit() if not all_connected else None
 
-    def shutdown(self, stall_flag=False):
+    def shutdown(self, stall_flag=False, silent=False):
         """
         Custom exit method to reposition motors back to starting position and ensure safe shutdown
+        :param silent: gives the option to disable the beeps and motor movements
         :param stall_flag: boolean if exiting due to motor stall, if they are stalled they shouldn't be repositioned
         """
         Leds.set_color(Leds.LEFT, Leds.GREEN)
         Leds.set_color(Leds.RIGHT, Leds.GREEN)
 
-        if not stall_flag:
+        if not stall_flag and not silent:
             self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=CS_SPEED)
             self.cs_arm.wait_for_position(0)
             self.grabber.run_to_abs_pos(position_sp=0, speed_sp=GRABBER_SPEED, ramp_down_sp=50)
@@ -139,14 +141,12 @@ class Robot:
 
         sleep(1)
 
-        self.cradle.stop_action = 'coast'
-        self.cradle.run_timed(time_sp=1, speed_sp=1)
-        self.grabber.stop_action = 'coast'
-        self.grabber.run_timed(time_sp=1, speed_sp=1)
-        self.cs_arm.stop_action = 'coast'
-        self.cs_arm.run_timed(time_sp=1, speed_sp=1)
-        print('\n')
-        Sound.tone([(800, 100, 0), (600, 150, 0), (400, 100, 0)]).wait()
+        self.set_motor_brakes(self.cradle, 'coast')
+        self.set_motor_brakes(self.grabber, 'coast')
+        self.set_motor_brakes(self.cs_arm, 'coast')
+
+        if not silent:
+            Sound.tone([(800, 100, 0), (600, 150, 0), (400, 100, 0)]).wait()
         exit()
 
     def rotate_cradle(self, angle=90):
@@ -156,7 +156,7 @@ class Robot:
         """
         # 400 is 1/4 turn - 13.333:1 gear ratio
         mod_angle = angle * (40 / 9)
-
+        self.set_motor_brakes(self.cradle, 'hold')
         self.cradle.run_to_rel_pos(position_sp=mod_angle, speed_sp=CRADLE_SPEED)
         self.cradle.wait_until_not_moving()
 
@@ -168,7 +168,7 @@ class Robot:
         self.grabber.wait_for_position(GBR_GRAB_POS)
 
         self.grabber.run_to_abs_pos(position_sp=20, speed_sp=GRABBER_SPEED)
-        self.grabber.wait_for_position(-50)
+        self.grabber.wait_for_position(0)
 
         self.grabber.run_to_abs_pos(position_sp=GBR_GUARD_POS, speed_sp=GRABBER_SPEED)
         self.grabber.wait_for_position(GBR_GUARD_POS)
@@ -201,6 +201,7 @@ class Robot:
         """
         Scans the top face of the cube
         """
+
         middle = []
         corner = []
 
@@ -273,6 +274,8 @@ class Robot:
 
             for i in range(len(faces)):
                 faces[i] = self.scan_up_face()
+
+                self.set_motor_brakes(self.cradle, 'coast')
 
                 self.cs_arm.run_to_abs_pos(position_sp=-300, speed_sp=CS_SPEED)
                 self.cs_arm.wait_for_position(-300)
@@ -412,3 +415,33 @@ class Robot:
         for move in move_sequence:
             self.run_move_method(move)
             print(move, end=', ')
+
+    @staticmethod
+    def set_motor_brakes(motor, brake_method):
+        """
+        Set the stopping method of any motor
+        :param motor: the motor to be updated
+        :param brake_method: the method of choice to be set on the motor, passed in as a string
+        """
+        motor.stop_action = brake_method
+        if brake_method == 'coast':
+            motor.run_timed(time_sp=1, speed_sp=1)
+
+    def show_off(self):
+        """
+        Play a tune and spin the Cube once it has been solved as a way to end the program
+        """
+        self.grabber.run_to_abs_pos(position_sp=GBR_NO_GUARD_POS, speed_sp=GRABBER_SPEED/4)
+        self.grabber.wait_for_position(GBR_NO_GUARD_POS)
+        self.cradle.run_to_rel_pos(position_sp=800, speed_sp=255)
+
+        Sound.tone(
+            [(987, 53, 53), (987, 53, 53), (987, 53, 53), (987, 428, 0), (784, 428, 0),
+             (880, 428, 0), (987, 107, 214), (880, 107, 0), (987, 800, 0)]
+        ).wait()
+
+        self.cradle.wait_for_stop()
+        self.set_motor_brakes(self.cradle, 'coast')
+        self.set_motor_brakes(self.grabber, 'coast')
+        self.set_motor_brakes(self.cs_arm, 'coast')
+        self.shutdown(False, True)

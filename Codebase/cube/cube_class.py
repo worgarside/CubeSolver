@@ -110,10 +110,24 @@ class Cube:
                         Color.ORANGE: '\033[35m', Color.WHITE: '\033[37m', Color.YELLOW: '\033[33m',
                         Color.DARK: '\033[30m', Color.NONE: '\033[36m'}
 
+    # Opposite of all moves, used in the table lookups
+    INVERSION_DICT = {
+        Move.U: Move.NOT_U, Move.D: Move.NOT_D, Move.L: Move.NOT_L,
+        Move.R: Move.NOT_R, Move.F: Move.NOT_F, Move.B: Move.NOT_B,
+        Move.NOT_U: Move.U, Move.NOT_D: Move.D, Move.NOT_L: Move.L,
+        Move.NOT_R: Move.R, Move.NOT_F: Move.F, Move.NOT_B: Move.B,
+        Move.U2: Move.U2, Move.D2: Move.D2, Move.L2: Move.L2,
+        Move.R2: Move.R2, Move.F2: Move.F2, Move.B2: Move.B2,
+    }
+
     def __init__(self, position=SOLVED_POS, temporary=False):
         """
         :param position: Current position of the Cube, defaults to solved
         :param temporary: Flag to say if it's a temporary Cube - reduced amount of processing and memory
+        :attr position_reduced: The number of colors is halved, with opposite sides becoming the same color
+        :attr color_position: a full net with ANSI color codes included
+        :attr robot_solve_sequence: a virtual Cube is manipulated to translate the sequence so needs an
+            attribute for storing the translated sequence
         """
         self.position = position
         self.position_reduced = ''

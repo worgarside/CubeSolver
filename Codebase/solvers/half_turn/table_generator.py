@@ -1,3 +1,10 @@
+"""
+A lot of the code in this file is similar to 'multiphase/table_generator.py', and some is duplicated.
+To avoid repeated code and inefficiencies, it would make sens to move the code into a commonly accessible file.
+However, the files have been kept separate because there are some intricate changes between the files which
+may cause confusion, and also to allow for further changes if necessary
+"""
+
 import gc
 import json
 import os
@@ -60,11 +67,11 @@ def generate_next_depth(db, depth):
     """
     Generates the next depth level of positions in the database table by iterating through the previous depth
     :param db: Database Cursor object
-    :param depth: the current depth level which has already been geenerated
+    :param depth: the current depth level which has already been generated
     :return: boolean flag to state if any data has been inserted; the new max depth value
     """
 
-    # Set object of all positions for duplication checking. Uses more memory but greatly optimises processing time
+    # Set of all positions for duplication checking. Uses more memory but greatly optimises processing time
     position_set = gen_position_set(db, depth)
     start_time = int(round(time.time() * 1000))
     depth += 1

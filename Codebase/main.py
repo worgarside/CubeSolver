@@ -14,8 +14,8 @@ import colorama
 
 import solvers.half_turn.table_generator as half_turn_generator
 import solvers.half_turn.table_lookup as half_turn_lookup
-import solvers.multiphase.table_generator as mphase_generator
-import solvers.multiphase.table_lookup as mphase_lookup
+import solvers.multiphase.table_generator as multiphase_generator
+import solvers.multiphase.table_lookup as multiphase_lookup
 from cube.cube_class import Cube, Color, Move, Face
 from cube.moves import dyn_move
 from database.database_manager import DatabaseManager
@@ -56,7 +56,7 @@ def multiphase_solve(db, position, phase_count):
     for phase in range(phase_count):
         print('- Phase %s: ' % phase_name[phase], end='')
 
-        looked_up_sequence = mphase_lookup.lookup_position(db, position_list[phase], phase)
+        looked_up_sequence = multiphase_lookup.lookup_position(db, position_list[phase], phase)
         if len(looked_up_sequence) > 0 and looked_up_sequence[0] == LookupError:
             print()
             kociemba_choice = ''
@@ -64,7 +64,7 @@ def multiphase_solve(db, position, phase_count):
                 kociemba_choice = input('Solve with kociemba package? (y/n) ').upper()
             if kociemba_choice == 'Y':
                 print('Converting Cube to kociemba notation.', end='')
-                sequence_list = [mphase_lookup.kociemba_convert(position)]
+                sequence_list = [multiphase_lookup.kociemba_convert(position)]
 
                 return end_solve()
             else:
@@ -95,7 +95,7 @@ def half_turn_solve(db, position):
     for move in solve_sequence:
         dyn_move(temp_cube, move)
         print(move.name, end=' ')
-
+    print()
     return solve_sequence
 
 
@@ -128,13 +128,14 @@ def tree_solve(position):
 
     with open('Codebase/solvers/tree/solution.pickle', 'rb') as solution_file:
         pickled_sequence = pickle.load(solution_file)
+    os.remove('Codebase/solvers/tree/solution.pickle')
 
     solve_sequence = []
     print('\n- Solve Sequence: ', end='')
     for move in pickled_sequence:
         solve_sequence.append(move)
         print(move.name, end=' ')
-
+    print()
     return solve_sequence
 
 
@@ -197,7 +198,7 @@ def orient_cube(cube):
         print('Orienting Cube: \n%s' % cube)
         return_sequence = []
         for move in orient_sequence:
-            return_sequence.append(move.name.lower())
+            return_sequence.append(move)
 
         return return_sequence
 
@@ -244,7 +245,7 @@ def main():
     if db_generation:
         if multiphase:
             for phase in range(5):
-                mphase_generator.generate_lookup_table(db, phase)
+                multiphase_generator.generate_lookup_table(db, phase)
         elif half_turn:
             half_turn_generator.generate_lookup_table(db)
         else:
@@ -253,7 +254,7 @@ def main():
                 confirm = input('Are you sure you want to generate the entire database? (y/n) ').upper()
             if confirm == 'Y':
                 for phase in range(5):
-                    mphase_generator.generate_lookup_table(db, phase)
+                    multiphase_generator.generate_lookup_table(db, phase)
                 half_turn_generator.generate_lookup_table(db)
     elif multiphase or half_turn or tree:
         solve_sequence = []
@@ -265,13 +266,25 @@ def main():
         if multiphase:
             solve_sequence = multiphase_solve(db, cube.position, 5)
         if half_turn:
-            if cube.position_reduced != Cube.SOLVED_POS:
+            if cube.position_reduced != Cube().position_reduced:
                 print('Invalid Half Turn Cube, reduced Cube should be solved but looks like this: \n%s' % Cube(
                     cube.position_reduced))
                 exit()
             solve_sequence = half_turn_solve(db, cube.position)
         if tree:
-            solve_sequence = tree_solve(position)
+            solve_sequence = tree_solve(cube.position)
+
+        print('- Final Sequence: ', end='')
+        for move in orient_sequence + solve_sequence:
+            print(move.name, end=' ')
+
+        total_sequence = []
+        for move in orient_sequence:
+            total_sequence.append(move.name.lower())
+        total_sequence.extend(convert_sequence(cube, solve_sequence))
+        print('\n- Robot Sequence: ', end='')
+        for move in total_sequence:
+            print(move.upper(), end=' ')
 
         print('\n- Final Cube -')
         for move in solve_sequence:
@@ -279,11 +292,7 @@ def main():
         print(cube)
 
         if robot_on:
-            robot_sequence = convert_sequence(cube, solve_sequence)
-            total_sequence = orient_sequence + robot_sequence
-            print(total_sequence)
-
-            conn.send(pickle.dumps(robot_sequence))
+            conn.send(pickle.dumps(total_sequence))
             conn.close()
 
 

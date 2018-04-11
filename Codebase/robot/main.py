@@ -1,3 +1,4 @@
+import datetime
 import os
 import pickle
 import socket
@@ -6,7 +7,7 @@ from time import sleep, time
 from ev3dev.ev3 import Sound
 from ev3dev.helper import MotorStall
 
-from robot.robot_class import Robot
+from robot_class import Robot
 
 # Different IPs for different locations, saves having to re-enter them each time
 IP_DICT = {
@@ -24,23 +25,20 @@ def create_socket():
     Creates a socket object, and waits for it to connect to the host computer
     :return: Socket connection object
     """
+    print('Connecting to %s:%s..' % (CURRENT_IP, 3000), end='', flush=True)
     conn = socket.socket()
+    try:
+        conn.connect((CURRENT_IP, 3000))
+    except TimeoutError:
+        print('?')
+        print('Connection timed out at ', end='')
+        print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+        exit(1)
 
-    print('Connecting to %s:%s...' % (CURRENT_IP, 3000), end='')
-    conn.connect((CURRENT_IP, 3000))
     print('!')
     Sound.speak('connected to server')
     sleep(1.5)
     return conn
-
-
-def create_robot():
-    """
-    Creates Robot object for later use
-    :return: Robot object
-    """
-    robot = Robot()
-    return robot
 
 
 def scan_cube(robot):
@@ -77,32 +75,36 @@ def scan_cube(robot):
 
 def main():
     conn = create_socket()
-    robot = create_robot()
+    robot = Robot()
 
-    """
-    Scans the Cube and transmits the position back to the host computer for processing
-    """
     try:
+        # Scan the Cube and transmits the position back to the host computer for processing
         pos = scan_cube(robot)
         pos_str = ''.join(pos)
         conn.send(pos_str.encode())
 
         sequence = ''
         sequence_received = False
-        while not sequence_received:
-            data = conn.recv(1024)
-            sequence = pickle.loads(data)
-            if sequence != '':
-                sequence_received = True
-
+        try:
+            # Wait until data (presumably the solve sequence) is received
+            while not sequence_received:
+                data = conn.recv(1024)
+                sequence = pickle.loads(data)
+                if sequence != '':
+                    sequence_received = True
+        except EOFError:
+            print('Host computer disconnected!')
+            robot.shutdown()
         print(sequence)
 
+        # Run the solve sequence then show off before shutting down
         robot.run_move_sequence(sequence)
+        robot.show_off()
     except MotorStall as err:
         print('\n\n %s' % err)
-
-    robot.shutdown()
+        robot.shutdown()
 
 
 if __name__ == '__main__':
+    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     main()
