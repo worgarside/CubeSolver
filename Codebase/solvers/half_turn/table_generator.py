@@ -22,18 +22,19 @@ TARGET_POS = 'WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY'
 MOVES = [Move.U2, Move.D2, Move.L2, Move.R2, Move.F2, Move.B2]
 
 
-def generate_lookup_table(db):
+def generate_lookup_table(db, verbose):
     """
     Creates a large table of positions (depth, position, move_sequence) for adding to the database
     by using the moves defined in the constant
     :param db: Cursor object for executing insertion queries
+    :param verbose: Changes verbosity of output
     """
-    print('\n- - Generating half_turn Table... - -')
+    print('\n- - Generating half_turn Table... - -') if verbose else 0
 
     db.query('''CREATE TABLE IF NOT EXISTS half_turn (depth INTEGER NOT NULL, position TEXT PRIMARY KEY,
              move_sequence BLOB NOT NULL)''')
 
-    print('  Getting previous depth... ', end='')
+    print('  Getting previous depth... ', end='') if verbose else 0
     try:
         # Gets previous depth from DB, defaults to 0 for complete regeneration
         depth = db.query('SELECT MAX(depth) FROM half_turn').fetchone()[0]
@@ -42,7 +43,7 @@ def generate_lookup_table(db):
     except TypeError:
         depth = 0
 
-    print(depth)
+    print(depth) if verbose else 0
 
     try:
         # Inserts target position into the DB, passes if it's already there
@@ -58,16 +59,17 @@ def generate_lookup_table(db):
     while inserted:
         gc.collect()
         try:
-            inserted, depth = generate_next_depth(db, depth)
+            inserted, depth = generate_next_depth(db, depth, verbose)
         except AssertionError as err:
             print(err)
 
 
-def generate_next_depth(db, depth):
+def generate_next_depth(db, depth, verbose):
     """
     Generates the next depth level of positions in the database table by iterating through the previous depth
     :param db: Database Cursor object
     :param depth: the current depth level which has already been generated
+    :param verbose: Changes verbosity of output
     :return: boolean flag to state if any data has been inserted; the new max depth value
     """
 
@@ -75,7 +77,7 @@ def generate_next_depth(db, depth):
     position_set = gen_position_set(db, depth)
     start_time = int(round(time.time() * 1000))
     depth += 1
-    print('%2i' % depth, end='.')
+    print('%2i' % depth, end='.') if verbose else 0
 
     """
     Create an iterable to be processed by the Pool. It is structured like this:
@@ -83,7 +85,7 @@ def generate_next_depth(db, depth):
     """
     iterable = map(lambda e: (e, position_set),
                    db.query('SELECT position, move_sequence FROM half_turn where depth = %i' % (depth - 1)).fetchall())
-    print('.', end='')
+    print('.', end='') if verbose else 0
 
     # Create a MP Pool and give it the iterable to process across all CPU cores for most efficient processing
     p = Pool(processes=cpu_count())
@@ -91,7 +93,7 @@ def generate_next_depth(db, depth):
     p.close()
 
     gc.collect()  # Reduce redundant memory usage
-    print('.', end='')
+    print('.', end='') if verbose else 0
     insert_count = 0
     duplication_count = 0
     # Pool returns one list per process (effectively 2D array), which must be iterated through and added to DB
@@ -115,13 +117,13 @@ def generate_next_depth(db, depth):
     gc.collect()
 
     # Lots of print statements for analysis of processing and manual estimations of remaining time
-    print('.', end='   ')
     end_time = int(round(time.time() * 1000))
     total = (end_time - start_time) / 1000
-    print('Time: %10.3fs' % total, end='  |  ')
-    print('DB Size: %7.2fMB' % (os.path.getsize('Codebase/database/db.sqlite') / 1000000), end='  |  ')
-    print('Rows Added: %10i' % insert_count, end='  |  ')
-    print('Duplications: %8i' % duplication_count)
+    if verbose:
+        print('.   Time: %10.3fs' % total, end='  |  ')
+        print('DB Size: %7.2fMB' % (os.path.getsize('Codebase/database/db.sqlite') / 1000000), end='  |  ')
+        print('Rows Added: %10i' % insert_count, end='  |  ')
+        print('Duplications: %8i' % duplication_count)
     # need to include duplication count in case of resume with full depth
     return (insert_count + duplication_count > 0), depth
 

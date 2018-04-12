@@ -1,9 +1,138 @@
 from cube.cube_class import Color
-from translator import all_moves as s_move
+from translator import translator_moves
 
 
-# Returns a tertiary method_id mainly based on color
-def get_face(cube, color, negative_flag=False, double_flag=False):
+"""
+The following methods are for moving a face nominated by its color, regardless of that faces current location.
+This allows the cube to be rotated to match the robot's needs but still have the correct sequence performed on it.
+:param cube: The temporary Cube
+"""
+
+
+def white(cube, verbose):
+    method_id = get_face_method_id(cube, Color.WHITE)
+    translate_move(cube, method_id, verbose)
+
+
+def not_white(cube, verbose):
+    method_id = get_face_method_id(cube, Color.WHITE, True)
+    translate_move(cube, method_id, verbose)
+
+
+def white2(cube, verbose):
+    method_id = get_face_method_id(cube, Color.WHITE, True, True)
+    translate_move(cube, method_id, verbose)
+
+
+def yellow(cube, verbose):
+    method_id = get_face_method_id(cube, Color.YELLOW)
+    translate_move(cube, method_id, verbose)
+
+
+def not_yellow(cube, verbose):
+    method_id = get_face_method_id(cube, Color.YELLOW, True)
+    translate_move(cube, method_id, verbose)
+
+
+def yellow2(cube, verbose):
+    method_id = get_face_method_id(cube, Color.YELLOW, True, True)
+    translate_move(cube, method_id, verbose)
+
+
+def green(cube, verbose):
+    method_id = get_face_method_id(cube, Color.GREEN)
+    translate_move(cube, method_id, verbose)
+
+
+def not_green(cube, verbose):
+    method_id = get_face_method_id(cube, Color.GREEN, True)
+    translate_move(cube, method_id, verbose)
+
+
+def green2(cube, verbose):
+    method_id = get_face_method_id(cube, Color.GREEN, True, True)
+    translate_move(cube, method_id, verbose)
+
+
+def blue(cube, verbose):
+    method_id = get_face_method_id(cube, Color.BLUE)
+    translate_move(cube, method_id, verbose)
+
+
+def not_blue(cube, verbose):
+    method_id = get_face_method_id(cube, Color.BLUE, True)
+    translate_move(cube, method_id, verbose)
+
+
+def blue2(cube, verbose):
+    method_id = get_face_method_id(cube, Color.BLUE, True, True)
+    translate_move(cube, method_id, verbose)
+
+
+def red(cube, verbose):
+    method_id = get_face_method_id(cube, Color.RED)
+    translate_move(cube, method_id, verbose)
+
+
+def not_red(cube, verbose):
+    method_id = get_face_method_id(cube, Color.RED, True)
+    translate_move(cube, method_id, verbose)
+
+
+def red2(cube, verbose):
+    method_id = get_face_method_id(cube, Color.RED, True, True)
+    translate_move(cube, method_id, verbose)
+
+
+def orange(cube, verbose):
+    method_id = get_face_method_id(cube, Color.ORANGE)
+    translate_move(cube, method_id, verbose)
+
+
+def not_orange(cube, verbose):
+    method_id = get_face_method_id(cube, Color.ORANGE, True)
+    translate_move(cube, method_id, verbose)
+
+
+def orange2(cube, verbose):
+    method_id = get_face_method_id(cube, Color.ORANGE, True, True)
+    translate_move(cube, method_id, verbose)
+
+
+def x(cube, verbose):
+    translate_move(cube, 'x', verbose)
+
+
+def x2(cube, verbose):
+    translate_move(cube, 'x2', verbose)
+
+
+def y(cube, verbose):
+    translate_move(cube, 'y', verbose)
+
+
+def y2(cube, verbose):
+    translate_move(cube, 'y2', verbose)
+
+
+def not_y(cube, verbose):
+    translate_move(cube, 'not_y', verbose)
+
+
+"""
+These methods are used in determining which face should be moved, and actuating that movement
+"""
+
+
+def get_face_method_id(cube, color, negative_flag=False, double_flag=False):
+    """
+    Turns the color back into the face for movement
+    :param cube: Temporary Cube being used to generate the robot sequence
+    :param color: The color used to find the face
+    :param negative_flag: Boolean to say if it's a counterclockwise turn
+    :param double_flag: Boolean to say if its a half turn
+    :return: the ID of the method in the translate_moves file (e.g. u, d, not_r, l2)
+    """
     method_id = cube.get_face_with_color(color=color).name[0].lower()
 
     if double_flag:
@@ -15,127 +144,11 @@ def get_face(cube, color, negative_flag=False, double_flag=False):
     return method_id
 
 
-# Runs a secondary move on a virtual cube to split it down into its composite tertiary moves
-def run_s_move(cube, color, method_id):
-    try:
-        move_method = getattr(s_move, method_id)
-        move_method(cube)
-    except AttributeError as e:
-        print('s_move.' + color.name.lower() + ' failed: \'' + method_id + '\' | ' + str(e))
-        exit()
-
-
-"""
-The following methods are for moving a face nominated by its color, regardless of that faces current location.
-This allows the cube to be rotated to match the robot's needs but still have the correct sequence performed on it.
-"""
-
-
-def white(cube):
-    method_id = get_face(cube, Color.WHITE)
-    run_s_move(cube, Color.WHITE, method_id)
-
-
-def not_white(cube):
-    method_id = get_face(cube, Color.WHITE, True)
-    run_s_move(cube, Color.WHITE, method_id)
-
-
-def white2(cube):
-    method_id = get_face(cube, Color.WHITE, True, True)
-    run_s_move(cube, Color.WHITE, method_id)
-
-
-def yellow(cube):
-    method_id = get_face(cube, Color.YELLOW)
-    run_s_move(cube, Color.YELLOW, method_id)
-
-
-def not_yellow(cube):
-    method_id = get_face(cube, Color.YELLOW, True)
-    run_s_move(cube, Color.YELLOW, method_id)
-
-
-def yellow2(cube):
-    method_id = get_face(cube, Color.YELLOW, True, True)
-    run_s_move(cube, Color.YELLOW, method_id)
-
-
-def green(cube):
-    method_id = get_face(cube, Color.GREEN)
-    run_s_move(cube, Color.GREEN, method_id)
-
-
-def not_green(cube):
-    method_id = get_face(cube, Color.GREEN, True)
-    run_s_move(cube, Color.GREEN, method_id)
-
-
-def green2(cube):
-    method_id = get_face(cube, Color.GREEN, True, True)
-    run_s_move(cube, Color.GREEN, method_id)
-
-
-def blue(cube):
-    method_id = get_face(cube, Color.BLUE)
-    run_s_move(cube, Color.BLUE, method_id)
-
-
-def not_blue(cube):
-    method_id = get_face(cube, Color.BLUE, True)
-    run_s_move(cube, Color.BLUE, method_id)
-
-
-def blue2(cube):
-    method_id = get_face(cube, Color.BLUE, True, True)
-    run_s_move(cube, Color.BLUE, method_id)
-
-
-def red(cube):
-    method_id = get_face(cube, Color.RED)
-    run_s_move(cube, Color.RED, method_id)
-
-
-def not_red(cube):
-    method_id = get_face(cube, Color.RED, True)
-    run_s_move(cube, Color.RED, method_id)
-
-
-def red2(cube):
-    method_id = get_face(cube, Color.RED, True, True)
-    run_s_move(cube, Color.RED, method_id)
-
-
-def orange(cube):
-    method_id = get_face(cube, Color.ORANGE)
-    run_s_move(cube, Color.ORANGE, method_id)
-
-
-def not_orange(cube):
-    method_id = get_face(cube, Color.ORANGE, True)
-    run_s_move(cube, Color.ORANGE, method_id)
-
-
-def orange2(cube):
-    method_id = get_face(cube, Color.ORANGE, True, True)
-    run_s_move(cube, Color.ORANGE, method_id)
-
-
-def x(cube):
-    run_s_move(cube, Color.NONE, 'x')
-
-
-def x2(cube):
-    run_s_move(cube, Color.NONE, 'x2')
-
-
-def y(cube):
-    run_s_move(cube, Color.NONE, 'y')
-
-
-def y2(cube):
-    run_s_move(cube, Color.NONE, 'y2')
-
-
-def not_y(cube):
-    run_s_move(cube, Color.NONE, 'not_y')
+def translate_move(cube, method_id, verbose):
+    """
+    Translates a human move (UDLRFB etc.) into robot-compatible sequences
+    :param cube: Temporary Cube being used to generate the robot sequence
+    :param method_id: The ID
+    """
+    move_method = getattr(translator_moves, method_id)
+    move_method(cube, verbose)

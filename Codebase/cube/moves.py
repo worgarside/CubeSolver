@@ -6,227 +6,227 @@ from cube.cube_class import Rotation, Face, Move
 All of the methods below have the same structure and are used to perform a Move on a Cube object
 
 :param cube: the Cube being moved
-:param print_flag: a flag to say if the move should be printed to the terminal, used mainly in testing to allow tracing
+:param verbose: a flag to say if the move should be printed to the terminal, used mainly in testing to allow tracing
 """
 
 
-def u(cube, print_flag=False):
+def u(cube, verbose):
     c = deepcopy(cube)
     cube.set_left(c.front[:3] + c.left[3:])
     cube.set_right(c.back[:3] + c.right[3:])
     cube.set_front(c.right[:3] + c.front[3:])
     cube.set_back(c.left[:3] + c.back[3:])
     cube.rotate_face(Rotation.CLOCKWISE, Face.UP)
-    print('u') if print_flag else 0
+    print('u', end=' ') if verbose else 0
 
 
-def not_u(cube, print_flag=False):
+def not_u(cube, verbose):
     c = deepcopy(cube)
     cube.set_left(c.back[:3] + c.left[3:])
     cube.set_right(c.front[:3] + c.right[3:])
     cube.set_front(c.left[:3] + c.front[3:])
     cube.set_back(c.right[:3] + c.back[3:])
     cube.rotate_face(Rotation.COUNTER_CLOCKWISE, Face.UP)
-    print('u\'') if print_flag else 0
+    print('u\'', end=' ') if verbose else 0
 
 
-def u2(cube, print_flag=False):
-    u(cube)
-    u(cube)
-    print('u2') if print_flag else 0
+def u2(cube, verbose):
+    u(cube, False)
+    u(cube, False)
+    print('u2', end=' ') if verbose else 0
 
 
-def d(cube, print_flag=False):
+def d(cube, verbose):
     c = deepcopy(cube)
     cube.set_left(c.left[:6] + c.back[6:])
     cube.set_right(c.right[:6] + c.front[6:])
     cube.set_front(c.front[:6] + c.left[6:])
     cube.set_back(c.back[:6] + c.right[6:])
     cube.rotate_face(Rotation.CLOCKWISE, Face.DOWN)
-    print('d') if print_flag else 0
+    print('d', end=' ') if verbose else 0
 
 
-def not_d(cube, print_flag=False):
+def not_d(cube, verbose):
     c = deepcopy(cube)
     cube.set_left(c.left[:6] + c.front[6:])
     cube.set_right(c.right[:6] + c.back[6:])
     cube.set_front(c.front[:6] + c.right[6:])
     cube.set_back(c.back[:6] + c.left[6:])
     cube.rotate_face(Rotation.COUNTER_CLOCKWISE, Face.DOWN)
-    print('d\'') if print_flag else 0
+    print('d\'', end=' ') if verbose else 0
 
 
-def d2(cube, print_flag=False):
-    d(cube)
-    d(cube)
-    print('d2') if print_flag else 0
+def d2(cube, verbose):
+    d(cube, False)
+    d(cube, False)
+    print('d2', end=' ') if verbose else 0
 
 
-def l(cube, print_flag=False):
+def l(cube, verbose):
     c = deepcopy(cube)
     cube.set_up(c.back[8:9] + c.up[1:3] + c.back[5:6] + c.up[4:6] + c.back[2:3] + c.up[7:])
     cube.set_down(c.front[0:1] + c.down[1:3] + c.front[3:4] + c.down[4:6] + c.front[6:7] + c.down[7:])
     cube.set_front(c.up[0:1] + c.front[1:3] + c.up[3:4] + c.front[4:6] + c.up[6:7] + c.front[7:])
     cube.set_back(c.back[0:2] + c.down[6:7] + c.back[3:5] + c.down[3:4] + c.back[6:8] + c.down[0:1])
     cube.rotate_face(Rotation.CLOCKWISE, Face.LEFT)
-    print('l') if print_flag else 0
+    print('l', end=' ') if verbose else 0
 
 
-def not_l(cube, print_flag=False):
+def not_l(cube, verbose):
     c = deepcopy(cube)
     cube.set_up(c.front[0:1] + c.up[1:3] + c.front[3:4] + c.up[4:6] + c.front[6:7] + c.up[7:])
     cube.set_down(c.back[8:9] + c.down[1:3] + c.back[5:6] + c.down[4:6] + c.back[2:3] + c.down[7:])
     cube.set_front(c.down[0:1] + c.front[1:3] + c.down[3:4] + c.front[4:6] + c.down[6:7] + c.front[7:])
     cube.set_back(c.back[0:2] + c.up[6:7] + c.back[3:5] + c.up[3:4] + c.back[6:8] + c.up[0:1])
     cube.rotate_face(Rotation.COUNTER_CLOCKWISE, Face.LEFT)
-    print('l\'') if print_flag else 0
+    print('l\'', end=' ') if verbose else 0
 
 
-def l2(cube, print_flag=False):
-    l(cube)
-    l(cube)
-    print('l2') if print_flag else 0
+def l2(cube, verbose):
+    l(cube, False)
+    l(cube, False)
+    print('l2', end=' ') if verbose else 0
 
 
-def r(cube, print_flag=False):
+def r(cube, verbose):
     c = deepcopy(cube)
     cube.set_up(c.up[:2] + c.front[2:3] + c.up[3:5] + c.front[5:6] + c.up[6:8] + c.front[8:9])
     cube.set_down(c.down[:2] + c.back[6:7] + c.down[3:5] + c.back[3:4] + c.down[6:8] + c.back[0:1])
     cube.set_front(c.front[:2] + c.down[2:3] + c.front[3:5] + c.down[5:6] + c.front[6:8] + c.down[8:9])
     cube.set_back(c.up[8:9] + c.back[1:3] + c.up[5:6] + c.back[4:6] + c.up[2:3] + c.back[7:])
     cube.rotate_face(Rotation.CLOCKWISE, Face.RIGHT)
-    print('r') if print_flag else 0
+    print('r', end=' ') if verbose else 0
 
 
-def not_r(cube, print_flag=False):
+def not_r(cube, verbose):
     c = deepcopy(cube)
     cube.set_up(c.up[:2] + c.back[6:7] + c.up[3:5] + c.back[3:4] + c.up[6:8] + c.back[0:1])
     cube.set_down(c.down[:2] + c.front[2:3] + c.down[3:5] + c.front[5:6] + c.down[6:8] + c.front[8:9])
     cube.set_front(c.front[:2] + c.up[2:3] + c.front[3:5] + c.up[5:6] + c.front[6:8] + c.up[8:9])
     cube.set_back(c.down[8:9] + c.back[1:3] + c.down[5:6] + c.back[4:6] + c.down[2:3] + c.back[7:])
     cube.rotate_face(Rotation.COUNTER_CLOCKWISE, Face.RIGHT)
-    print('r\'') if print_flag else 0
+    print('r\'', end=' ') if verbose else 0
 
 
-def r2(cube, print_flag=False):
-    r(cube)
-    r(cube)
-    print('r2') if print_flag else 0
+def r2(cube, verbose):
+    r(cube, False)
+    r(cube, False)
+    print('r2', end=' ') if verbose else 0
 
 
-def f(cube, print_flag=False):
+def f(cube, verbose):
     c = deepcopy(cube)
     cube.set_up(c.up[:6] + c.left[8:9] + c.left[5:6] + c.left[2:3])
     cube.set_down(c.right[6:7] + c.right[3:4] + c.right[0:1] + c.down[3:])
     cube.set_left(c.left[:2] + c.down[0:1] + c.left[3:5] + c.down[1:2] + c.left[6:8] + c.down[2:3])
     cube.set_right(c.up[6:7] + c.right[1:3] + c.up[7:8] + c.right[4:6] + c.up[8:9] + c.right[7:])
     cube.rotate_face(Rotation.CLOCKWISE, Face.FRONT)
-    print('f') if print_flag else 0
+    print('f', end=' ') if verbose else 0
 
 
-def not_f(cube, print_flag=False):
+def not_f(cube, verbose):
     c = deepcopy(cube)
     cube.set_up(c.up[:6] + c.right[0:1] + c.right[3:4] + c.right[6:7])
     cube.set_down(c.left[2:3] + c.left[5:6] + c.left[8:9] + c.down[3:])
     cube.set_left(c.left[:2] + c.up[8:9] + c.left[3:5] + c.up[7:8] + c.left[6:8] + c.up[6:7])
     cube.set_right(c.down[2:3] + c.right[1:3] + c.down[1:2] + c.right[4:6] + c.down[0:1] + c.right[7:])
     cube.rotate_face(Rotation.COUNTER_CLOCKWISE, Face.FRONT)
-    print('f\'') if print_flag else 0
+    print('f\'', end=' ') if verbose else 0
 
 
-def f2(cube, print_flag=False):
-    f(cube)
-    f(cube)
-    print('f2') if print_flag else 0
+def f2(cube, verbose):
+    f(cube, False)
+    f(cube, False)
+    print('f2', end=' ') if verbose else 0
 
 
-def b(cube, print_flag=False):
+def b(cube, verbose):
     c = deepcopy(cube)
     cube.set_up(c.right[2:3] + c.right[5:6] + c.right[8:9] + c.up[3:])
     cube.set_down(c.down[:6] + c.left[0:1] + c.left[3:4] + c.left[6:7])
     cube.set_left(c.up[2:3] + c.left[1:3] + c.up[1:2] + c.left[4:6] + c.up[0:1] + c.left[7:])
     cube.set_right(c.right[:2] + c.down[8:9] + c.right[3:5] + c.down[7:8] + c.right[6:8] + c.down[6:7])
     cube.rotate_face(Rotation.CLOCKWISE, Face.BACK)
-    print('b') if print_flag else 0
+    print('b', end=' ') if verbose else 0
 
 
-def not_b(cube, print_flag=False):
+def not_b(cube, verbose):
     c = deepcopy(cube)
     cube.set_up(c.left[6:7] + c.left[3:4] + c.left[0:1] + c.up[3:])
     cube.set_down(c.down[:6] + c.right[8:9] + c.right[5:6] + c.right[2:3])
     cube.set_left(c.down[6:7] + c.left[1:3] + c.down[7:8] + c.left[4:6] + c.down[8:9] + c.left[7:])
     cube.set_right(c.right[:2] + c.up[0:1] + c.right[3:5] + c.up[1:2] + c.right[6:8] + c.up[2:3])
     cube.rotate_face(Rotation.COUNTER_CLOCKWISE, Face.BACK)
-    print('b\'') if print_flag else 0
+    print('b\'', end=' ') if verbose else 0
 
 
-def b2(cube, print_flag=False):
-    b(cube)
-    b(cube)
-    print('b2') if print_flag else 0
+def b2(cube, verbose):
+    b(cube, False)
+    b(cube, False)
+    print('b2', end=' ') if verbose else 0
 
 
-def m(cube, print_flag=False):
-    r(cube)
-    not_l(cube)
-    not_x(cube)
-    print('m') if print_flag else 0
+def m(cube, verbose):
+    r(cube, False)
+    not_l(cube, False)
+    not_x(cube, False)
+    print('m', end=' ') if verbose else 0
 
 
-def not_m(cube, print_flag=False):
-    not_r(cube)
-    l(cube)
-    x(cube)
-    print('m\'') if print_flag else 0
+def not_m(cube, verbose):
+    not_r(cube, False)
+    l(cube, False)
+    x(cube, False)
+    print('m\'', end=' ') if verbose else 0
 
 
-def m2(cube, print_flag=False):
-    m(cube)
-    m(cube)
-    print('m2') if print_flag else 0
+def m2(cube, verbose):
+    m(cube, False)
+    m(cube, False)
+    print('m2', end=' ') if verbose else 0
 
 
-def e(cube, print_flag=False):
-    u(cube)
-    not_d(cube)
-    not_y(cube)
-    print('e') if print_flag else 0
+def e(cube, verbose):
+    u(cube, False)
+    not_d(cube, False)
+    not_y(cube, False)
+    print('e', end=' ') if verbose else 0
 
 
-def not_e(cube, print_flag=False):
-    not_u(cube)
-    d(cube)
-    y(cube)
-    print('e\'') if print_flag else 0
+def not_e(cube, verbose):
+    not_u(cube, False)
+    d(cube, False)
+    y(cube, False)
+    print('e\'', end=' ') if verbose else 0
 
 
-def e2(cube, print_flag=False):
-    e(cube)
-    e(cube)
-    print('e2') if print_flag else 0
+def e2(cube, verbose):
+    e(cube, False)
+    e(cube, False)
+    print('e2', end=' ') if verbose else 0
 
 
-def s(cube, print_flag=False):
-    not_f(cube)
-    b(cube)
-    z(cube)
-    print('s') if print_flag else 0
+def s(cube, verbose):
+    not_f(cube, False)
+    b(cube, False)
+    z(cube, False)
+    print('s', end=' ') if verbose else 0
 
 
-def not_s(cube, print_flag=False):
-    f(cube)
-    not_b(cube)
-    not_z(cube)
-    print('s\'') if print_flag else 0
+def not_s(cube, verbose):
+    f(cube, False)
+    not_b(cube, False)
+    not_z(cube, False)
+    print('s\'', end=' ') if verbose else 0
 
 
-def s2(cube, print_flag=False):
-    s(cube)
-    s(cube)
-    print('s2') if print_flag else 0
+def s2(cube, verbose):
+    s(cube, False)
+    s(cube, False)
+    print('s2', end=' ') if verbose else 0
 
 
-def x(cube, print_flag=False):
+def x(cube, verbose):
     c = deepcopy(cube)
     cube.set_up(c.front)
     cube.set_down(c.back[::-1])  # [::-1] reverses the string
@@ -234,10 +234,10 @@ def x(cube, print_flag=False):
     cube.set_back(c.up[::-1])  # [::-1] reverses the string
     cube.rotate_face(Rotation.COUNTER_CLOCKWISE, Face.LEFT)
     cube.rotate_face(Rotation.CLOCKWISE, Face.RIGHT)
-    print('x') if print_flag else 0
+    print('x', end=' ') if verbose else 0
 
 
-def not_x(cube, print_flag=False):
+def not_x(cube, verbose):
     c = deepcopy(cube)
     cube.set_up(c.back[::-1])  # [::-1] reverses the string
     cube.set_down(c.front)
@@ -245,16 +245,16 @@ def not_x(cube, print_flag=False):
     cube.set_back(c.down[::-1])  # [::-1] reverses the string
     cube.rotate_face(Rotation.CLOCKWISE, Face.LEFT)
     cube.rotate_face(Rotation.COUNTER_CLOCKWISE, Face.RIGHT)
-    print('x\'') if print_flag else 0
+    print('x\'', end=' ') if verbose else 0
 
 
-def x2(cube, print_flag=False):
-    x(cube)
-    x(cube)
-    print('x2') if print_flag else 0
+def x2(cube, verbose):
+    x(cube, False)
+    x(cube, False)
+    print('x2', end=' ') if verbose else 0
 
 
-def y(cube, print_flag=False):
+def y(cube, verbose):
     c = deepcopy(cube)
     cube.set_left(c.front)
     cube.set_right(c.back)
@@ -262,10 +262,10 @@ def y(cube, print_flag=False):
     cube.set_back(c.left)
     cube.rotate_face(Rotation.CLOCKWISE, Face.UP)
     cube.rotate_face(Rotation.COUNTER_CLOCKWISE, Face.DOWN)
-    print('y') if print_flag else 0
+    print('y', end=' ') if verbose else 0
 
 
-def not_y(cube, print_flag=False):
+def not_y(cube, verbose):
     c = deepcopy(cube)
     cube.set_left(c.back)
     cube.set_right(c.front)
@@ -273,16 +273,16 @@ def not_y(cube, print_flag=False):
     cube.set_back(c.right)
     cube.rotate_face(Rotation.COUNTER_CLOCKWISE, Face.UP)
     cube.rotate_face(Rotation.CLOCKWISE, Face.DOWN)
-    print('y\'') if print_flag else 0
+    print('y\'', end=' ') if verbose else 0
 
 
-def y2(cube, print_flag=False):
-    y(cube)
-    y(cube)
-    print('y2') if print_flag else 0
+def y2(cube, verbose):
+    y(cube, False)
+    y(cube, False)
+    print('y2', end=' ') if verbose else 0
 
 
-def z(cube, print_flag=False):
+def z(cube, verbose):
     c = deepcopy(cube)
     cube.set_up(c.left[6:7] + c.left[3:4] + c.left[0:1] + c.left[7:8] + c.left[4:5]
                 + c.left[1:2] + c.left[8:9] + c.left[5:6] + c.left[2:3])
@@ -294,10 +294,10 @@ def z(cube, print_flag=False):
                    c.up[4:5] + c.up[1:2] + c.up[8:9] + c.up[5:6] + c.up[2:3])
     cube.rotate_face(Rotation.CLOCKWISE, Face.FRONT)
     cube.rotate_face(Rotation.COUNTER_CLOCKWISE, Face.BACK)
-    print('z') if print_flag else 0
+    print('z', end=' ') if verbose else 0
 
 
-def not_z(cube, print_flag=False):
+def not_z(cube, verbose):
     c = deepcopy(cube)
     cube.set_up(c.right[2:3] + c.right[5:6] + c.right[8:9] + c.right[1:2]
                 + c.right[4:5] + c.right[7:8] + c.right[0:1] + c.right[3:4] + c.right[6:7])
@@ -309,13 +309,13 @@ def not_z(cube, print_flag=False):
                    + c.down[4:5] + c.down[7:8] + c.down[0:1] + c.down[3:4] + c.down[6:7])
     cube.rotate_face(Rotation.COUNTER_CLOCKWISE, Face.FRONT)
     cube.rotate_face(Rotation.CLOCKWISE, Face.BACK)
-    print('z\'') if print_flag else 0
+    print('z\'', end=' ') if verbose else 0
 
 
-def z2(cube, print_flag=False):
-    z(cube)
-    z(cube)
-    print('z2') if print_flag else 0
+def z2(cube, verbose):
+    z(cube, False)
+    z(cube, False)
+    print('z2', end=' ') if verbose else 0
 
 
 def dyn_move(cube, move):
@@ -324,6 +324,8 @@ def dyn_move(cube, move):
     :param cube: the Cube being moved
     :param move: a Move object, which will be evaluated and then used to find the desired method from above
     """
+
+    # The values in this dictionary are the methods defined above - not strings!
     move_dict = {
         Move.U: u,
         Move.NOT_U: not_u,
@@ -354,4 +356,5 @@ def dyn_move(cube, move):
         Move.Z2: z2
     }
 
-    move_dict[move](cube)
+    # Run the method on the Cube
+    move_dict[move](cube, False)

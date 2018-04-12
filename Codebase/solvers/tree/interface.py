@@ -2,10 +2,13 @@ from time import sleep, time
 from tkinter import *
 from tkinter.constants import *
 
+from cube.cube_class import Color
+
 
 class Interface:
     BG_COLOR = '#dddddd'
     CONTROL_WIDTH = 300
+    # 'Coordinates' of the facelets' corners, where one facelet width is one unit
     FACELET_COORDS = [
         (3, 0, 4, 1), (4, 0, 5, 1), (5, 0, 6, 1),
         (3, 1, 4, 2), (4, 1, 5, 2), (5, 1, 6, 2),
@@ -20,14 +23,6 @@ class Interface:
         (3, 7, 4, 8), (4, 7, 5, 8), (5, 7, 6, 8),
         (3, 8, 4, 9), (4, 8, 5, 9), (5, 8, 6, 9),
     ]
-    COLOR_DICT = {
-        'W': 'white',
-        'O': 'orange',
-        'R': 'red',
-        'G': 'green',
-        'B': 'blue',
-        'Y': 'yellow'
-    }
     FONT = 'Microsoft\ YaHei\ UI 10'
 
     def __init__(self, queue):
@@ -105,8 +100,13 @@ class Interface:
                 if next_solved:
                     solved = True
                 if position == 'solved':
+                    """
+                    The loop needs to be broken on the NEXT iteration, so that the final position (i.e. solved) is
+                    popped off the queue
+                    """
                     next_solved = True
                 else:
+                    # Set all the GUI data
                     minutes, secs = divmod((int(time()) - self.start_time), 60)
                     self.lbl_timer['text'] = 'Time: %02i:%02i' % (minutes, secs)
                     self.lbl_depth['text'] = 'Depth: %i' % position.depth
@@ -115,10 +115,12 @@ class Interface:
                     for m in position.move_sequence:
                         self.lbl_move_sequence_moves['text'] += m.value + '\n'
                     for index, color in enumerate(position.position):
-                        self.canvas.itemconfig(self.cubie[index], fill=Interface.COLOR_DICT[color])
+                        self.canvas.itemconfig(self.cubie[index], fill=Color(color).name.lower())
                     self.root.update_idletasks()
                     self.root.update()
-            input('Press enter to continue')
+            solve_time = int(round(time() * 1000))
+            while int(round(time() * 1000)) - solve_time < 2500:
+                continue
             self.root.destroy()
         except TclError:
             # catches error when window is prematurely closed
