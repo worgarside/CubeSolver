@@ -1,3 +1,11 @@
+#!/usr/bin/env python
+
+__author__ = "Will Garside"
+__version__ = "1.0"
+__maintainer__ = "Will Garside"
+__email__ = "worgarside@gmail.com"
+__status__ = "Development"
+
 import datetime
 import getopt
 import os
