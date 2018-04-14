@@ -9,6 +9,8 @@ def convert_sequence(cube, sequence):
     color_sequence = convert_digital_to_colors(cube, sequence)
     robot_sequence = create_robot_solve_sequence(cube, color_sequence)
 
+    optimise_sequence(robot_sequence)
+
     return robot_sequence
     # Changes digital/human moves to account for frame of reference changes with M/E/S robot style moves
 
@@ -57,3 +59,75 @@ def create_robot_solve_sequence(cube, color_sequence):
         method(temp_cube)
 
     return temp_cube.robot_solve_sequence
+
+
+def optimise_sequence(sequence):
+    print('\n')
+    for index, move in enumerate(sequence):
+        print(move, end=' ')
+    print()
+
+    for index, move in enumerate(sequence):
+        if index < len(sequence) - 1:
+            # Single move (d, y)
+            if len(move) == 1:
+                if move.lower() != 'x':
+                    # d d2 -> not_d
+                    if sequence[index + 1] == move + '2':
+                        sequence[index] = 'not_' + move
+                        del sequence[index + 1]
+
+                    # d not_d -> []
+                    elif sequence[index + 1].lower() == 'not_' + move.lower():
+                        del sequence[index]
+                        del sequence[index + 1]
+
+                    # d d -> d2
+                    elif sequence[index + 1].lower() == move.lower():
+                        sequence[index] = move + '2'
+                        del sequence[index + 1]
+
+            # Double move (d2, x2 y2)
+            elif len(move) == 2:
+                # d2, d -> not_d (not x)
+                if len(sequence[index + 1]) == 1 \
+                        and sequence[index + 1].lower() == move[0].lower() \
+                        and move[0].lower() != 'x':
+                    sequence[index] = 'not_' + move[0]
+                    del sequence[index + 1]
+
+                # d2, d2 -> []
+                elif sequence[index + 1] == move:
+                    del sequence[index]
+                    del sequence[index + 1]
+
+                # d2, not_d -> d
+                elif sequence[index + 1] == 'not_' + move[0]:
+                    sequence[index] = move[0]
+                    del sequence[index + 1]
+
+            # Not move (not_d, not_y)
+            elif len(move) == 5:
+                # not_d, d -> []
+                if sequence[index + 1] == move[-1]:
+                    del sequence[index]
+                    del sequence[index + 1]
+
+                # not_d, d2 -> d
+                elif sequence[index + 1] == move[-1] + '2':
+                    sequence[index] = move[-1]
+                    del sequence[index + 1]
+
+                # not_d, not_d -> d2
+                elif sequence[index + 1] == move:
+                    sequence[index] = move[-1] + '2'
+                    del sequence[index + 1]
+            else:
+                for index2, move2 in enumerate(sequence):
+                    print(move2, end=' ')
+                print('\nInvalid move length at index %i during post conversion optimisation: %s' % (index, move))
+                exit(1)
+
+    for index, move in enumerate(sequence):
+        print(move, end=' ')
+    print('\n')

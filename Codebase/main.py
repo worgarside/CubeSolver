@@ -278,12 +278,12 @@ def main():
         for move in orient_sequence + solve_sequence:
             print(move.name, end=' ')
 
-        total_sequence = []
+        robot_sequence = []
         for move in orient_sequence:
-            total_sequence.append(move.name.lower())
-        total_sequence.extend(convert_sequence(cube, solve_sequence))
+            robot_sequence.append(move.name.lower())
+        robot_sequence.extend(convert_sequence(cube, solve_sequence))
         print('\n- Robot Sequence: ', end='')
-        for move in total_sequence:
+        for move in robot_sequence:
             print(move.upper(), end=' ')
 
         print('\n- Final Cube -')
@@ -292,7 +292,7 @@ def main():
         print(cube)
 
         if robot_on:
-            conn.send(pickle.dumps(total_sequence))
+            conn.send(pickle.dumps(robot_sequence))
             conn.close()
 
 

@@ -156,9 +156,13 @@ class Robot:
         """
         # 400 is 1/4 turn - 13.333:1 gear ratio
         mod_angle = angle * (40 / 9)
+        self.cradle.reset()
         self.set_motor_brakes(self.cradle, 'hold')
-        self.cradle.run_to_rel_pos(position_sp=mod_angle, speed_sp=CRADLE_SPEED)
+        self.cradle.speed_sp = CRADLE_SPEED
+        pos = self.cradle.position + mod_angle
+        self.cradle.run_to_abs_pos(position_sp=pos)
         self.cradle.wait_until_not_moving()
+        sleep(0.05)
 
     def grab_cube(self):
         """
