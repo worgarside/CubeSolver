@@ -166,66 +166,6 @@ def b2(cube, verbose):
     print('b2', end=' ') if verbose else 0
 
 
-def m(cube, verbose):
-    r(cube, False)
-    not_l(cube, False)
-    not_x(cube, False)
-    print('m', end=' ') if verbose else 0
-
-
-def not_m(cube, verbose):
-    not_r(cube, False)
-    l(cube, False)
-    x(cube, False)
-    print('m\'', end=' ') if verbose else 0
-
-
-def m2(cube, verbose):
-    m(cube, False)
-    m(cube, False)
-    print('m2', end=' ') if verbose else 0
-
-
-def e(cube, verbose):
-    u(cube, False)
-    not_d(cube, False)
-    not_y(cube, False)
-    print('e', end=' ') if verbose else 0
-
-
-def not_e(cube, verbose):
-    not_u(cube, False)
-    d(cube, False)
-    y(cube, False)
-    print('e\'', end=' ') if verbose else 0
-
-
-def e2(cube, verbose):
-    e(cube, False)
-    e(cube, False)
-    print('e2', end=' ') if verbose else 0
-
-
-def s(cube, verbose):
-    not_f(cube, False)
-    b(cube, False)
-    z(cube, False)
-    print('s', end=' ') if verbose else 0
-
-
-def not_s(cube, verbose):
-    f(cube, False)
-    not_b(cube, False)
-    not_z(cube, False)
-    print('s\'', end=' ') if verbose else 0
-
-
-def s2(cube, verbose):
-    s(cube, False)
-    s(cube, False)
-    print('s2', end=' ') if verbose else 0
-
-
 def x(cube, verbose):
     c = deepcopy(cube)
     cube.set_up(c.front)

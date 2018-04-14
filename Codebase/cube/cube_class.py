@@ -125,13 +125,11 @@ class Cube:
         :param position: Current position of the Cube, defaults to solved
         :param temporary: Flag to say if it's a temporary Cube - reduced amount of processing and memory
         :attr position_reduced: The number of colors is halved, with opposite sides becoming the same color
-        :attr color_position: a full net with ANSI color codes included
         :attr robot_solve_sequence: a virtual Cube is manipulated to translate the sequence so needs an
             attribute for storing the translated sequence
         """
         self.position = position
         self.position_reduced = ''
-        self.color_position = ''
         self.temporary = temporary
 
         self.up = ''
@@ -141,7 +139,8 @@ class Cube:
         self.front = ''
         self.back = ''
 
-        self.robot_solve_sequence = []
+        if not self.temporary:
+            self.robot_solve_sequence = []
 
         self.update_fields()
 
@@ -164,7 +163,6 @@ class Cube:
         self.update_faces()
         if not self.temporary:
             self.update_reduced_cube()
-            self.update_pos_colors()
 
     def update_faces(self):
         """ Updates the faces of the cube from the main position variable """
@@ -174,12 +172,6 @@ class Cube:
         self.right = self.position[15:18] + self.position[27:30] + self.position[39:42]
         self.front = self.position[12:15] + self.position[24:27] + self.position[36:39]
         self.back = self.position[18:21] + self.position[30:33] + self.position[42:45]
-
-    def update_pos_colors(self):
-        """ Updates position field with colored output """
-        self.color_position = ''
-        for color in self.position:
-            self.color_position += self.COLOR_PRINT_DICT[Color(color)] + color + '\033[0m'
 
     def update_reduced_cube(self):
         """ Updates color-reduced string """
