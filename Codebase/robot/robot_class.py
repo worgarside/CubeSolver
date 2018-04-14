@@ -7,6 +7,7 @@ from ev3dev.auto import OUTPUT_A, OUTPUT_B, OUTPUT_C
 from ev3dev.ev3 import Sound, Leds, TouchSensor, ColorSensor
 from ev3dev.helper import LargeMotor, MediumMotor, ColorSensor
 
+# Modify the path to allow access to sibling package
 path.append(dirname(path[0]))
 __package__ = "robot"
 

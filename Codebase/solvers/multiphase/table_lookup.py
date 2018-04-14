@@ -101,8 +101,9 @@ def _color_to_monochrome(position, phase):
         exit()
 
 
-def kociemba_convert(position):
+def kociemba_fallback(position):
     """
+    Fallback to kociemba if the position is not in the table
     The kociemba package uses a different was of representing a Cube so the position must be converted
     :param position: original position
     :return: kociemba solved sequence

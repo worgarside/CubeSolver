@@ -30,7 +30,7 @@
 \usepackage{listings}			% code formatting
 \usepackage{enumitem}			% Lettered enumerations
 \usepackage{tikz}				% flowcharts
-%\usepackage{varwidth}			% flowchart node width
+\usepackage{mdframed}			% borders on aside environment
 
 \usetikzlibrary{shapes.geometric, arrows, positioning}
 \tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black]
@@ -43,6 +43,10 @@
 \titleformat{\chapter}{\normalfont\Huge\bfseries}{\thechapter}{1em}{}
 \titlespacing*{\chapter}{0pt}{3.5ex plus 1ex minus .2ex}{2.3ex plus .2ex}
 
+\definecolor{yellow}{HTML}{e5d600}
+\definecolor{green}{HTML}{007f00}
+\definecolor{keyword}{HTML}{bc4331}
+
 \usepgfplotslibrary{dateplot}	% use date in pgfplot
 \pgfplotsset{compat=1.8}
 
@@ -51,14 +55,15 @@
 	basicstyle=\small\ttfamily,        % the size of the fonts that are used for the code
 %	breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
 %	breaklines=true,                 % sets automatic line breaking
-%	captionpos=b,                    % sets the caption-position to bottom
-	commentstyle=\color{mygreen},    % comment style
+	captionpos=b,                    % sets the caption-position to bottom
+	commentstyle=\color{gray},    % comment style
 %	deletekeywords={...},            % if you want to delete keywords from the given language
+	escapechar={|}, 
 %	escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
 %	extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
-%	frame=single,	                   % adds a frame around the code
+	frame=single,	                   % adds a frame around the code
 	keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
-	keywordstyle=\color{blue},       % keyword style
+	keywordstyle=\color{keyword},     % keyword style
 	language=Python,                 % the language of the code
 %	morekeywords={*,...},            % if you want to add more keywords to the set
 %	numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
@@ -69,8 +74,8 @@
 %	showstringspaces=false,          % underline spaces within strings only
 %	showtabs=false,                  % show tabs within strings adding particular underscores
 %	stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
-%	stringstyle=\color{mymauve},     % string literal style
-%	tabsize=2,	                   % sets default tabsize to 2 spaces
+	stringstyle=\color{green},     % string literal style
+	tabsize=4,	                   % sets default tabsize to 2 spaces
 %	title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
 }
 
@@ -112,6 +117,13 @@
 
 \tl_new:N \l__maxd_argument_tl
 \ExplSyntaxOff
+
+\newenvironment{aside}
+{\begin{mdframed}[style=0,%
+		leftline=false,rightline=false,leftmargin=2em,rightmargin=2em,%
+		innerleftmargin=0pt,innerrightmargin=0pt,linewidth=0.75pt,%
+		skipabove=7pt,skipbelow=7pt]\small}
+	{\end{mdframed}}
 
 \begin{document}
 	\pagenumbering{gobble}
@@ -740,7 +752,7 @@
 		\end{center}
 	\end{figure}
 	
-	Figure \ref{fig:rdrFullRobotV1} demonstrates the full assembly of the MkI, including the main EV3 control brick. This model is the final result after any modifications made during the building process. These modifications to the model were only made to reflect the lack of some Lego pieces and the substituted pieces, and only affected the framework of the model - not any of the mechanisms mentioned above. As a result of the in-depth design process and any minor modifications, the MkI was optimised as much as possible with regards to functionality, structural integrity, and efficiency to work under restrictions from piece availability.
+	Figure \ref{fig:rdrFullRobotV1} demonstrates the full assembly of the MkI, including the main EV3 control brick. This model is the final result after any modifications made during the building process. As a result of the in-depth design process and any minor modifications, the MkI was optimised as much as possible with regards to functionality, structural integrity, and efficiency to work under restrictions from piece availability.
 	
 	The build of the MkI is quite compact, and the design is largely influenced by the pieces available: during the modelling process, small sections of the model were built with actual Lego to check functionality translated from the virtual model to the physical model as intended. Due to the limited quantity of Lego pieces, some less-than-optimal sections arose where two parts had to be connected but the necessary liftarm was not available. This situation is visible behind the cradle, where six small red pieces \legopiece{32062} are used to connect two right-angled liftarms. Another example of \enquote{design by necessity} is in the colour sensor's gear train: one medium and two small gears were used consecutively instead of two medium, or one large and one small. The functional impact of some of these sections is negligible thanks to workarounds and extra pieces, however the aesthetics have unfortunately suffered minor setbacks in places.
 	
@@ -767,7 +779,7 @@
 
 	The first part of the test was to run the scanning process from start to end, as described by Algorithms \ref{alg:scanupface} and \ref{alg:scancube}, to test the movement of all three fundamental components. The \lstinline|repeat...until| loop allows optimisations to be made between each test: for the first few runs, the optimisations were quite simple, such as refining the constants used for setting the stopping points for the components; further optimisations involved making small modifications to the MkI design to reinforce the framework, or changes to the rotational velocity of the motors amongst other changes. The second part of the loop (where the move sequence \movesequence{y.y'x.y'd'd2d'x} is run) allows the functionality of the MkI during the solving process to be tested. This covers the accuracy of the cradle for \move{d}s and \move{y}s, the accuracy and the effectiveness of the \move{x} arm's guards, and the success of the \move{x}s. Minor modifications that were easily solved are subsequently ignored for the sake of conciseness and efficiency.
 	
-	\subsubsection{Major Issues}
+	\subsubsection{Major Issues} \label{sec:mkIMajorIssues}
 	
 	The first major issue with the functionality of the MkI was actually software-based - however it is discussed here because it produced a hardware issue which affected the MkI's design. The details of the code used are discussed in section \ref{sec:robotObject}. In Algorithm \ref{alg:mkITest}, the stopping condition for the main loop is a comparison between the virtual Cube and the real-world Cube. This comparison was a manual one, where the position of the Cube was checked against an on-screen printout. The colour sensor has different modes to read colours: \lstinline|COL_COLOR|, which returns an integer between zero and seven (inc.) to represent a specific colour; \lstinline|RGB_RAW|, which returns the RGB values read by the sensor; and other modes which read light intensity rather than the colour. For this application, the \lstinline|COL_COLOR| is the most suitable mode because it will not require the RGB values to be parsed into one of the six colours.
 	
@@ -827,7 +839,7 @@
 		\end{tabular}
 	\end{table}
 
-	Following more tests, it becamse clear that the addition of the stickers was a double-edged sword: the coefficient of friction between the Cube and the curved edge of the cradle wall was now too high for the Cube to slide back into the cradle following an \move{x}. If the \face{d} had any of the new stickers on, it would stay rested on the wall of the cradle and corrupt the entire process. Rather than spend time redesigning the cradle to be angled to make the Cube slide back in, or changing the arm design to pull the Cube back in, the easiest solution was simply to tilt the entire robot:
+	The addition of the stickers was a double-edged sword: the coefficient of friction between the Cube and the curved edge of the cradle wall was now too high for the Cube to slide back into the cradle. Rather than spend time redesigning the cradle to be angled to make the Cube slide back in, or changing the arm design to pull the Cube back in, the easiest solution was simply to tilt the entire robot:
 	
 	\begin{figure}[H]
 		\begin{center}
@@ -837,7 +849,7 @@
 		\end{center} 
 	\end{figure}
 
-	The second major issue with the MkI was in part caused by the newly added tilt, and also by the design of the \move{x} arm: when the wheel on the end of the arm pushed the Cube to start an \move{x}, the Cube would fall out of either side of the cradle instead of pivoting about the opposite wall. The main cause of this was that the wheel was exerting a force in the exact centre of the Cube's face, and the opposite wall was now higher (because of the added tilt) which meant that the resistive force was greater. There was no obvious solution to this problem, other than making the wheel larger to spread the force across the face of the Cube. However, a larger wheel meant that the arm became unbalanced and the strength of the arm was compromised. This led to the liftarm that held the wheel falling off the MkI mid-process more than once, as shown in Figure \ref{fig:mkIArmCollapse} (three frames extracted from a video of the scanning process).
+	The second major issue with the MkI was caused by the newly added tilt and the design of the \move{x} arm: when the wheel on the end of the arm pushed the Cube to start an \move{x}, the Cube would often fall out of the cradle instead of pivoting about the opposite wall. There was no obvious solution to this problem, other than making the wheel larger to spread the force across the face of the Cube. However, a larger wheel meant that the arm became unbalanced and the strength of the arm was compromised. This led to the liftarm that held the wheel falling off the MkI mid-process more than once, as shown in Figure \ref{fig:mkIArmCollapse} (three frames extracted from a video of the scanning process).
 
 	\begin{figure}[H]
 		\centering
@@ -1242,12 +1254,51 @@
     
     \subsection{Cube}
     
-    The second object defined in the software is the \lstinline|Cube| object.
+    \subsubsection{The \lstinline|Cube| Class}
     
-    \subsubsection{Position}
-    \section{Solve Methods}
-    \subsection{Method 1: Tree Solving}
-	\subsection{Method 2: Group Solving}
+    The second object defined in the software is the \lstinline|Cube| object.  As well as the main \lstinline|Cube| class, there are four \lstinline|Enum| classes which are used in defining a \lstinline|Cube|: \lstinline|Color|, which has eight members - each representing a colour which the Lego sensor can \enquote{see} (\lstinline|NONE|, \lstinline|DARK|, \lstinline|WHITE|, \lstinline|ORANGE|, \lstinline|GREEN|, \lstinline|BLUE|, \lstinline|RED| and \lstinline|YELLOW|); \lstinline|Move|, an Enum with one member for each possible move; \lstinline|Face|, which has one member for each Cube face; and \lstinline|Rotation|, which is a simple Enum with only two members - \lstinline|CLOCKWISE| and \lstinline|COUNTER_CLOCKWISE|.
+    
+    To store the position of a Cube, the three-dimensional Cube is turned into a two-dimensional net, which is then turned into a single string by \enquote{reading} the facelets from top to bottom, left to right as shown in Figure ???. The \lstinline|position| attribute can be accessed by calling \lstinline|Cube.position|, and a coloured net can be output by printing the \lstinline|Cube| object. A \lstinline|Cube| has two optional parameters upon initialisation. The first is the position, as a string. If this is omitted, it defaults to the solved position. The second argument is a boolean to state whether the Cube is temporary. If set to \lstinline|True|, some less commonly used attributes and methods are ignored to reduce memory usage and processing requirements.
+    
+	\begin{lstlisting}[caption={The two different ways of accessing a Cube's position}]
+		>>> from cube_class import Cube
+		>>> cube = Cube()
+		>>> print(cube.position)
+		WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY
+		>>> print(cube)
+	 	      |\color{gray}W W W|
+	 	      |\color{gray}W W W|
+	 	      |\color{gray}W W W|
+        |\color{orange}O O O| |\color{green}G G G| |\color{red}R R R| |\color{blue}B B B|
+        |\color{orange}O O O| |\color{green}G G G| |\color{red}R R R| |\color{blue}B B B|
+        |\color{orange}O O O| |\color{green}G G G| |\color{red}R R R| |\color{blue}B B B|
+	 	      |\color{yellow}Y Y Y|
+	 	      |\color{yellow}Y Y Y|
+	 	      |\color{yellow}Y Y Y|\end{lstlisting}
+    
+    There are also six class attributes to represent the faces of the Cube. Each of these is a string of six characters, each representing the colour of a facelet when the face is \enquote{read} top to bottom, left to right.
+    
+    \subsubsection{Updating a \lstinline|Cube|}
+    
+    In order to replicate each of the twenty-seven possible moves, twenty-seven corresponding methods were created to simulate each move. They make use of the \lstinline|Cube|'s setter methods, which each take a single string as an argument and set the corresponding characters in the \lstinline|position| attribute. They also use the method \lstinline|rotate_face| which takes a direction (of type \lstinline|Rotation|) and a face (of type \lstinline|Face|) and moves the facelets \ang{90} in the given direction.
+    
+    To ensure that all the class attributes accurately describe the Cube's position at any given time, methods have been written to update all of the necessary attributes when the object is modified. As well as the setter methods, there are two getter methods. The first takes a keyword argument and returns a \lstinline|Color| object: the keyword is either \lstinline|'facelet'| which is an integer facelet reference, or \lstinline|'face'| to lookup that face's colour. The second getter method takes a \lstinline|Color| as an argument and returns the face which is that colour.
+    
+    \section{Solve Method 1: Tree Solving}
+    
+    During the development of this project, three main methods of solving the Cube were implemented. Each had it's own advantages and disadvantages and are discussed in this section and the following two.
+    
+    The very first step in creating a reliable solve method was to create a reliable object class, and a data structure to store the object in. The \lstinline|Position| class defines an object with four attributes: the depth of the position; the position's string representation; the move sequence used to get to that position; and the ID of that position. Richard Korf discusses using a binary tree and an iterative deepening A* algorithm to solve a Cube in his 1997 paper \cite{Korf1997}. Korf also mentions using the Manhattan distance of the cubies as a heuristic to help improve the efficiency of the search algorithm. 
+    
+   	\begin{aside}
+   		    It is important to note that a lot of the research into efficient solving algorithms was done between twenty and forty years ago, and is now lost to the abandonment of websites, mailing lists, and newsletters in favour of much simpler websites and blog posts with much less information and community interaction. Some of the data from the \enquote{golden age} of solving Cube's is available as large, disorganised archives  - but a lot of it was done before the days of commonplace online interaction, and the amount of data available to assist in the design and implementation of solve methods is far more limited than is desirable if one has no contacts in the world of Rubik's Cube solving. This all means that some of the development hit a premature dead end and was abandoned in favour of attempting a larger range of methods for cross-comparison.
+   	\end{aside}
+
+    
+    
+	\section{Method 2: Multiphase Group Solve}
+	\section{Method 3: Single Group Half Turn Solve}
+	
     \section{Database}
     
     

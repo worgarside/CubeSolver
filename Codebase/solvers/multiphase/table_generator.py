@@ -32,18 +32,19 @@ MOVE_GROUPS = [
 ]
 
 
-def generate_lookup_table(db, phase):
+def generate_lookup_table(db, phase, verbose):
     """
     Method to generate a new table in the database for the current phase
     :param db: Database Cursor object
     :param phase: the current phase number
+    :param verbose: Changes verbosity of output
     """
 
-    print('\n- - Generating Table multiphase_%i... - -' % phase)
+    print('\n- - Generating Table multiphase_%i... - -' % phase) if verbose else 0
     db.query('''CREATE TABLE IF NOT EXISTS multiphase_%i (depth INTEGER NOT NULL, position TEXT PRIMARY KEY,
              move_sequence BLOB NOT NULL)''' % phase)
 
-    print('  Getting previous depth... ', end='')
+    print('  Getting previous depth... ', end='') if verbose else 0
     try:
         # Gets previous depth from DB, defaults to 0 for complete regeneration
         depth = db.query('SELECT MAX(depth) from multiphase_%i' % phase).fetchone()[0]  # - 1
@@ -52,7 +53,7 @@ def generate_lookup_table(db, phase):
     except TypeError:
         depth = 0
 
-    print(depth)
+    print(depth) if verbose else 0
 
     try:
         # Inserts target position into the DB, passes if it's already there
@@ -65,17 +66,18 @@ def generate_lookup_table(db, phase):
     while inserted:
         gc.collect()
         try:
-            inserted, depth = generate_next_depth(db, depth, phase)
+            inserted, depth = generate_next_depth(db, depth, phase, verbose)
         except AssertionError as err:
             print(err)
 
 
-def generate_next_depth(db, depth, phase):
+def generate_next_depth(db, depth, phase, verbose):
     """
     Generates the next depth level of positions in the database table by iterating through the previous depth
     :param db: Database Cursor object
     :param depth: the current depth level which has already been generated
     :param phase: current phase number, determines which table is being used
+    :param verbose: Boolean to change output verbosity
     :return: boolean flag to state if any data has been inserted; the new max depth value
     """
 
@@ -83,7 +85,7 @@ def generate_next_depth(db, depth, phase):
     position_set = gen_position_set(db, depth, phase)
     start_time = int(round(time.time() * 1000))
     depth += 1
-    print('%2i' % depth, end='.')
+    print('%2i' % depth, end='.') if verbose else 0
 
     """
     Create an iterable to be processed by the Pool. It is structured like this:
@@ -92,14 +94,14 @@ def generate_next_depth(db, depth, phase):
     iterable = map(lambda e: (e, phase, position_set),
                    db.query('SELECT position, move_sequence FROM multiphase_%i '
                             'where depth = %i' % (phase, depth - 1)).fetchall())
-    print('.', end='')
+    print('.', end='') if verbose else 0
 
     # Create a MP Pool and give it the iterable to process across all CPU cores for most efficient processing
     p = Pool(processes=cpu_count())
     pool_result = p.starmap(generate_pos_children, iterable)
     p.close()
     gc.collect()
-    print('.', end='')
+    print('.', end='') if verbose else 0
     insert_count = 0
     duplication_count = 0
 
@@ -124,13 +126,13 @@ def generate_next_depth(db, depth, phase):
     gc.collect()
 
     # Lots of print statements for analysis of processing and manual estimations of remaining time
-    print('.', end='   ')
     end_time = int(round(time.time() * 1000))
     total = (end_time - start_time) / 1000
-    print('Time: %10.3fs' % total, end='  |  ')
-    print('DB Size: %7.2fMB' % (os.path.getsize('Codebase/database/db.sqlite') / 1000000), end='  |  ')
-    print('Rows Added: %10i' % insert_count, end='  |  ')
-    print('Duplications: %8i' % duplication_count)
+    if verbose:
+        print('.   Time: %10.3fs' % total, end='  |  ')
+        print('DB Size: %7.2fMB' % (os.path.getsize('Codebase/database/db.sqlite') / 1000000), end='  |  ')
+        print('Rows Added: %10i' % insert_count, end='  |  ')
+        print('Duplications: %8i' % duplication_count)
     # need to include duplication count in case of resume with full depth
     return (insert_count + duplication_count > 0), depth
 
@@ -139,6 +141,7 @@ def gen_position_set(db, depth, phase):
     """
     Take all of the positions in the Database and put them into one set for quick duplication checking to reduce
     memory usage
+    :param phase: The current phase being generated
     :param db: Database cursor object
     :param depth: Current depth
     :return: Set of position strings

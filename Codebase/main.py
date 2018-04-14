@@ -1,3 +1,11 @@
+#!/usr/bin/env python
+
+__author__ = "Will Garside"
+__version__ = "1.0"
+__maintainer__ = "Will Garside"
+__email__ = "worgarside@gmail.com"
+__status__ = "Development"
+
 import datetime
 import getopt
 import os
@@ -25,9 +33,14 @@ from translator.move_converter import convert_sequence
 
 
 def init_db(prints=True):
+    """
+    Create a Database Cursor object which can be passed around to for global access to database
+    :param prints: Print flag
+    :return: Database Cursor object
+    """
     print('Initialising DB.', end='') if prints else None
     db = DatabaseManager('Codebase/database/db.sqlite')
-    db.query("PRAGMA synchronous = off")
+    db.query("PRAGMA synchronous = off")  # Allows asynchronous writing for better multiprocessing write speed
     print('.', end='')
     db.query("BEGIN TRANSACTION")
     print('!') if prints else None
@@ -35,7 +48,18 @@ def init_db(prints=True):
 
 
 def multiphase_solve(db, position, phase_count):
+    """
+    Use the multiphase method of solving the Cube
+    :param db: Database connection
+    :param position: The position scanned in by the robot
+    :param phase_count: The number of phases to check
+    :return: The solve sequence for the Cube
+    """
     def end_solve():
+        """
+        The method used to end the multiphase solve process, regardless of kociemba usage
+        :return: the combined sequences from each phase
+        """
         total_sequence = []
         for sequence in sequence_list:
             total_sequence.extend(sequence)
@@ -48,7 +72,6 @@ def multiphase_solve(db, position, phase_count):
         return total_sequence
 
     sequence_list = []
-
     phase_name = ['Zero', 'One', 'Two', 'Three', 'Four']
     cube_list = []
     position_list = [position]
@@ -57,6 +80,8 @@ def multiphase_solve(db, position, phase_count):
         print('- Phase %s: ' % phase_name[phase], end='')
 
         looked_up_sequence = multiphase_lookup.lookup_position(db, position_list[phase], phase)
+
+        # If the position wasn't found in the table, option for fallback to kociemba
         if len(looked_up_sequence) > 0 and looked_up_sequence[0] == LookupError:
             print()
             kociemba_choice = ''
@@ -64,7 +89,8 @@ def multiphase_solve(db, position, phase_count):
                 kociemba_choice = input('Solve with kociemba package? (y/n) ').upper()
             if kociemba_choice == 'Y':
                 print('Converting Cube to kociemba notation.', end='')
-                sequence_list = [multiphase_lookup.kociemba_convert(position)]
+                # Overwrite all previous sequences, kociemba uses a different method
+                sequence_list = [multiphase_lookup.kociemba_fallback(position)]
 
                 return end_solve()
             else:
@@ -78,8 +104,8 @@ def multiphase_solve(db, position, phase_count):
                     print('Nice try, bye')
                     exit()
 
-        sequence_list.append(looked_up_sequence)
-        cube_list.append(Cube(position_list[phase]))
+        sequence_list.append(looked_up_sequence)  # List of sequences from each phase
+        cube_list.append(Cube(position_list[phase]))  # List of Cubes produced by each phase's sequence
         for move in sequence_list[phase]:
             dyn_move(cube_list[phase], move)
             print(move.name, end=' ')
@@ -89,6 +115,12 @@ def multiphase_solve(db, position, phase_count):
 
 
 def half_turn_solve(db, position):
+    """
+    Solve the Cube with half turns only, proof of concept for simple table
+    :param db: Database connection
+    :param position: The mixed position
+    :return: The solve sequence from the table
+    """
     print('- Table Lookup: ', end='')
     solve_sequence = half_turn_lookup.lookup_position(db, position)
     temp_cube = Cube(position)
@@ -100,10 +132,16 @@ def half_turn_solve(db, position):
 
 
 def tree_solve(position):
+    """
+    Solve the Cube by creating a tree for breadth-first search
+    :param position: Mixed position scanned by robot
+    :return: The solve sequence
+    """
     move_group = [Move.U, Move.NOT_U, Move.U2, Move.D, Move.NOT_D, Move.D2,
                   Move.L, Move.NOT_L, Move.L2, Move.R, Move.NOT_R, Move.R2,
                   Move.F, Move.NOT_F, Move.F2, Move.B, Move.NOT_B, Move.B2]
 
+    # Create an instance of a LifoQueue for passing positions to the GUI
     BaseManager.register('LifoQueue', LifoQueue)
     manager = BaseManager()
     manager.start()
@@ -111,7 +149,8 @@ def tree_solve(position):
 
     cube = Cube(position)
 
-    tree_process = Process(target=time_function,
+    # Create a separate process for generating the tree
+    tree_process = Process(target=time_method,
                            args=(generate_tree, cube, move_group, position_queue,),
                            name='tree_process')
 
@@ -126,6 +165,7 @@ def tree_solve(position):
 
     tree_process.terminate()  # kill process when window is closed
 
+    # Retrieve the solve sequence and delete the file
     with open('Codebase/solvers/tree/solution.pickle', 'rb') as solution_file:
         pickled_sequence = pickle.load(solution_file)
     os.remove('Codebase/solvers/tree/solution.pickle')
@@ -139,9 +179,15 @@ def tree_solve(position):
     return solve_sequence
 
 
-def time_function(func, *arguments):
+def time_method(method, *arguments):
+    """
+    Simple utility method to run a method and return the time elapsed
+    :param method: The method to be run
+    :param arguments: Any arguments to be passed to the method
+    :return:
+    """
     start = int(round(time.time() * 1000))
-    result = func(*arguments)
+    result = method(*arguments)
     end = int(round(time.time() * 1000))
     total = (end - start) / 1000
     print('Time: %0.03fs' % total)
@@ -149,16 +195,25 @@ def time_function(func, *arguments):
 
 
 def create_socket():
-    conn = socket.socket()
-    conn.bind(('0.0.0.0', 3000))
+    """
+    Create a socket object to connect to the EV3 robot
+    :return: a connection object which can be used for sending and receiving data
+    """
+    sock = socket.socket()
+    sock.bind(('0.0.0.0', 3000))
     print('Listening for connection...')
-    conn.listen(1)
-    c, client_address = conn.accept()
+    sock.listen(1)
+    conn, client_address = sock.accept()
     print('EV3 connected @ %s:%s\n' % (client_address[0], client_address[1]))
-    return c
+    return conn
 
 
 def get_robot_scan(conn):
+    """
+    Receive the scanned data from the robot
+    :param conn: socket connection
+    :return: the Cube's position
+    """
     pos_received = False
     position = ''
     while not pos_received:
@@ -169,6 +224,12 @@ def get_robot_scan(conn):
 
 
 def orient_cube(cube):
+    """
+    A lot of the tables work with the Cube being oriented in a specific manner. Rather than recreating the tables for
+    all 24 orientations, it's much simpler to just orient the Cube to match the expected orientation
+    :param cube: the scanned Cube
+    :return: the oriented Cube
+    """
     orient_sequence = []
 
     white_face = cube.get_face_with_color(color=Color.WHITE)
@@ -195,23 +256,24 @@ def orient_cube(cube):
         dyn_move(cube, green_to_front[green_face][0])
 
     if len(orient_sequence) > 0:
-        print('Orienting Cube: \n%s' % cube)
-        return_sequence = []
+        print('- Orient Sequence: ', end='')
         for move in orient_sequence:
-            return_sequence.append(move)
-
-        return return_sequence
+            print(move.name, end=' ')
+        print()
+        return orient_sequence
 
     return []
 
 
 def main():
+    # Set all the booleans based on the opts and args
     robot_on = '-r' in opts
     db_generation = '-d' in opts
     db_clear = '-c' in opts
     half_turn = '-h' in opts
     multiphase = '-m' in opts
     tree = '-t' in opts
+    verbose = '-v' in opts
 
     conn = None
     position = None
@@ -222,8 +284,7 @@ def main():
         conn = create_socket()
         position = get_robot_scan(conn)
         print('Scanned position: %s' % position)
-
-    if not robot_on and not db_generation and (half_turn or multiphase or tree):  # Solving without robot
+    elif not db_generation and (half_turn or multiphase or tree):  # Solving without robot
         position = ''
         while len(position) != 54:
             position = input('Enter a position: ').upper()
@@ -235,27 +296,31 @@ def main():
             confirm = input('Are you sure you want to wipe the database? (y/n) ').upper()
         if confirm == 'Y':
             print('Deleting Database.', end='')
-            os.remove('%s/Codebase/database/db.sqlite' % os.getcwd())
-            print('.', end='')
-            db = init_db(False)  # Re-make db file to avoid errors
-            print('!')
+            try:
+                os.remove('%s/Codebase/database/db.sqlite' % os.getcwd())
+                print('.', end='')
+                db = init_db(False)  # Re-make db file to avoid errors
+                print('!')
+            except PermissionError as err:
+                print(err)
         else:
             print('Aborted')
 
     if db_generation:
         if multiphase:
             for phase in range(5):
-                multiphase_generator.generate_lookup_table(db, phase)
+                multiphase_generator.generate_lookup_table(db, phase, verbose)
         elif half_turn:
-            half_turn_generator.generate_lookup_table(db)
+            half_turn_generator.generate_lookup_table(db, verbose)
         else:
             confirm = ''
             while confirm != 'Y' and confirm != 'N':
-                confirm = input('Are you sure you want to generate the entire database? (y/n) ').upper()
+                confirm = input('Are you sure you want to generate the entire database?\n'
+                                'This will take a considerable amount of time (y/n) ').upper()
             if confirm == 'Y':
                 for phase in range(5):
-                    multiphase_generator.generate_lookup_table(db, phase)
-                half_turn_generator.generate_lookup_table(db)
+                    multiphase_generator.generate_lookup_table(db, phase, verbose)
+                half_turn_generator.generate_lookup_table(db, verbose)
     elif multiphase or half_turn or tree:
         solve_sequence = []
         cube = Cube(position)
@@ -266,22 +331,21 @@ def main():
         if multiphase:
             solve_sequence = multiphase_solve(db, cube.position, 5)
         if half_turn:
+            # Check that the Cube is valid by reducing colors
             if cube.position_reduced != Cube().position_reduced:
-                print('Invalid Half Turn Cube, reduced Cube should be solved but looks like this: \n%s' % Cube(
+                print("Invalid Half Turn Cube, reduced Cube should be 'solved' but looks like this: \n%s" % Cube(
                     cube.position_reduced))
                 exit()
             solve_sequence = half_turn_solve(db, cube.position)
         if tree:
             solve_sequence = tree_solve(cube.position)
 
-        print('- Final Sequence: ', end='')
-        for move in orient_sequence + solve_sequence:
-            print(move.name, end=' ')
+        # Print all the sequences for analysis
 
         robot_sequence = []
         for move in orient_sequence:
             robot_sequence.append(move.name.lower())
-        robot_sequence.extend(convert_sequence(cube, solve_sequence))
+        robot_sequence.extend(convert_sequence(cube, solve_sequence, verbose))
         print('\n- Robot Sequence: ', end='')
         for move in robot_sequence:
             print(move.upper(), end=' ')
@@ -291,31 +355,35 @@ def main():
             dyn_move(cube, move)
         print(cube)
 
+        # And then send the solve to the robot if possible
         if robot_on:
             conn.send(pickle.dumps(robot_sequence))
             conn.close()
 
 
 if __name__ == '__main__':
+    # Colorama allows for colored printing
     colorama.init()
     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
-    opts, args = getopt.getopt(sys.argv[1:], 'rdchmt')
+    opts, args = getopt.getopt(sys.argv[1:], 'rdchmtv')
     opts = dict(opts)
 
     if len(opts) == 0:
         print("""
 ------------------------------------
   OPTIONS:
-    -r : run with robot connection
-    -d : (continue) database generation
-    -c : clear the database
-    -h : half-turn generation/solve
-    -m : multiphase generation/solve
+    -r : Connect to Robot
+    -d : Generate Database, can also choose a method to refine generation
+    -c : Clear the entire database
+    -h : half-turn generation/solve method
+    -m : multiphase generation/solve method
     -t : tree solve
+    -v : verbose outputs
 ------------------------------------
         """)
     else:
+        # Check only one method is declared
         if ('-h' in opts and '-m' in opts) or ('-h' in opts and '-t' in opts) or ('-m' in opts and '-t' in opts):
             print('Please choose ONE method')
             exit()
