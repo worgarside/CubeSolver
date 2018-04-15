@@ -136,9 +136,9 @@ class Robot:
 
         if not stall_flag and not silent:
             self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=CS_SPEED)
-            self.cs_arm.wait_for_position(0)
+            self.cs_arm.wait_until_not_moving()
             self.grabber.run_to_abs_pos(position_sp=0, speed_sp=GRABBER_SPEED, ramp_down_sp=50)
-            self.grabber.wait_for_position(0)
+            self.grabber.wait_until_not_moving()
 
         sleep(1)
 
@@ -150,10 +150,12 @@ class Robot:
             Sound.tone([(800, 100, 0), (600, 150, 0), (400, 100, 0)]).wait()
         exit()
 
-    def rotate_cradle(self, angle=90):
+    def rotate_cradle(self, angle=90, wait=True):
         """
         Rotates the cradle by the provided angle
         :param angle: rotation angle in degrees
+        :param wait: boolean flag to tel the cradle to block the program until the motor is stationary
+            can be disabled to allow other motors to be moved concurrently
         """
         # 400 is 1/4 turn - 13.333:1 gear ratio
         mod_angle = angle * (40 / 9)
@@ -162,21 +164,20 @@ class Robot:
         self.cradle.speed_sp = CRADLE_SPEED
         pos = self.cradle.position + mod_angle
         self.cradle.run_to_abs_pos(position_sp=pos)
-        self.cradle.wait_until_not_moving()
-        sleep(0.05)
+        self.cradle.wait_until_not_moving() if wait else 0
 
     def grab_cube(self):
         """
         Rotates the cube in the x direction by moving the grabber to its 'keyframe' points
         """
         self.grabber.run_to_abs_pos(position_sp=GBR_GRAB_POS, speed_sp=GRABBER_SPEED * 1.5)
-        self.grabber.wait_for_position(GBR_GRAB_POS)
-
+        self.grabber.wait_until_not_moving()
+        sleep(0.01)
         self.grabber.run_to_abs_pos(position_sp=20, speed_sp=GRABBER_SPEED)
-        self.grabber.wait_for_position(0)
-
+        self.grabber.wait_until_not_moving()
+        sleep(0.01)
         self.grabber.run_to_abs_pos(position_sp=GBR_GUARD_POS, speed_sp=GRABBER_SPEED)
-        self.grabber.wait_for_position(GBR_GUARD_POS)
+        self.grabber.wait_until_not_moving()
 
         sleep(0.05)
 
@@ -212,12 +213,12 @@ class Robot:
 
         # Moves the grabber out of the way
         self.grabber.run_to_abs_pos(position_sp=GBR_NO_GUARD_POS, speed_sp=GRABBER_SPEED)
-        self.grabber.wait_for_position(GBR_NO_GUARD_POS)
+        self.grabber.wait_until_not_moving()
 
         for i in range(4):
             # Middle
             self.cs_arm.run_to_abs_pos(position_sp=CS_MID_POS, speed_sp=CS_SPEED)
-            self.cs_arm.wait_for_position(CS_MID_POS)
+            self.cs_arm.wait_until_not_moving()
             middle.append(COLOR_SCAN_DICT[self.color_sensor.value()])
 
             self.increment_progressbar()
@@ -226,7 +227,7 @@ class Robot:
             self.rotate_cradle(45)
 
             self.cs_arm.run_to_abs_pos(position_sp=CS_COR_POS, speed_sp=CS_SPEED)
-            self.cs_arm.wait_for_position(CS_COR_POS)
+            self.cs_arm.wait_until_not_moving()
 
             # Checks that the color sensor is not reading no color or too dark a value
             if self.color_sensor.value() not in [0, 1]:
@@ -241,7 +242,7 @@ class Robot:
 
         # Read centre cubie
         self.cs_arm.run_to_abs_pos(position_sp=CS_CEN_POS, speed_sp=CS_SPEED)
-        self.cs_arm.wait_for_position(CS_CEN_POS)
+        self.cs_arm.wait_until_not_moving()
         centre = COLOR_SCAN_DICT[self.color_sensor.value()]
 
         self.increment_progressbar()
@@ -275,7 +276,7 @@ class Robot:
 
             # Move grabber out of the way
             self.grabber.run_to_abs_pos(position_sp=GBR_NO_GUARD_POS, speed_sp=GRABBER_SPEED / 2)
-            self.grabber.wait_for_position(GBR_NO_GUARD_POS)
+            self.grabber.wait_until_not_moving()
 
             for i in range(len(faces)):
                 faces[i] = self.scan_up_face()
@@ -283,7 +284,7 @@ class Robot:
                 self.set_motor_brakes(self.cradle, 'coast')
 
                 self.cs_arm.run_to_abs_pos(position_sp=-300, speed_sp=CS_SPEED)
-                self.cs_arm.wait_for_position(-300)
+                self.cs_arm.wait_until_not_moving()
 
                 # Rotate 90 after fourth face to get to L-face and R-face
                 if i == 3:
@@ -295,6 +296,7 @@ class Robot:
 
                 # Extra X-move on fifth face to get from UP to DOWN
                 if i == 4:
+                    sleep(0.05)
                     self.grab_cube()
 
             self.cs_arm.run_to_abs_pos(position_sp=0, speed_sp=CS_SPEED)
@@ -353,7 +355,7 @@ class Robot:
     def r_move_d(self):
         # Set guards to block position
         self.grabber.run_to_abs_pos(position_sp=GBR_GUARD_POS, speed_sp=GRABBER_SPEED)
-        self.grabber.wait_for_position(GBR_GUARD_POS)
+        self.grabber.wait_until_not_moving()
 
         # Rotate Cradle -90
         self.rotate_cradle(-90)
@@ -361,7 +363,7 @@ class Robot:
     def r_move_not_d(self):
         # Set guards to block position
         self.grabber.run_to_abs_pos(position_sp=GBR_GUARD_POS, speed_sp=GRABBER_SPEED)
-        self.grabber.wait_for_position(GBR_GUARD_POS)
+        self.grabber.wait_until_not_moving()
 
         # Rotate Cradle 90
         self.rotate_cradle()
@@ -375,28 +377,29 @@ class Robot:
         self.grab_cube()
 
     def r_move_x2(self):
-        # Grab cube
+        # Grab cube twice
         self.grab_cube()
+        sleep(0.05)
         self.grab_cube()
 
     def r_move_y(self):
         # Remove guards
         self.grabber.run_to_abs_pos(position_sp=GBR_NO_GUARD_POS, speed_sp=GRABBER_SPEED)
-        self.grabber.wait_for_position(GBR_NO_GUARD_POS)
+        self.grabber.wait_until_not_moving()
         # Rotate Cradle 90
         self.rotate_cradle()
 
     def r_move_not_y(self):
         # Remove guards
         self.grabber.run_to_abs_pos(position_sp=GBR_NO_GUARD_POS, speed_sp=GRABBER_SPEED)
-        self.grabber.wait_for_position(GBR_NO_GUARD_POS)
+        self.grabber.wait_until_not_moving()
         # Rotate Cradle -90
         self.rotate_cradle(-90)
 
     def r_move_y2(self):
         # Remove guards
         self.grabber.run_to_abs_pos(position_sp=GBR_NO_GUARD_POS, speed_sp=GRABBER_SPEED)
-        self.grabber.wait_for_position(GBR_NO_GUARD_POS)
+        self.grabber.wait_until_not_moving()
         # Rotate Cradle 180
         self.rotate_cradle(180)
 
@@ -437,7 +440,7 @@ class Robot:
         Play a tune and spin the Cube once it has been solved as a way to end the program
         """
         self.grabber.run_to_abs_pos(position_sp=GBR_NO_GUARD_POS, speed_sp=GRABBER_SPEED/4)
-        self.grabber.wait_for_position(GBR_NO_GUARD_POS)
+        self.grabber.wait_until_not_moving()
         self.cradle.run_to_rel_pos(position_sp=800, speed_sp=255)
 
         Sound.tone(

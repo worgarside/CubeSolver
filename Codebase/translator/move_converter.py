@@ -84,10 +84,6 @@ def create_robot_solve_sequence(cube, color_sequence, verbose):
 
 
 def optimise_sequence(sequence):
-    print('\n')
-    for index, move in enumerate(sequence):
-        print(move, end=' ')
-    print()
 
     for index, move in enumerate(sequence):
         if index < len(sequence) - 1:
@@ -150,6 +146,4 @@ def optimise_sequence(sequence):
                 print('\nInvalid move length at index %i during post conversion optimisation: %s' % (index, move))
                 exit(1)
 
-    for index, move in enumerate(sequence):
-        print(move, end=' ')
     print('\n')
