@@ -31,6 +31,7 @@
 \usepackage{enumitem}			% Lettered enumerations
 \usepackage{tikz}				% flowcharts
 \usepackage{mdframed}			% borders on aside environment
+\usepackage[toc,page]{appendix}	% appendix package
 
 \usetikzlibrary{shapes.geometric, arrows, positioning}
 \tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black]
@@ -92,6 +93,7 @@
 \newcommand{\move}[1]{\uppercase{\texttt{\formatmovesnospace{#1}}}-move}
 \newcommand{\colour}[1]{\uppercase{\tit{\texttt{\formatmoves{#1}}}}}
 \newcommand{\slice}[1]{\uppercase{\texttt{\formatmovesnospace{#1}}}-slice}
+\newcommand{\depth}[1]{depth-#1}
 \newcommand{\uscore}{\texttt{\char`_}}
 
 \ExplSyntaxOn
@@ -214,6 +216,8 @@
 
 	\newpage
 	\tableofcontents
+   	\listoffigures
+	\listoftables
 	\newpage
 
 	\renewcommand{\thechapter}{\arabic{chapter}}
@@ -286,7 +290,7 @@
     
     When a computer solves a Cube (or any other similar puzzle), it does so by following set algorithms and rules until the solved state is achieved. Computers cannot use humanlike instincts, so we often try to provide a heuristic to make the task simpler. These heuristics can be pre-computed data tables to reduce the amount of processing at run time, or a reduction in the original data set by eliminating certain elements according to a set of rules.
     
-    In his 1997 paper on the use of pattern databases to increase solve efficiency, Richard Korf uses different heuristic functions and characterises how effective they are in reducing the number of moves in a solve sequence. His first method used an Iterative-Deepening A* algorithm, combined with the heuristic of the Manhattan distances from the edge cubies' current position and orientation to that which is desired. This reduced the time required to solve a Cube at depth-14 to three days\footnote{The simulation was run on a Sun Ultra-Sparc Model 1 workstation}, however when increased to depth-18 the time increased exponentially to two hundred and fifty years. After a re-evaluation, Korf modified the heuristic by pre-computing the Manhattan distance of each cubie from all of its possible positions and orientations and storing the table in memory at run-time. This created a table of nearly ninety-million entries - which would have been bigger but was restricted by the available memory (the table was approximately forty-two megabytes). The newer heuristic reduced the time to search at depth-18 to less than four weeks - a reduction of approximately 99.97\%. Korf suggested that the speed of the algorithm used would increase linearly with the amount of memory available, meaning that if it were run today the depth-18 search would take under three hours\footnote{This is based on the memory capacity of the Model 1 Workstation and a modern computer being 64MB and 16GB respectively.} \cite{Korf1997}.
+    In his 1997 paper on the use of pattern databases to increase solve efficiency, Richard Korf uses different heuristic functions and characterises how effective they are in reducing the number of moves in a solve sequence. His first method used an Iterative-Deepening A* algorithm, combined with the heuristic of the Manhattan distances from the edge cubies' current position and orientation to that which is desired. This reduced the time required to solve a Cube at \depth{14} to three days\footnote{The simulation was run on a Sun Ultra-Sparc Model 1 workstation}, however when increased to \depth{18} the time increased exponentially to two hundred and fifty years. After a re-evaluation, Korf modified the heuristic by pre-computing the Manhattan distance of each cubie from all of its possible positions and orientations and storing the table in memory at run-time. This created a table of nearly ninety-million entries - which would have been bigger but was restricted by the available memory (the table was approximately forty-two megabytes). The newer heuristic reduced the time to search at \depth{18} to less than four weeks - a reduction of approximately 99.97\%. Korf suggested that the speed of the algorithm used would increase linearly with the amount of memory available, meaning that if it were run today the \depth{18} search would take under three hours\footnote{This is based on the memory capacity of the Model 1 Workstation and a modern computer being 64MB and 16GB respectively.} \cite{Korf1997}.
     
    	\begin{table}[H]
     	\def\arraystretch{1.25}
@@ -1158,7 +1162,7 @@
     
     \section{Device-Specific Software}
     
-    The hardware capabilities of the EV3 control brick are perfectly adequate for controlling the EV3's sensors and actuators, performing non-processor intensive tasks, and managing wireless connections. However, it is absolutely inadequate for solving a Cube: one of the computers used by Richard Korf to generate a solution had an (at best) 167 \si{\mega\hertz} processor, with 64 \si{\mega\byte} of RAM, and he gave estimates of four weeks to search to depth-18 \cite{Korf1997}. The control brick has a 300 \si{\mega\hertz} processor and 64 \si{\mega\byte} of RAM - not much better than Korf's computer from 1997. The computer (referred to as the DevPC) that is being used for developing this project has a 3.6 \si{\giga\hertz} processor and 32 \si{\giga\byte} of RAM, meaning that the processing will be performed much quicker on it than on the EV3. If both the EV3 and the DevPC are to be used, two programs which connect to each other need to be written.
+    The hardware capabilities of the EV3 control brick are perfectly adequate for controlling the EV3's sensors and actuators, performing non-processor intensive tasks, and managing wireless connections. However, it is absolutely inadequate for solving a Cube: one of the computers used by Richard Korf to generate a solution had an (at best) 167 \si{\mega\hertz} processor, with 64 \si{\mega\byte} of RAM, and he gave estimates of four weeks to search to \depth{18} \cite{Korf1997}. The control brick has a 300 \si{\mega\hertz} processor and 64 \si{\mega\byte} of RAM - not much better than Korf's computer from 1997. The computer (referred to as the DevPC) that is being used for developing this project has a 3.6 \si{\giga\hertz} processor and 32 \si{\giga\byte} of RAM, meaning that the processing will be performed much quicker on it than on the EV3. If both the EV3 and the DevPC are to be used, two programs which connect to each other need to be written.
     
     Python's \propernoun{socket} module is used to connect the two programs: the DevPC creates a socket and binds it to a set port on its local IP address to listen for connections, and the program waits until a device connects; the EV3 creates a socket and attempts to connect to a hard-coded constant IP address. The timeout on the sockets is over two minutes, so the programs do not have to be started simultaneously. The methods used to establish the connection both return a connection object, which can be used to send and receive data at any point in the program. The sockets can be run asynchronously, but there is no advantage to this as there are no processes which can be run concurrently in the software, as shown above.
     
@@ -1258,9 +1262,9 @@
     
     The second object defined in the software is the \lstinline|Cube| object.  As well as the main \lstinline|Cube| class, there are four \lstinline|Enum| classes which are used in defining a \lstinline|Cube|: \lstinline|Color|, which has eight members - each representing a colour which the Lego sensor can \enquote{see} (\lstinline|NONE|, \lstinline|DARK|, \lstinline|WHITE|, \lstinline|ORANGE|, \lstinline|GREEN|, \lstinline|BLUE|, \lstinline|RED| and \lstinline|YELLOW|); \lstinline|Move|, an Enum with one member for each possible move; \lstinline|Face|, which has one member for each Cube face; and \lstinline|Rotation|, which is a simple Enum with only two members - \lstinline|CLOCKWISE| and \lstinline|COUNTER_CLOCKWISE|.
     
-    To store the position of a Cube, the three-dimensional Cube is turned into a two-dimensional net, which is then turned into a single string by \enquote{reading} the facelets from top to bottom, left to right as shown in Figure ???. The \lstinline|position| attribute can be accessed by calling \lstinline|Cube.position|, and a coloured net can be output by printing the \lstinline|Cube| object. A \lstinline|Cube| has two optional parameters upon initialisation. The first is the position, as a string. If this is omitted, it defaults to the solved position. The second argument is a boolean to state whether the Cube is temporary. If set to \lstinline|True|, some less commonly used attributes and methods are ignored to reduce memory usage and processing requirements.
+    To store the position of a Cube, the three-dimensional Cube is turned into a two-dimensional net, which is then turned into a single string by \enquote{reading} the facelets from top to bottom, left to right as shown in Listing \ref{lst:cubePrint}. The \lstinline|position| attribute can be accessed by calling \lstinline|Cube.position|, and a coloured net can be output by printing the \lstinline|Cube| object. A \lstinline|Cube| has two optional parameters upon initialisation. The first is the position, as a string. If this is omitted, it defaults to the solved position. The second argument is a boolean to state whether the Cube is temporary. If set to \lstinline|True|, some less commonly used attributes and methods are ignored to reduce memory usage and processing requirements.
     
-	\begin{lstlisting}[caption={The two different ways of accessing a Cube's position}]
+	\begin{lstlisting}[caption={The two different ways of accessing a Cube's position}, label={lst:cubePrint}]
 		>>> from cube_class import Cube
 		>>> cube = Cube()
 		>>> print(cube.position)
@@ -1284,27 +1288,37 @@
     
     To ensure that all the class attributes accurately describe the Cube's position at any given time, methods have been written to update all of the necessary attributes when the object is modified. As well as the setter methods, there are two getter methods. The first takes a keyword argument and returns a \lstinline|Color| object: the keyword is either \lstinline|'facelet'| which is an integer facelet reference, or \lstinline|'face'| to lookup that face's colour. The second getter method takes a \lstinline|Color| as an argument and returns the face which is that colour.
     
-    \section{Solve Method 1: Tree Solving}
+    \section{Solve Method 1: Tree Solving} \label{sec:treeSolving}
     
     During the development of this project, three main methods of solving the Cube were implemented. Each had it's own advantages and disadvantages and are discussed in this section and the following two.
     
-    The very first step in creating a reliable solve method was to create a reliable object class, and a data structure to store the object in. The \lstinline|Position| class defines an object with four attributes: the depth of the position; the position's string representation; the move sequence used to get to that position; and the ID of that position. Richard Korf discusses using a binary tree and an iterative deepening A* algorithm to solve a Cube in his 1997 paper \cite{Korf1997}. Korf also mentions using the Manhattan distance of the cubies as a heuristic to help improve the efficiency of the search algorithm. 
+    \subsection{Implementation}
+    
+    The very first step in creating a reliable solve method was to create a reliable object class, and a data structure to store the object in. The \lstinline|Position| class defines an object with four attributes: the depth of the position; the position's string representation; the move sequence used to get to that position; and the ID of that position. Richard Korf discusses using a search tree and an iterative deepening A* algorithm to solve a Cube in his 1997 paper \cite{Korf1997}. Korf also mentions using the Manhattan distance of the cubies as a heuristic to help improve the efficiency of the search algorithm. 
     
    	\begin{aside}
    		    It is important to note that a lot of the research into efficient solving algorithms was done between twenty and forty years ago, and is now lost to the abandonment of websites, mailing lists, and newsletters in favour of much simpler websites and blog posts with much less information and community interaction. Some of the data from the \enquote{golden age} of solving Cube's is available as large, disorganised archives  - but a lot of it was done before the days of commonplace online interaction, and the amount of data available to assist in the design and implementation of solve methods is far more limited than is desirable if one has no contacts in the world of Rubik's Cube solving. This all means that some of the development hit a premature dead end and was abandoned in favour of attempting a larger range of methods for cross-comparison.
    	\end{aside}
 
+    Having evaluated the available information abiut the use of search trees and spaces in solving a Cube, it seemed like it could actualky be a fairly rrivial task: use a moveset to manioulte a Cube until it is solved; a lot of positions can be eliminated through duplication checking and other optimisations; and the code to create a recursive search space will also be relatively simple. This assumption was soon proved very wrong.
+    
+    The data structure used for the search space was a dictionary, with the keys set to the depth of the positions in the array which was used as the values. A \lstinline|while| loop meant that the program would continue to search until the \lstinline|solved| flag was set to \lstinline|true|. Inside the \lstinline|while| loop, a nested \lstinline|for| loop iterated through the values in the dictionary at the previous depth, and a second nested \lstinline|for| loop applied each move in the defined moveset to each position. In order to observe the progress being made by the tree generator, a graphical user interface (GUI) was created to display the time elapsed, current depth, position count and move sequence, alongside a graphical representation of the Cube. To take full advantage of Python's versatility, the \propernoun{multiprocessing} package was imported to separate the generation and GUI processes on to different cores in the computer's CPU. Multiprocessing was chosen over multithreading due to the complete separation of processes - different threads still operate on the same CPU core so don't take full advantage of a computer's processing power - and inherent increase in processing speed. Although this complete separation meant the processing speed was increased, it presented a challenge in getting the positions from the generator to the GUI across completely distinct memory locations. The easy solution would have been to just abandon the GUI development and continue with the development of a solving tree generator. However this would provide very little data to analyse, and after all, this is a research project.
+    
+    A \lstinline|LifoQueue|, which is a data structure provided by the multiprocessing package, was used to bridge the gap between the two processes. It was used as a parameter in the creation of the two processes, providing a pointer back to its memory location whenever necessary. A \tit{LIFO} queue was used rather than a \tit{FIFO} queue because positions were generated faster than the GUI could update, causing a lag in the GUI as it worked through the ever-growing queue and reducing its effectiveness. The disadvantage of the LIFO format was that positions which were skipped by the GUI were left in the queue with no further use. Although this increased total memory usage, the older positions were committed to a pagefile, reducing the impact on memory to an acceptable level.
+    
+    \subsection{Testing}
+
+	The tree solving method is run with a single argument: the position of a Cube, either returned by the robot after scanning a real Cube or entered manually. The first test for the tree solve was the position of a Cube at \depth{3} (created by \movesequence{u.d.l}). The solve time for this depth was ??? - but it soon became clear that this was best case for \depth{3}. The solve time varied greatly depending on the move sequence used to mix the Cube (assuming the invariance of the tree generator's moveset): the closer the moves used were to the start of the moveset, the closer the solve position was to the start of the depth in the tree.
+    
     
     
 	\section{Method 2: Multiphase Group Solve}
-	\section{Method 3: Single Group Half Turn Solve}
 	
-    \section{Database}
-    
-    
-    
-    
-    
+	Having accepted the implementation of a tree-based solve method to ultimately be a failure, the next best method was to follow the research performed decades ago when the Cube was first being efficiently solved by computers. Of the eleven major developments made in finding God's Number \cite{Rokicki2010}, the majority rely solely on group theory combined with optimisations. The main form of documentation for these developments was a mailing list that approximately three hundred people subscribed and contributed their work on Rubik's Cube to \cite{Schoenert1996}. The most complete version of the mailing list was retrieved from a German research university \cite{Schoenert1996}, \cite{RWTHAachenUniversity} to try and extract the most useful method. After tedious hours spent poring through the archived emails, Hans Kloosterman's method of solving a Cube in forty-two moves seemed the most viable for this project. Rik van Grol, a Dutch mathematician and Rubik's Cube enthusiast who ran the newsletter \propernoun{Cubism for Fun}, was kind enough to provide images of a copy of the issue containing Kloosterman's article \cite{Kloosterman1990}, which are attached in Appendix \ref{app:kloostermanCFF}.
+	
+	The code used to generate the tree in section 
+	
+	\section{Method 3: Single Group Half Turn Solve}
     
     
     
@@ -1315,12 +1329,32 @@
     \chapter{Conclusions}
     
     \newpage
-    \begin{appendix}  
-    	\listoffigures
-    	\listoftables
+    \begin{appendices}  
+		\chapter{Rubik's Cube in 42 Moves}
+		\begin{figure}[H]
+			\centering
+			\begin{subfigure}[b]{0.45\textwidth}
+				\includegraphics[width=\textwidth]{Resources/Images/appKloosterman1.jpg}
+			\end{subfigure}
+			\hspace{10mm}
+			\begin{subfigure}[b]{0.45\textwidth}
+				\includegraphics[width=\textwidth]{Resources/Images/appKloosterman2.jpg}
+			\end{subfigure}
+			\vskip\baselineskip
+			\begin{subfigure}[b]{0.45\textwidth}
+				\includegraphics[width=\textwidth]{Resources/Images/appKloosterman3.jpg}
+			\end{subfigure}
+			\hspace{10mm}
+			\begin{subfigure}[b]{0.45\textwidth}
+				\includegraphics[width=\textwidth]{Resources/Images/appKloosterman4.jpg}
+			\end{subfigure}
+			\caption{Hans Kloosterman's article in \propernoun{Cubism for Fun} \cite{Kloosterman1990}, provided by Rik van Grol}
+			\label{app:kloostermanCFF}
+		\end{figure}
+	
     	\newpage
     	\bibliographystyle{ieeetr}
     	\bibliography{Dissertation}
-    \end{appendix}
-    
+    \end{appendices}
+
 \end{document}

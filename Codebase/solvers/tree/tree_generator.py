@@ -21,11 +21,11 @@ def generate_tree(cube, moveset, queue):
     while not solved:
         positions[depth] = []
         # For all previous depth positions, perform each of the moves on each position
-        for p in positions[depth - 1]:
+        for pos_object in positions[depth - 1]:
             for m in moveset:
-                c = Cube(p.position)
+                c = Cube(pos_object.position)
                 dyn_move(c, m)
-                new_pos = Position(depth, c.position, p.move_sequence + [m], current_id)
+                new_pos = Position(depth, c.position, pos_object.move_sequence + [m], current_id)
 
                 if valid_pos(c.position, position_set):
                     current_id += 1
