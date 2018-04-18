@@ -78,6 +78,9 @@ class Position:
         self.move_sequence = move_sequence
         self.pos_id = pos_id
 
+    def __str__(self):
+        return '%i %s %s %i' % (self.depth, self.position, [x.name for x in self.move_sequence], self.pos_id)
+
 
 class Cube:
     """
