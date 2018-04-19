@@ -88,6 +88,7 @@
 \newcommand{\legopiece}[1]{(\#\tbo{#1})}
 \newcommand{\moveset}[1]{\uppercase{\texttt{\{\formatmoves{#1}\}}}}
 \newcommand{\movesequence}[1]{\uppercase{\texttt{:\formatmoves{#1}:}}}
+\newcommand{\movesequencenospace}[1]{\uppercase{\texttt{:\formatmovesnospace{#1}:}}}
 \newcommand{\movegroup}[1]{\uppercase{\texttt{\formatmoves{#1}}}}
 \newcommand{\face}[1]{\uppercase{\texttt{\formatmovesnospace{#1}}}-face}
 \newcommand{\move}[1]{\uppercase{\texttt{\formatmovesnospace{#1}}}-move}
@@ -109,11 +110,11 @@
 
 \NewDocumentCommand{\formatmovesnospace}{m}
 {
-	\tl_set:Nn \l__maxd_argument_tl { #1 }
-	\tl_replace_all:Nnn \l__maxd_argument_tl { ' } { ' }
-	\tl_replace_all:Nnn \l__maxd_argument_tl { . } { \; }
-	\tl_replace_all:Nnn \l__maxd_argument_tl { ~ } { \; }
-	\tl_replace_all:Nnn \l__maxd_argument_tl { 2 } { \textsuperscript{2} }
+	\tl_set:Nn \l__maxd_argument_tl {#1}
+	\tl_replace_all:Nnn \l__maxd_argument_tl {'} {'}
+	\tl_replace_all:Nnn \l__maxd_argument_tl {.} {\;}
+	\tl_replace_all:Nnn \l__maxd_argument_tl {~} {\;}
+	\tl_replace_all:Nnn \l__maxd_argument_tl {2} {\textsuperscript{2}}
 	\tl_use:N \l__maxd_argument_tl
 }
 
@@ -211,8 +212,6 @@
 		\footnote{\label{footnote:cube}This Dissertation is only dealing with 3x3x3 Rubik's Cubes, and any discussion of alternative dimensions will be explicitly stated.}
 		\footnote{\label{footnote:metric}For this Dissertation the Half Turn Metric is used unless explicitly stated.}		
 	}
-
-
 
 	\newpage
 	\tableofcontents
@@ -324,7 +323,7 @@
    	\begin{figure}[h]
     	\begin{center}
 			\begin{tikzpicture}
-				\begin{axis}[title={God's Number}, date coordinates in=x,	enlarge x limits=false, xticklabel={\year},	date ZERO=1980-01-01, xmin=1980-01-01, xmax=2020-01-01,	xtick={1980-01-02,1990-01-01,2000-01-01,2010-01-01,2020-01-01}]
+				\begin{axis}[title={God's Number}, axis lines = left, date coordinates in=x,	enlarge x limits=false, xticklabel={\year},	date ZERO=1980-01-01, xmin=1980-01-01, xmax=2020-01-01,	xtick={1980-01-02,1990-01-01,2000-01-01,2010-01-01,2020-01-01}, ylabel = Sequence Length, xlabel=Year]
 				\addplot coordinates {
 					(1981-07-01, 52)
 					(1990-12-01, 42)
@@ -484,7 +483,7 @@
     \newpage
     
     \chapter[Design, Implementation and Testing: The Robot]{Design, Implementation \\ and Testing: The Robot} \label{chp:designRobot}
-    \epigraph{I don’t spend my time pontificating about high-concept things. I spend my time solving engineering and manufacturing problems}{Elon Musk\cite{Ohnsman2013}}
+    \epigraph{I don't spend my time pontificating about high-concept things. I spend my time solving engineering and manufacturing problems.}{Elon Musk\cite{Ohnsman2013}}
     
 	\section{Introduction}
 	
@@ -1239,7 +1238,7 @@
     &\implies				\;	\movesequence{U.F}	\;	\rightarrow			\;	\movesequence{\tbo{X}.\tbo{X}.\tbo{d}.\tun{G}}			\\
     \movesequence{\tun{G}}	\;	&\rightarrow		\;	\movesequence{B}																\\
     \movesequence{B}		\;	&\rightarrow		\;	\movesequence{X.D}																\\
-    &\implies				\;	\movesequence{U.F}	\;	\rightarrow			\;	\movesequence{\tbo{X}.\tbo{X}.\tbo{d}.\tbo{X}.\tbo{d}}	\\
+    &\implies				\;	\movesequence{U.F}	\;	\rightarrow			\;	\movesequence{\tbo{X}.\tbo{X}.\tbo{d}.\tbo{X}.\tbo{d}}
     \end{align*}
     
     This final move sequence will then be transmitted to the robot and used to control the motors to manipulate the Cube. % TODO: do some analysis about runtime of translation
@@ -1308,9 +1307,49 @@
     
     \subsection{Testing}
 
-	The tree solving method is run with a single argument: the position of a Cube, either returned by the robot after scanning a real Cube or entered manually. The first test for the tree solve was the position of a Cube at \depth{3} (created by \movesequence{l'd'u'}). The solve time for this depth was ??? - but it soon became clear that this was best case for \depth{3}. The solve time varied greatly depending on the move sequence used to mix the Cube (assuming the invariance of the tree generator's moveset): the closer the moves used were to the start of the moveset, the closer the solve position was to the start of the depth in the tree.
+	The tree solving method is run with a single argument: the position of a Cube, either returned by the robot after scanning a real Cube or entered manually. The first test for the tree solve was the position of a Cube at \depth{3} (created by \movesequencenospace{l'd'u'}). The solve time for this depth was 0.522 \si{\second} - but it soon became clear that this was best case for \depth{3}. The solve time varied greatly depending on the move sequence used to mix the Cube (assuming the invariance of the tree generator's moveset): the closer the moves used were to the start of the moveset, the closer the solve position was to the start of the depth in the tree.
+    
+   	\begin{figure}[H]
+    	\begin{center}
+    		\begin{tikzpicture}
+    		\begin{axis}[title={Tree Solve Times}, axis lines = left, legend pos=north west, xlabel = Depth, ylabel = Solve Time /\si{\second}, ymode=log]
+    		\addplot coordinates {
+    			(1, 0.038)
+    			(2, 0.467)
+    			(3, 6.545)
+    			(4, 87.324)
+    			(5, 1149.732)
+    			(6, 14750)
+    		};
+    		\addplot coordinates {
+    			(1, 0.007)
+    			(2, 0.048)
+    			(3, 0.522)
+    			(4, 6.53)
+    			(5, 86.904)
+    			(6, 1165.35)
+    		};
+    		\legend{Worst Case, Best Case}
+    		\end{axis}
+    		\end{tikzpicture}
+    		\caption{The time difference increased exponentially for each depth}
+    		\label{fig:treeSolveGraph}
+    	\end{center}
+    \end{figure}
+    
+    Figure \ref{fig:treeSolveGraph} is a graph of the solve depths against the time taken to solve them, and shows the best case and worst case times for each depth. The data used to create the graph is attached in Appendix \ref{tab:treeSolveTimes}, and shows the sequence used to mix the Cube as well as the solve time and the number of positions generated to find the solution. The position numbers for the \depth{$n$} worst case and \depth{$(n+1)$} are consecutive, which proves that the positions are definitely the best and worst cases for each depth.
+    
+    The Y axis of the graph uses a logarithmic scale, because the time taken (regardless of best or worst case) for each depth increased by an average factor of 13.59. This also meant that the variance in the times increased exponentially, with a recorded maximum of ??? at \depth{6}. The average growth factor for the solve time times can be used to generate a predicted time for each depth by using the following formula, where $t_d$ id the time to solve \depth{$d$}:
     
     
+   	\begin{align*}
+   	\text{Best Case:}\hspace{7.5mm} 		&	t_d = 1165.35 \times 13.59^{d-6} \\
+	\text{Worst Case:}\hspace{7.5mm}	 	&	t_d = 14750.00 \times 13.59^{d-6}
+   	\end{align*}
+   	
+   	% TODO: update the worst case number
+    
+    However, the prediction breaks down past \depth{17}, where the predicted number of predictions surpasses the maximum number of available positions. The prediction of positions per depth follows a constant trajectory, whilst in reality the number of positions at each depth increases steadily then sharply decreases.
     
 	\section{Method 2: Multiphase Group Solve}
 	
@@ -1329,8 +1368,55 @@
     \chapter{Conclusions}
     
     \newpage
-    \begin{appendices}  
-		\chapter{Rubik's Cube in 42 Moves}
+    \begin{appendices}
+		\chapter{Tables}
+	   	\begin{table}[H]
+			\def\arraystretch{1.25}
+			\centering
+			\caption{Developments in God's Number}
+			\label{tab:godsNumber}
+			\begin{tabular}{M{0.16\textwidth}M{0.16\textwidth}M{0.16\textwidth}}
+				\toprule
+				\tbo{Date} & \tbo{Lower Bound} & \tbo{Upper Bound} \\
+				\midrule
+				July, 1981	&	18	&	52 \\
+				Dec, 1990	&	18	&	42 \\
+				May, 1992	&	18	&	39 \\
+				May, 1992	&	18	&	37 \\
+				Jan, 1995	&	18	&	29 \\
+				Jan, 1995	&	20	&	29 \\
+				Dec, 2005	&	20	&	28 \\
+				Apr, 2006	&	20	&	27 \\
+				May, 2007	&	20	&	26 \\
+				Mar, 2008	&	20	&	25 \\
+				Apr, 2008	&	20	&	23 \\
+				Aug, 2008	&	20	&	22 \\
+				July, 2010	&	20	&	20 \\
+				\bottomrule
+			\end{tabular}
+		\end{table}
+				
+		\begin{table}[H]
+			\def\arraystretch{1.25}
+			\centering
+			\caption{The best and worst case times for solving each depth}
+			\label{tab:treeSolveTimes}
+			\begin{tabular}{M{0.075\textwidth}M{0.175\textwidth}M{0.1\textwidth}M{0.1\textwidth}M{0.175\textwidth}M{0.1\textwidth}M{0.1\textwidth}}
+				\toprule
+				\multirow{ 2}{*}{\tbo{Depth}} & \multicolumn{3}{c}{\tbo{Best Case}} & \multicolumn{3}{c}{\tbo{Worst Case}} \\
+				& Mix & Time /\si{\second} & Pos Num & Mix & Time /\si{\second} & Pos Num \\
+				\midrule
+				1	&	\movesequencenospace{u'}	&	0.007	&	0	&	\movesequencenospace{b2}	&	0.038	&	17	\\
+				2	&	\movesequencenospace{u'u}	&	0.048	&	18	&	\movesequencenospace{r2b2}	&	0.467	&	261	\\
+				3	&	\movesequencenospace{l'd'u'}	&	0.522	&	262	&	\movesequencenospace{b2r2b2}	&	6.545	&	3501	\\
+				4	&	\movesequencenospace{u'l'd'u'}	&	6.530	&	3502	&	\movesequencenospace{r2b2r2b2}	&	87.324	&	46740	\\
+				5	&	\movesequencenospace{d'u'l'd'u'}	&	86.904	&	46741	&	\movesequencenospace{b.r2b2r2b2}	&	1149.732	&	621648	\\
+				6	&	\movesequencenospace{l'd'u'l'd'u'}	&	1165.350	&	621649	&		&		&	\\
+				\bottomrule
+			\end{tabular}
+		\end{table}
+		
+		\chapter{Figures}
 		\begin{figure}[H]
 			\centering
 			\begin{subfigure}[b]{0.45\textwidth}
