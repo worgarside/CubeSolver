@@ -24,6 +24,8 @@ import solvers.half_turn.table_generator as half_turn_generator
 import solvers.half_turn.table_lookup as half_turn_lookup
 import solvers.multiphase.table_generator as multiphase_generator
 import solvers.multiphase.table_lookup as multiphase_lookup
+import solvers.robot_moves_only.table_generator as robot_only_generator
+import solvers.robot_moves_only.table_lookup as robot_only_lookup
 from cube.cube_class import Cube, Color, Move, Face
 from cube.moves import dyn_move
 from database.database_manager import DatabaseManager
@@ -123,6 +125,23 @@ def half_turn_solve(db, position):
     """
     print('- Table Lookup: ', end='')
     solve_sequence = half_turn_lookup.lookup_position(db, position)
+    temp_cube = Cube(position)
+    for move in solve_sequence:
+        dyn_move(temp_cube, move)
+        print(move.name, end=' ')
+    print()
+    return solve_sequence
+
+
+def robot_only_solve(db, position):
+    """
+    Solve the Cube with robot moves only
+    :param db: Database connection
+    :param position: The mixed position
+    :return: The solve sequence from the table
+    """
+    print('- Table Lookup: ', end='')
+    solve_sequence = robot_only_lookup.lookup_position(db, position)
     temp_cube = Cube(position)
     for move in solve_sequence:
         dyn_move(temp_cube, move)
@@ -276,6 +295,7 @@ def main():
     db_clear = '-c' in opts
     half_turn = '-h' in opts
     multiphase = '-m' in opts
+    robot_only = '-b' in opts
     tree = '-t' in opts
     verbose = '-v' in opts
 
@@ -288,7 +308,7 @@ def main():
         conn = create_socket()
         position = get_robot_scan(conn)
         print('Scanned position: %s' % position)
-    elif not db_generation and (half_turn or multiphase or tree):  # Solving without robot
+    elif not db_generation and (half_turn or multiphase or tree or robot_only):  # Solving without robot
         position = ''
         while len(position) != 54:
             position = input('Enter a position: ').upper()
@@ -316,6 +336,8 @@ def main():
                 multiphase_generator.generate_lookup_table(db, phase, verbose)
         elif half_turn:
             half_turn_generator.generate_lookup_table(db, verbose)
+        elif robot_only:
+            robot_only_generator.generate_lookup_table(db, verbose)
         else:
             confirm = ''
             while confirm != 'Y' and confirm != 'N':
@@ -325,7 +347,7 @@ def main():
                 for phase in range(5):
                     multiphase_generator.generate_lookup_table(db, phase, verbose)
                 half_turn_generator.generate_lookup_table(db, verbose)
-    elif multiphase or half_turn or tree:
+    elif multiphase or half_turn or tree or robot_only:
         solve_sequence = []
         cube = Cube(position)
         print('Cube: \n%s' % cube)
@@ -341,6 +363,8 @@ def main():
                     cube.position_reduced))
                 exit()
             solve_sequence = half_turn_solve(db, cube.position)
+        if robot_only:
+            solve_sequence = robot_only_solve(db, cube.position)
         if tree:
             solve_sequence = tree_solve(cube.position)
 
@@ -371,7 +395,7 @@ if __name__ == '__main__':
     print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
-    opts, args = getopt.getopt(sys.argv[1:], 'rdchmtv')
+    opts, args = getopt.getopt(sys.argv[1:], 'rdchmtvb')
     opts = dict(opts)
 
     if len(opts) == 0:
@@ -383,7 +407,8 @@ if __name__ == '__main__':
     -c : Clear the entire database
     -h : half-turn generation/solve method
     -m : multiphase generation/solve method
-    -t : tree solve
+    -t : tree solve method
+    -b : robot only generation/solve method
     -v : verbose outputs
 ------------------------------------
         """)
