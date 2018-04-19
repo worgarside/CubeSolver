@@ -312,7 +312,7 @@ def main():
 
     if db_generation:
         if multiphase:
-            for phase in range(5):
+            for phase in range(4):
                 multiphase_generator.generate_lookup_table(db, phase, verbose)
         elif half_turn:
             half_turn_generator.generate_lookup_table(db, verbose)
@@ -368,6 +368,7 @@ def main():
 if __name__ == '__main__':
     # Colorama allows for colored printing
     colorama.init()
+    print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
     opts, args = getopt.getopt(sys.argv[1:], 'rdchmtv')
