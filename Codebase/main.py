@@ -165,18 +165,22 @@ def tree_solve(position):
 
     tree_process.terminate()  # kill process when window is closed
 
-    # Retrieve the solve sequence and delete the file
-    with open('Codebase/solvers/tree/solution.pickle', 'rb') as solution_file:
-        pickled_sequence = pickle.load(solution_file)
-    os.remove('Codebase/solvers/tree/solution.pickle')
+    try:
+        # Retrieve the solve sequence and delete the file
+        with open('Codebase/solvers/tree/solution.pickle', 'rb') as solution_file:
+            pickled_sequence = pickle.load(solution_file)
+        os.remove('Codebase/solvers/tree/solution.pickle')
 
-    solve_sequence = []
-    print('\n- Solve Sequence: ', end='')
-    for move in pickled_sequence:
-        solve_sequence.append(move)
-        print(move.name, end=' ')
-    print()
-    return solve_sequence
+        solve_sequence = []
+        print('\n- Solve Sequence: ', end='')
+        for move in pickled_sequence:
+            solve_sequence.append(move)
+            print(move.name, end=' ')
+        print()
+        return solve_sequence
+    except FileNotFoundError as err:
+        print(err)
+        exit()
 
 
 def time_method(method, *arguments):

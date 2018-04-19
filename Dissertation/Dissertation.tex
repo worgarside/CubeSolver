@@ -1299,11 +1299,13 @@
    		    It is important to note that a lot of the research into efficient solving algorithms was done between twenty and forty years ago, and is now lost to the abandonment of websites, mailing lists, and newsletters in favour of much simpler websites and blog posts with much less information and community interaction. Some of the data from the \enquote{golden age} of solving Cube's is available as large, disorganised archives  - but a lot of it was done before the days of commonplace online interaction, and the amount of data available to assist in the design and implementation of solve methods is far more limited than is desirable if one has no contacts in the world of Rubik's Cube solving. This all means that some of the development hit a premature dead end and was abandoned in favour of attempting a larger range of methods for cross-comparison.
    	\end{aside}
 
-    Having evaluated the available information abiut the use of search trees and spaces in solving a Cube, it seemed like it could actualky be a fairly rrivial task: use a moveset to manioulte a Cube until it is solved; a lot of positions can be eliminated through duplication checking and other optimisations; and the code to create a recursive search space will also be relatively simple. This assumption was soon proved very wrong.
+    Having evaluated the available information about the use of search trees and spaces in solving a Cube, it seemed like it could actually be a fairly trivial task: use a moveset to manipulate a Cube until it is solved; a lot of positions can be eliminated through duplication checking and other optimisations; and the code to create a recursive search space will also be relatively simple. This assumption was soon proved very wrong.
     
-    The data structure used for the search space was a dictionary, with the keys set to the depth of the positions in the array which was used as the values. A \lstinline|while| loop meant that the program would continue to search until the \lstinline|solved| flag was set to \lstinline|true|. Inside the \lstinline|while| loop, a nested \lstinline|for| loop iterated through the values in the dictionary at the previous depth, and a second nested \lstinline|for| loop applied each move in the defined moveset to each position. In order to observe the progress being made by the tree generator, a graphical user interface (GUI) was created to display the time elapsed, current depth, position count and move sequence, alongside a graphical representation of the Cube. To take full advantage of Python's versatility, the \propernoun{multiprocessing} package was imported to separate the generation and GUI processes on to different cores in the computer's CPU. Multiprocessing was chosen over multithreading due to the complete separation of processes - different threads still operate on the same CPU core so don't take full advantage of a computer's processing power - and inherent increase in processing speed. Although this complete separation meant the processing speed was increased, it presented a challenge in getting the positions from the generator to the GUI across completely distinct memory locations. The easy solution would have been to just abandon the GUI development and continue with the development of a solving tree generator. However this would provide very little data to analyse, and after all, this is a research project.
+    A dictionary was used for storing the search space, with the positions at each depth stored as the values and the depths as the keys. Inside a \lstinline|while not solved| loop, a nested \lstinline|for| loop iterated through the values in the dictionary at the previous depth, and a second nested \lstinline|for| loop applied each move in the defined moveset to each position. The only optimisations applied to the generations was the use of a set to hold the previously generated positions for duplication checking. This optimisation reduced the time required to solve a Cube at \depth{n} by an approximate factor of $0.45n$, and the number of positions by $0.58n$.
     
-    A \lstinline|LifoQueue|, which is a data structure provided by the multiprocessing package, was used to bridge the gap between the two processes. It was used as a parameter in the creation of the two processes, providing a pointer back to its memory location whenever necessary. A \tit{LIFO} queue was used rather than a \tit{FIFO} queue because positions were generated faster than the GUI could update, causing a lag in the GUI as it worked through the ever-growing queue and reducing its effectiveness. The disadvantage of the LIFO format was that positions which were skipped by the GUI were left in the queue with no further use. Although this increased total memory usage, the older positions were committed to a pagefile, reducing the impact on memory to an acceptable level.
+    In order to observe the progress being made by the tree generator, a graphical user interface (GUI) was created to display the time elapsed, current depth, position count and move sequence, alongside a graphical representation of the Cube. To take full advantage of Python's versatility, the \propernoun{multiprocessing} package was imported to separate the generation and GUI processes on to different cores in the computer's CPU. Multiprocessing was chosen over multithreading due to the complete separation of processes - different threads still operate on the same CPU core so don't take full advantage of a computer's processing power - and inherent increase in processing speed. Although this complete separation meant the processing speed was increased, it presented a challenge in getting the positions from the generator to the GUI across completely distinct memory locations.
+    
+    A \lstinline|LifoQueue| was used to bridge the gap between the two processes. It was used as a parameter in the creation of the two processes, providing a pointer back to its memory location whenever necessary. A \tit{LIFO} queue was used rather than a \tit{FIFO} queue because positions were generated faster than the GUI could update, causing a lag in the GUI as it worked through the ever-growing queue and reducing its effectiveness. The disadvantage of the LIFO format was that positions which were skipped by the GUI were left in the queue with no further use. Although this increased total memory usage, the older positions were committed to a pagefile, reducing the impact on memory to an acceptable level.
     
     \subsection{Testing}
 
@@ -1339,25 +1341,25 @@
     
     Figure \ref{fig:treeSolveGraph} is a graph of the solve depths against the time taken to solve them, and shows the best case and worst case times for each depth. The data used to create the graph is attached in Appendix \ref{tab:treeSolveTimes}, and shows the sequence used to mix the Cube as well as the solve time and the number of positions generated to find the solution. The position numbers for the \depth{$n$} worst case and \depth{$(n+1)$} are consecutive, which proves that the positions are definitely the best and worst cases for each depth.
     
-    The Y axis of the graph uses a logarithmic scale, because the time taken (regardless of best or worst case) for each depth increased by an average factor of 13.59. This also meant that the variance in the times increased exponentially, with a recorded maximum of ??? at \depth{6}. The average growth factor for the solve time times can be used to generate a predicted time for each depth by using the following formula, where $t_d$ id the time to solve \depth{$d$}:
-    
-    
+    The Y axis of the graph uses a logarithmic scale because the time taken (regardless of best or worst case) for each depth increased by an average factor of 13.59. This also meant that the variance in the times increased exponentially, with a recorded maximum of 15053.42 at \depth{6}. The average growth factor for the solve time times can be used to generate a predicted time for each depth by using the following formula, where $t_d$ is the time to solve \depth{$d$}:
    	\begin{align*}
-   	\text{Best Case:}\hspace{7.5mm} 		&	t_d = 1165.35 \times 13.59^{d-6} \\
-	\text{Worst Case:}\hspace{7.5mm}	 	&	t_d = 14750.00 \times 13.59^{d-6}
+   	\text{Best Case:}\hspace{7.5mm} 	&	t_d = 1165.35 \times 13.59^{d-6} \\
+	\text{Worst Case:}\hspace{7.5mm}	&	t_d = 15053.42 \times 13.59^{d-6}
    	\end{align*}
    	
-   	% TODO: update the worst case number
+    However, the prediction breaks down past \depth{17}, where the predicted number of unique positions surpasses the maximum number of available positions. The prediction of unique positions per depth follows a constant trajectory, whilst in reality the number at each depth increases steadily then sharply decreases at \depth{17}. The predicted times and positions are listed in Appendix \ref{tab:treeSolvePredictions}.
     
-    However, the prediction breaks down past \depth{17}, where the predicted number of predictions surpasses the maximum number of available positions. The prediction of positions per depth follows a constant trajectory, whilst in reality the number of positions at each depth increases steadily then sharply decreases.
+    The extensive time required for a solution to be returned meant that the method was completely impractical past \depth{5}. Further optimisations to the tree generator were either too small to make a sizeable difference, or too complex or poorly documented to be implemented successfully. An example of the latter is the use of \enquote{pruning tables}, which is discussed later.
     
-	\section{Method 2: Multiphase Group Solve}
+	\section{Method 2: Multiphase Solver}
 	
-	Having accepted the implementation of a tree-based solve method to ultimately be a failure, the next best method was to follow the research performed decades ago when the Cube was first being efficiently solved by computers. Of the eleven major developments made in finding God's Number \cite{Rokicki2010}, the majority rely solely on group theory combined with optimisations. The main form of documentation for these developments was a mailing list that approximately three hundred people subscribed and contributed their work on Rubik's Cube to \cite{Schoenert1996}. The most complete version of the mailing list was retrieved from a German research university \cite{Schoenert1996}, \cite{RWTHAachenUniversity} to try and extract the most useful method. After tedious hours spent poring through the archived emails, Hans Kloosterman's method of solving a Cube in forty-two moves seemed the most viable for this project. Rik van Grol, a Dutch mathematician and Rubik's Cube enthusiast who ran the newsletter \propernoun{Cubism for Fun}, was kind enough to provide images of a copy of the issue containing Kloosterman's article \cite{Kloosterman1990}, which are attached in Appendix \ref{app:kloostermanCFF}.
+	Having accepted the implementation of a tree-based solve method to ultimately be non-viable, the next best method was to follow the research performed decades ago when Rubik's Cube was first being efficiently solved by computers. Of the eleven major developments made in finding God's Number \cite{Rokicki2010}, the majority rely solely on group theory combined with optimisations. The main form of documentation for these developments was a mailing list that approximately three hundred people subscribed and contributed their work on Rubik's Cube to \cite{Schoenert1996}: the most complete archive of the mailing list was retrieved from a German research university \cite{Schoenert1996}, \cite{RWTHAachenUniversity} to try and extract the most useful method. After tedious hours spent poring through the archived emails, Hans Kloosterman's method of solving a Cube in forty-two moves seemed the most viable for this project. Rik van Grol, a Dutch mathematician and Rubik's Cube enthusiast who ran the newsletter \propernoun{Cubism for Fun}, was kind enough to provide images of a copy of the issue containing Kloosterman's article \cite{Kloosterman1990}, which are attached in Appendix \ref{app:kloostermanCFF}.	The majority of this method is \tit{inferred} from Kloosterman's article, rather than read as stated facts and rules, and as such may not be true to the original methodology.
 	
+	\enquote{Rubik's Cube in 42 Moves} describes the use of four phases, each with a specific purpose to allow progression into the next phase.
+
 	The code used to generate the tree in section 
 	
-	\section{Method 3: Single Group Half Turn Solve}
+	\section{Method 3: Single Phase Half-Turn Solver}
     
     
     
@@ -1411,10 +1413,40 @@
 				3	&	\movesequencenospace{l'd'u'}	&	0.522	&	262	&	\movesequencenospace{b2r2b2}	&	6.545	&	3501	\\
 				4	&	\movesequencenospace{u'l'd'u'}	&	6.530	&	3502	&	\movesequencenospace{r2b2r2b2}	&	87.324	&	46740	\\
 				5	&	\movesequencenospace{d'u'l'd'u'}	&	86.904	&	46741	&	\movesequencenospace{b.r2b2r2b2}	&	1149.732	&	621648	\\
-				6	&	\movesequencenospace{l'd'u'l'd'u'}	&	1165.350	&	621649	&		&		&	\\
+				6	&	\movesequencenospace{l'd'u'l'd'u'}	&	1165.350	&	621649	&	\movesequencenospace{r2b.r2b2r2b2}	&	15053.421	&	8240086	\\
 				\bottomrule
 			\end{tabular}
 		\end{table}
+	
+		\begin{table}[H]
+			\def\arraystretch{1.25}
+			\centering
+			\caption{The predicted times and position counts up to \depth{20}}
+			\label{tab:treeSolvePredictions}
+			\begin{tabular}{M{0.075\textwidth}M{0.225\textwidth}M{0.2\textwidth}M{0.2\textwidth}M{0.225\textwidth}}
+				\toprule
+				\multirow{ 2}{*}{\tbo{Depth}} & \multicolumn{2}{c}{\tbo{Best Case}} & \multicolumn{2}{c}{\tbo{Worst Case}} \\
+				& Time /\si{\second} & Pos Num & Time /\si{\second} & Pos Num \\
+				\midrule
+				7	&	\num{1.57e+04}	&	\num{8.24e+06}	&	\num{2.03e+05}	&	\num{1.11e+08}	\\
+				8	&	\num{2.13e+05}	&	\num{1.11e+08}	&	\num{2.75e+06}	&	\num{1.50e+09}	\\
+				9	&	\num{2.87e+06}	&	\num{1.50e+09}	&	\num{3.71e+07}	&	\num{2.03e+10}	\\
+				10	&	\num{3.88e+07}	&	\num{2.03e+10}	&	\num{5.01e+08}	&	\num{2.74e+11}	\\
+				11	&	\num{5.23e+08}	&	\num{2.74e+11}	&	\num{6.76e+09}	&	\num{3.70e+12}	\\
+				12	&	\num{7.07e+09}	&	\num{3.70e+12}	&	\num{9.13e+10}	&	\num{5.00e+13}	\\
+				13	&	\num{9.55e+10}	&	\num{5.00e+13}	&	\num{1.23e+12}	&	\num{6.75e+14}	\\
+				14	&	\num{1.29e+12}	&	\num{6.75e+14}	&	\num{1.67e+13}	&	\num{9.12e+15}	\\
+				15	&	\num{1.74e+13}	&	\num{9.12e+15}	&	\num{2.25e+14}	&	\num{1.23e+17}	\\
+				16	&	\num{2.35e+14}	&	\num{1.23e+17}	&	\num{3.04e+15}	&	\num{1.66e+18}	\\
+				17	&	\num{3.18e+15}	&	\num{1.66e+18}	&	\num{4.10e+16}	&	\num{2.25e+19}	\\
+				18	&	\num{4.29e+16}	&	\num{2.25e+19}	&	\num{5.54e+17}	&	\num{3.03e+20}	\\
+				19	&	\num{5.79e+17}	&	\num{3.03e+20}	&	\num{7.48e+18}	&	\num{4.09e+21}	\\
+				20	&	\num{7.82e+18}	&	\num{4.09e+21}	&	\num{1.01e+20}	&	\num{5.53e+22}	\\
+				\bottomrule
+			\end{tabular}
+		\end{table}
+		
+		
 		
 		\chapter{Figures}
 		\begin{figure}[H]

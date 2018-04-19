@@ -36,6 +36,7 @@ def generate_tree(cube, moveset, queue):
                         solved = True
                         queue.put('solved')
                         queue.put(new_pos)
+                        print(new_pos)
 
                         """
                         Save the serialized solve sequence to a file for accessing by the main process. This may not 
