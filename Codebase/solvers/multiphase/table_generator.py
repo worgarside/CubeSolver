@@ -74,7 +74,6 @@ def generate_lookup_table(db, phase, verbose):
         while inserted:
             gc.collect()
             try:
-                print('.')
                 # Get loop condition and next depth of iteration from function - adding to DB as byproduct of assignment
                 inserted, depth = generate_next_depth(db, depth, phase, verbose)
             except AssertionError as err:
@@ -90,10 +89,8 @@ def generate_lookup_table(db, phase, verbose):
                     # Get loop condition and next depth of iteration from function -
                     # adding to DB as byproduct of assignment
                     inserted, depth = generate_next_depth(db, depth, phase, verbose)
-                    print('Flag: %s Depth: %i' % (inserted, depth))
                     # Reset move_group phase to full capacity after first depth
                     if phase == 3 and depth == 1:
-                        print('#')
                         move_groups[phase] = MOVE_GROUPS_MASTER[phase]
                 except AssertionError as err:
                     print(err)
