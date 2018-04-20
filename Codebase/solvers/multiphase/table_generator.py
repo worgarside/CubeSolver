@@ -74,6 +74,7 @@ def generate_lookup_table(db, phase, verbose):
         while inserted:
             gc.collect()
             try:
+                print('.')
                 # Get loop condition and next depth of iteration from function - adding to DB as byproduct of assignment
                 inserted, depth = generate_next_depth(db, depth, phase, verbose)
             except AssertionError as err:
@@ -85,14 +86,17 @@ def generate_lookup_table(db, phase, verbose):
 
             while inserted:
                 gc.collect()
-            try:
-                # Get loop condition and next depth of iteration from function - adding to DB as byproduct of assignment
-                inserted, depth = generate_next_depth(db, depth, phase, verbose)
-                # Reset move_group phase to full capacity after first depth
-                if phase == 3 and depth == 1:
-                    move_groups[phase] = MOVE_GROUPS_MASTER[phase]
-            except AssertionError as err:
-                print(err)
+                try:
+                    # Get loop condition and next depth of iteration from function -
+                    # adding to DB as byproduct of assignment
+                    inserted, depth = generate_next_depth(db, depth, phase, verbose)
+                    print('Flag: %s Depth: %i' % (inserted, depth))
+                    # Reset move_group phase to full capacity after first depth
+                    if phase == 3 and depth == 1:
+                        print('#')
+                        move_groups[phase] = MOVE_GROUPS_MASTER[phase]
+                except AssertionError as err:
+                    print(err)
 
 
 def generate_next_depth(db, depth, phase, verbose):
@@ -189,6 +193,7 @@ def generate_pos_children(pos_tuple, phase, position_set, move_group_param):
     :param pos_tuple: tuple of position data: (position String, move_sequence List)
     :param phase: the current phase number for use in referencing the constant list indexes
     :param position_set: the large set must be passed in because the processes do not share memory
+    :param move_group_param: the group of moves to be applied to the Cube
     :return: The list of new position data: [(position String, new move_sequence Serialized), (... ]
     """
 
