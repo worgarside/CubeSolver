@@ -87,6 +87,7 @@
 \newcommand{\propernoun}[1]{\enquote{\tit{#1}}}
 \newcommand{\legopiece}[1]{(\#\tbo{#1})}
 \newcommand{\moveset}[1]{\uppercase{\texttt{\{\formatmoves{#1}\}}}}
+\newcommand{\movesetnospace}[1]{\uppercase{\texttt{\{\formatmovesnospace{#1}\}}}}
 \newcommand{\movesequence}[1]{\uppercase{\texttt{:\formatmoves{#1}:}}}
 \newcommand{\movesequencenospace}[1]{\uppercase{\texttt{:\formatmovesnospace{#1}:}}}
 \newcommand{\movegroup}[1]{\uppercase{\texttt{\formatmoves{#1}}}}
@@ -96,6 +97,13 @@
 \newcommand{\slice}[1]{\uppercase{\texttt{\formatmovesnospace{#1}}}-slice}
 \newcommand{\depth}[1]{depth-#1}
 \newcommand{\uscore}{\texttt{\char`_}}
+
+\newcommand{\fw}{\color{gray}W }
+\newcommand{\fo}{\color{orange}O }
+\newcommand{\fg}{\color{green}G }
+\newcommand{\fr}{\color{red}R }
+\newcommand{\fb}{\color{blue}B }
+\newcommand{\fy}{\color{yellow}Y }
 
 \ExplSyntaxOn
 \NewDocumentCommand{\formatmoves}{m}
@@ -175,7 +183,7 @@
 %			Valid Position		&	A position that can be achieved with a real-world Cube without dismantling it. \\
 			
 			\multirow{ 2}{*}{Moveset}		&	A set of moves, denoted with curly braces. \\
-			&	e.g. \moveset{u. d' l2} \\
+			&	e.g. \movesetnospace{u.d'l2} \\
 			\multirow{ 2}{*}{Move Sequence}		&	A series of moves \tbo{performed consecutively}, enclosed by colons . \\
 			&	e.g. \movesequence{f.d.f'd2l'b'u.l.d.r.u.l'f'u.l.u2} \\
 			Solve Sequence		&	A move sequence which leads to the goal state. \\
@@ -301,9 +309,9 @@
     		\tbo{Group Denotation} & \tbo{Mathematical Representation} & \tbo{Summary} \\
     		\midrule
    			$G_0$	&	\moveset{l.r.f.b.u.d}	&	All valid positions \\	
-	    	$G_1$	&	\moveset{l.r.f.b.u2d2}	&	All positions that can be reached with quarter turns of the \movegroup{l.r.f.b} faces and half turns of the \movegroup{u.d} faces \\
-	    	$G_2$	&	\moveset{l.r.f2b2u2d2}	&	Positions reachable from quarter turns of \movegroup{l.r} faces and half turns of the \movegroup{f.b.u.d} faces \\
-	    	$G_3$	&	\moveset{L2R2F2B2U2D2}	&	Positions only reachable from half turns of any face \\
+	    	$G_1$	&	\movesetnospace{l.r.f.b.u2d2}	&	All positions that can be reached with quarter turns of the \movegroup{l.r.f.b} faces and half turns of the \movegroup{u.d} faces \\
+	    	$G_2$	&	\movesetnospace{l.r.f2b2u2d2}	&	Positions reachable from quarter turns of \movegroup{l.r} faces and half turns of the \movegroup{f.b.u.d} faces \\
+	    	$G_3$	&	\movesetnospace{L2R2F2B2U2D2}	&	Positions only reachable from half turns of any face \\
 	    	$G_4$	&	$ \{I\}$	&	The goal state \\
     		\bottomrule
     	\end{tabular}
@@ -542,7 +550,7 @@
     
     \subsubsection{Cradle}
     
-    The Cube will sit in a cradle which rotates about the Y axis to provide the movement needed for the moveset \moveset{Y.Y'y2D.D'd2}. This will have an inner dimension of 7 studs $\times$ 7 studs (56 \si{\milli\metre} $\times$ 56 \si{\milli\metre}) to closely match the dimensions of the Valk 3: 55.5 \si{\milli\metre} $\times$ 55.5 \si{\milli\metre} $\times$ 55.5 \si{\milli\metre}. The 0.5 \si{\milli\metre} tolerance means that the Cube doesn't have to be absolutely perfectly aligned when it is rotated (i.e. the program won't fail if the cube is a degree out of line). The cradle must rotate as accurately as possible to \ang{90} increments to ensure the success of the \move{x}s and avoid the Cube falling out of the cradle. 
+    The Cube will sit in a cradle which rotates about the Y axis to provide the movement needed for the moveset \movesetnospace{Y.Y'y2D.D'd2}. This will have an inner dimension of 7 studs $\times$ 7 studs (56 \si{\milli\metre} $\times$ 56 \si{\milli\metre}) to closely match the dimensions of the Valk 3: 55.5 \si{\milli\metre} $\times$ 55.5 \si{\milli\metre} $\times$ 55.5 \si{\milli\metre}. The 0.5 \si{\milli\metre} tolerance means that the Cube doesn't have to be absolutely perfectly aligned when it is rotated (i.e. the program won't fail if the cube is a degree out of line). The cradle must rotate as accurately as possible to \ang{90} increments to ensure the success of the \move{x}s and avoid the Cube falling out of the cradle. 
     
     \subsubsection{X-Move Arm}
     To perform an \move{x}, some kind of arm will need to \enquote{flip} the Cube about its X axis. This should be a quick movement, with high reliability and good structural soundness. The arm must not interfere with the other components of the robot at any point. Furthermore the arm will also need to incorporate functionality to hold the \slice{l-r} and the \face{u} in place whilst the cradle rotates to perform a permutation of the \move{d}.
@@ -1101,7 +1109,7 @@
 	\subsubsection{Cradle}
 
 	\begin{enumerate}
-		\item The cradle should rotate about the Y axis to perform the moveset \moveset{Y.Y'y2D.D'd2} \label{lst:cr1}
+		\item The cradle should rotate about the Y axis to perform the moveset \movesetnospace{Y.Y'y2D.D'd2} \label{lst:cr1}
 		\item The cradle must rotate as accurately as possible to \ang{90} increments \label{lst:cr2}
 		\item The Cube must not fall out of the cradle \label{lst:cr3}
 	\end{enumerate}
@@ -1222,7 +1230,7 @@
     
     \section{Move Sequence Translation}
     
-    The algorithms considered and discussed in the Literature Review (as well as others used in determining God's Number) are designed to work with a standard moveset \moveset{L.R.U.D.F.B} (as well as half turns and counter-clockwise turns). The design of the robot means that it is restricted to the moveset \moveset{X.Y.y'y2D.d'd2} - and will therefore require any incompatible sequences to be translated to the robot's moveset.
+    The algorithms considered and discussed in the Literature Review (as well as others used in determining God's Number) are designed to work with a standard moveset \moveset{L.R.U.D.F.B} (as well as half turns and counter-clockwise turns). The design of the robot means that it is restricted to the moveset \movesetnospace{X.Y.y'y2D.d'd2} - and will therefore require any incompatible sequences to be translated to the robot's moveset.
     
     When the entire Cube is rotated, the \tit{colour} of the faces will change but the faces' \tit{orientations} will not (analogous to when one turns on the spot: left and right have changed, but east and west have not). This means that the frame of reference for the moves will have to remain invariant throughout a sequence by compensating for any full Cube rotations.
     
@@ -1253,7 +1261,7 @@
     
     The \lstinline|Robot| class has one class attribute for each peripheral (sensors and actuators) to allow individual control. Upon initialisation of the \lstinline|Robot|, each peripheral's connection is checked and the motors are then manually initialised. To do this, the braking method for the motors is set to \lstinline|coast|, which means that all resistance is removed from the rotor and they can be turned to the correct position using the large gears shown in Figure \ref{fig:rdrInitialiser} on page \pageref{fig:rdrInitialiser}. Once the motors are initialised, the touch sensor can be pressed to continue the program: this sets the braking method of the motors to \lstinline|hold|, providing an active resistance to the rotors to ensure there is no unwanted rotation.
     
-    The \lstinline|Robot| has a number of methods for controlling the core components: Algorithms \ref{alg:scanupface} and \ref{alg:scancube} have been implemented to scan the Cube; constant values are used to set the endpoints of an \move{x} performed by the arm; \lstinline|rotate_cradle| is a method which has an optional parameter (with a default value of 90) by which to rotate the cradle; and there are moves for each method in the set \moveset{x.x'x2y.y'y2d.d'd2} (The \move{x'} is interpreted as \movesequence{x.x.x}).
+    The \lstinline|Robot| has a number of methods for controlling the core components: Algorithms \ref{alg:scanupface} and \ref{alg:scancube} have been implemented to scan the Cube; constant values are used to set the endpoints of an \move{x} performed by the arm; \lstinline|rotate_cradle| is a method which has an optional parameter (with a default value of 90) by which to rotate the cradle; and there are moves for each method in the set \movesetnospace{x.x'x2y.y'y2d.d'd2} (The \move{x'} is interpreted as \movesequence{x.x.x}).
     
     \subsection{Cube}
     
@@ -1264,20 +1272,20 @@
     To store the position of a Cube, the three-dimensional Cube is turned into a two-dimensional net, which is then turned into a single string by \enquote{reading} the facelets from top to bottom, left to right as shown in Listing \ref{lst:cubePrint}. The \lstinline|position| attribute can be accessed by calling \lstinline|Cube.position|, and a coloured net can be output by printing the \lstinline|Cube| object. A \lstinline|Cube| has two optional parameters upon initialisation. The first is the position, as a string. If this is omitted, it defaults to the solved position. The second argument is a boolean to state whether the Cube is temporary. If set to \lstinline|True|, some less commonly used attributes and methods are ignored to reduce memory usage and processing requirements.
     
 	\begin{lstlisting}[caption={The two different ways of accessing a Cube's position}, label={lst:cubePrint}]
-		>>> from cube_class import Cube
-		>>> cube = Cube()
-		>>> print(cube.position)
-		WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY
-		>>> print(cube)
-	 	      |\color{gray}W W W|
-	 	      |\color{gray}W W W|
-	 	      |\color{gray}W W W|
-        |\color{orange}O O O| |\color{green}G G G| |\color{red}R R R| |\color{blue}B B B|
-        |\color{orange}O O O| |\color{green}G G G| |\color{red}R R R| |\color{blue}B B B|
-        |\color{orange}O O O| |\color{green}G G G| |\color{red}R R R| |\color{blue}B B B|
-	 	      |\color{yellow}Y Y Y|
-	 	      |\color{yellow}Y Y Y|
-	 	      |\color{yellow}Y Y Y|\end{lstlisting}
+    >>> from cube_class import Cube
+    >>> cube = Cube()
+    >>> print(cube.position)
+    WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY
+    >>> print(cube)
+          |\color{gray}W W W|
+          |\color{gray}W W W|
+          |\color{gray}W W W|
+    |\color{orange}O O O| |\color{green}G G G| |\color{red}R R R| |\color{blue}B B B|
+    |\color{orange}O O O| |\color{green}G G G| |\color{red}R R R| |\color{blue}B B B|
+    |\color{orange}O O O| |\color{green}G G G| |\color{red}R R R| |\color{blue}B B B|
+          |\color{yellow}Y Y Y|
+          |\color{yellow}Y Y Y|
+          |\color{yellow}Y Y Y|\end{lstlisting}
     
     There are also six class attributes to represent the faces of the Cube. Each of these is a string of six characters, each representing the colour of a facelet when the face is \enquote{read} top to bottom, left to right.
     
@@ -1357,7 +1365,7 @@
 	
 	Having accepted the implementation of a tree-based solve method to ultimately be non-viable, the next best method was to follow the research performed decades ago when Rubik's Cube was first being efficiently solved by computers. Of the eleven major developments made in finding God's Number \cite{Rokicki2010}, the majority rely solely on group theory combined with optimisations. The main form of documentation for these developments was a mailing list that approximately three hundred people subscribed and contributed their work on Rubik's Cube to \cite{Schoenert1996}: the most complete archive of the mailing list was retrieved from a German research university \cite{Schoenert1996}, \cite{RWTHAachenUniversity} to try and extract the most useful method. After tedious hours spent poring through the archived emails, Hans Kloosterman's method of solving a Cube in forty-two moves seemed the most viable for this project. Rik van Grol, a Dutch mathematician and Rubik's Cube enthusiast who ran the newsletter \propernoun{Cubism for Fun}, was kind enough to provide images of a copy of the issue containing Kloosterman's article \cite{Kloosterman1990}, which are attached in Appendix \ref{app:kloostermanCFF}.	The majority of this method is \tit{inferred} from Kloosterman's article, rather than read as stated facts and rules, and as such may not be true to the original methodology. \enquote{Rubik's Cube in 42 Moves} describes the use of four phases, each with a specific purpose to allow progression into the next phase. The first phase revolves around the concept of \enquote{good} and \enquote{bad} cubies. 
 	
-	\subsubsection[Phase Zero]{Phase Zero\protect\footnote{The phases are zero-indexed for clarity and ease of use in for loops}}
+	\subsubsection[Phase Zero]{Phase Zero\protect\footnote{The phases are zero-indexed for clarity and ease of use in \lstinline|for| loops}}
 	
 	The concept of goodness is defined by a set of conditions, any of which can be met:
 	
@@ -1368,17 +1376,12 @@
 		% TODO: better define goodness :(
 	\end{enumerate}
 
-	The result of these conditions is that if any of the moves from the set \moveset{u.u'd.d'} are used in getting the cubie to its home position, then the cubie is bad. Kloosterman's first phase makes all of the cubies good, and because only the moves \moveset{u.u'd.d'} toggle goodness, then the moves used in Phase Zero are \moveset{u.d.l2r2f2b2}. To quantify the complex concept, an algorithm was written to set each of the fifty-four facelets to a boolean state depending on their home position. To condition the Cube in this manner, the colours were set to either \lstinline|Color.DARK| (if the facelet needed to be made good) or \lstinline|Color.NONE| if it was irrelevant to this phase. This monochrome Cube was then used as the target position to generate the first part of the solve sequence.
+	% TODO: custom command spacing
+	The result of these conditions is that if any of the moves from the set \moveset{u.u'd.d'} are used in getting the cubie to its correct position and orientation, then the cubie is bad. Kloosterman's first phase makes all of the cubies good, and because \tit{only} the moves \moveset{u.u'd.d'} toggle goodness, then the moves used in Phase Zero are \moveset{u.d.l2r2f2b2}. To quantify the complex concept, an algorithm was written to set each of the fifty-four facelets to a boolean state depending on their home position. To condition the Cube in this manner, the colours were set to either \lstinline|Color.DARK| (if the facelet needed to be made good) or \lstinline|Color.NONE| if it was irrelevant to this phase. This monochrome Cube was then used as the target position to generate the first part of the solve sequence.
 	
-	To create this first part, the code used to generate the tree in section \ref{sec:treeSolving} was adapted to take a target position and a finite moveset as arguments, then generate a table of all reachable positions and the sequences used to generate them. The mixed monochrome position of the Cube could then be used as the parameter of a lookup query which returns the corresponding sequence. An inversion of the retrieved sequence is then used as the first part of the final solve sequence.
+	To create this first part, the code used to generate the tree in section \ref{sec:treeSolving} was adapted to take a target position and a finite moveset as arguments, then generate a table of all reachable positions and the sequences used to generate them. The monochrome mixed position of the Cube could then be used as the parameter of a lookup query which returns the corresponding sequence. An inversion of the retrieved sequence is then used as the first part of the final solve sequence.
 	
-	\subsubsection{Phase One}
-	
-	The remaining three phases use the same base algorithm to generate the lookup tables and for the search functions. The \face{U} and \face{D} are both coloured \lstinline|DARK|, and all other faces are coloured \lstinline|NONE|. This phase moves all of the \movegroup{U} and \movegroup{D} facelets to either the \face{U} or \face{D} (the specific face is immaterial), and correctly orients the corners
-	
-	\subsubsection{Phase Two}
-	
-	 \begin{figure}[H]
+	\begin{figure}[H]
 		\centering
 		\begin{subfigure}[b]{0.275\textwidth}
 			\includegraphics[width=\textwidth]{Resources/Images/dwgMonochrome0.png}
@@ -1394,15 +1397,71 @@
 		\hspace{10mm}
 		\begin{subfigure}[b]{0.275\textwidth}
 			\includegraphics[width=\textwidth]{Resources/Images/dwgMonochrome2.png}
-			\caption{Two - \face{U} and \face{D} different colours}
+			\caption{Two - \face{U} and \face{D}}
 			\label{fig:dwgMonochrome2}
 		\end{subfigure}
 		\caption{The reduced \enquote{monochrome} Cubes used in Phases Zero - Two}
-		\label{fig:dwgMonochromeCubes}5
+		\label{fig:dwgMonochromeCubes}
 	\end{figure}
 	
+	\subsubsection{Phase One}
+	
+	The remaining three phases use the same base algorithm to generate the lookup tables and for the search functions. The \face{U} and \face{D} are both coloured \lstinline|DARK|, and all other faces are coloured \lstinline|NONE|, as shown in Figure \ref{fig:dwgMonochrome1}. This phase moves all of the \movegroup{U} and \movegroup{D} facelets to either the \face{U} or \face{D} (the specific face is immaterial), and correctly orients the corners.
+	
+	The colour scheme used in Figure \ref{fig:dwgMonochrome0} for Phase Zero shows the locations of the good facelets at the end of Phase Zero/start of Phase One. To avoid corrupting these positions, the moveset \moveset{f.f'b.b'} must be omitted from any further sequences. Therefore the moveset for Phase One is \moveset{u.d.l.r.f2b2}.
+	
+	\subsubsection{Phase Two}
+	
+	Phase Two differentiates the \face{u} and \face{d} in order to move all of the \movegroup{u}-Cubies and \movegroup{d}-Cubies into their respective faces. As the cubies are already in either the \face{u} or \face{d} already, none of the faces on the side of the Cube should be move by a quaerter turn; ergo, this phase's moveset is \moveset{u.d.l2r2f2b2}.
 	
 	\subsubsection{Phase Three}
+	
+	The final phase of Kloosterman's 42-move method is to restore a full-coloured Cube with the same moveset as Phase Three. Kloosterman states that this phase has a maximum depth of eighteen, making it the largest phase by eight search depths. The \lstinline|monochrome| function for this phase returns the same Cube because no reduction is required.
+	
+	\subsubsection{Optimisations}
+	
+	Kloosterman suggests a few possible improvements to be made, such as avoiding sequences like \movesequence{l2r2l2} and avoiding mirrored moves. Reflections of sequences are best explained with an example: let sequence $A =\;$\movesequence{u'r} ; the reflection of $A$, $A'$ is \movesequence{u.l'}. Although these sequences are reflections, the results they produce are quite distinct from one another:
+	
+	
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}{0.4\textwidth}
+			\begin{lstlisting}[caption={Performing sequence $A$}, label={lst:reflection1}]
+>>> from cube_class import Cube
+>>> cube = Cube()
+>>> not_u(cube)
+>>> r(cube)
+>>> print(cube)
+      |\fw \fw \fo|
+      |\fw \fw \fg|
+      |\fw \fw \fg|
+|\fb \fb \fb \fo \fo \fy \fr \fr \fg \fw \fr \fr|
+|\fo \fo \fo \fg \fg \fy \fr \fr \fg \fw \fb \fb|
+|\fo \fo \fo \fg \fg \fy \fr \fr \fg \fw \fb \fb|
+      |\fy \fy \fb|
+      |\fy \fy \fb|
+      |\fy \fy \fr|\end{lstlisting}
+		\end{minipage}%
+		\hspace{10mm}
+		\begin{minipage}{0.4\textwidth}
+			\begin{lstlisting}[caption={Perform $A$'s reflection, $A'$}, label={lst:reflection2}]
+>>> from cube_class import Cube
+>>> cube = Cube()
+>>> u(cube)
+>>> not_l(cube)
+>>> print(cube)
+      |\fr \fw \fw|
+      |\fg \fw \fw|
+      |\fg \fw \fw|
+|\fg \fo \fo \fy \fr \fr \fb \fb \fb \fo \fo \fw|
+|\fg \fo \fo \fy \fg \fg \fr \fr \fr \fb \fb \fw|
+|\fg \fo \fo \fy \fg \fg \fr \fr \fr \fb \fb \fw|
+      |\fb \fy \fy|
+      |\fb \fy \fy|
+      |\fo \fy \fy|\end{lstlisting}
+		\end{minipage}
+	\end{figure}
+	
 	
     \newpage
     \chapter{Results and Discussion}
