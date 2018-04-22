@@ -1269,7 +1269,9 @@
     
     The second object defined in the software is the \lstinline|Cube| object.  As well as the main \lstinline|Cube| class, there are four \lstinline|Enum| classes which are used in defining a \lstinline|Cube|: \lstinline|Color|, which has eight members - each representing a colour which the Lego sensor can \enquote{see} (\lstinline|NONE|, \lstinline|DARK|, \lstinline|WHITE|, \lstinline|ORANGE|, \lstinline|GREEN|, \lstinline|BLUE|, \lstinline|RED| and \lstinline|YELLOW|); \lstinline|Move|, an Enum with one member for each possible move; \lstinline|Face|, which has one member for each Cube face; and \lstinline|Rotation|, which is a simple Enum with only two members - \lstinline|CLOCKWISE| and \lstinline|COUNTER_CLOCKWISE|.
     
-    To store the position of a Cube, the three-dimensional Cube is turned into a two-dimensional net, which is then turned into a single string by \enquote{reading} the facelets from top to bottom, left to right as shown in Listing \ref{lst:cubePrint}. The \lstinline|position| attribute can be accessed by calling \lstinline|Cube.position|, and a coloured net can be output by printing the \lstinline|Cube| object. A \lstinline|Cube| has two optional parameters upon initialisation. The first is the position, as a string. If this is omitted, it defaults to the solved position. The second argument is a boolean to state whether the Cube is temporary. If set to \lstinline|True|, some less commonly used attributes and methods are ignored to reduce memory usage and processing requirements.
+    To store the position of a Cube, the three-dimensional Cube is turned into a two-dimensional net, which is then turned into a single string by \enquote{reading} the facelets from top to bottom, left to right as shown in Listing \ref{lst:cubePrint}. The \lstinline|position| attribute can be accessed by calling \lstinline|Cube.position|, and a coloured net can be output by printing the \lstinline|Cube| object. A \lstinline|Cube| has two optional parameters upon initialisation. The first is the position, as a string. If this is omitted, it defaults to the solved position. The second argument is a boolean to state whether the Cube is temporary. If set to \lstinline|True|, some less commonly used attributes and methods are ignored to reduce memory usage and processing requirements. There are also six class attributes to represent the faces of the Cube. Each of these is a string of six characters, each representing the colour of a facelet when the face is \enquote{read} top to bottom, left to right.
+    
+    The final attribute of a Cube is \lstinline|position_reduced|: a reduced-colour version of the Cube's faces. In this version, only three colours are used, and the others are substituted for their opposite faces.
     
 	\begin{lstlisting}[caption={The two different ways of accessing a Cube's position}, label={lst:cubePrint}]
     >>> from cube_class import Cube
@@ -1277,17 +1279,25 @@
     >>> print(cube.position)
     WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY
     >>> print(cube)
-          |\color{gray}W W W|
-          |\color{gray}W W W|
-          |\color{gray}W W W|
-    |\color{orange}O O O| |\color{green}G G G| |\color{red}R R R| |\color{blue}B B B|
-    |\color{orange}O O O| |\color{green}G G G| |\color{red}R R R| |\color{blue}B B B|
-    |\color{orange}O O O| |\color{green}G G G| |\color{red}R R R| |\color{blue}B B B|
-          |\color{yellow}Y Y Y|
-          |\color{yellow}Y Y Y|
-          |\color{yellow}Y Y Y|\end{lstlisting}
-    
-    There are also six class attributes to represent the faces of the Cube. Each of these is a string of six characters, each representing the colour of a facelet when the face is \enquote{read} top to bottom, left to right.
+          |\fw \fw \fw|
+          |\fw \fw \fw|
+          |\fw \fw \fw|
+    |\fo \fo \fo \fg \fg \fg \fr \fr \fr \fb \fb \fb|
+    |\fo \fo \fo \fg \fg \fg \fr \fr \fr \fb \fb \fb|
+    |\fo \fo \fo \fg \fg \fg \fr \fr \fr \fb \fb \fb|
+          |\fy \fy \fy|
+          |\fy \fy \fy|
+          |\fy \fy \fy|
+	>>> print Cube(cube.position_reduced)
+	      |\fw \fw \fw|
+	      |\fw \fw \fw|
+	      |\fw \fw \fw|
+	|\fr \fr \fr \fb \fb \fb \fr \fr \fr \fb \fb \fb|
+	|\fr \fr \fr \fb \fb \fb \fr \fr \fr \fb \fb \fb|
+	|\fr \fr \fr \fb \fb \fb \fr \fr \fr \fb \fb \fb|
+	      |\fw \fw \fw|
+	      |\fw \fw \fw|
+	      |\fw \fw \fw|\end{lstlisting}
     
     \subsubsection{Updating a \lstinline|Cube|}
     
@@ -1377,7 +1387,7 @@
 	\end{enumerate}
 
 	% TODO: custom command spacing
-	The result of these conditions is that if any of the moves from the set \moveset{u.u'd.d'} are used in getting the cubie to its correct position and orientation, then the cubie is bad. Kloosterman's first phase makes all of the cubies good, and because \tit{only} the moves \moveset{u.u'd.d'} toggle goodness, then the moves used in Phase Zero are \moveset{u.d.l2r2f2b2}. To quantify the complex concept, an algorithm was written to set each of the fifty-four facelets to a boolean state depending on their home position. To condition the Cube in this manner, the colours were set to either \lstinline|Color.DARK| (if the facelet needed to be made good) or \lstinline|Color.NONE| if it was irrelevant to this phase. This monochrome Cube was then used as the target position to generate the first part of the solve sequence.
+	The result of these conditions is that if any of the moves from the set \moveset{u.u'd.d'} are used in getting the cubie to its correct position and orientation, then the cubie is bad. Kloosterman's first phase makes all of the cubies good and provides a way to start the solving process. In order to \enquote{get into} the first group, the moveset for this phase is \moveset{u'd'l'r'f'b'}. To quantify the complex concept of goodness, an algorithm was written to set each of the fifty-four facelets to a boolean state depending on their home position. To condition the Cube in this manner, the colours were set to either \lstinline|Color.DARK| (if the facelet needed to be made good) or \lstinline|Color.NONE| if it was irrelevant to this phase. This monochrome Cube was then used as the target position to generate the first part of the solve sequence.
 	
 	To create this first part, the code used to generate the tree in section \ref{sec:treeSolving} was adapted to take a target position and a finite moveset as arguments, then generate a table of all reachable positions and the sequences used to generate them. The monochrome mixed position of the Cube could then be used as the parameter of a lookup query which returns the corresponding sequence. An inversion of the retrieved sequence is then used as the first part of the final solve sequence.
 	
@@ -1408,11 +1418,11 @@
 	
 	The remaining three phases use the same base algorithm to generate the lookup tables and for the search functions. The \face{U} and \face{D} are both coloured \lstinline|DARK|, and all other faces are coloured \lstinline|NONE|, as shown in Figure \ref{fig:dwgMonochrome1}. This phase moves all of the \movegroup{U} and \movegroup{D} facelets to either the \face{U} or \face{D} (the specific face is immaterial), and correctly orients the corners.
 	
-	The colour scheme used in Figure \ref{fig:dwgMonochrome0} for Phase Zero shows the locations of the good facelets at the end of Phase Zero/start of Phase One. To avoid corrupting these positions, the moveset \moveset{f.f'b.b'} must be omitted from any further sequences. Therefore the moveset for Phase One is \moveset{u.d.l.r.f2b2}.
+	The colour scheme used in Figure \ref{fig:dwgMonochrome0} for Phase Zero shows the locations of the good facelets at the end of Phase Zero/start of Phase One. To avoid corrupting these positions, the moveset \moveset{f.f'b.b'} must be omitted from any further sequences. Therefore the moveset for Phase One is \moveset{u'd'l'r'f2b2}.
 	
 	\subsubsection{Phase Two}
 	
-	Phase Two differentiates the \face{u} and \face{d} in order to move all of the \movegroup{u}-Cubies and \movegroup{d}-Cubies into their respective faces. As the cubies are already in either the \face{u} or \face{d} already, none of the faces on the side of the Cube should be move by a quaerter turn; ergo, this phase's moveset is \moveset{u.d.l2r2f2b2}.
+	Phase Two differentiates the \face{u} and \face{d} in order to move all of the \movegroup{u}-Cubies and \movegroup{d}-Cubies into their respective faces. As the cubies are already in either the \face{u} or \face{d} already, none of the faces on the side of the Cube should be move by a quarter turn; ergo, this phase's moveset is \moveset{u'd'l2r2f2b2}.
 	
 	\subsubsection{Phase Three}
 	
@@ -1420,7 +1430,7 @@
 	
 	\subsubsection{Optimisations}
 	
-	Kloosterman suggests a few possible improvements to be made, such as avoiding sequences like \movesequence{l2r2l2} and avoiding mirrored moves. Reflections of sequences are best explained with an example: let sequence $A =\;$\movesequence{u'r} ; the reflection of $A$, $A'$ is \movesequence{u.l'}. Although these sequences are reflections, the results they produce are quite distinct from one another:
+	Kloosterman suggests a few possible improvements to be made, such as avoiding sequences like \movesequence{l2r2l2} and avoiding reflected sequences. Reflections of sequences are best explained with an example: let sequence $A =\;$\movesequence{u'r} ; the reflection of $A$, $A'$ is \movesequence{u.l'}. Although these sequences are reflections of one another, the results they produce are quite distinct from one another:
 	
 	
 	\begin{figure}[H]
@@ -1462,12 +1472,34 @@
 		\end{minipage}
 	\end{figure}
 	
+	In order to make quick and efficient comparisons against each other, a common form must be defined. For the example given above, the reduced-colour versions of the Cube's are different, until a \move{y2} is performed on one of them. This gives a good foundation for a comparison method, but may require more processing and memory at run time than other methods: it is impossible to know which Cube should have the \move{y2} applied to it - so it must be applied to both, then the results cross-compared. This will double the amount of memory required at run time, which is unacceptable.
+	
+	The first optimisation Kloosterman discusses is a lot easier to implement, and will actually reduce the amount of memory and processing required. Where he suggests prohibiting the use of \enquote{sequences like \movesequence{r2l2r2}}, the rules have been made stricter yet for this project: consecutive duplicates and opposites of \tit{any} moves were prohibited, along with a look-back distance of two moves. This prevented sub-sequences such as \movesequence{l.l} ($\equiv$ \movesequence{l2}), \movesequence{l'l} ($\equiv$\movesequence{$\phi$}), and \movesequence{l'r.l} ($\equiv$\movesequence{r}).
+	
+	\subsection{Testing and Analysis}
+	
+	% TODO: talk about memory usage
+	
+	used loads of memory
+	
+	To avoid wasting all the time and effort put into implementing this updated version of Kloosterman's algorithm, the final table was split into two, using the movesets \moveset{u'd'l2r2f2b2} \moveset{u2d2l2r2f2b2} respectively, which brought the number of positions to a manageable level. The function to make the Cube \enquote{monochrome} for the new Phase Three simply returned the Cube's built-in reduced colour attribute, and Phase Four used the full colour Cube.
+	
+	Initially, the solution from the end of Phase Three with the reduced-colour Cube appears easy: \tit{each facelet is either on the correct face or the opposite one, so surely the only moves need are half-turns? The moveset used in Phase Four is just half-turns, so the final solve should be easy}. This hypothesis was disproved with simple tests using well-mixed Cubes. Herbert Kociemba's \propernoun{Cube Explorer} program \cite{Kociemba} was used to find the optimal solve sequence, which contained quarter turns - the moveset needed was therefore \moveset{u'd'l2r2f2b2}. This moveset had already been found to cause runtime errors as a direct result of memory consumption, so Kloosterman's method required a fallback method for this project.
+	
+	The fallback method used was actually a Python port of Kociemba's original solving algorithm by GitHub user muodov \cite{muodov2018}. In its simplest form, muodov's package \propernoun{kociemba} takes a position of a Cube as a parameter and returns a sub-optimal solve sequence. If the fallback method is used, then the sequences found from the databse are ignored to reduce the length of the total solve sequence.
+	
+	\section{Method 3: Half-Turn Proof of Concept}
+	
+	Following the 
+	
+	
+	
 	
     \newpage
     \chapter{Results and Discussion}
     
     \newpage
-    \chapter{Conclusions}
+    \chapter{Conclusions and Future Work}
     
     \newpage
     \begin{appendices}
