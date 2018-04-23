@@ -20,21 +20,17 @@ TARGET_POS = [
     'NDNDNDNDNNNNNNNNNNNNNNNNDNDNNNDNDNNNNNNNNNNNNNDNDNDNDN',
     'DDDDDDDDDNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNDDDDDDDDD',
     'DDDDDDDDDWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWNNNNNNNNN',
+    'WWWWWWWWWRRRBBBRRRBBBRRRBBBRRRBBBRRRBBBRRRBBBWWWWWWWWW',
     'WWWWWWWWWOOOGGGRRRBBBOOOGGGRRRBBBOOOGGGRRRBBBYYYYYYYYY'
 ]
 
 # Different movesets are used for generating the group in each phase
-MOVE_GROUPS_MASTER = [
+MOVE_GROUPS = [
     [Move.NOT_U, Move.NOT_D, Move.NOT_L, Move.NOT_R, Move.NOT_F, Move.NOT_B],
     [Move.NOT_U, Move.NOT_D, Move.NOT_L, Move.NOT_R, Move.F2, Move.B2],
     [Move.NOT_U, Move.NOT_D, Move.L2, Move.R2, Move.F2, Move.B2],
     [Move.NOT_U, Move.NOT_D, Move.L2, Move.R2, Move.F2, Move.B2],
-]
-move_groups = [
-    [Move.NOT_U, Move.NOT_D, Move.NOT_L, Move.NOT_R, Move.NOT_F, Move.NOT_B],
-    [Move.NOT_U, Move.NOT_D, Move.NOT_L, Move.NOT_R, Move.F2, Move.B2],
-    [Move.NOT_U, Move.NOT_D, Move.L2, Move.R2, Move.F2, Move.B2],
-    []
+    [Move.U2, Move.D2, Move.L2, Move.R2, Move.F2, Move.B2]
 ]
 
 
@@ -69,31 +65,12 @@ def generate_lookup_table(db, phase, verbose):
 
     inserted = True
 
-    # Third phase requires special condition due to sheer size of table
-    if phase != 3 or depth != 0:
-        while inserted:
-            gc.collect()
-            try:
-                # Get loop condition and next depth of iteration from function - adding to DB as byproduct of assignment
-                inserted, depth = generate_next_depth(db, depth, phase, verbose)
-            except AssertionError as err:
-                print(err)
-    else:
-        for move in MOVE_GROUPS_MASTER[phase]:
-            depth = 0
-            move_groups[phase] = [move]
-
-            while inserted:
-                gc.collect()
-                try:
-                    # Get loop condition and next depth of iteration from function -
-                    # adding to DB as byproduct of assignment
-                    inserted, depth = generate_next_depth(db, depth, phase, verbose)
-                    # Reset move_group phase to full capacity after first depth
-                    if phase == 3 and depth == 1:
-                        move_groups[phase] = MOVE_GROUPS_MASTER[phase]
-                except AssertionError as err:
-                    print(err)
+    while inserted:
+        gc.collect()
+        try:
+            inserted, depth = generate_next_depth(db, depth, phase, verbose)
+        except AssertionError as err:
+            print(err)
 
 
 def generate_next_depth(db, depth, phase, verbose):
@@ -116,7 +93,7 @@ def generate_next_depth(db, depth, phase, verbose):
     Create an iterable to be processed by the Pool. It is structured like this:
     [(position String, move_sequence List), phaseInteger, position_set]
     """
-    iterable = map(lambda e: (e, phase, position_set, move_groups),
+    iterable = map(lambda e: (e, phase, position_set),
                    db.query('SELECT position, move_sequence FROM multiphase_%i '
                             'where depth = %i' % (phase, depth - 1)).fetchall())
     print('.', end='') if verbose else 0
@@ -184,18 +161,17 @@ def gen_position_set(db, depth, phase):
     return position_set
 
 
-def generate_pos_children(pos_tuple, phase, position_set, move_group_param):
+def generate_pos_children(pos_tuple, phase, position_set):
     """
     Generate the children of a position by using the moves defined in the constant MOVES
     :param pos_tuple: tuple of position data: (position String, move_sequence List)
     :param phase: the current phase number for use in referencing the constant list indexes
     :param position_set: the large set must be passed in because the processes do not share memory
-    :param move_group_param: the group of moves to be applied to the Cube
     :return: The list of new position data: [(position String, new move_sequence Serialized), (... ]
     """
 
     result_list = []
-    for m in move_group_param[phase]:
+    for m in MOVE_GROUPS[phase]:
         c = Cube(pos_tuple[0], True)
         dyn_move(c, m)
 

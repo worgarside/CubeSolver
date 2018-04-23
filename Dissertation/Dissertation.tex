@@ -32,6 +32,9 @@
 \usepackage{tikz}				% flowcharts
 \usepackage{mdframed}			% borders on aside environment
 \usepackage[toc,page]{appendix}	% appendix package
+\usepackage{pgfplotstable} 		% Generates table from .csv
+\usepackage{textcomp}			% text symbols
+\usepackage{etoolbox}			% allows custom environment pre/suffixes (listings -> minipage)
 
 \usetikzlibrary{shapes.geometric, arrows, positioning}
 \tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black]
@@ -50,6 +53,9 @@
 
 \usepgfplotslibrary{dateplot}	% use date in pgfplot
 \pgfplotsset{compat=1.8}
+
+\BeforeBeginEnvironment{lstlisting}{\par\noindent\begin{minipage}{\linewidth}}
+\AfterEndEnvironment{lstlisting}{\end{minipage}\par\addvspace{\topskip}}
 
 \lstset{ 
 %	backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
@@ -136,6 +142,14 @@
 		skipabove=7pt,skipbelow=7pt]\small}
 	{\end{mdframed}}
 
+\pgfkeysifdefined{/pgfplots/table/output empty row/.@cmd}{
+	\pgfplotstableset{
+		empty header/.style={
+			every head row/.style={output empty row},
+		}
+	}
+}{}
+
 \begin{document}
 	\pagenumbering{gobble}
 	\maketitle
@@ -209,7 +223,7 @@
 %			$B$	&	Back			&	\\
 %			$U$	&	Up (Top)		&	\\
 %			$D$	&	Down (Bottom)	&	\\
-%			$X$ &	\multirow{ 3}{*}{\parbox{0.2\textwidth}{Clockwise 90$\degree${} rotation of a Cube about the relevant axis.}} & \\
+%			$X$ &	\multirow{ 3}{*}{\parbox{0.2\textwidth}{Clockwise \ang{90} rotation of a Cube about the relevant axis.}} & \\
 %			$Y$ & & \\
 %			$Z$ & & \\
 %			\bottomrule
@@ -326,12 +340,12 @@
     
     Sure enough, a year later Kloosterman wrote an article titled \propernoun{Rubik's Cube in 42 Moves} in the twenty-fifth issue of CFF. This stated that the new algorithm was in fact the final version of Kloosterman's forty-four move algorithm. In the same way as its predecessor, this article is split into four stages to solve a Cube. The first three stages are based on \enquote{solving} a Cube with only certain cubies coloured - the positions of the other remain irrelevant until a later stage. The final stage is solving the Cube in a non-particular manner, and is calculated to take no more than eighteen moves \cite{Kloosterman1990}.
     
-    In the following twenty years, the upper bound was gradually refined to match the lower bound - meaning that God's Number is exactly twenty. The final development came from a group of four Rubik's Cube enthusiasts in July of 2010, and was only achieved through a brute force method: the four-man team first took every possible position of a Cube and reduced it from forty-three quintillion positions down to just over one quintillion - still a vast number, but a reduction by a factor of forty-three - by using rules of symmetry and mirroring. They then wrote a program to find solve sequences of length twenty or less, and ran it on a \enquote{large number of computers at Google} to find all solve sequences in a few weeks. The parallel computation took the equivalent of thirty-five years \cite{Rokicki2010}.
+    In the following twenty years, the upper bound was gradually refined to match the lower bound - meaning that God's Number is exactly twenty. The final development came from a group of four Rubik's Cube enthusiasts in July of 2010, and was only achieved through a brute force method: the four-man team first took every possible position of a Cube and reduced it from forty-three quintillion positions down to just over one quintillion - still a vast number, but a reduction by a factor of forty-three - by using rules of symmetry and mirroring. They then wrote a program to find solve sequences of length twenty or less, which found all solve sequences in a few weeks \cite{Rokicki2010}.
     
    	\begin{figure}[h]
     	\begin{center}
 			\begin{tikzpicture}
-				\begin{axis}[title={God's Number}, axis lines = left, date coordinates in=x,	enlarge x limits=false, xticklabel={\year},	date ZERO=1980-01-01, xmin=1980-01-01, xmax=2020-01-01,	xtick={1980-01-02,1990-01-01,2000-01-01,2010-01-01,2020-01-01}, ylabel = Sequence Length, xlabel=Year]
+				\begin{axis}[title={God's Number}, axis lines = left, date coordinates in=x, enlarge x limits=false, xticklabel={\year},	date ZERO=1980-01-01, xmin=1980-01-01, xmax=2020-01-01, xtick={1980-01-02,1990-01-01,2000-01-01,2010-01-01,2020-01-01}, ylabel = Sequence Length, xlabel=Year]
 				\addplot coordinates {
 					(1981-07-01, 52)
 					(1990-12-01, 42)
@@ -389,12 +403,12 @@
    
     \newpage
     \chapter{Requirements and Analysis}
-    \epigraph{I have yet to see any problem, however complicated, which when you looked at in the right way, did not become still more complicated.}{Paul Anderson, New Scientist \cite{Anderson1969}}
+    \epigraph{I have yet to see any problem, however complicated, which when you looked at in the right way, did not become still more complicated.}{Paul Anderson, for New Scientist \cite{Anderson1969}}
     
     \section{Introduction} % TODO: maybe add more to this
     This chapter covers the specific requirements needed for the project to succeed: the particular tasks to complete the project; the hardware required to build the robot and run the solving program; and the software needed to write and run the program. As well as the requirements, an in-depth analysis of the project and its goals is made, discussing their feasibility, difficulty, and how necessary they are for the success of this project.
     
-    \section{Specific Aims and Objectives}
+    \section{Specific Aims and Objectives} \label{sec:objectives}
     
     \begin{enumerate}
     	\item Build a robot which can manipulate a Cube accurately \par This is the first of the two primary objectives for this project, and is imperative to the project's success. As such it will be the first objective to be completed. This task, despite being of a medium difficulty, is fairly straightforward by nature: the robot simply needs to manipulate a Cube in any valid move.
@@ -450,48 +464,71 @@
 		\end{tabular}
 	\end{table}
     
-    \section{Feasibility Study}
+    \section{Feasibility Evaluation}
     \subsection{Optimal Solutions}
+    
+	The immense size of the Cube position search space means that finding the optimal solution for every position is an intractable problem. Research carried out by Rokicki et al. (2010) to definitively prove God's Number found a solution for every position with a length less-than-or-equal-to twenty. This research was carried out on \enquote{a large number of computers at Google}, and took the equivalent of thirty-five CPU years \cite{Rokicki2010}. The program they wrote could solve Cubes in twenty positions or less at a rate of 3600 positions \si{\per\second}, but when set to find optimal solutions the rate dropped to 0.36 positions \si{\per\second} - a reduction by a factor of $10^4$. Evidently finding optimal solutions is an infeasible task.
+    
 	\subsection{Tree Based Methods}
+	
+	Although the problem of finding optimal solutions is likely infeasible within the scope of this project, a tree-based method will prove or disprove the hypothesis. It will also provide a greater understanding into the generation and navigation of a search space for Cube positions. A basic search tree will be very difficult to successfully solve any Cube, as it will grow exponentially at a rate of $\text{depth}^6$. Optimisations and heuristics can be used to make the tree generation easier and more efficient, however they still may not make the problem manageable on account of its sheer scale.
+	
     \subsection{Group Based Methods}
     
+    A more tractable method for solving positions is the use of pre-defined groups with lookup tables, which was commonly used throughout the development of God's Number. The (somewhat self-imposed) constraint of solving a Cube in a reasonable time is removed through the use of lookup tables, because the positions are already generated. It is this table generation which will present an obstacle in solving a Cube. A significant portion (if not all) of the forty-three quintillion positions will need to be generated and stored in a database for a comprehensive lookup.
+    
+    The definition of the groups and their effectiveness will have to be tested and analysed, along with their combined functionality. Extensive research into different group types and combinations could be used to reduce the magnitude of the problem at hand - although this may be limited by the imposed time-scale.
+    
     \section{Evaluative Techniques}
+    
+    This project is of quite a closed nature, in that there is very little commercial value and inherent user testing. Instead, all evaluation of this project will be internal and ultimately quantifiable into categories such as \enquote{Cube Solved}, \enquote{Efficient Solve}, and \enquote{Quick Solution Generation}. The quickest way of measuring the success of this project is whether or not any position can be successfully solved in a relatively short amount of time (e.g. $<10$ \si{\minute}). 
+    
+    The main objectives for this project have been defined in Section \ref{sec:objectives} and the project will aim to meet them throughout. In Chapter \ref{chp:resultsDiscussion} the completed implementation of the project will be measured against the objectives.
+    
     The progress of this project is estimated to follow the below Gantt Chart. For the duration of its lifespan, there will be a continual measurement of the actual progress against predicted.
     
-	\begin{center}
+    \begin{figure}[H]
 		\begin{ganttchart}[title/.append style={fill=black!10}, hgrid, x unit=0.4mm, y unit title=7.5mm,, y unit chart=5mm, vgrid={*{6}{draw=none},dotted},	milestone/.append style={xscale=10}, time slot format=isodate]{2017-07-03}{2018-04-29}
 			\gantttitlecalendar{year, month=shortname} \\
-			\ganttgroup{Robot}{2017-07-15}{2017-09-18} \\
-			\ganttbar{Design}{2017-07-20}{2017-08-20} \\
-			\ganttbar{Build}{2017-08-08}{2017-09-04} \\
-			\ganttbar{Testing}{2017-09-01}{2017-09-15} \\
-			\ganttbar{Refinement}{2017-09-05}{2017-09-17} \\
-			\ganttmilestone{Complete}{2017-09-18} \\
-			\ganttgroup{Codebase}{2018-02-01}{2018-04-15} \\
-			\ganttbar{Binary Search Method}{2018-02-05}{2018-02-25} \\
-			\ganttbar{Primary Solve Method}{2018-02-24}{2018-03-05} \\
-			\ganttmilestone{Cube Solved}{2018-03-05} \\
-			\ganttbar{Primary Refinements}{2018-03-05}{2018-03-12} \\
-			\ganttbar{Further Algorithms}{2018-03-10}{2018-03-20} \\
-			\ganttbar{Performance Comparison}{2018-03-20}{2018-03-31} \\
-			\ganttmilestone{Optimal Solve}{2018-04-05} \\
-			\ganttbar{Implementation}{2018-03-16}{2018-04-04} \\
-			\ganttbar{Testing}{2018-03-30}{2018-04-05} \\
-			\ganttgroup{Final Write Up}{2017-09-20}{2018-04-29} \\
-			\ganttbar{Introduction}{2017-09-23}{2017-10-02} \\
-			\ganttbar{Research}{2017-09-28}{2017-12-12} \\
-			\ganttbar{Literature Review}{2017-10-03}{2017-11-13} \\
-			\ganttbar{Requirements and Analysis}{2017-10-28}{2017-11-20} \\
-			\ganttbar{Results and Discussion}{2018-03-24}{2018-04-17} \\
-			\ganttmilestone{Conclusions}{2018-04-20} \\
-			\ganttmilestone{Deadline}{2018-05-02}
+			\ganttgroup{\small Robot}{2017-07-15}{2017-09-18} \\
+			\ganttbar{\small Design}{2017-07-20}{2017-08-20} \\
+			\ganttbar{\small Build}{2017-08-08}{2017-09-04} \\
+			\ganttbar{\small Testing}{2017-09-01}{2017-09-15} \\
+			\ganttbar{\small Refinement}{2017-09-05}{2017-09-17} \\
+			\ganttmilestone{\small Complete}{2017-09-18} \\
+			\ganttgroup{\small Codebase}{2018-02-01}{2018-04-15} \\
+			\ganttbar{\small Binary Search Method}{2018-02-05}{2018-02-25} \\
+			\ganttbar{\small Primary Solve Method}{2018-02-24}{2018-03-05} \\
+			\ganttmilestone{\small Cube Solved}{2018-03-05} \\
+			\ganttbar{\small Primary Refinements}{2018-03-05}{2018-03-12} \\
+			\ganttbar{\small Further Algorithms}{2018-03-10}{2018-03-20} \\
+			\ganttbar{\small Performance Comparison}{2018-03-20}{2018-03-31} \\
+			\ganttmilestone{\small Optimal Solve}{2018-04-05} \\
+			\ganttbar{\small Implementation}{2018-03-16}{2018-04-04} \\
+			\ganttbar{\small Testing}{2018-03-30}{2018-04-05} \\
+			\ganttgroup{\small Final Write Up}{2017-09-20}{2018-04-29} \\
+			\ganttbar{\small Introduction}{2017-09-23}{2017-10-02} \\
+			\ganttbar{\small Research}{2017-09-28}{2017-12-12} \\
+			\ganttbar{\small Literature Review}{2017-10-03}{2017-11-13} \\
+			\ganttbar{\small Requirement Analysis}{2017-10-28}{2017-11-20} \\
+			\ganttbar{\small Results and Discussion}{2018-03-24}{2018-04-17} \\
+			\ganttmilestone{\small Conclusions}{2018-04-20} \\
+			\ganttmilestone{\small Deadline}{2018-05-02}
 		\end{ganttchart}
-	\end{center}
+		\caption{The estimated progress of this project during its timeline}
+	\end{figure}
+
+ 	\vskip\baselineskip
+ 	\vskip\baselineskip
+ 	
+    \begin{aside}
+    	The large gap in the Gantt chart between the completion of the robot and the beginning of the codebase development is due to other work commitments and priorities. This has been shown in the Gantt chart to maintain a realistic presentation of this project and its progress throughout. During this time away from core development, progress will be made on this document.
+    \end{aside}
     
     \newpage
     
     \chapter[Design, Implementation and Testing: The Robot]{Design, Implementation \\ and Testing: The Robot} \label{chp:designRobot}
-    \epigraph{I don't spend my time pontificating about high-concept things. I spend my time solving engineering and manufacturing problems.}{Elon Musk\cite{Ohnsman2013}}
+    \epigraph{I don't spend my time pontificating about high-concept things. I spend my time solving engineering and manufacturing problems.}{Elon Musk \cite{Ohnsman2013}}
     
 	\section{Introduction}
 	
@@ -573,7 +610,6 @@
 			\label{fig:rdrCradle}
 		\end{center}
 	\end{figure}
-	
 	
 	The wall will have a semi-circular profile to allow the Cube to rotate smoothly out of the base of the cradle as demonstrated in Figures \ref{fig:dwgCradleCurvedEdgeNormal} and \ref{fig:dwgCradleCurvedEdgeTilted}. The curved edge will also allow the Cube to slide back into the cradle completely, rather than resting on the upper corner of the edge piece. The method for rotating the cradle is for it to be mounted directly (with no gear train or intermediary mechanism) onto the rotor of a large motor. This gives it stability from the secure mount, high rotational velocity because there is no gearing down, and it will be accurate due to the in-built tachometer which provides \enquote{precise control to within one degree of accuracy} \cite{Lego}. Figure \ref{fig:dwgCradleProfileV1} shows the cradle mounted on the rotor via a large gear, which allows a strong interface with the motor and gives the cradle sufficient clearance from the motor to make a full rotation without collision.
     
@@ -1134,7 +1170,7 @@
     \newpage
     
     \chapter[Design, Implementation and Testing: The Codebase]{Design, Implementation \\ and Testing: The Codebase}
-    \epigraph{There are two ways of constructing a software design: One way is to make it so simple that there are obviously no deficiencies, and the other way is to make it so complicated that there are no obvious deficiencies. The first method is far more difficult.}{C.A.R. Hoare\cite{Hoare1981}}
+    \epigraph{There are two ways of constructing a software design: One way is to make it so simple that there are obviously no deficiencies, and the other way is to make it so complicated that there are no obvious deficiencies. The first method is far more difficult.}{C.A.R. Hoare \cite{Hoare1981}}
     
     \section{Introduction}
     
@@ -1305,7 +1341,7 @@
     
     To ensure that all the class attributes accurately describe the Cube's position at any given time, methods have been written to update all of the necessary attributes when the object is modified. As well as the setter methods, there are two getter methods. The first takes a keyword argument and returns a \lstinline|Color| object: the keyword is either \lstinline|'facelet'| which is an integer facelet reference, or \lstinline|'face'| to lookup that face's colour. The second getter method takes a \lstinline|Color| as an argument and returns the face which is that colour.
     
-    \section{Solve Method 1: Tree Solving} \label{sec:treeSolving}
+    \section{Method 1: Tree Solving} \label{sec:treeSolving}
     
     During the development of this project, three main methods of solving the Cube were implemented. Each had it's own advantages and disadvantages and are discussed in this section and the following two.
     
@@ -1369,7 +1405,7 @@
     
     The extensive time required for a solution to be returned meant that the method was completely impractical past \depth{5}. Further optimisations to the tree generator were either too small to make a sizeable difference, or too complex or poorly documented to be implemented successfully. An example of the latter is the use of \enquote{pruning tables}, which is discussed later.
     
-	\section{Method 2: Multiphase Solver}
+	\section{Method 2: Multiphase Solver} \label{sec:multiphaseSolving}
 	
 	\subsection{Design and Implementation}
 	
@@ -1468,38 +1504,167 @@
 |\fg \fo \fo \fy \fg \fg \fr \fr \fr \fb \fb \fw|
       |\fb \fy \fy|
       |\fb \fy \fy|
-      |\fo \fy \fy|\end{lstlisting}
-		\end{minipage}
-	\end{figure}
-	
+      |\fo \fy \fy|\end{lstlisting}\end{minipage}\end{figure}
 	In order to make quick and efficient comparisons against each other, a common form must be defined. For the example given above, the reduced-colour versions of the Cube's are different, until a \move{y2} is performed on one of them. This gives a good foundation for a comparison method, but may require more processing and memory at run time than other methods: it is impossible to know which Cube should have the \move{y2} applied to it - so it must be applied to both, then the results cross-compared. This will double the amount of memory required at run time, which is unacceptable.
 	
 	The first optimisation Kloosterman discusses is a lot easier to implement, and will actually reduce the amount of memory and processing required. Where he suggests prohibiting the use of \enquote{sequences like \movesequence{r2l2r2}}, the rules have been made stricter yet for this project: consecutive duplicates and opposites of \tit{any} moves were prohibited, along with a look-back distance of two moves. This prevented sub-sequences such as \movesequence{l.l} ($\equiv$ \movesequence{l2}), \movesequence{l'l} ($\equiv$\movesequence{$\phi$}), and \movesequence{l'r.l} ($\equiv$\movesequence{r}).
 	
 	\subsection{Testing and Analysis}
 	
-	% TODO: talk about memory usage
-	
-	used loads of memory
-	
+	When generating the four tables designed above, the program ran out of memory consistently - regardless of how many applications were force-stopped in favour of generating more data. This is evaluated more in section ???, but signified the end of the development of the multiphase algorithm.
+		
 	To avoid wasting all the time and effort put into implementing this updated version of Kloosterman's algorithm, the final table was split into two, using the movesets \moveset{u'd'l2r2f2b2} \moveset{u2d2l2r2f2b2} respectively, which brought the number of positions to a manageable level. The function to make the Cube \enquote{monochrome} for the new Phase Three simply returned the Cube's built-in reduced colour attribute, and Phase Four used the full colour Cube.
 	
-	Initially, the solution from the end of Phase Three with the reduced-colour Cube appears easy: \tit{each facelet is either on the correct face or the opposite one, so surely the only moves need are half-turns? The moveset used in Phase Four is just half-turns, so the final solve should be easy}. This hypothesis was disproved with simple tests using well-mixed Cubes. Herbert Kociemba's \propernoun{Cube Explorer} program \cite{Kociemba} was used to find the optimal solve sequence, which contained quarter turns - the moveset needed was therefore \moveset{u'd'l2r2f2b2}. This moveset had already been found to cause runtime errors as a direct result of memory consumption, so Kloosterman's method required a fallback method for this project.
+	Initially, the solution from the end of Phase Three with the reduced-colour Cube appears easy: \tit{each facelet is either on the correct face or the opposite one, so surely the only moves need are half-turns? The moveset used in Phase Four is just half-turns, so the final solve should be easy}. This hypothesis was disproved with simple tests using well-mixed Cubes. Herbert Kociemba's \propernoun{Cube Explorer} program \cite{Kociemba} was used to find the optimal solve sequence, which contained quarter turns - the moveset needed was therefore \moveset{u'd'l2r2f2b2}. This moveset had already been found to cause runtime errors as a direct result of memory consumption, so Kloosterman's method required a fall-back method for this project.
 	
-	The fallback method used was actually a Python port of Kociemba's original solving algorithm by GitHub user muodov \cite{muodov2018}. In its simplest form, muodov's package \propernoun{kociemba} takes a position of a Cube as a parameter and returns a sub-optimal solve sequence. If the fallback method is used, then the sequences found from the databse are ignored to reduce the length of the total solve sequence.
+	The fall-back method used was actually a Python port of Kociemba's original solving algorithm by GitHub user muodov \cite{muodov2018}. In its simplest form, muodov's package \propernoun{kociemba} takes a position of a Cube as a parameter and returns a sub-optimal solve sequence. If the fall-back method is used, then the sequences found from the database are ignored to reduce the length of the total solve sequence.
 	
-	\section{Method 3: Half-Turn Proof of Concept}
+	\section{Method 3: Half-Turn Proof-of-Concept} \label{sec:halfTurnSolving}
 	
-	Following the 
+	Following the partially unsuccessful implementation of Kloosterman's group-based method, the table of positions previously generated with the moveset \moveset{u2d2l2r2f2b2} was used to create a secondary, proof-of-concept method. As this method is only proof-of concept and not a fully-fledged solution, it has an inherent condition that the Cube can only be mixed with half-turns. The code to generate this table was taken from the previous implementation of the same group in the multiphase method with slight modifications to remove its iterative nature, and the lookup code was also re-used. The target position for this method remained as a full coloured Cube, as there is no advantage to reducing the amount of colours.
 	
+	The only validation applied to the Cube for this method is to check that it has been mixed with half-turns only (see Listing \ref{lst:halfTurnValidation}). To check this, its reduced-colour position is checked to be \enquote{solved}. Between this method and its predecessor, full function of the robot and the success of the table lookup method can be proved.	
 	
+	\begin{lstlisting}[caption={Half-Turn method validation}, label={lst:halfTurnValidation}]
+	>>> import solvers.half_turn.table_lookup as half_turn_lookup
+	>>> half_turn_lookup()
+	Enter a position: BRRBWWOWWWOGWRRBBYBBOWOGWGGRRYBBOBOGWGGRRGYYYRYYGYYOOO
 	
+	Cube:
+	
+	      |\fb \fr \fr|
+	      |\fb \fw \fw|
+	      |\fo \fw \fw|
+	|\fw \fo \fg \fw \fr \fr \fb \fb \fy \fb \fb \fo|
+	|\fw \fo \fg \fw \fg \fg \fr \fr \fy \fb \fb \fo|
+	|\fb \fo \fg \fw \fg \fg \fr \fr \fg \fy \fy \fy|
+	      |\fr \fy \fy|
+	      |\fg \fy \fy|
+	      |\fo \fo \fo|
+	      
+	Invalid Half-Turn Cube, reduced Cube should be solved but looks like this:
+	
+	      |\fb \fr \fr|
+	      |\fb \fw \fw|
+	      |\fr \fw \fw|
+	|\fw \fr \fb \fw \fr \fr \fb \fb \fw \fb \fb \fr|
+	|\fw \fr \fb \fw \fb \fb \fr \fr \fw \fb \fb \fr|
+	|\fb \fr \fb \fw \fb \fb \fr \fr \fb \fw \fw \fw|
+	      |\fr \fw \fw|
+	      |\fb \fw \fw|
+	      |\fr \fr \fr|\end{lstlisting}
 	
     \newpage
-    \chapter{Results and Discussion}
+    \chapter{Results and Discussion} \label{chp:resultsDiscussion}
+   	\epigraph{I pass with relief from the tossing sea of Cause and Theory to the firm ground of Result and Fact.}{Winston Churchill \cite{Churchill1898}}
     
+    \section{Original Objectives}
+    
+    The original objectives laid out in Section \ref{sec:objectives} have been re-stated below for clarity:
+    
+    \begin{enumerate}
+    	\item Build a robot which can manipulate a Cube accurately \label{itm:obj1}
+    	\item Implement a system which successfully generates a solve sequence for any given position. \label{itm:obj2}
+    	\item When the robot is provided with a move sequence... \label{itm:obj3}
+    	\begin{enumerate}
+    		\item Convert any input sequence to be robot-compatible \label{itm:obj3a}
+    		\item Correctly follow the sequence to achieve the intended output \label{itm:obj3b}
+    	\end{enumerate}
+    	\item Ensure the runtime of the system is an acceptable length \label{itm:obj4}
+    	\item Implement a program to use a range of algorithms to generate a solve sequence \label{itm:obj5}
+    	\item Compare the performance of different algorithms, especially the difference between human and robot compatible move sequences \label{itm:obj6}
+    \end{enumerate}
+    
+    \section{Robot}
+    
+    Objective \ref{itm:obj1} was achieved with the design and implementation of the MkII. The movement of all three main components is reliable, quick and efficient, providing an all-round accurate Cube manipulation. After further full scale tests and use of the robot, the accuracy of the cradle was revealed to be compromised when it was rotated for short amounts multiple times in a row. This issue was replicable through the short Python script shown in Listing \ref{lst:cradleAccuracyTest}, with the outputted angles show in Appendix \ref{tab:cradleAccuracyTest}. The expected result of the script was that the cradle will have completed two full rotations and still be in line with the rest of the robot. However, the actual output was that the cradle rotated less than the desired amount due to a small rotation in the opposite direction. This in turn caused the \move{x} arm to fail and render the entire process moot.
+
+    \begin{lstlisting}[caption={A short script to test the cradle's accuracy}, label={lst:cradleAccuracyTest}]
+    from time import sleep
+    from ev3dev.ev3 import Sound, OUTPUT_A
+    from ev3dev.helper import LargeMotor
+    
+    motor = LargeMotor(OUTPUT_A)
+    motor.stop_action = 'hold'
+    motor.speed_sp = 510
+    
+    for i in range(16):
+	    motor.run_to_rel_pos(position_sp=200)
+	    # rotating 200 deg produces output rotation of 45 degs
+	    motor.wait_until_not_moving()
+	    sleep(0.05)
+	    Sound.beep()\end{lstlisting}
+    
+    As this was an inherent problem with ev3dev, an issue was opened on its GitHub repository asking for advice on workarounds or fixes \cite{Worgarside2018}. Just over a week after the issue was opened the owner of the repository, David Lechner, posted a workaround for this issue which involved changing the rotation type from \lstinline|relative| to \lstinline|absolute|. This lessened the problem, but did not remove it entirely, so a more reliable workaround was devised: after each cradle rotation, the cradle's braking emthod is set to \lstinline|coast| so that the cradle can be manually aligned when necessary. Although not desirable, this workaround works as required.
+    
+    \begin{aside}
+    	As of 23/04/2018, a fix has been released in version 2.0.0 of ev3dev. As this is a major update from the version used for this project (and the close proximity to the deadline), it has not been used for this project.
+    \end{aside}
+    
+    \section{Codebase}
+    
+    Objectives \ref{itm:obj2} and \ref{itm:obj3} have all been achieved with varying degrees of success as discussed in sections \ref{sec:treeSolving}, \ref{sec:multiphaseSolving} and \ref{sec:halfTurnSolving}. The only method to fully guarantee a solution is the multiphase solver, which includes the fall-back kociemba algorithm. The tree-based method will generate a solution, but it requires an infeasible amount of time and eventually memory. The half turn method only works for a subset of the positions, as it is not intended to be a full solution. Both of these methods could easily have the fall-back method added, but they are included as proof of a hypothesis or concept so do not require it.
+    
+    The multiphase method, however, does require the fall-back method due to failure in generating the final table of positions. In order to better optimise the position generation, Windows Performance Monitor was used to log the amount of free memory every five seconds for the duration of the first three phases. The data created by the logger was then used to find the amount of memory in use at each point to create a more useful graph. The data points all had the value of the first point in that set subtracted from them to make all the sets start at zero so the data is more comparable. In Figure \ref{fig:memoryLoggerGraph}, the shape of the data plots is more important than the values themselves: it is more useful to have a process which keeps the memory constant than one which has troughs and peaks, because effort can be put into reducing the constant value of the former.
+    
+    \begin{figure}[H]
+    	\begin{tikzpicture}
+    	\begin{axis}[
+    	width=\linewidth,
+    	height=0.66\linewidth,
+    	ymajorgrids=true,
+    	xmajorgrids=false,
+    	grid style={dashed,gray!30},
+    	xlabel=Time /\si{\second},
+    	ylabel=Memory Used /\si{\mega\byte},
+    	x tick label style={rotate=90,anchor=east},
+    	no markers,
+    	enlarge x limits=false,
+    	enlarge y limits=false,
+    	cycle list name=color list,
+    	legend pos=north west,
+    	axis lines=left,
+    	legend style={draw=gray, line width=1pt}
+    	]
+    	\addplot table[x=Time, y=One, col sep=comma] {Research/Memory Logs.csv};
+    	\addplot table[x=Time, y=Two, col sep=comma] {Research/Memory Logs.csv}; 
+    	\addplot table[x=Time, y=Six, col sep=comma] {Research/Memory Logs.csv}; 
+    	\addplot table[x=Time, y=Seven, col sep=comma] {Research/Memory Logs.csv}; 
+    	\addplot table[x=Time, y=Eight, col sep=comma] {Research/Memory Logs.csv}; 
+    	\addplot table[x=Time, y=Ten, col sep=comma] {Research/Memory Logs.csv}; 
+    	\legend{One, Two, Six, Seven, Eight, Ten}
+    	\end{axis}
+    	\end{tikzpicture}
+    	\caption{Memory usage logged when generating tables for Phases Zero, One and Two}
+    	\label{fig:memoryLoggerGraph}
+    \end{figure}
+    
+    Ten different optimisations\footnote{Only the more important ones have been included in Figure \ref{fig:memoryLoggerGraph} for simplicity} were made in an attempt to make the program use less memory:
+    
+    \begin{enumerate}
+    	\item Standard multiprocessing iteration to add to database, no optimisation
+    	\item Results are popped off the returned list instead of simply being read [1]\footnote{\enquote{[1-3]} means that an opimisation is built on optimisations 1, 2, and 3}
+    	\item The creation of processes is moved \tit{inside} the iteration [1-2]
+    	\item Added \lstinline|position_set| for duplication checking [1-3]
+    	\item Small change to \lstinline|position_set| initialisation [1-4]
+    	\item Changed the pool type (to \lstinline|async|\footnote{An asynchronous pool of worker processes. This was used to try to write the data to the database as soon as possible}) to offload data to main process for faster writing to database [1-5]
+    	\item Implementation of \lstinline|Manager().Queue()| to streamline data movement [1-6]
+    	\item Adem, but with three processes instead of four, with the intention of freeing up a core for concurrent database writing [1-7]
+    	\item Rollback to process five with small changes [1-5]
+    	\item Process nine with aggressive garbage collection [1-5, 9]
+    \end{enumerate}
+    
+    As is clearest in processes One, Seven and Eight, there are three major points where a significant portion of memory is freed at once. This is where the generation of points has been completed, and the data written from memory to the database on the hard disk. This shape of the graph means that the memory is being quickly consumed throughout the generation of each table, and is only freed upon database insertion.
+    
+    Optimisation 8 was the culmination of attempts to reduce the number of positions kept in the memory during runtime. Due to the separation of processes' memory blocks, passing data back to the main process (or any process) to be written to the database concurrently to the same data's generation is extremely difficult: as the data is incomplete, it cannot be returned from the worker processes. After testing memory usage and other features, it became apparent that the build up of data in memory had to be accepted as invariant through all optimisation methods.
+    
+    This invariance of memory hungry processing prompted a rollback to optimisation 5. The last improvement to be added to the generation process was to manually call the garbage collector whenever large amount of data were written to the disk. The combined results of the optimisations managed to reduce the peak amount of memory used from the original value of 4428MB to 1490MB: a reduction of 66.4\%. Despite this large reduction, the final table still required more memory than was available.
+    
+     
     \newpage
     \chapter{Conclusions and Future Work}
+    
+    % ============================================================================= Appendices ============================================================================= %
     
     \newpage
     \begin{appendices}
@@ -1578,7 +1743,67 @@
 			\end{tabular}
 		\end{table}
 		
+		\begin{small}
+			\pgfplotstabletypeset[
+			empty header,
+			begin table=\begin{longtable},
+			every first row/.append style={before row={%
+				\caption{Data logged by Windows Performance Monitor for ten optimisations}%
+				\label{tab:memoryUse}\\\toprule
+		 		\multirow{ 2}{*}{\tbo{Time /\si{\second}}} & \multicolumn{10}{c}{\tbo{Memory Used /\si{\mega\byte}}}\\
+				 & \tbo{One} & \tbo{Two} & \tbo{Three} & \tbo{Four} & \tbo{Five} & \tbo{Six} & \tbo{Seven} & \tbo{Eight} & \tbo{Nine} & \tbo{Ten} \\ \toprule    
+				\endfirsthead
+				%
+				\multicolumn{11}{c}%
+				{{\bfseries Table \thetable\ Continued from previous page}} \\
+				\toprule 
+				%
+				\tbo{Time} & \tbo{One} & \tbo{Two} & \tbo{Three} & \tbo{Four} & \tbo{Five} & \tbo{Six} & \tbo{Seven} & \tbo{Eight} & \tbo{Nine} & \tbo{Ten} \\ \toprule  
+				\endhead
+				%
+				\midrule \multicolumn{11}{r}{{Continued on next page}} \\ \bottomrule
+				\endfoot
+				%
+				\midrule
+				\multicolumn{11}{r}{{Concluded}} \\ \bottomrule
+				\endlastfoot
+			}},%
+			%
+			end table=\end{longtable},
+			col sep=comma,
+			string type,
+			]{Research/Memory Logs.csv}
+		\end{small}
 		
+		\begin{table}[h!]
+			\def\arraystretch{1.25}
+			\centering
+			\caption{Data obtained from testing the cradle's motor's accuracy}
+			\label{tab:cradleAccuracyTest}
+			\begin{tabular}{M{0.1\textwidth}M{0.1\textwidth}M{0.1\textwidth}M{0.1\textwidth}}
+				\toprule
+				\multirow{2}{*}{\parbox{0.1\textwidth}{\centering\tbo{Rotation Number}}} & \multicolumn{3}{c}{\tbo{Rotation Angle /\textdegree}} \\
+				& \tbo{Actual} & \tbo{Expected} & \tbo{Difference} \\
+				\midrule
+				0 & 189 & 200 & 11 \\
+				1 & 384 & 400 & 16 \\
+				2 & 579 & 600 & 21 \\
+				3 & 778 & 800 & 22 \\
+				4 & 976 & 1000 & 24 \\
+				5 & 1172 & 1200 & 28 \\
+				6 & 1369 & 1400 & 31 \\
+				7 & 1563 & 1600 & 37 \\
+				8 & 1759 & 1800 & 41 \\
+				9 & 1954 & 2000 & 46 \\
+				10 & 2152 & 2200 & 48 \\
+				11 & 2349 & 2400 & 51 \\
+				12 & 2546 & 2600 & 54 \\
+				13 & 2744 & 2800 & 56 \\
+				14 & 2945 & 3000 & 55 \\
+				15 & 3148 & 3200 & 52 \\
+				\bottomrule
+			\end{tabular}
+		\end{table}
 		
 		\chapter{Figures}
 		\begin{figure}[H]

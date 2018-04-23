@@ -332,7 +332,7 @@ def main():
 
     if db_generation:
         if multiphase:
-            for phase in range(4):
+            for phase in range(5):
                 multiphase_generator.generate_lookup_table(db, phase, verbose)
         elif half_turn:
             half_turn_generator.generate_lookup_table(db, verbose)
