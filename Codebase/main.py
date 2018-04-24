@@ -347,6 +347,7 @@ def main():
                 for phase in range(5):
                     multiphase_generator.generate_lookup_table(db, phase, verbose)
                 half_turn_generator.generate_lookup_table(db, verbose)
+                robot_only_generator.generate_lookup_table(db, verbose)
     elif multiphase or half_turn or tree or robot_only:
         solve_sequence = []
         cube = Cube(position)
@@ -392,7 +393,6 @@ def main():
 if __name__ == '__main__':
     # Colorama allows for colored printing
     colorama.init()
-    print('\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n')
     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 
     opts, args = getopt.getopt(sys.argv[1:], 'rdchmtvb')
