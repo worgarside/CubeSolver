@@ -1,9 +1,5 @@
 \documentclass{report}
 
-\title{Solving Rubik's Cube with Lego Mindstorms}
-\date{02-05-2018}
-\author{Will Garside}
-
 \usepackage[a4paper,left=2.54cm,right=2.54cm, top=2.54cm, bottom=2.54cm]{geometry}	% better margins
 \usepackage{booktabs} 			% tables with nice formatting
 \usepackage{tabularx}			% tables with proper width
@@ -36,9 +32,13 @@
 \usepackage{textcomp}			% text symbols
 \usepackage{etoolbox}			% allows custom environment pre/suffixes (listings -> minipage)
 \usepackage[backend=bibtex,style=numeric-comp,sorting=none,sortcites=true,block=none,indexing=false,citereset=none,isbn=true,url=true,doi=true,natbib=true]{biblatex}
+\usepackage{setspace}			% Line spacing
+\usepackage{numprint}			% long number formatting
 
 \setlength\bibitemsep{0.5\baselineskip}
 \addbibresource{Dissertation.bib}
+
+\sisetup{group-separator={,}}
 
 \usetikzlibrary{shapes.geometric, arrows, positioning}
 \tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black]
@@ -62,33 +62,20 @@
 \AfterEndEnvironment{lstlisting}{\end{minipage}\par\addvspace{\topskip}}
 
 \lstset{ 
-%	backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}; should come as last argument
 	basicstyle=\small\ttfamily,        % the size of the fonts that are used for the code
-%	breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
-%	breaklines=true,                 % sets automatic line breaking
 	captionpos=b,                    % sets the caption-position to bottom
 	commentstyle=\color{gray},    % comment style
-%	deletekeywords={...},            % if you want to delete keywords from the given language
 	escapechar={|}, 
-%	escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
-%	extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
 	frame=single,	                   % adds a frame around the code
 	keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
 	keywordstyle=\color{keyword},     % keyword style
 	language=Python,                 % the language of the code
-%	morekeywords={*,...},            % if you want to add more keywords to the set
-%	numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
-%	numbersep=5pt,                   % how far the line-numbers are from the code
-%	numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
-%	rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
-%	showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
-%	showstringspaces=false,          % underline spaces within strings only
-%	showtabs=false,                  % show tabs within strings adding particular underscores
-%	stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+	morekeywords={half_turn_lookup, },            % if you want to add more keywords to the set
 	stringstyle=\color{green},     % string literal style
 	tabsize=4,	                   % sets default tabsize to 2 spaces
-%	title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
 }
+
+%\sisetup{group-separator = {,}}
 
 \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
 \newcommand{\tbo}[1]{\textbf{#1}}
@@ -156,16 +143,15 @@
 
 \begin{document}
 	\pagenumbering{gobble}
-	\maketitle
+	\input{Title.tex}
 	\newpage
 	
 	\renewcommand{\thechapter}{\Roman{chapter}}
 	\pagenumbering{roman}
-	\chapter{Signed Declaration}
+	\chapter{Declaration}
 	All sentences or passages quoted in this report from other people's work have been specifically acknowledged by clear cross-referencing to author, work and page(s). Any illustrations which are not the work of the author of this report have been used with the explicit permission of the originator and are specifically acknowledged. I understand that failure to do this amounts to plagiarism and will be considered grounds for failure in this project and the degree examination as a whole.
-	\\Name: Will Garside
-	\\Signature:
-	\\Date: 
+	
+	William Garside
 
 	\newpage
 	\chapter{Abstract}
@@ -173,7 +159,7 @@
 	
 	\newpage
 	\chapter{Acknowledgements}
-	Thanks to my parents, who raised me since I was a boy. And Rik van Grol, who raised me afterwards.
+	I would like to express my thanks to Dr. Siobh\'{a}n North for suggesting this project and supervising my progress throughout. Thanks must also go to Rik van Grol, who provided invaluable information for one of the main algorithms used in this project.
 	
 	\newpage
 	\chapter{Definitions and Notations}
@@ -190,8 +176,8 @@
 			{[Rubik's]} Cube 		& 	A standard 3x3x3 Rubik's Cube\textsuperscript{\ref{footnote:cube}}. \\
 			Face 				& 	One of the size faces on a Cube, Denoted by position or colour. e.g. \face{u}\\
 			Slice				&	A central layer between two faces. Usually referenced by the faces it spans. \\
-			Quarter Turn		&	A clockwise rotation of a face or slice by 90$\degree$ \\
-			Half Turn			&	A clockwise rotation of a face or slice by 180$\degree$ \\
+			Quarter Turn		&	A clockwise rotation of a face or slice by \ang{90} \\
+			Half Turn			&	A clockwise rotation of a face or slice by \ang{180} \\
 			Quarter Turn Metric	&	When counting moves, a Quarter Turn is counted as a single move and a half is two moves. \\
 			Half Turn Metric\textsuperscript{\ref{footnote:metric}}	&	Quarter turns and half turns are both counted as single moves. \\
 			Cubie				&	One of the twenty-six smaller cubes that make up a Cube. \\
@@ -210,7 +196,7 @@
 		\end{tabular}
 	\end{table}
 
-%	% TODO talk about Singmaster notation
+%	 TODO talk about Singmaster notation
 %	\addcontentsline{toc}{section}{Notation}
 %	\begin{table}[htbp]
 %		\def\arraystretch{1.2}
@@ -275,7 +261,7 @@
     
     One of the larger issues that this project will encounter is the run-time of the program to find a solution. Many programs have been known to take upwards of three days to find a solve sequence - this project currently aims to find a solution in approximately fifteen minutes or less (an arbitrary number determined only by the attention span of the author). This will require extensive optimisation of search spaces and group theory through symmetrical elimination and set covering in order to reduce the necessary coverage of the search algorithm.
     
-    Finding the optimal solve sequence for any given position has been deliberately omitted from the objectives of this project: there are over forty-three quintillion valid positions of a Cube, each requiring an extensive amount of time to find the optimal solution for. Based on current hardware capabilities and previous studies and research, an estimated timespan for finding all optimal solutions is in the order of millennia\footnote{This is an estimation based on data presented at cube20.org which states that finding optimal solutions takes ~11,800 times as long as finding sequences or twenty moves or less \cite{Rokicki2010}}.
+    Finding the optimal solve sequence for any given position has been deliberately omitted from the objectives of this project: there are over forty-three quintillion valid positions of a Cube, each requiring an extensive amount of time to find the optimal solution for. Based on current hardware capabilities and previous studies and research, an estimated timespan for finding all optimal solutions is in the order of millennia\footnote{This is an estimation based on data presented at cube20.org which states that finding optimal solutions takes roughly \numprint{11800} times as long as finding sequences or twenty moves or less \cite{Rokicki2010}}.
     
     \newpage
     \chapter{Literature Review}
@@ -286,7 +272,7 @@
     
     The twentieth century generated many ideas about the future of robotics, such as \enquote{Kitchen units will be devised that will prepare \enquote{automeals}, heating water and converting it to coffee} alongside grandiose aspirations such as \enquote{An experimental fusion-power plant or two will already exist in 2014} \cite{Asimov1964}. Whilst some predictions have been fulfilled by the technology of the past two decades, others are still nowhere near completion and could be considered impossible for the next century. This is a clear demonstration that the field of Robotics has made vast improvements, but is still - in some respects - very much in its youth.
     
-    In the same way as the field of Robotics, AI has vast potential and we have only touched the tip of the iceberg. The most advanced commercial AI systems are intended to make people's lives easier through organisation and saving precious seconds in performing simple tasks on their smartphones and more recently in their homes. However, Google's Assistant, Apple's Siri, and Amazon's Alexa still fall short when it comes to the intelligence demonstrated in Asimov's book \propernoun{I, Robot}. We are still far from being unable to \enquote{differentiate between a robot and the very best of humans} \cite{Asimov1970}.
+    In the same way as the field of Robotics, AI has vast potential and we have only touched the tip of the iceberg. The most advanced commercial AI systems are intended to make people's lives easier through organisation and saving precious seconds in performing simple tasks on their smartphones and more recently in their homes. However, Google's Assistant \cite{Google2016}, Apple's Siri \cite{Apple2011}, and Amazon's Alexa \cite{Amazon2014} still fall short when it comes to the intelligence demonstrated in Asimov's book \propernoun{I, Robot}. We are still far from being unable to \enquote{differentiate between a robot and the very best of humans} \cite{Asimov1970}.
     
     \section{Robotics in Education}
     There has always been a clear use of \enquote{edutainment} style teaching in one form or another for hundreds of years. One of the earliest known uses of edutainment is in \propernoun{Poor Richard's Almanack}, which was written by Benjamin Franklin and published annually between 1732 and 1758. Alongside all the usual information contained in an Almanac, Franklin (under the pseudonym \propernoun{Poor Richard}) included maths exercises, puzzles, and aphorisms \cite{Beato2015}, \cite{Franklin1732}. Walt Disney was another pioneer of edutainment in the time immediately before, during, and following the World Wars. His first piece of edutainment was a short film, \propernoun{Tommy Tucker's Tooth}, which was commissioned by a dental institute in 1922.
@@ -314,7 +300,7 @@
     
     When a computer solves a Cube (or any other similar puzzle), it does so by following set algorithms and rules until the solved state is achieved. Computers cannot use humanlike instincts, so we often try to provide a heuristic to make the task simpler. These heuristics can be pre-computed data tables to reduce the amount of processing at run time, or a reduction in the original data set by eliminating certain elements according to a set of rules.
     
-    In his 1997 paper on the use of pattern databases to increase solve efficiency, Richard Korf uses different heuristic functions and characterises how effective they are in reducing the number of moves in a solve sequence. His first method used an Iterative-Deepening A* algorithm, combined with the heuristic of the Manhattan distances from the edge cubies' current position and orientation to that which is desired. This reduced the time required to solve a Cube at \depth{14} to three days\footnote{The simulation was run on a Sun Ultra-Sparc Model 1 workstation}, however when increased to \depth{18} the time increased exponentially to two hundred and fifty years. After a re-evaluation, Korf modified the heuristic by pre-computing the Manhattan distance of each cubie from all of its possible positions and orientations and storing the table in memory at run-time. This created a table of nearly ninety-million entries - which would have been bigger but was restricted by the available memory (the table was approximately forty-two megabytes). The newer heuristic reduced the time to search at \depth{18} to less than four weeks - a reduction of approximately 99.97\%. Korf suggested that the speed of the algorithm used would increase linearly with the amount of memory available, meaning that if it were run today the \depth{18} search would take under three hours\footnote{This is based on the memory capacity of the Model 1 Workstation and a modern computer being 64MB and 16GB respectively.} \cite{Korf1997}.
+    In his 1997 paper on the use of pattern databases to increase solve efficiency, Richard Korf uses different heuristic functions and characterises how effective they are in reducing the number of moves in a solve sequence. His first method used an Iterative-Deepening A* algorithm, combined with the heuristic of the Manhattan distances from the edge cubies' current position and orientation to that which is desired. This reduced the time required to solve a Cube at \depth{14} to three days\footnote{The simulation was run on a Sun Ultra-Sparc Model 1 workstation}, however when increased to \depth{18} the time increased exponentially to two hundred and fifty years. After a re-evaluation, Korf modified the heuristic by pre-computing the Manhattan distance of each cubie from all of its possible positions and orientations and storing the table in memory at run-time. This created a table of nearly ninety-million entries - which would have been bigger but was restricted by the available memory (the table was approximately forty-two megabytes). The newer heuristic reduced the time to search at \depth{18} to less than four weeks - a reduction of approximately 99.97\%. Korf suggested that the speed of the algorithm used would increase linearly with the amount of memory available, meaning that if it were run today the \depth{18} search would take under three hours\footnote{This is based on the memory capacity of the Model 1 Workstation and a modern computer being 64 \si{\mega\byte} and 16 \si{\giga\byte} respectively.} \cite{Korf1997}.
     
    	\begin{table}[H]
     	\def\arraystretch{1.25}
@@ -390,7 +376,7 @@
 
     
     \section{Python as a Scientific Scripting Language}
-    Traditionally when performing large calculations and processes, compiled languages (C, C++, Fortran etc.) are the preferred choice over scripting languages such as Ruby, JavaScript, (pure) Python, etcetera. This is because compilation is done before run-time, allowing the program to run unhindered by on-the-fly translation/interpretation \cite{Cai2005}.
+    Traditionally when performing large calculations and processes, compiled languages (C, C++, Fortran etc.) are the preferred choice over scripting languages such as Ruby, JavaScript, (pure) Python, et cetera. This is because compilation is done before run-time, allowing the program to run unhindered by on-the-fly translation/interpretation \cite{Cai2005}.
     
     For general purpose applications, scripting languages are preferable because they allow small changes to be made without re-compiling large classes before testing. In the thirteenth issue of \propernoun{Scientific Programming}, Cai, Langtangen and Moe \cite{Cai2005} explain how MATLAB is often a preferable choice for less intensive scientific computation due to its many features, such as: integrated simulation and visualisation tools; clear syntax; immediate feedback of commands; impressive documentation. They describe the use of MATLAB in computational science as paradoxical, as it is a scripting language which inherently is interpreted at run-time.
     
@@ -433,9 +419,6 @@
     
 	\subsubsection{Python 3.6 Runtime Environment}
     As discussed in the Literature Review, Python is the ideal language for this project. It requires a native runtime environment for programs to be run: this consists of the Python interpreter, libraries, and any packages used in the development process.
-    
-    \subsubsection{MinGW}
-    C++ requires an environment to develop and compile in. MinGW (Minimalist GNU for Windows) is a popular choice when developing C++ applications. % TODO complete this
     
     \subsubsection{ev3dev}
     ev3dev \cite{Ev3dev.org} is a custom operating system (OS) for the EV3 which contains a low-level framework for the peripherals of an EV3. It allows users to write their own programs in a multitude of languages (including Python) to create complex functions and models. It is installed by flashing the ev3dev OS to a microSD card which is then inserted into the EV3, avoiding affecting the EV3's original firmware.
@@ -713,7 +696,7 @@
 		\label{fig:rdrColorSensor}
 	\end{figure}
 	
-	Where the motors used for the cradle and the \move{x} arm can both rotate indefinitely without a mechanical issue (colliding with other parts of the MkI, for instance), the one powering the colour sensor cannot rotate indefinitely due to the limited freedom of the colour sensor assembly. When the assembly reaches the end of its travel, it will be stopped by the liftarm that holds the shafts, causing it to stop the gear train and in turn provide a level of resistance to the motor that could either damage the motor or force the MkI to break apart. For this reason, the 24-tooth gear \legopiece{60c01} (which is the first in the gear train) is a special type of \enquote{clutch gear}, shown in Figure \ref{fig:imgClutchGear}. This means that it will only transmit a maximum torque value of between 2.5 \si{\newton\centi\metre} and 5.0 \si{\newton\centi\metre}. The theoretical output torque of the gear train is 2.21 \si{\newton\centi\metre}, so the clutch gear will function as a regular gear for the duration of colour sensor movement. When the assembly reaches its limit, the resistance to the gear train will cause the clutch gear to slip and the motor can continue turning without damaging itself or the MkI. This all ensures that if an error occurs which causes the motor to remain in a running state, no components will be damaged. Clearly an error of that magnitude should never occur if \lstinline|try...except| statements are used correctly, but this is a final fail-safe measure.
+	Where the motors used for the cradle and the \move{x} arm can both rotate indefinitely without a mechanical issue (colliding with other parts of the MkI, for instance), the one powering the colour sensor cannot rotate indefinitely due to the limited freedom of the colour sensor assembly. When the assembly reaches the end of its travel, it will be stopped by the liftarm that holds the shafts, causing it to stop the gear train and in turn provide a level of resistance to the motor that could either damage the motor or force the MkI to break apart. For this reason, the 24-tooth gear \legopiece{60c01} (which is the first in the gear train) is a special type of \enquote{clutch gear}, shown in Figure \ref{fig:imgClutchGear}. This means that it will only transmit a maximum torque value of between 0.025 \si{\newton\metre} and 0.05 \si{\newton\metre}. The theoretical output torque of the gear train is 0.0221 \si{\newton\metre}, so the clutch gear will function as a regular gear for the duration of colour sensor movement. When the assembly reaches its limit, the resistance to the gear train will cause the clutch gear to slip and the motor can continue turning without damaging itself or the MkI. This all ensures that if an error occurs which causes the motor to remain in a running state, no components will be damaged. Clearly an error of that magnitude should never occur if \lstinline|try...except| statements are used correctly, but this is a final fail-safe measure.
 	
 	\begin{figure}
 		\centering
@@ -968,7 +951,7 @@
 	
 	\subsubsection{Battery Usage}
 	
-	The final of the issues discovered by repeated testing of the MkI was how power-hungry the EV3 control brick really is. After only one to one-and-a-half hours of testing, it would run six AA 2500 \si{\milli\ampere\hour} batteries completely flat. Lego do sell a rechargeable battery for the EV3, however it's only 2050 \si{\milli\ampere\hour} by itself and it costs \pounds81.99 \cite{Lego2018}. A cheaper (and higher capacity) option was to purchase twelve rechargeable 2500 \si{\milli\ampere\hour} batteries and a charger for approximately \pounds25. Whilst the EV3 was voraciously consuming the power from six of the batteries, the other six could either be charging or waiting ready. This led to the design and creation of a battery holder attached to the MkII. It holds six AA batteries and has two pins which can be removed to release the batteries, as shown in Figure \ref{fig:imgBatteryHolderOpen}.
+	The final of the issues discovered by repeated testing of the MkI was how power-hungry the EV3 control brick really is. After only one to one-and-a-half hours of testing, it would run six AA \num{2500} \si{\milli\ampere\hour} batteries completely flat. Lego do sell a rechargeable battery for the EV3, however it's only \num{2050} \si{\milli\ampere\hour} by itself and it costs \pounds81.99 \cite{Lego2018}. A cheaper (and higher capacity) option was to purchase twelve rechargeable \num{2500} \si{\milli\ampere\hour} batteries and a charger for approximately \pounds25. Whilst the EV3 was voraciously consuming the power from six of the batteries, the other six could either be charging or waiting ready. This led to the design and creation of a battery holder attached to the MkII. It holds six AA batteries and has two pins which can be removed to release the batteries, as shown in Figure \ref{fig:imgBatteryHolderOpen}.
 	
 	\begin{figure}[H]
 		\centering
@@ -1014,7 +997,7 @@
 		\label{fig:cradleWormGear}
 	\end{figure}
 	
-	Figure \ref{fig:rdrCradleWormGear} shows how the cradle is driven by a large motor. A large 36-tooth gear \legopiece{32498} is directly attached to the rotor with two small pins to reduce the need for an extended shaft which will flex when placed under strain (i.e. at the start of a rotation). This gear drives a 12-tooth gear \legopiece{32270} to triple the rotational velocity at that point of the gear train. This connection is immediately repeated and used to create a \ang{90} turn onto the shaft with the worm gear. At this point the speed ratio between the worm gear and the motor is 9:1, which is then decreased forty times by the large 40-tooth gear to create a final ratio of 1:4.444. This means the maximum rotational velocity of the cradle will be 1.843 \si{\radian\per\second} (17.6 RPM) at 7.5\si{\volt} and the original torque is increased from 17.3 \si{\newton\centi\metre} to 76.8 \si{\newton\centi\metre}, which will allow a face of the Cube to be rotated with ease. The vertical black shaft seen at the top of the image provides a mounting point for the cradle.
+	Figure \ref{fig:rdrCradleWormGear} shows how the cradle is driven by a large motor. A large 36-tooth gear \legopiece{32498} is directly attached to the rotor with two small pins to reduce the need for an extended shaft which will flex when placed under strain (i.e. at the start of a rotation). This gear drives a 12-tooth gear \legopiece{32270} to triple the rotational velocity at that point of the gear train. This connection is immediately repeated and used to create a \ang{90} turn onto the shaft with the worm gear. At this point the speed ratio between the worm gear and the motor is 9:1, which is then decreased forty times by the large 40-tooth gear to create a final ratio of 1:4.444. This means the maximum rotational velocity of the cradle will be 1.843 \si{\radian\per\second} (17.6 RPM) at 7.5\si{\volt} and the original torque is increased from 0.0173 \si{\newton\metre} to 0.0768 \si{\newton\metre}, which will allow a face of the Cube to be rotated with ease. The vertical black shaft seen at the top of the image provides a mounting point for the cradle.
 	
 	\subsection{X-Move Arm}
     
@@ -1335,9 +1318,9 @@
     
     During the development of this project, three main methods of solving the Cube were implemented. Each had it's own advantages and disadvantages and are discussed in this section and the following two.
     
-    \subsection{Implementation}
+    \subsection{Implementation} \label{sec:treeSolveImplementation}
     
-    The very first step in creating a reliable solve method was to create a reliable object class, and a data structure to store the object in. The \lstinline|Position| class defines an object with four attributes: the depth of the position; the position's string representation; the move sequence used to get to that position; and the ID of that position. Richard Korf discusses using a search tree and an iterative deepening A* algorithm to solve a Cube in his 1997 paper \cite{Korf1997}. Korf also mentions using the Manhattan distance of the cubies as a heuristic to help improve the efficiency of the search algorithm. 
+    The very first step in creating a reliable solve method was to create a reliable object class, and a data structure to store the object in. The \lstinline|Position| class defines an object with four attributes: the depth of the position; the position's string representation; the move sequence used to get to that position; and the ID of that position. Richard Korf discusses the successful implementation of a search tree and an iterative deepening A* algorithm to solve a Cube in his 1997 paper \cite{Korf1997}. 
     
    	\begin{aside}
    		    It is important to note that a lot of the research into efficient solving algorithms was done between twenty and forty years ago, and is now lost to the abandonment of websites, mailing lists, and newsletters in favour of much simpler websites and blog posts with much less information and community interaction. Some of the data from the \enquote{golden age} of solving Cube's is available as large, disorganised archives  - but a lot of it was done before the days of commonplace online interaction, and the amount of data available to assist in the design and implementation of solve methods is far more limited than is desirable if one has no contacts in the world of Rubik's Cube solving. This all means that some of the development hit a premature dead end and was abandoned in favour of attempting a larger range of methods for cross-comparison.
@@ -1358,25 +1341,25 @@
    	\begin{figure}[H]
     	\centering
    		\begin{tikzpicture}
-   		\begin{axis}[title={Tree Solve Times}, axis lines = left, legend pos=north west, xlabel = Depth, ylabel = Solve Time /\si{\second}, ymode=log]
-   		\addplot coordinates {
-   			(1, 0.038)
-   			(2, 0.467)
-   			(3, 6.545)
-   			(4, 87.324)
-   			(5, 1149.732)
-   			(6, 14750)
-   		};
-   		\addplot coordinates {
-   			(1, 0.007)
-   			(2, 0.048)
-   			(3, 0.522)
-   			(4, 6.53)
-   			(5, 86.904)
-   			(6, 1165.35)
-   		};
-   		\legend{Worst Case, Best Case}
-   		\end{axis}
+	   		\begin{axis}[title={Tree Solve Times}, axis lines = left, legend pos=north west, xlabel = Depth, ylabel = Solve Time /\si{\second}, ymode=log]
+		   		\addplot coordinates {
+		   			(1, 0.038)
+		   			(2, 0.467)
+		   			(3, 6.545)
+		   			(4, 87.324)
+		   			(5, 1149.732)
+		   			(6, 14750)
+		   		};
+		   		\addplot coordinates {
+		   			(1, 0.007)
+		   			(2, 0.048)
+		   			(3, 0.522)
+		   			(4, 6.53)
+		   			(5, 86.904)
+		   			(6, 1165.35)
+		   		};
+		   		\legend{Worst Case, Best Case}
+	   		\end{axis}
    		\end{tikzpicture}
    		\caption{The time difference increased exponentially for each depth}
    		\label{fig:treeSolveGraph}
@@ -1547,7 +1530,7 @@
     \chapter{Results and Discussion} \label{chp:resultsDiscussion}
    	\epigraph{I pass with relief from the tossing sea of Cause and Theory to the firm ground of Result and Fact.}{Winston Churchill \cite{Churchill1898}}
     
-    \section{Original Objectives}
+    \section{Objective Fulfilment}
     
     The original objectives laid out in Section \ref{sec:objectives} have been re-stated below for clarity:
     
@@ -1564,7 +1547,7 @@
     	\item Compare the performance of different algorithms, especially the difference between human and robot compatible move sequences \label{itm:obj6}
     \end{enumerate}
     
-    \section{Robot}
+    \subsection{Robot}
     
     Objective \ref{itm:obj1} was achieved with the design and implementation of the MkII. The movement of all three main components is reliable, quick and efficient, providing an all-round accurate Cube manipulation. After further full scale tests and use of the robot, the accuracy of the cradle was revealed to be compromised when it was rotated for short amounts multiple times in a row. This issue was replicable through the short Python script shown in Listing \ref{lst:cradleAccuracyTest}, with the outputted angles show in Appendix \ref{tab:cradleAccuracyTest}. The expected result of the script was that the cradle will have completed two full rotations and still be in line with the rest of the robot. However, the actual output was that the cradle rotated less than the desired amount due to a small rotation in the opposite direction. This in turn caused the \move{x} arm to fail and render the entire process moot.
 
@@ -1590,7 +1573,7 @@
     	As of 23/04/2018, a fix has been released in version 2.0.0 of ev3dev. As this is a major update from the version used for this project (and the close proximity to the deadline), it has not been used for this project.
     \end{aside}
     
-    \section{Codebase}
+    \subsection{Codebase}
     
     Objectives \ref{itm:obj2}, \ref{itm:obj3} and \ref{itm:obj4} have been achieved with varying degrees of success (as discussed in sections \ref{sec:treeSolving}, \ref{sec:multiphaseSolving} and \ref{sec:halfTurnSolving}). The only method to fully guarantee a solution is the multiphase solver, which includes the fallback kociemba algorithm. The tree-based method will generate a solution, but it requires an infeasible amount of time (and presumably, eventually memory) for depths greater than six. The half turn method only works for a subset of the positions, as it is not intended to be a full solution. Both of these methods could easily have the fallback method added, but they are included as proof of a hypothesis or concept so do not require it. Assuming all necessary tables have been pre-generated and if we regard the \enquote{size of the input set} as the depth of the solution, the three different algorithms have runtimes of $O(1)$, $O(1)$ and $O(13.59^N)$ respectively.
     
@@ -1647,13 +1630,73 @@
     
     Optimisation 8 was the culmination of attempts to reduce the number of positions kept in the memory during runtime. Due to the separation of processes' memory blocks, passing data back to the main process (or any process) to be written to the database concurrently to the same data's generation is extremely difficult: as the data is incomplete, it cannot be returned from the worker processes. After testing memory usage and other features, it became apparent that the build up of data in memory had to be accepted as invariant through all optimisation methods.
     
-    This invariance of memory hungry processing prompted a rollback to optimisation 5. The last improvement to be added to the generation process was to manually call the garbage collector whenever large amounts of data were written to the disk. The combined results of the optimisations managed to reduce the peak amount of memory used from the original value of 4428 \si{\mega\byte} to 1490 \si{\mega\byte}: a reduction of 66.4\%. Despite this large reduction, the final table still required more memory than was available and was abandoned in favour of using half-turns and a fallback method.
+    This invariance of memory hungry processing prompted a rollback to optimisation 5. The last improvement to be added to the generation process was to manually call the garbage collector whenever large amounts of data were written to the disk. The combined results of the optimisations managed to reduce the peak amount of memory used from the original value of \num{4428} \si{\mega\byte} to \num{1490} \si{\mega\byte}: a reduction of 66.4\%. Despite this large reduction, the final table still required more memory than was available and was abandoned in favour of using half-turns and a fallback method.
     
-    Returning to the objective checklist, Objective \ref{itm:obj5} has been completed through the implementation of three different algorithms, and Objective 6 has been fulfilled with the discussion in the sections above. Regarding the part of Objective \ref{itm:obj6} which requires comparison of human and robot compatible moves, a robot-move only lookup table was generated to depth ???, after which point it generated an OutOfMemory??? error. This shows that both Kloosterman's final phase and the \lstinline|robot_only| table require the same optimisations.
-    
-     
+    Returning to the objective check-list, Objective \ref{itm:obj5} has been completed through the implementation of three different algorithms, and Objective 6 has been fulfilled with the discussion in the sections above. Regarding the part of Objective \ref{itm:obj6} which requires comparison of human and robot compatible moves, a robot-move-only lookup table was generated to depth ???, after which point it generated an OutOfMemory??? error. This shows that both Kloosterman's final phase and the \lstinline|robot_only| table require the same optimisations.
+         
+	\section{Comparison with Prior Algorithms}
+	
+	As stated in section \ref{sec:treeSolveImplementation}, there is very little available information surrounding the workings of successful solution algorithms. What is known, however, is that these algorithms took many months and years of research, development and collaboration to complete. The most accessible Cube solver is Herbert Kociemba's \propernoun{Cube Explorer}: it can generate a non-optimal \depth{20} solution in under five seconds, and an optimal solution within approximately forty-five minutes \cite{Kociemba}. Like many published algorithms, to generate a solution in this relatively short amount of time it makes use of established heuristics such as pruning tables. It is noteworthy that when solving a \depth{20} Cube, Cube Explorer only used 20-30\% of the available processing power so the time required could potentially be quartered.
+	
+	The vast majority of the milestone algorithms used for optimally solving a Cube are all based off their respective predecessors, with little complete originality. This proejct was developed with the intention of being as original as possible. Admittedly the multiphase solver is effectively an implementation of Kllosterman's 42-move algorithm, but this was to be the start of further developments into group creation and generation with robot compatible moves. The failures to complete these extended goals have been documented in this report to show that all avenues were considered in developing a reliable solution.
+	
+	The solutions generated by the multiphase algorithm (without the fallback) have a maximum length of fifty-five moves, which is larger than the original value found for God's Number by Morwen Thistlethwaite in 1981 \cite{Singmaster1981}. Although this is a sub-optimal result in both functionality and reliability, it is a strong proof of concept and a well explored foundation for future development.
+	
+	\section{Further Development}
+
+	\section{Robot Improvements}
+	
+	The core design of the robot has few flaws, if any. Extended testing shows that the \move{x} arm fails approximately one in one hundred times, and the failures are not replicable at all. These failures have been attributed to the play in the motors. The fix implemented in ev3dev 2.0.0 could hopefully reduce the effects of this play and increase the movements of the motors. If the motors were still found to be too inaccurate, stronger validation of the positions could be implemented, as shown in Listing \ref{lst:motorValidation}, although this could extend the time period for manipulating a Cube. 
+	
+	\begin{lstlisting}[caption={Potential position validation method for the Lego motors}, label={lst:motorValidation}]
+	from ev3dev.ev3 import OUTPUT_A
+	from ev3dev.helper import LargeMotor
+	
+	motor = LargeMotor(OUTPUT_A)
+	motor.stop_action = 'hold'
+	motor.speed_sp = 510
+	
+	for i in range(16):
+		next_pos = motor.pos + 200
+		motor.run_to_rel_pos(position_sp=200)
+		motor.wait_until_not_moving()
+		while not motor.pos == next_pos:
+			# Rotate motor by 1 degree slowly until position is matched
+			if motor.pos < next_pos:
+				motor.run_to_rel_pos(position_sp=1, speed_sp=10)
+				motor.wait_until_not_moving()
+			else:
+				motor.run_to_rel_pos(position_sp=-1, speed_sp=10)
+				motor.wait_until_not_moving()\end{lstlisting}
+	
+	The final solution to the problem of motor accuracy is to replace them with precision DC motors which provide enough torque to move the components. A small amount of research shows that there are consumer-grade motors which fit this specification \cite{Portescap}. The difficulty presented by using a standard DC motor is making it interact with the EV3 control brick - a much easier solution might be to use a system-on-chip (SoC) device, such as a Raspberry Pi or Arduino, with IO pins to control the motors. The actual Lego framework has no major issues, so could still be used as the robot's chassis.
+
+	\section{Heuristics and Optimisations}
+	
+	The greatest shortcoming of any of the solvers is the weakness of the optimisations: although many have been tested and implemented, they are all based on simply making the existing algorithms better, rather than larger modifications to their cores.
+	
+	\subsection{Manhattan Cubie Distances}
+
+	In his 1997 paper, Richard Korf discusses the use of the Manhattan distance of the cubies from their correct positions as a heuristic to help improve the efficiency of the search algorithm \cite{Korf1997}. In order to implement this, he uses a table which contains the Manhattan distances of \enquote{each individual cubie from all possible positions and orientations}. At runtime, this table can be used to find the number of moves required to move a cubie to its correct position and orientation and eliminate all sequences with fewer moves (as they will definitely not be a valid solution).
+	
+	This would be a simple yet effective optimisation to add to either of the solvers (not including the half-turn solver) to reduce the number of positions generated/checked. Further analysis could be performed to compare the effectiveness of Manhattan distances vs. Euclidean distances.
+
+	\subsection{Pruning Tables}
+        
+	A common advancement on Manhattan distance tables are known as pruning tables, which contain large quantities of pseudo-positions. These pseudo-positions are representative of many Cube positions, which are all further away than the position given in the table. The entries in the table are used to \enquote{prune} the number of positions which need to be examined in finding the solution. For example, if a pruning table shows that part of the Cube requires twelve moves to solve it, the tree generation can skip straight to \depth{12} instead of generating the multitude of positions in the first eleven depths.
+	
+	These tables are quite complex to generate, so would require considerable research into efficient generation and usage, adding a significant workload to the project. In order to achieve the most efficient implementation, the \lstinline|Cube| class might also need improving with respect to its position notation and structure. The updated \lstinline|Cube| class would also be refactored with the intention of reducing memory usage and processing requirements.
+	
+	\section{Language Choice}
+	
+	Whilst Python's strengths have been demonstrated throughout this project, its weaknesses have also been highlighted: for rapid iterations, it has a much slower iterative rate than compiled languages such as C++. The scope of this project and limited knowledge of C++ led to the absence of C++ extensions through Boost.Python
+	
     \newpage
-    \chapter{Conclusions and Future Work}
+    \chapter{Conclusions}
+    
+    The title of this project is \enquote{text}
+    
+    
     
     % ============================================================================= Appendices ============================================================================= %
     
@@ -1698,10 +1741,10 @@
 				\midrule
 				1	&	\movesequencenospace{u'}	&	0.007	&	0	&	\movesequencenospace{b2}	&	0.038	&	17	\\
 				2	&	\movesequencenospace{u'u}	&	0.048	&	18	&	\movesequencenospace{r2b2}	&	0.467	&	261	\\
-				3	&	\movesequencenospace{l'd'u'}	&	0.522	&	262	&	\movesequencenospace{b2r2b2}	&	6.545	&	3501	\\
-				4	&	\movesequencenospace{u'l'd'u'}	&	6.530	&	3502	&	\movesequencenospace{r2b2r2b2}	&	87.324	&	46740	\\
-				5	&	\movesequencenospace{d'u'l'd'u'}	&	86.904	&	46741	&	\movesequencenospace{b.r2b2r2b2}	&	1149.732	&	621648	\\
-				6	&	\movesequencenospace{l'd'u'l'd'u'}	&	1165.350	&	621649	&	\movesequencenospace{r2b.r2b2r2b2}	&	15053.421	&	8240086	\\
+				3	&	\movesequencenospace{l'd'u'}	&	0.522	&	262	&	\movesequencenospace{b2r2b2}	&	6.545	&	\num{3501}	\\
+				4	&	\movesequencenospace{u'l'd'u'}	&	6.530	&	3502	&	\movesequencenospace{r2b2r2b2}	&	87.324	&	\num{46740}	\\
+				5	&	\movesequencenospace{d'u'l'd'u'}	&	86.904	&	\num{46741}	&	\movesequencenospace{b.r2b2r2b2}	&	\num{1149.732}	&	\num{621648}	\\
+				6	&	\movesequencenospace{l'd'u'l'd'u'}	&	1165.350	&	\num{621649}	&	\movesequencenospace{r2b.r2b2r2b2}	&	\num{15053.421}	&	\num{8240086}	\\
 				\bottomrule
 			\end{tabular}
 		\end{table}
