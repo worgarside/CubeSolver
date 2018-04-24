@@ -8,3 +8,6 @@ del /S *.gz
 del /S *.toc
 del /S *.synctex(busy)
 del /S Sheena.bib
+del /S *.run.xml
+del /S Dissertation-blx.bib
+del /S *.out

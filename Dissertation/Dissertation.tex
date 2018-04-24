@@ -1,7 +1,7 @@
 \documentclass{report}
 
 \title{Solving Rubik's Cube with Lego Mindstorms}
-\date{03-05-2018}
+\date{02-05-2018}
 \author{Will Garside}
 
 \usepackage[a4paper,left=2.54cm,right=2.54cm, top=2.54cm, bottom=2.54cm]{geometry}	% better margins
@@ -35,6 +35,10 @@
 \usepackage{pgfplotstable} 		% Generates table from .csv
 \usepackage{textcomp}			% text symbols
 \usepackage{etoolbox}			% allows custom environment pre/suffixes (listings -> minipage)
+\usepackage[backend=bibtex,style=numeric-comp,sorting=none,sortcites=true,block=none,indexing=false,citereset=none,isbn=true,url=true,doi=true,natbib=true]{biblatex}
+
+\setlength\bibitemsep{0.5\baselineskip}
+\addbibresource{Dissertation.bib}
 
 \usetikzlibrary{shapes.geometric, arrows, positioning}
 \tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black]
@@ -298,12 +302,11 @@
     
     The Lego Mindstorms' native programming environment is makes use of drag-and-drop code blocks to form programs which can run natively on the main \enquote{brick}. This provides a simplistic user experience and allows novice programmers to create complex programs with relative ease. Drag-and-drop programming can drastically reduce the amount of syntax errors in a program, allowing programmers to better focus on the functionality of their program \cite{Kelleher2002}.
 
-	\begin{figure}[h]
-		\begin{center}
-			\includegraphics[width=0.5\textwidth]{Resources/Images/scrEV3ProgrammingSoftware.jpg}
-			\caption{A sample program in \propernoun{EV3 Programming Software}}
-			\label{fig:ev3software}
-		\end{center}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.5\textwidth]{Resources/Images/scrEV3ProgrammingSoftware.jpg}
+		\caption{A sample program in \propernoun{EV3 Programming Software}}
+		\label{fig:ev3software}
 	\end{figure}
     
     \section{Solving Puzzles with Algorithms}
@@ -342,48 +345,47 @@
     
     In the following twenty years, the upper bound was gradually refined to match the lower bound - meaning that God's Number is exactly twenty. The final development came from a group of four Rubik's Cube enthusiasts in July of 2010, and was only achieved through a brute force method: the four-man team first took every possible position of a Cube and reduced it from forty-three quintillion positions down to just over one quintillion - still a vast number, but a reduction by a factor of forty-three - by using rules of symmetry and mirroring. They then wrote a program to find solve sequences of length twenty or less, which found all solve sequences in a few weeks \cite{Rokicki2010}.
     
-   	\begin{figure}[h]
-    	\begin{center}
-			\begin{tikzpicture}
-				\begin{axis}[title={God's Number}, axis lines = left, date coordinates in=x, enlarge x limits=false, xticklabel={\year},	date ZERO=1980-01-01, xmin=1980-01-01, xmax=2020-01-01, xtick={1980-01-02,1990-01-01,2000-01-01,2010-01-01,2020-01-01}, ylabel = Sequence Length, xlabel=Year]
-				\addplot coordinates {
-					(1981-07-01, 52)
-					(1990-12-01, 42)
-					(1992-05-01, 39)
-					(1992-05-01, 37)
-					(1995-01-01, 29)
-					(1995-01-01, 29)
-					(2005-12-01, 28)
-					(2006-04-01, 27)
-					(2007-05-01, 26)
-					(2008-03-01, 25)
-					(2008-04-01, 23)
-					(2008-08-01, 22)
-					(2010-07-01, 20)
-					(2018-01-01, 20)
-				};
-				\addplot coordinates {
-					(1981-07-01, 18)
-					(1990-12-01, 18)
-					(1992-05-01, 18)
-					(1992-05-01, 18)
-					(1995-01-01, 18)
-					(1995-01-01, 20)
-					(2005-12-01, 20)
-					(2006-04-01, 20)
-					(2007-05-01, 20)
-					(2008-03-01, 20)
-					(2008-04-01, 20)
-					(2008-08-01, 20)
-					(2010-07-01, 20)
-					(2018-01-01, 20)
-				};
-				\legend{Upper Bound, Lower Bound}
-				\end{axis}
-			\end{tikzpicture}
-    		\caption{The upper bound was decreased to 20 over the course of twenty-nine years and across thirteen separate studies \cite{Rokicki2010}}
-			\label{fig:godsnumbergraph}
-		\end{center}
+   	\begin{figure}[H]
+   		\centering
+		\begin{tikzpicture}
+			\begin{axis}[title={God's Number}, axis lines = left, date coordinates in=x, enlarge x limits=false, xticklabel={\year},	date ZERO=1980-01-01, xmin=1980-01-01, xmax=2020-01-01, xtick={1980-01-02,1990-01-01,2000-01-01,2010-01-01,2020-01-01}, ylabel = Sequence Length, xlabel=Year]
+			\addplot coordinates {
+				(1981-07-01, 52)
+				(1990-12-01, 42)
+				(1992-05-01, 39)
+				(1992-05-01, 37)
+				(1995-01-01, 29)
+				(1995-01-01, 29)
+				(2005-12-01, 28)
+				(2006-04-01, 27)
+				(2007-05-01, 26)
+				(2008-03-01, 25)
+				(2008-04-01, 23)
+				(2008-08-01, 22)
+				(2010-07-01, 20)
+				(2018-01-01, 20)
+			};
+			\addplot coordinates {
+				(1981-07-01, 18)
+				(1990-12-01, 18)
+				(1992-05-01, 18)
+				(1992-05-01, 18)
+				(1995-01-01, 18)
+				(1995-01-01, 20)
+				(2005-12-01, 20)
+				(2006-04-01, 20)
+				(2007-05-01, 20)
+				(2008-03-01, 20)
+				(2008-04-01, 20)
+				(2008-08-01, 20)
+				(2010-07-01, 20)
+				(2018-01-01, 20)
+			};
+			\legend{Upper Bound, Lower Bound}
+			\end{axis}
+		\end{tikzpicture}
+   		\caption{The upper bound was decreased to 20 over the course of twenty-nine years and across thirteen separate studies \cite{Rokicki2010}}
+		\label{fig:godsnumbergraph}
 	\end{figure}
 
     
@@ -415,7 +417,7 @@
     	\item Implement a system which successfully generates a solve sequence for any given position. \par The second primary objective ensures that any of the forty-three quintillion positions of Rubik's Cube can be solved correctly. The time taken to generate the solve sequence and the actual length of the solve sequence will both be used when measuring an algorithm's success.
     	\item When the robot is provided with a move sequence...
     	\begin{enumerate}
-    		\item Convert any input sequence to be robot-compatible \par All of the pre-existing algorithms return a solution which a human being can follow to solve a real-world Cube. In the context of this project the manipulation is done by the robot, which cannot perform all of the standard moves, so any sequences provided must be translated to one which the robot can follow.
+    		\item Convert it to be robot-compatible \par All of the pre-existing algorithms return a solution which a human being can follow to solve a real-world Cube. In the context of this project the manipulation is done by the robot, which cannot perform all of the standard moves, so any sequences provided must be translated to one which the robot can follow.
     		\item Correctly follow the sequence to achieve the intended output \par Once a robot-compatible move sequence has been generated, the robot must move the Cube in this exact sequence with no errors or move-failures. If a single move is performed incorrectly then the entire move sequence will produce an incorrect output.
     	\end{enumerate}
     	\item Ensure the runtime of the system is an acceptable length \par Previous solve sequence generator algorithms have had a run-time in the order of weeks: the desired run-time of the generation by this project will be in the order of minutes. This will require careful analysis of the trade off between generator efficiency and solve sequence length.
@@ -535,11 +537,10 @@
 	The nature of this project lends itself to a spiral design cycle, where both the robot and the solving program can be designed, implemented, tested and then optimised to re-start the cycle. This non-linearity of the \tit{Design $\rightarrow$ Implementation $\rightarrow$ Testing} process means that the structure of this dissertation must follow the progress of the project, rather than having distinct sections for \enquote{Design} and \enquote{Implementation and Testing}. Consequentially the Design, Implementation and Testing component of this document is split into two chapters - \enquote{Robot} and \enquote{Codebase} - each with introductory sections for fundamental components that are invariant through the different iterations, and further sections to discuss each iteration individually.
 
 	\begin{figure}[H]
-		\begin{center}
-			\includegraphics[width=0.3\textwidth]{Resources/Images/diagSpiralModel.png}
-			\caption{The spiral model used for this project}
-			\label{fig:diagSpiralModel}
-		\end{center}
+		\centering
+		\includegraphics[width=0.3\textwidth]{Resources/Images/diagSpiralModel.png}
+		\caption{The spiral model used for this project}
+		\label{fig:diagSpiralModel}
 	\end{figure}
 
     \section{Robot Fundamentals and Prototyping}
@@ -574,11 +575,10 @@
 	Although the cradle was a good solution to the problem outlined above, it also meant that only the \face{d} could be rotated, therefore requiring a mechanism to \enquote{flip} the Cube in place so different faces could sit in the cradle. The most obvious design for this was to apply a force at the upper corner to create a resultant force to pivot about the wall of the cradle. This is shown by the free body diagram in Figure \ref{fig:dwgCubeFreeBodyDiagram}: the force $F$ will be applied by a mechanism powered by the second large motor; this will be combined with the resistive force $R$ of the cradle wall; the resultant force (shown in red) will be about the pivot point (also in red) to rotate the Cube. Once the Cube is partially out of the cradle, it will slide back into place due to the height difference between the wall and the base of the cradle, and the low coefficient of friction between the plastic of the Cube and the Lego pieces.
     
 	\begin{figure}[H]
-    	\begin{center}
-    		\includegraphics[width=0.35\textwidth]{Resources/Images/dwgCubeFreeBodyDiagram.png}
-    		\caption{A free body diagram showing how the Cube will be rotated}
-    		\label{fig:dwgCubeFreeBodyDiagram}
-    	\end{center}
+    	\centering
+   		\includegraphics[width=0.35\textwidth]{Resources/Images/dwgCubeFreeBodyDiagram.png}
+   		\caption{A free body diagram showing how the Cube will be rotated}
+   		\label{fig:dwgCubeFreeBodyDiagram}
     \end{figure}
     
     \subsection{Fundamental Component Definitions} \label{sec:componentDefinitions}
@@ -604,11 +604,10 @@
 	The cradle is a solid base of 7 studs $\times$ 7 studs $\times$ 2 studs (length $\times$ breadth $\times$ height) with a surrounding wall with a height and depth of 1 stud. This ensures that the weight of the cradle is uniformly distributed and the centre of gravity is low. These are important factors in the design of the cradle because a potential design is for it to be mounted on a singular vertical shaft, which is quite flexible under relatively low amounts of strain. The upper layer of the cradle's base has a smooth solid surface - as opposed to the sides of Lego Technic pieces which have lots of holes - to allow the Cube to slide properly when moved out of the cradle for an \move{x}; and the lower layer provides an interface to allow mounting on either a vertical shaft or otherwise.
 	
 	\begin{figure}[H]
-		\begin{center}
-			\includegraphics[width=0.4\textwidth]{Resources/Images/rdrCradle.png}
-			\caption{A view of the cradle with some parts removed}
-			\label{fig:rdrCradle}
-		\end{center}
+		\centering
+		\includegraphics[width=0.4\textwidth]{Resources/Images/rdrCradle.png}
+		\caption{A view of the cradle with some parts removed}
+		\label{fig:rdrCradle}
 	\end{figure}
 	
 	The wall will have a semi-circular profile to allow the Cube to rotate smoothly out of the base of the cradle as demonstrated in Figures \ref{fig:dwgCradleCurvedEdgeNormal} and \ref{fig:dwgCradleCurvedEdgeTilted}. The curved edge will also allow the Cube to slide back into the cradle completely, rather than resting on the upper corner of the edge piece. The method for rotating the cradle is for it to be mounted directly (with no gear train or intermediary mechanism) onto the rotor of a large motor. This gives it stability from the secure mount, high rotational velocity because there is no gearing down, and it will be accurate due to the in-built tachometer which provides \enquote{precise control to within one degree of accuracy} \cite{Lego}. Figure \ref{fig:dwgCradleProfileV1} shows the cradle mounted on the rotor via a large gear, which allows a strong interface with the motor and gives the cradle sufficient clearance from the motor to make a full rotation without collision.
@@ -639,11 +638,10 @@
     Figure \ref{fig:rdrCradleMountedRotor}, below, is a rendered image of the 3D aforementioned model. It shows how the cradle and the motor will be supported by a framework which will link to the rest of the MkI. The main body of the motor is supported both vertically and horizontally to stop it from leaning under its own weight and also to prevent the motor rotating due to the inertia of the Cube.
     
     \begin{figure}[H]
-    	\begin{center}
-    		\includegraphics[width=0.5\textwidth]{Resources/Images/rdrCradleMountedRotor.png}
-    		\caption{A render showing the original cradle mount design}
-    		\label{fig:rdrCradleMountedRotor}
-    	\end{center}
+    	\centering
+   		\includegraphics[width=0.5\textwidth]{Resources/Images/rdrCradleMountedRotor.png}
+   		\caption{A render showing the original cradle mount design}
+   		\label{fig:rdrCradleMountedRotor}
     \end{figure}
     
     \subsection{X-Move Arm}
@@ -651,11 +649,10 @@
     To rotate the Cube about the X axis, a rotating arm will apply the force $F$ shown in \ref{fig:dwgCubeFreeBodyDiagram} to cause the Cube to pivot about the opposite cradle wall. The Cube will then slide back into the cradle to complete the rotation. On one end of the arm there will be a wheel with a rubber tire to provide enough friction to tip the Cube over, and the other end will have a set of guards which can hold the top two slices of the Cube in place when performing a \move{D} or \move{d'}. The length of the guards will be staggered so that they don't collide with the cradle mid-rotation. Small right-angled pieces have been used to reinforced the corners of the arm, and liftarms will be used to hold the guards together to resist the outwards pushing force exerted on them by the rotating Cube. The design of the arm and its positioning relative to the cradle can be seen in Figure \ref{fig:dwgRotatingArm}.
     
     \begin{figure}[H]
-    	\begin{center}
-    		\includegraphics[width=0.4\textwidth]{Resources/Images/dwgRotatingArm.png}
-    		\caption{The rotating arm used to flip the Cube}
-    		\label{fig:dwgRotatingArm}
-    	\end{center}
+    	\centering
+   		\includegraphics[width=0.4\textwidth]{Resources/Images/dwgRotatingArm.png}
+   		\caption{The rotating arm used to flip the Cube}
+   		\label{fig:dwgRotatingArm}
     \end{figure}
 
 	Three primary positions of the arm can be seen below in Figure \ref{fig:rdrXMoveArmV1}. Figure \ref{fig:rdrXMoveArmV1_1} shows the \enquote{guarded} position of the arm, where the guards are positioned either side of the Cube to hold the \slice{l-r} and the \face{U} in place when performing a \move{D}, \move{D'} or \move{D2}. The two liftarms \legopiece{40490} that have been attached to the upper part of the guards to hold them together are visible just above the right-angled connectors \legopiece{55615} used to attach the guards to the arm. The guard assembly is attached to a central axle which is rotated by the large motor visible at the far side of the model. The entire assembly's weight is balanced sufficiently well to ensure that there is a smooth rotation about the axle and no unnecessary strain is placed on the motor.
@@ -691,11 +688,10 @@
 	The colour sensor will be powered by the medium motor and a gear train which ends with a worm gear and rack \legopiece{3743}. The rack will be directly connected to a liftarm which has two long parallel shafts \legopiece{3708} mounted above it, both of which feed through a liftarm attached to the main frame of the MkI. These shafts are the only fixed mounting points for the whole colour sensor assembly - the worm gears and rack provide lateral movement but little to no structural support. The distance between the sensor and the top of the Cube will be approximately 8 \si{\milli\metre}. From previous tests and forum data, the optimal distance for the colour sensor appears to be between 10 \si{\milli\metre} and 16 \si{\milli\metre} \cite{UlfR2015}. Although the chosen distance is less than optimal, it ensures that the \enquote{beam} from the colour sensor remains inside the facelets. The accuracy of the readings will not be affected.
 	
 	\begin{figure}[H]
-		\begin{center}
-			\includegraphics[width=0.5\textwidth]{Resources/Images/dwgColorSensor.png}
-			\caption{The colour sensor mounting arm is driven by a set of worm gears}
-			\label{fig:dwgColorSensor}
-		\end{center}
+		\centering
+		\includegraphics[width=0.5\textwidth]{Resources/Images/dwgColorSensor.png}
+		\caption{The colour sensor mounting arm is driven by a set of worm gears}
+		\label{fig:dwgColorSensor}
 	\end{figure}
 	
 	The medium motor powers a 24-tooth gear \legopiece{60c01}, which then transmits power to an 8-tooth gear \legopiece{3647}, which is on the same axle as the worm gears. The rotational velocity of the worm gear is 63.75 \si{\radian\per\second} (608 RPM), which means that a large 40-tooth gear would have a rotational velocity of 1.59 \si{\radian\per\second} (15.2 RPM). Using this rotational velocity, the surface velocity of the large gear and therefore the lateral velocity of the rack can be calculated to be $\sim$0.0662 \si{\meter\per\second}. Given that the range of the colour sensor assembly's moveable distance is 80 \si{\milli\metre}, the time taken for the colour sensor to travel from its neutral position to above the centre facelet is 1.21 \si{\second}. Whilst this may seem like a relatively long time for the motor to move a light load, the assembly will only have to make the full journey between each face and at the start and end of the scanning process.
@@ -791,19 +787,18 @@
 
 	\subsection{Full Model}
 	
-	\begin{figure}[H]
-		\begin{center}
-			\includegraphics[width=0.9\textwidth]{Resources/Images/rdrFullRobotV1.png}
-			\caption{The full robot assembly}
-			\label{fig:rdrFullRobotV1}
-		\end{center}
-	\end{figure}
-	
 	Figure \ref{fig:rdrFullRobotV1} demonstrates the full assembly of the MkI, including the main EV3 control brick. This model is the final result after any modifications made during the building process. As a result of the in-depth design process and any minor modifications, the MkI was optimised as much as possible with regards to functionality, structural integrity, and efficiency to work under restrictions from piece availability.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.6\textwidth]{Resources/Images/rdrFullRobotV1.png}
+		\caption{The full robot assembly}
+		\label{fig:rdrFullRobotV1}
+	\end{figure}
 	
 	The build of the MkI is quite compact, and the design is largely influenced by the pieces available: during the modelling process, small sections of the model were built with actual Lego to check functionality translated from the virtual model to the physical model as intended. Due to the limited quantity of Lego pieces, some less-than-optimal sections arose where two parts had to be connected but the necessary liftarm was not available. This situation is visible behind the cradle, where six small red pieces \legopiece{32062} are used to connect two right-angled liftarms. Another example of \enquote{design by necessity} is in the colour sensor's gear train: one medium and two small gears were used consecutively instead of two medium, or one large and one small. The functional impact of some of these sections is negligible thanks to workarounds and extra pieces, however the aesthetics have unfortunately suffered minor setbacks in places.
 	
-	A touch sensor \legopiece{95648} is mounted on the side of the frame that surrounds the cradle and the X-Move Arm. This adds the ability for user input when the program is running, without needing to access the operating system through the control brick. Simple tasks can be bound to the button at each stage of the program (e.g. pause the scanning process if a move fails or confirm initialisation). The EV3 control brick is mounted on the side of the MkI to allow easy access to the controls which allow navigation of the file system and turning the brick on and off. It is held in place by several long pins \legopiece{32054} which can be easily retracted to allow quick removal of the brick so the batteries can be changed.
+	A touch sensor \legopiece{95648} is mounted on the side of the frame that surrounds the cradle and the \move{x} Arm. This adds the ability for user input when the program is running, without needing to access the operating system through the control brick. Simple tasks can be bound to the button at each stage of the program (e.g. pause the scanning process if a move fails or confirm initialisation). The EV3 control brick is mounted on the side of the MkI to allow easy access to the controls which allow navigation of the file system and turning the brick on and off. It is held in place by several long pins \legopiece{32054} which can be easily retracted to allow quick removal of the brick so the batteries can be changed.
 
 	\subsection{Implementation and Testing}
 	
@@ -857,11 +852,10 @@
 	The solution to this problem was to print readable colours on standard white sticky labels and apply them over the stickers which were being incorrectly read (only the yellow, green and orange sides) on the Valk 3. The end result is visible in Figure \ref{fig:imgCubeStickersComparison}, next to a non-stickered Valk 3 (a variation with no black borders, but still the same type of Cube). The orange side has been replaced with brown stickers because the colour sensor reads the five other colours, and then brown - not orange. For the duration of this project however, the colour will be referred to as orange for consistency.
 
 	\begin{figure}[H]
-		\begin{center}
-			\includegraphics[width=0.5\textwidth]{Resources/Images/imgCubeStickersComparison.jpg}
-			\caption{Side-by-side comparison of the Valk 3 with and without stickers}
-			\label{fig:imgCubeStickersComparison}
-		\end{center}
+		\centering
+		\includegraphics[width=0.5\textwidth]{Resources/Images/imgCubeStickersComparison.jpg}
+		\caption{Side-by-side comparison of the Valk 3 with and without stickers}
+		\label{fig:imgCubeStickersComparison}
 	\end{figure}
 
 	Table \ref{tab:coloursensor2} shows that the new stickers greatly improved the accuracy of the colour sensor's readings. Although the colours in the final column of the table are all very dark and almost indistinguishable, the colour sensor apparently has no difficulty in telling the colours apart: approximately 500 facelets were scanned, and none were scanned incorrectly. As such, the sensor's accuracy with the new stickers is sufficient for this project.
@@ -889,11 +883,10 @@
 	The addition of the stickers was a double-edged sword: the coefficient of friction between the Cube and the curved edge of the cradle wall was now too high for the Cube to slide back into the cradle. Rather than spend time redesigning the cradle to be angled to make the Cube slide back in, or changing the arm design to pull the Cube back in, the easiest solution was simply to tilt the entire robot:
 	
 	\begin{figure}[H]
-		\begin{center}
-			\includegraphics[width=0.5\textwidth]{Resources/Images/imgCubeSolverV1.png}
-			\caption{The MkI had a distinctive tilt to ensure the success of \move{x}s}
-			\label{fig:imgCubeSolverV1}
-		\end{center} 
+		\centering
+		\includegraphics[width=0.5\textwidth]{Resources/Images/imgCubeSolverV1.png}
+		\caption{The MkI had a distinctive tilt to ensure the success of \move{x}s}
+		\label{fig:imgCubeSolverV1}
 	\end{figure}
 
 	The second major issue with the MkI was caused by the newly added tilt and the design of the \move{x} arm: when the wheel on the end of the arm pushed the Cube to start an \move{x}, the Cube would often fall out of the cradle instead of pivoting about the opposite wall. There was no obvious solution to this problem, other than making the wheel larger to spread the force across the face of the Cube. However, a larger wheel meant that the arm became unbalanced and the strength of the arm was compromised. This led to the liftarm that held the wheel falling off the MkI mid-process more than once, as shown in Figure \ref{fig:mkIArmCollapse} (three frames extracted from a video of the scanning process).
@@ -975,7 +968,7 @@
 	
 	\subsubsection{Battery Usage}
 	
-	The final of the issues discovered by repeated testing of the MkI was how power-hungry the EV3 control brick really is. After only one to one-and-a-half hours of testing, it would run six AA 2500 \si{\milli\ampere\hour} batteries completely flat. Lego do sell a rechargeable battery for the EV3, however is is only 2050 \si{\milli\ampere\hour} by itself and its costs \pounds81.99 \cite{Lego2018}. A cheaper (and higher capacity) option was to purchase twelve rechargeable 2500 \si{\milli\ampere\hour} batteries and a charger for approximately \pounds25. Whilst the EV3 was voraciously consuming the power from six of the batteries, the other six could either be charging or waiting ready. This led to the design and creation of a battery holder attached to the MkII. It holds six AA batteries and has two pins which can be removed to release the batteries, as shown in Figure \ref{fig:imgBatteryHolderOpen}.
+	The final of the issues discovered by repeated testing of the MkI was how power-hungry the EV3 control brick really is. After only one to one-and-a-half hours of testing, it would run six AA 2500 \si{\milli\ampere\hour} batteries completely flat. Lego do sell a rechargeable battery for the EV3, however it's only 2050 \si{\milli\ampere\hour} by itself and it costs \pounds81.99 \cite{Lego2018}. A cheaper (and higher capacity) option was to purchase twelve rechargeable 2500 \si{\milli\ampere\hour} batteries and a charger for approximately \pounds25. Whilst the EV3 was voraciously consuming the power from six of the batteries, the other six could either be charging or waiting ready. This led to the design and creation of a battery holder attached to the MkII. It holds six AA batteries and has two pins which can be removed to release the batteries, as shown in Figure \ref{fig:imgBatteryHolderOpen}.
 	
 	\begin{figure}[H]
 		\centering
@@ -1028,11 +1021,9 @@
     The largest change between the two design iterations was the complete update of the \move{x} arm - in functionality, aesthetics, and reliability. Where the MkI \move{x} arm relied on pushing the Cube, the MkII \tit{pulls} the Cube towards it. This creates a much more controlled movement, as the Cube is bound on all four sides at all times. As shown in Figure \ref{fig:rdrXMoveBlock}, the Cube cannot fall out of the cradle during the \enquote{pull} part of the rotation due to the small right-angled piece behind the cradle. The pulling motion causes the Cube's rotation, then the Cube is immediately pushed back into the cradle to complete the move.
    	
 	\begin{figure}[H]
-   		\begin{center}
-   			\includegraphics[width=0.4\textwidth]{Resources/Images/rdrXMoveBlock.png}
-   			\caption{A side elevation to show the pieces which block the Cube from falling}
-   			\label{fig:rdrXMoveBlock}
-   		\end{center} 
+		\includegraphics[width=0.4\textwidth]{Resources/Images/rdrXMoveBlock.png}
+		\caption{A side elevation to show the pieces which block the Cube from falling}
+		\label{fig:rdrXMoveBlock}
    	\end{figure}
    
     The arm is controlled by a single large motor, and is suspended from a tall frame by a liftarm which is free to pivot at both ends. This means that the arm can move \tit{along} the Z-axis as well as about the X-axis - albeit with limited freedom. Figure \ref{fig:rdrXMoveRenders} show the incremental steps for an \move{x}: 
@@ -1087,11 +1078,10 @@
     \subsection{Full Model}
     
    	\begin{figure}[H]
-    	\begin{center}
-    		\includegraphics[width=0.9\textwidth]{Resources/Images/rdrMkIIFull.png}
-    		\caption{The full MkII robot assembly}
-    		\label{fig:rdrMkIIFull}
-    	\end{center} 
+    	\centering
+   		\includegraphics[width=0.9\textwidth]{Resources/Images/rdrMkIIFull.png}
+   		\caption{The full MkII robot assembly}
+   		\label{fig:rdrMkIIFull}
     \end{figure}
     
     Figure \ref{fig:rdrMkIIFull} is the full assembly of the MkII. As with the full render of the MkI, the model has been updated to reflect any modifications made during the building process. The construction of the MkII is of much higher quality, with fewer shortcuts and workarounds used to make up for missing pieces. It is also considerably larger than the MkI due to the increased size of the \move{x} arm. The extended framework initially caused some flexing across the body of the MkII simply due to it's size and the forces exerted by the movement of the \move{x} arm. A very simple solution to this was to mount the entire MkII on \enquote{feet} made from wheels on their sides. The flexibility of the tyres allows the feet to act as dampers for the \move{x} arm, and the high friction between the tyres and the surface they sit on means that the MkII will not move around. The framework which the EV3 control brick is mounted on is actually mostly the same design as the MkI: this was one part there truly were no issues with. Reusing the framework meant less time had to be spent on the more mundane parts of the build, and more time could be spent getting the core components right. Once again, the touch sensor has been mounted on the front of the robot for easy access at runtime.
@@ -1366,42 +1356,41 @@
 	The tree solving method is run with a single argument: the position of a Cube, either returned by the robot after scanning a real Cube or entered manually. The first test for the tree solve was the position of a Cube at \depth{3} (created by \movesequencenospace{l'd'u'}). The solve time for this depth was 0.522 \si{\second} - but it soon became clear that this was best case for \depth{3}. The solve time varied greatly depending on the move sequence used to mix the Cube (assuming the invariance of the tree generator's moveset): the closer the moves used were to the start of the moveset, the closer the solve position was to the start of the depth in the tree.
     
    	\begin{figure}[H]
-    	\begin{center}
-    		\begin{tikzpicture}
-    		\begin{axis}[title={Tree Solve Times}, axis lines = left, legend pos=north west, xlabel = Depth, ylabel = Solve Time /\si{\second}, ymode=log]
-    		\addplot coordinates {
-    			(1, 0.038)
-    			(2, 0.467)
-    			(3, 6.545)
-    			(4, 87.324)
-    			(5, 1149.732)
-    			(6, 14750)
-    		};
-    		\addplot coordinates {
-    			(1, 0.007)
-    			(2, 0.048)
-    			(3, 0.522)
-    			(4, 6.53)
-    			(5, 86.904)
-    			(6, 1165.35)
-    		};
-    		\legend{Worst Case, Best Case}
-    		\end{axis}
-    		\end{tikzpicture}
-    		\caption{The time difference increased exponentially for each depth}
-    		\label{fig:treeSolveGraph}
-    	\end{center}
+    	\centering
+   		\begin{tikzpicture}
+   		\begin{axis}[title={Tree Solve Times}, axis lines = left, legend pos=north west, xlabel = Depth, ylabel = Solve Time /\si{\second}, ymode=log]
+   		\addplot coordinates {
+   			(1, 0.038)
+   			(2, 0.467)
+   			(3, 6.545)
+   			(4, 87.324)
+   			(5, 1149.732)
+   			(6, 14750)
+   		};
+   		\addplot coordinates {
+   			(1, 0.007)
+   			(2, 0.048)
+   			(3, 0.522)
+   			(4, 6.53)
+   			(5, 86.904)
+   			(6, 1165.35)
+   		};
+   		\legend{Worst Case, Best Case}
+   		\end{axis}
+   		\end{tikzpicture}
+   		\caption{The time difference increased exponentially for each depth}
+   		\label{fig:treeSolveGraph}
     \end{figure}
     
     Figure \ref{fig:treeSolveGraph} is a graph of the solve depths against the time taken to solve them, and shows the best case and worst case times for each depth. The data used to create the graph is attached in Appendix \ref{tab:treeSolveTimes}, and shows the sequence used to mix the Cube as well as the solve time and the number of positions generated to find the solution. The position numbers for the \depth{$n$} worst case and \depth{$(n+1)$} are consecutive, which proves that the positions are definitely the best and worst cases for each depth.
     
-    The Y axis of the graph uses a logarithmic scale because the time taken (regardless of best or worst case) for each depth increased by an average factor of 13.59. This also meant that the variance in the times increased exponentially, with a recorded maximum of 15053.42 at \depth{6}. The average growth factor for the solve time times can be used to generate a predicted time for each depth by using the following formula, where $t_d$ is the time to solve \depth{$d$}:
+    The Y axis of the graph uses a logarithmic scale because the time taken (regardless of best or worst case) for each depth increased by an average factor of 13.59. This also meant that the variance in the times increased exponentially, with a recorded maximum difference of just under four hours at \depth{6}. The average growth factor for the solve time times can be used to generate a predicted time for each depth by using the following formulae\footnote{The values used in the formulae are taken from \depth{6} to remove any inherent inaccuracies from the start of the program - this is also why the index of $13.59$ is $d-6$}, where $t_d$ is the time to solve \depth{$d$}:
    	\begin{align*}
    	\text{Best Case:}\hspace{7.5mm} 	&	t_d = 1165.35 \times 13.59^{d-6} \\
 	\text{Worst Case:}\hspace{7.5mm}	&	t_d = 15053.42 \times 13.59^{d-6}
    	\end{align*}
    	
-    However, the prediction breaks down past \depth{17}, where the predicted number of unique positions surpasses the maximum number of available positions. The prediction of unique positions per depth follows a constant trajectory, whilst in reality the number at each depth increases steadily then sharply decreases at \depth{17}. The predicted times and positions are listed in Appendix \ref{tab:treeSolvePredictions}.
+    However, the prediction breaks down past \depth{17}, where the predicted number of unique positions surpasses the maximum number of available positions. The prediction of unique positions per depth follows a linear trajectory, whilst in reality the number at each depth increases steadily then sharply decreases at \depth{17}. The predicted times and positions are listed in Appendix \ref{tab:treeSolvePredictions}.
     
     The extensive time required for a solution to be returned meant that the method was completely impractical past \depth{5}. Further optimisations to the tree generator were either too small to make a sizeable difference, or too complex or poorly documented to be implemented successfully. An example of the latter is the use of \enquote{pruning tables}, which is discussed later.
     
@@ -1515,9 +1504,9 @@
 		
 	To avoid wasting all the time and effort put into implementing this updated version of Kloosterman's algorithm, the final table was split into two, using the movesets \moveset{u'd'l2r2f2b2} \moveset{u2d2l2r2f2b2} respectively, which brought the number of positions to a manageable level. The function to make the Cube \enquote{monochrome} for the new Phase Three simply returned the Cube's built-in reduced colour attribute, and Phase Four used the full colour Cube.
 	
-	Initially, the solution from the end of Phase Three with the reduced-colour Cube appears easy: \tit{each facelet is either on the correct face or the opposite one, so surely the only moves need are half-turns? The moveset used in Phase Four is just half-turns, so the final solve should be easy}. This hypothesis was disproved with simple tests using well-mixed Cubes. Herbert Kociemba's \propernoun{Cube Explorer} program \cite{Kociemba} was used to find the optimal solve sequence, which contained quarter turns - the moveset needed was therefore \moveset{u'd'l2r2f2b2}. This moveset had already been found to cause runtime errors as a direct result of memory consumption, so Kloosterman's method required a fall-back method for this project.
+	Initially, the solution from the end of Phase Three with the reduced-colour Cube appears easy: \tit{each facelet is either on the correct face or the opposite one, so surely the only moves need are half-turns? The moveset used in Phase Four is just half-turns, so the final solve should be easy}. This hypothesis was disproved with simple tests using well-mixed Cubes. Herbert Kociemba's \propernoun{Cube Explorer} program \cite{Kociemba} was used to find the optimal solve sequence, which contained quarter turns - the moveset needed was therefore \moveset{u'd'l2r2f2b2}. This moveset had already been found to cause runtime errors as a direct result of memory consumption, so Kloosterman's method required a fallback method for this project.
 	
-	The fall-back method used was actually a Python port of Kociemba's original solving algorithm by GitHub user muodov \cite{muodov2018}. In its simplest form, muodov's package \propernoun{kociemba} takes a position of a Cube as a parameter and returns a sub-optimal solve sequence. If the fall-back method is used, then the sequences found from the database are ignored to reduce the length of the total solve sequence.
+	The fallback method used was actually a Python port of Kociemba's original solving algorithm by GitHub user muodov \cite{muodov2018}. In its simplest form, muodov's package \propernoun{kociemba} takes a position of a Cube as a parameter and returns a sub-optimal solve sequence. If the fallback method is used, then the sequences found from the database are ignored to reduce the length of the total solve sequence.
 	
 	\section{Method 3: Half-Turn Proof-of-Concept} \label{sec:halfTurnSolving}
 	
@@ -1567,7 +1556,7 @@
     	\item Implement a system which successfully generates a solve sequence for any given position. \label{itm:obj2}
     	\item When the robot is provided with a move sequence... \label{itm:obj3}
     	\begin{enumerate}
-    		\item Convert any input sequence to be robot-compatible \label{itm:obj3a}
+    		\item Convert it to be robot-compatible \label{itm:obj3a}
     		\item Correctly follow the sequence to achieve the intended output \label{itm:obj3b}
     	\end{enumerate}
     	\item Ensure the runtime of the system is an acceptable length \label{itm:obj4}
@@ -1595,7 +1584,7 @@
 	    sleep(0.05)
 	    Sound.beep()\end{lstlisting}
     
-    As this was an inherent problem with ev3dev, an issue was opened on its GitHub repository asking for advice on workarounds or fixes \cite{Worgarside2018}. Just over a week after the issue was opened the owner of the repository, David Lechner, posted a workaround for this issue which involved changing the rotation type from \lstinline|relative| to \lstinline|absolute|. This lessened the problem, but did not remove it entirely, so a more reliable workaround was devised: after each cradle rotation, the cradle's braking emthod is set to \lstinline|coast| so that the cradle can be manually aligned when necessary. Although not desirable, this workaround works as required.
+    As this was an inherent problem with ev3dev, an issue was opened on 06/04/2018 on its GitHub repository asking for advice on workarounds or fixes \cite{Worgarside2018}. Just over a week after the issue was opened, the owner of the repository, David Lechner, posted a workaround for this issue which involved changing the rotation type from \lstinline|relative| to \lstinline|absolute|. This lessened the problem, but did not remove it entirely, so a more reliable workaround was devised: after each cradle rotation, the cradle's braking method is set to \lstinline|coast| so that the cradle can be manually aligned when necessary. Although manual intervention is not desirable, this workaround functions as required.
     
     \begin{aside}
     	As of 23/04/2018, a fix has been released in version 2.0.0 of ev3dev. As this is a major update from the version used for this project (and the close proximity to the deadline), it has not been used for this project.
@@ -1603,9 +1592,24 @@
     
     \section{Codebase}
     
-    Objectives \ref{itm:obj2} and \ref{itm:obj3} have all been achieved with varying degrees of success as discussed in sections \ref{sec:treeSolving}, \ref{sec:multiphaseSolving} and \ref{sec:halfTurnSolving}. The only method to fully guarantee a solution is the multiphase solver, which includes the fall-back kociemba algorithm. The tree-based method will generate a solution, but it requires an infeasible amount of time and eventually memory. The half turn method only works for a subset of the positions, as it is not intended to be a full solution. Both of these methods could easily have the fall-back method added, but they are included as proof of a hypothesis or concept so do not require it.
+    Objectives \ref{itm:obj2}, \ref{itm:obj3} and \ref{itm:obj4} have been achieved with varying degrees of success (as discussed in sections \ref{sec:treeSolving}, \ref{sec:multiphaseSolving} and \ref{sec:halfTurnSolving}). The only method to fully guarantee a solution is the multiphase solver, which includes the fallback kociemba algorithm. The tree-based method will generate a solution, but it requires an infeasible amount of time (and presumably, eventually memory) for depths greater than six. The half turn method only works for a subset of the positions, as it is not intended to be a full solution. Both of these methods could easily have the fallback method added, but they are included as proof of a hypothesis or concept so do not require it. Assuming all necessary tables have been pre-generated and if we regard the \enquote{size of the input set} as the depth of the solution, the three different algorithms have runtimes of $O(1)$, $O(1)$ and $O(13.59^N)$ respectively.
     
-    The multiphase method, however, does require the fall-back method due to failure in generating the final table of positions. In order to better optimise the position generation, Windows Performance Monitor was used to log the amount of free memory every five seconds for the duration of the first three phases. The data created by the logger was then used to find the amount of memory in use at each point to create a more useful graph. The data points all had the value of the first point in that set subtracted from them to make all the sets start at zero so the data is more comparable. In Figure \ref{fig:memoryLoggerGraph}, the shape of the data plots is more important than the values themselves: it is more useful to have a process which keeps the memory constant than one which has troughs and peaks, because effort can be put into reducing the constant value of the former.
+    The multiphase method, however, does require the fallback method due to failure in generating the final table of positions. In order to better optimise the position generation, Windows Performance Monitor was used to log the amount of free memory every five seconds for the duration of the first three phases. The data created by the logger was then used to find the amount of memory in use at each point to create a more useful graph. The data points all had the value of the first point in that set subtracted from them to make all the sets start at zero so the data is more comparable. In Figure \ref{fig:memoryLoggerGraph}, the shape of the data plots is more important than the values themselves: it is more useful to have a process which keeps the memory constant than one which has troughs and peaks, because effort can be put into reducing the constant value of the former.
+    
+    Ten different optimisations\footnote{Only the more important ones have been included in Figure \ref{fig:memoryLoggerGraph} for simplicity} were made in an attempt to make the program use less memory:
+    
+    \begin{enumerate}
+    	\item Standard multiprocessing iteration to add to database, no optimisation
+    	\item Results are popped off the returned list instead of simply being read [1]\footnote{\enquote{[1-3]} means that an opimisation is built on optimisations 1, 2, and 3}
+    	\item The creation of processes is moved \tit{inside} the iteration [1-2]
+    	\item Added \lstinline|position_set| for duplication checking [1-3]
+    	\item Small change to \lstinline|position_set| initialisation [1-4]
+    	\item Changed the pool type (to \lstinline|async|\footnote{An asynchronous pool of worker processes. This was used to try to write the data to the database as soon as possible}) to offload data to main process for faster writing to database [1-5]
+    	\item Implementation of \lstinline|Manager().Queue()| to streamline data movement [1-6]
+    	\item As above, but with three processes instead of four - with the intention of freeing up a core for concurrent database writing [1-7]
+    	\item Rollback to process five with small changes [1-5]
+    	\item Process nine with aggressive garbage collection [1-5, 9]
+    \end{enumerate}
     
     \begin{figure}[H]
     	\begin{tikzpicture}
@@ -1639,26 +1643,13 @@
     	\label{fig:memoryLoggerGraph}
     \end{figure}
     
-    Ten different optimisations\footnote{Only the more important ones have been included in Figure \ref{fig:memoryLoggerGraph} for simplicity} were made in an attempt to make the program use less memory:
-    
-    \begin{enumerate}
-    	\item Standard multiprocessing iteration to add to database, no optimisation
-    	\item Results are popped off the returned list instead of simply being read [1]\footnote{\enquote{[1-3]} means that an opimisation is built on optimisations 1, 2, and 3}
-    	\item The creation of processes is moved \tit{inside} the iteration [1-2]
-    	\item Added \lstinline|position_set| for duplication checking [1-3]
-    	\item Small change to \lstinline|position_set| initialisation [1-4]
-    	\item Changed the pool type (to \lstinline|async|\footnote{An asynchronous pool of worker processes. This was used to try to write the data to the database as soon as possible}) to offload data to main process for faster writing to database [1-5]
-    	\item Implementation of \lstinline|Manager().Queue()| to streamline data movement [1-6]
-    	\item Adem, but with three processes instead of four, with the intention of freeing up a core for concurrent database writing [1-7]
-    	\item Rollback to process five with small changes [1-5]
-    	\item Process nine with aggressive garbage collection [1-5, 9]
-    \end{enumerate}
-    
-    As is clearest in processes One, Seven and Eight, there are three major points where a significant portion of memory is freed at once. This is where the generation of points has been completed, and the data written from memory to the database on the hard disk. This shape of the graph means that the memory is being quickly consumed throughout the generation of each table, and is only freed upon database insertion.
+    As is clearest in processes One, Seven and Eight, there are three major points where a significant portion of memory is freed at once. This is where the generation of positions has been completed, and the data written from memory to the database on the hard disk. This shape of the graph shows that the memory is being quickly consumed throughout the generation of each table, and is only freed upon database insertion.
     
     Optimisation 8 was the culmination of attempts to reduce the number of positions kept in the memory during runtime. Due to the separation of processes' memory blocks, passing data back to the main process (or any process) to be written to the database concurrently to the same data's generation is extremely difficult: as the data is incomplete, it cannot be returned from the worker processes. After testing memory usage and other features, it became apparent that the build up of data in memory had to be accepted as invariant through all optimisation methods.
     
-    This invariance of memory hungry processing prompted a rollback to optimisation 5. The last improvement to be added to the generation process was to manually call the garbage collector whenever large amount of data were written to the disk. The combined results of the optimisations managed to reduce the peak amount of memory used from the original value of 4428MB to 1490MB: a reduction of 66.4\%. Despite this large reduction, the final table still required more memory than was available.
+    This invariance of memory hungry processing prompted a rollback to optimisation 5. The last improvement to be added to the generation process was to manually call the garbage collector whenever large amounts of data were written to the disk. The combined results of the optimisations managed to reduce the peak amount of memory used from the original value of 4428 \si{\mega\byte} to 1490 \si{\mega\byte}: a reduction of 66.4\%. Despite this large reduction, the final table still required more memory than was available and was abandoned in favour of using half-turns and a fallback method.
+    
+    Returning to the objective checklist, Objective \ref{itm:obj5} has been completed through the implementation of three different algorithms, and Objective 6 has been fulfilled with the discussion in the sections above. Regarding the part of Objective \ref{itm:obj6} which requires comparison of human and robot compatible moves, a robot-move only lookup table was generated to depth ???, after which point it generated an OutOfMemory??? error. This shows that both Kloosterman's final phase and the \lstinline|robot_only| table require the same optimisations.
     
      
     \newpage
@@ -1678,7 +1669,7 @@
 				\toprule
 				\tbo{Date} & \tbo{Lower Bound} & \tbo{Upper Bound} \\
 				\midrule
-				July, 1981	&	18	&	52 \\
+				Jul, 1981	&	18	&	52 \\
 				Dec, 1990	&	18	&	42 \\
 				May, 1992	&	18	&	39 \\
 				May, 1992	&	18	&	37 \\
@@ -1690,7 +1681,7 @@
 				Mar, 2008	&	20	&	25 \\
 				Apr, 2008	&	20	&	23 \\
 				Aug, 2008	&	20	&	22 \\
-				July, 2010	&	20	&	20 \\
+				Jul, 2010	&	20	&	20 \\
 				\bottomrule
 			\end{tabular}
 		\end{table}
@@ -1747,28 +1738,20 @@
 			\pgfplotstabletypeset[
 			empty header,
 			begin table=\begin{longtable},
-			every first row/.append style={before row={%
-				\caption{Data logged by Windows Performance Monitor for ten optimisations}%
-				\label{tab:memoryUse}\\\toprule
-		 		\multirow{ 2}{*}{\tbo{Time /\si{\second}}} & \multicolumn{10}{c}{\tbo{Memory Used /\si{\mega\byte}}}\\
+			every first row/.append style={before row={\caption{Data logged by Windows Performance Monitor for ten optimisations}\label{tab:memoryUse} \\ \toprule
+		 		\multirow{ 2}{*}{\tbo{Time /\si{\second}}} & \multicolumn{10}{c}{\tbo{Memory Used /\si{\mega\byte}}} \\
 				 & \tbo{One} & \tbo{Two} & \tbo{Three} & \tbo{Four} & \tbo{Five} & \tbo{Six} & \tbo{Seven} & \tbo{Eight} & \tbo{Nine} & \tbo{Ten} \\ \toprule    
 				\endfirsthead
-				%
-				\multicolumn{11}{c}%
-				{{\bfseries Table \thetable\ Continued from previous page}} \\
+				\multicolumn{11}{c}{{\bfseries Table \thetable\ Continued from previous page}} \\
 				\toprule 
-				%
 				\tbo{Time} & \tbo{One} & \tbo{Two} & \tbo{Three} & \tbo{Four} & \tbo{Five} & \tbo{Six} & \tbo{Seven} & \tbo{Eight} & \tbo{Nine} & \tbo{Ten} \\ \toprule  
 				\endhead
-				%
 				\midrule \multicolumn{11}{r}{{Continued on next page}} \\ \bottomrule
 				\endfoot
-				%
 				\midrule
 				\multicolumn{11}{r}{{Concluded}} \\ \bottomrule
 				\endlastfoot
 			}},%
-			%
 			end table=\end{longtable},
 			col sep=comma,
 			string type,
@@ -1828,8 +1811,7 @@
 		\end{figure}
 	
     	\newpage
-    	\bibliographystyle{ieeetr}
-    	\bibliography{Dissertation}
+		\printbibliography
     \end{appendices}
 
 \end{document}
