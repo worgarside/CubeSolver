@@ -5,6 +5,7 @@ However, the files have been kept separate because there are some intricate chan
 may cause confusion, and also to allow for further changes if necessary
 """
 
+import datetime
 import gc
 import json
 import os
@@ -42,7 +43,8 @@ def generate_lookup_table(db, phase, verbose):
     :param verbose: Changes verbosity of output
     """
 
-    print('\n- - Generating Table multiphase_%i... - -' % phase) if verbose else 0
+    print('\n- - Generating Table multiphase_%i @ %s... - -' % (
+        phase, datetime.datetime.now().strftime("%H:%M:%S"))) if verbose else 0
     db.query('''CREATE TABLE IF NOT EXISTS multiphase_%i (depth INTEGER NOT NULL, position TEXT PRIMARY KEY,
              move_sequence BLOB NOT NULL)''' % phase)
 

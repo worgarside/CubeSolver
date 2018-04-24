@@ -5,6 +5,7 @@ However, the files have been kept separate because there are some intricate chan
 may cause confusion, and also to allow for further changes if necessary
 """
 
+import datetime
 import gc
 import json
 import os
@@ -29,7 +30,8 @@ def generate_lookup_table(db, verbose):
     :param db: Cursor object for executing insertion queries
     :param verbose: Changes verbosity of output
     """
-    print('\n- - Generating robot_only Table... - -') if verbose else 0
+    print('\n- - Generating robot_only Table... @ %s - -' % datetime.datetime.now().strftime(
+        "%H:%M:%S")) if verbose else 0
 
     db.query('''CREATE TABLE IF NOT EXISTS robot_only (depth INTEGER NOT NULL, position TEXT PRIMARY KEY,
              move_sequence BLOB NOT NULL)''')
