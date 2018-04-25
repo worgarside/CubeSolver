@@ -40,6 +40,8 @@
 
 \sisetup{group-separator={,}}
 
+\renewcommand{\epigraphsize}{\footnotesize}
+
 \usetikzlibrary{shapes.geometric, arrows, positioning}
 \tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm,text centered, draw=black]
 \tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=1cm, text centered, draw=black, text width=3cm]
@@ -163,8 +165,24 @@
 	
 	\newpage
 	\chapter{Definitions and Notations}
+	
+	The notation used in this document follows Singmaster Notation standards. For the following, \enquote{clockwise} denotes a rotation of that face when it is \tit{towards} the user.
+	
+	\begin{enumerate}
+		\item[] \movegroup{u} - rotates the \face{u} clockwise by \ang{90}
+		\item[] \movegroup{d} - rotates the \face{d} clockwise by \ang{90}
+		\item[] \movegroup{l} - rotates the \face{l} clockwise by \ang{90}
+		\item[] \movegroup{r} - rotates the \face{r} clockwise by \ang{90}
+		\item[] \movegroup{f} - rotates the \face{f} clockwise by \ang{90}
+		\item[] \movegroup{b} - rotates the \face{b} clockwise by \ang{90}
+	\end{enumerate}
+	
+	The addition of a \movegroup{'}symbol denotes a counter-clockwise quarter rotation.
+	
+	The addition of a \movegroup{2}denotes a half turn of that face. Direction is immaterial.
+	
 	\addcontentsline{toc}{section}{Basic Definitions}
-	\begin{table}[htbp]
+	\begin{table}[H]
 		\def\arraystretch{1.2}
 		\centering
 		\caption{Terminology used in this document}
@@ -173,7 +191,7 @@
 			\toprule
 			\tbo{Abbreviation/Word} & \tbo{Definition} \\
 			\midrule
-			{[Rubik's]} Cube 		& 	A standard 3x3x3 Rubik's Cube\textsuperscript{\ref{footnote:cube}}. \\
+			{[Rubik's]} Cube 		& 	A standard 3x3x3 Rubik's Cube. \\
 			Face 				& 	One of the size faces on a Cube, Denoted by position or colour. e.g. \face{u}\\
 			Slice				&	A central layer between two faces. Usually referenced by the faces it spans. \\
 			Quarter Turn		&	A clockwise rotation of a face or slice by \ang{90} \\
@@ -188,7 +206,7 @@
 			
 			\multirow{ 2}{*}{Moveset}		&	A set of moves, denoted with curly braces. \\
 			&	e.g. \movesetnospace{u.d'l2} \\
-			\multirow{ 2}{*}{Move Sequence}		&	A series of moves \tbo{performed consecutively}, enclosed by colons . \\
+			\multirow{ 2}{*}{Move Sequence}		&	A series of moves \tbo{performed consecutively}, enclosed by colons. \\
 			&	e.g. \movesequence{f.d.f'd2l'b'u.l.d.r.u.l'f'u.l.u2} \\
 			Solve Sequence		&	A move sequence which leads to the goal state. \\
 			Depth $n$			&	A Cube which has been moved $n$ times away from the goal state. \\
@@ -196,33 +214,9 @@
 		\end{tabular}
 	\end{table}
 
-%	 TODO talk about Singmaster notation
-%	\addcontentsline{toc}{section}{Notation}
-%	\begin{table}[htbp]
-%		\def\arraystretch{1.2}
-%		\centering
-%		\caption{Notation used in this document}
-%		\label{tab:notation}
-%		\begin{tabular}{m{0.25\textwidth}m{0.2\textwidth}m{0.425\textwidth}}
-%			\toprule
-%			\tbo{Symbol Notation} & \tbo{Meaning} \\
-%			\midrule
-%			$L$	&	Left			&	\multirow{9}{*}{\parbox{0.425\textwidth}{This notation is used to show a quarter turn of a face. It can have a single quote or a \enquote{2} appended to show a counter-clockwise quarter turn or a half turn respectively.}} \\
-%			$R$	&	Right			&	\\
-%			$F$	&	Front			&	\\
-%			$B$	&	Back			&	\\
-%			$U$	&	Up (Top)		&	\\
-%			$D$	&	Down (Bottom)	&	\\
-%			$X$ &	\multirow{ 3}{*}{\parbox{0.2\textwidth}{Clockwise \ang{90} rotation of a Cube about the relevant axis.}} & \\
-%			$Y$ & & \\
-%			$Z$ & & \\
-%			\bottomrule
-%		\end{tabular}
-%	\end{table}
-	% Content for footnote is here because it wouldn't display from table %
+	% Content for footnote is here because it wouldn't display from table
 	\textcolor{white}{
-		\footnote{\label{footnote:cube}This Dissertation is only dealing with 3x3x3 Rubik's Cubes, and any discussion of alternative dimensions will be explicitly stated.}
-		\footnote{\label{footnote:metric}For this Dissertation the Half Turn Metric is used unless explicitly stated.}		
+		\footnote{\label{footnote:metric}For this project the Half Turn Metric is used unless explicitly stated.}		
 	}
 
 	\newpage
@@ -323,7 +317,7 @@
     There have been many historical landmark algorithms since the inception of Rubik's Cube in 1974. One of the earliest instances was created by Morwen Thistlethwaite circa 1981 and is based on group theory. Thistlethwaite's algorithm splits all possible positions of the cube into five groups of decreasing size as seen in Table \ref{tab:thistlethwaite}. David Singmaster, Thistlethwaite's colleague at London South Bank University (then called Polytechnic of the South Bank), describes the methodology of the algorithm: \enquote{Once in $G_i$, one only uses moves in $G_i$ to get into $G_{i+1}$. The ratio $\frac{|G_i|}{|G_{i+1}|}$ is called the index of $G_{i+1}$ in $G_i$.} Using this algorithm, Thistlethwaite proved that the maximum number of moves required to solve any valid position is fifty-two \cite{Singmaster1981}. This was the first development of God's Number, so named because it is the number of moves that an omniscient being would use to solve a Cube in the most efficient manner without failure.
     
     \section{God's Number}
-    The lower bound for God's Number was originally recognised to be eighteen moves through analysis of the number of sequences of seventeen moves or fewer, and the discovery that there were more Cube positions than seventeen-moves-or-fewer sequences. In 1995, the lower bound was increased to twenty by Michael Reid upon discovering that the \enquote{Superflip} position requires twenty moves to solve. He included his findings in an email to the Cube-Lovers mailing list, \enquote{superflip is now known to require 20 face turns . . . this is the first improvement to the lower bound... given by a simple counting argument} \cite{Reid1995}.
+    The lower bound for God's Number was originally recognised to be eighteen moves through analysis of the number of sequences of seventeen moves or fewer, and the discovery that there were more Cube positions than seventeen-moves-or-fewer sequences. In 1995, the lower bound was increased to twenty by Michael Reid upon discovering that the \enquote{Superflip} position requires twenty moves to solve. He included his findings in an email to the Cube-Lovers mailing list, \enquote{superflip is now known to require 20 face turns... this is the first improvement to the lower bound... given by a simple counting argument} \cite{Reid1995}.
     
     The next refinement to the upper bound of God's Number came from Dutch mathematician Hans Kloosterman in December of 1989. Kloosterman's findings were published in a newsletter \propernoun{Cubism for Fun} (CFF) as an article titled \propernoun{Rubik's Cube in 44 Moves}. In this article Kloosterman discusses his existing solution to the Magic Domino, a subset of Rubik's Cube, and how he has adapted it into a more efficient Cube solution with the help of Thistlethwaite's algorithm. Kloosterman reduced the estimation of God's Number by adapting Thistlethwaite's $G_3$ into a subgroup of $G_2$ where all of the $U$-cubies are on the $U$ face and all the $D$-cubies are similarly on the $D$ face. This reduces the index $\frac{|G_2|}{|G_3|}$ from 15 to 8 (whilst also reducing the ($G_1:G_2$) index by 3 and increasing the ($G_3:G_4$) index by 1), creating a net decrease of 8 moves when compared to Thistlethwaite's algorithm. \propernoun{Rubik's Cube in 44 Moves} ended with an editor's note stating that not all of the details of the algorithm were certain and more (including a more efficient algorithm) would be revealed in a later issue \cite{Kloosterman1989}.
     
@@ -370,7 +364,7 @@
 			\legend{Upper Bound, Lower Bound}
 			\end{axis}
 		\end{tikzpicture}
-   		\caption{The upper bound was decreased to 20 over the course of twenty-nine years and across thirteen separate studies \cite{Rokicki2010}}
+   		\caption{The upper bound was decreased to 20 over the course of twenty-nine years and across thirteen separate studies \cite{Rokicki2010}. Data attached in Appendix \ref{tab:godsNumber}}
 		\label{fig:godsnumbergraph}
 	\end{figure}
 
@@ -393,7 +387,7 @@
     \chapter{Requirements and Analysis}
     \epigraph{I have yet to see any problem, however complicated, which when you looked at in the right way, did not become still more complicated.}{Paul Anderson, for New Scientist \cite{Anderson1969}}
     
-    \section{Introduction} % TODO: maybe add more to this
+    % TODO: maybe add more to this
     This chapter covers the specific requirements needed for the project to succeed: the particular tasks to complete the project; the hardware required to build the robot and run the solving program; and the software needed to write and run the program. As well as the requirements, an in-depth analysis of the project and its goals is made, discussing their feasibility, difficulty, and how necessary they are for the success of this project.
     
     \section{Specific Aims and Objectives} \label{sec:objectives}
@@ -427,8 +421,8 @@
     
     \subsection{Software Requirements}
     This table shows the requirements of the software to be used in the creation of this project, and the capabilities of the computer that they will be running on. Any 
-    
-	\begin{table}[h]
+    % TODO finish this and add a hardware section?
+	\begin{table}[H]
 		\def\arraystretch{1.25}
 		\centering
 		\caption{Software requirements for the main development computer and its capabilities}
@@ -464,7 +458,7 @@
     
     The definition of the groups and their effectiveness will have to be tested and analysed, along with their combined functionality. Extensive research into different group types and combinations could be used to reduce the magnitude of the problem at hand - although this may be limited by the imposed time-scale.
     
-    \section{Evaluative Techniques}
+    \section{Evaluative Techniques} \label{sec:evalTechniques}
     
     This project is of quite a closed nature, in that there is very little commercial value and inherent user testing. Instead, all evaluation of this project will be internal and ultimately quantifiable into categories such as \enquote{Cube Solved}, \enquote{Efficient Solve}, and \enquote{Quick Solution Generation}. The quickest way of measuring the success of this project is whether or not any position can be successfully solved in a relatively short amount of time (e.g. $<10$ \si{\minute}). 
     
@@ -1004,6 +998,7 @@
     The largest change between the two design iterations was the complete update of the \move{x} arm - in functionality, aesthetics, and reliability. Where the MkI \move{x} arm relied on pushing the Cube, the MkII \tit{pulls} the Cube towards it. This creates a much more controlled movement, as the Cube is bound on all four sides at all times. As shown in Figure \ref{fig:rdrXMoveBlock}, the Cube cannot fall out of the cradle during the \enquote{pull} part of the rotation due to the small right-angled piece behind the cradle. The pulling motion causes the Cube's rotation, then the Cube is immediately pushed back into the cradle to complete the move.
    	
 	\begin{figure}[H]
+		\centering
 		\includegraphics[width=0.4\textwidth]{Resources/Images/rdrXMoveBlock.png}
 		\caption{A side elevation to show the pieces which block the Cube from falling}
 		\label{fig:rdrXMoveBlock}
@@ -1483,7 +1478,7 @@
 	
 	\subsection{Testing and Analysis}
 	
-	When generating the four tables designed above, the program ran out of memory consistently - regardless of how many applications were force-stopped in favour of generating more data. This is evaluated more in section ???, but signified the end of the development of the multiphase algorithm.
+	When generating the four tables designed above, the program ran out of memory consistently - regardless of how many applications were force-stopped in favour of generating more data. This is evaluated more in section \ref{sec:objectivesCodebase}, but signified the end of the development of the multiphase algorithm.
 		
 	To avoid wasting all the time and effort put into implementing this updated version of Kloosterman's algorithm, the final table was split into two, using the movesets \moveset{u'd'l2r2f2b2} \moveset{u2d2l2r2f2b2} respectively, which brought the number of positions to a manageable level. The function to make the Cube \enquote{monochrome} for the new Phase Three simply returned the Cube's built-in reduced colour attribute, and Phase Four used the full colour Cube.
 	
@@ -1573,7 +1568,7 @@
     	As of 23/04/2018, a fix has been released in version 2.0.0 of ev3dev. As this is a major update from the version used for this project (and the close proximity to the deadline), it has not been used for this project.
     \end{aside}
     
-    \subsection{Codebase}
+    \subsection{Codebase} \label{sec:objectivesCodebase}
     
     Objectives \ref{itm:obj2}, \ref{itm:obj3} and \ref{itm:obj4} have been achieved with varying degrees of success (as discussed in sections \ref{sec:treeSolving}, \ref{sec:multiphaseSolving} and \ref{sec:halfTurnSolving}). The only method to fully guarantee a solution is the multiphase solver, which includes the fallback kociemba algorithm. The tree-based method will generate a solution, but it requires an infeasible amount of time (and presumably, eventually memory) for depths greater than six. The half turn method only works for a subset of the positions, as it is not intended to be a full solution. Both of these methods could easily have the fallback method added, but they are included as proof of a hypothesis or concept so do not require it. Assuming all necessary tables have been pre-generated and if we regard the \enquote{size of the input set} as the depth of the solution, the three different algorithms have runtimes of $O(1)$, $O(1)$ and $O(13.59^N)$ respectively.
     
@@ -1632,7 +1627,7 @@
     
     This invariance of memory hungry processing prompted a rollback to optimisation 5. The last improvement to be added to the generation process was to manually call the garbage collector whenever large amounts of data were written to the disk. The combined results of the optimisations managed to reduce the peak amount of memory used from the original value of \num{4428} \si{\mega\byte} to \num{1490} \si{\mega\byte}: a reduction of 66.4\%. Despite this large reduction, the final table still required more memory than was available and was abandoned in favour of using half-turns and a fallback method.
     
-    Returning to the objective check-list, Objective \ref{itm:obj5} has been completed through the implementation of three different algorithms, and Objective 6 has been fulfilled with the discussion in the sections above. Regarding the part of Objective \ref{itm:obj6} which requires comparison of human and robot compatible moves, a robot-move-only lookup table was generated to depth ???, after which point it generated an OutOfMemory??? error. This shows that both Kloosterman's final phase and the \lstinline|robot_only| table require the same optimisations.
+    Returning to the objective check-list, Objective \ref{itm:obj5} has been completed through the implementation of three different algorithms, and Objective 6 has been fulfilled with the discussion in the sections above. Regarding the part of Objective \ref{itm:obj6} which requires comparison of human and robot compatible moves, a robot-move-only lookup table was generated to \depth{15}, after which point it generated an OutOfMemory error. This shows that both Kloosterman's final phase and the \lstinline|robot_only| table require the same optimisations.
          
 	\section{Comparison with Prior Algorithms}
 	
@@ -1688,17 +1683,35 @@
 	These tables are quite complex to generate, so would require considerable research into efficient generation and usage, adding a significant workload to the project. In order to achieve the most efficient implementation, the \lstinline|Cube| class might also need improving with respect to its position notation and structure. The updated \lstinline|Cube| class would also be refactored with the intention of reducing memory usage and processing requirements.
 	
 	\section{Language Choice}
+	%TODO program vs. software terminology
+	Whilst Python's strengths have been demonstrated throughout this project, its weaknesses have also been highlighted: for rapid iterations, it has a much slower iterative rate than compiled languages. Python was a good choice for the less intensive parts of the software, as its flexibility and high abstraction allowed for a reliable program to be written to fit the needs of the projects. The rapid iterations could be written as a C++ extension for the program through the use of Boost.Python, a library which allows interoperability between Python and C++ \cite{Abrahams2015}. This would take advantage of the efficiency of compiled languages combined with the flexibility of interpreted - the perfect combination for this project.
 	
-	Whilst Python's strengths have been demonstrated throughout this project, its weaknesses have also been highlighted: for rapid iterations, it has a much slower iterative rate than compiled languages such as C++. The scope of this project and limited knowledge of C++ led to the absence of C++ extensions through Boost.Python
+	The database management system (DBMS) used for this project was SQLite3, chosen primarily for its simplicity and ease of use. When tasked with inserting a large amount of rows consecutively, the write speed rarely went above 1 \si{\mega\byte\per\second}, which is less than 0.02\% of the disk's maximum write speed \cite{Samsung2016}. This is a wholly unnecessary delay in generating tables of data, caused by the general restriction of concurrent read/write operations on an SQLite3 database. The DBMS used in future versions of this project would need to allow concurrent transactions and have a large write speed capacity.
+	
+	\section{Memory Usage}
+	
+	The final aspect of this project to be updated in future development is the better management of memory usage: the development computer has 32 \si{\giga\byte} of RAM, which is higher than the majority of consumer computers \cite{TechTalk2018}, \cite{Steam2018}. This shows that a project of this scale may not be suitable to the \enquote{average} user based on hardware requirements alone. A much better alternative to hardware upgrades is to manage the use of memory better: database commits could be made more often, or the trees could be generated one section at a time (e.g. for \depth{1} generate one node and its descendants at a time).
 	
     \newpage
     \chapter{Conclusions}
+   	\epigraph{``Begin at the beginning'', the King said, very gravely, ``and go on till you come to the end: then stop.''}{Lewis Carroll, Alice in Wonderland \cite{Carroll1865}}
     
-    The title of this project is \enquote{text}
+    This project began with research into the history of Ern\"{o} Rubik's \propernoun{Magic Cube}, whilst considering the development of the infamous \propernoun{God's Algorithm} and the milestone algorithms used to develop it over the past thirty-seven years. In this research period, lots of fragmented terminology, methodology and enigmatology was found to be scattered across all sorts of media and pieced together bit by bit to form the larger picture: quantifying and solving a Cube is no mean feat and evaded mathematicians and enigmatologists alike for decades. Research was also undertaken into robotics and its use in education and puzzle solving, demonstrating the field's growth in recent years and its strengths and weaknesses. The literature review concluded with a choice of language to be used in this project, with a confirmed faith in the ability of Lego Mindstorms to fulfil the project's goal.
     
+    Following the conclusion of the research, the requirements of the project could be outlined alongside the main objectives. These objectives were later repeated and used in Chapter \ref{chp:resultsDiscussion} to measure the success of the project against its original specification. Following the objective declarations, the choices of software were analysed with reasoning for their use presented and discussed. The feasibility of the project was evaluated, with each algorithm type considered in turn. This was a small taste of how difficult and complex the project would actually become in the coming months, especially because of the gargantuan size of the search space.
     
+    The progress of the project was predicted by the Gantt chart shown in section \ref{sec:evalTechniques}, and for the majority of it, it did actually follow the chart. There were a few setbacks caused by the failure of the database generation, but these were overcome with workarounds and alternate methods to still create a functioning solution. Retrospective in-depth evaluation was completed in the previous chapter to \enquote{round off} the core work of the project.
+    
+    The design and implementation of the robot was a much larger part of this project than expected, due to the inherently complex nature and strict tolerances of a Cube. The design of the MkI led to a much stronger MkII design, with a far stronger consideration of the physical requirements of this project. Due to the in-depth drawings and models of the robot, the building stage was fairly straightforward, with any modifications reflected in previous work to ensure consistency throughout.
+    
+    The design of the codebase started almost naturally thanks to the foresight used in designing the robot. However, this soon unravelled in the testing stage because ultimately Lego is just a toy: it is not designed to move to exact angles with minute accuracy. Plentiful workarounds and fixes were implemented and tested, some more successful than others - but all successful enough to allow progression to coding the solver algorithms. Similarly to the feasibility study, the attempted implementation of the algorithms showed how severely the scope of the project had been underestimated: the code which generates the tables and trees is relatively simple at its core, but in hindsight it might be this simplicity that causes its downfall. A much more complex solution is required to efficiently generate tables of positions, with corresponding pruning tables and object classes.
+    
+   Overall it is felt that this project has succeeded in the \enquote{analysis} part of its goal, and made a strong attempt at the \enquote{solution} part. Any setbacks were accounted for and documented, with alternatives being explored where possible until the next step in solving Rubik's Cube with a Lego Mindstorms robot was taken. Each research topic clearly manifested into part of the hardware and software produced. Whilst the topic of Rubik's Cube has been thoroughly explored and tapped into over the past four decades, there is a clear direction for further improvements for this project with the use of original ideas and combinations of existing algorithms to find the most efficient way of mapping \num{43252003274489856000} positions into a manageable structure for reducing them all back to the original Magic Cube.
     
     % ============================================================================= Appendices ============================================================================= %
+    
+    \newpage
+    \printbibliography
     
     \newpage
     \begin{appendices}
@@ -1853,8 +1866,8 @@
 			\label{app:kloostermanCFF}
 		\end{figure}
 	
-    	\newpage
-		\printbibliography
+		% TODO table of lego pieces
+		
     \end{appendices}
 
 \end{document}
