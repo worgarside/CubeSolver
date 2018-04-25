@@ -24,7 +24,7 @@
 \usepackage{courier}			% adds inline Courier font
 \usepackage[binary-units]{siunitx}	% SI unit support
 \usepackage{listings}			% code formatting
-\usepackage{enumitem}			% Lettered enumerations
+\usepackage[shortlabels]{enumitem}	% Lettered enumerations
 \usepackage{tikz}				% flowcharts
 \usepackage{mdframed}			% borders on aside environment
 \usepackage[toc,page]{appendix}	% appendix package
@@ -34,7 +34,7 @@
 \usepackage[backend=bibtex,style=numeric-comp,sorting=none,sortcites=true,block=none,indexing=false,citereset=none,isbn=true,url=true,doi=true,natbib=true]{biblatex}
 \usepackage{setspace}			% Line spacing
 \usepackage{numprint}			% long number formatting
-\usepackage[hidelinks]{hyperref}			% linking throughout pdf
+\usepackage[hidelinks]{hyperref}% linking throughout pdf
 
 \setlength\bibitemsep{0.5\baselineskip}
 \addbibresource{Dissertation.bib}
@@ -58,28 +58,27 @@
 \definecolor{green}{HTML}{007f00}
 \definecolor{keyword}{HTML}{bc4331}
 
-\usepgfplotslibrary{dateplot}	% use date in pgfplot
+\usepgfplotslibrary{dateplot}
 \pgfplotsset{compat=1.8}
 
 \BeforeBeginEnvironment{lstlisting}{\par\noindent\begin{minipage}{\linewidth}}
 \AfterEndEnvironment{lstlisting}{\end{minipage}\par\addvspace{\topskip}}
 
 \lstset{ 
-	basicstyle=\small\ttfamily,        % the size of the fonts that are used for the code
-	captionpos=b,                    % sets the caption-position to bottom
-	commentstyle=\color{gray},    % comment style
-	escapechar={|}, 
-	frame=single,	                   % adds a frame around the code
-	keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
-	keywordstyle=\color{keyword},     % keyword style
-	language=Python,                 % the language of the code
-	morekeywords={half_turn_lookup, },            % if you want to add more keywords to the set
-	stringstyle=\color{green},     % string literal style
-	tabsize=4,	                   % sets default tabsize to 2 spaces
+	basicstyle=\small\ttfamily,
+	captionpos=b,
+	commentstyle=\color{gray},
+	escapechar={|},
+	frame=single,
+	keepspaces=true,
+	keywordstyle=\color{keyword},
+	language=Python,
+	morekeywords={half_turn_lookup, },
+	stringstyle=\color{green},
+	tabsize=4
 }
 
 \newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
-\newcolumntype{J}[1]{>{\arraybackslash}m{#1}}
 \newcommand{\tbo}[1]{\textbf{#1}}
 \newcommand{\tit}[1]{\textit{#1}}
 \newcommand{\tun}[1]{\underline{#1}}
@@ -130,8 +129,7 @@
 \tl_new:N \l__maxd_argument_tl
 \ExplSyntaxOff
 
-\newenvironment{aside}
-{\begin{mdframed}[style=0,%
+\newenvironment{aside}{\begin{mdframed}[style=0,%
 		leftline=false,rightline=false,leftmargin=2em,rightmargin=2em,%
 		innerleftmargin=0pt,innerrightmargin=0pt,linewidth=0.75pt,%
 		skipabove=7pt,skipbelow=7pt]\small}
@@ -155,11 +153,12 @@
 	\chapter{Declaration}
 	All sentences or passages quoted in this report from other people's work have been specifically acknowledged by clear cross-referencing to author, work and page(s). Any illustrations which are not the work of the author of this report have been used with the explicit permission of the originator and are specifically acknowledged. I understand that failure to do this amounts to plagiarism and will be considered grounds for failure in this project and the degree examination as a whole.
 	
-	William Garside
+	Name: William Garside
+	Date: 02/05/2018
 
 	\newpage
 	\chapter{Abstract}
-	This should be two or three short paragraphs (100-150 words total), summarising the report. A suggested flow is background, project aims, and achievements to date. It should not simply be a restatement of the original project outline
+	Mathematicians and enigmatologists alike have been infatuated with Rubik's Cube for the past four decades, with countless solving algorithms and methods devised to solve it. Whilst the self-named \enquote{Cubers} have been playing with brightly coloured Cubes, Lego enthusiasts have been playing with small plastic bricks which have even more combinations than Rubik's Cube's forty-three quintillion. This project will combine these two groups with the aim of solving Rubik's Cube with a Lego Mindstorms robot and attempt to optimise the solution as far as possible. Various methods will be analysed and compared throughout the duration of the project, alongside the documentation of the robot building process. This is an entertaining and exciting  project, but complex algorithms will be picked apart and demonstrated through the Lego robot, with the final goal of pushing both the algorithms and the Lego to their limits.
 	
 	\newpage
 	\chapter{Acknowledgements}
@@ -255,7 +254,7 @@
     
     \newpage
     \chapter{Literature Review}
-    \epigraph{Please forgive me, but to give birth to a machine is wonderful progress. It's more convenient and it's quicker, and everything that's quicker means progress. Nature had no notion of the modern rate of work. From a technical point of view, the whole of childhood is quite pointless.}{Mr. Fabry, in Karel \v{C}apek's \propernoun{Rossum's Universal Robots}\cite{Capek1921}}
+    \epigraph{Please forgive me, but to give birth to a machine is wonderful progress. It's more convenient and it's quicker, and everything that's quicker means progress. Nature had no notion of the modern rate of work. From a technical point of view, the whole of childhood is quite pointless.}{Mr. Fabry, in Karel \v{C}apek's \propernoun{Rossum's Universal Robots} \cite{Capek1921}}
     
     \section{Robotics}
     The term robot was first brought to the collective consciousness of the general public by Karel \v{C}apek in 1921 in his play \propernoun{Rossum's Universal Robots} \cite{Capek1921}. It comes from the Czech for \enquote{forced labour} and was coined by \v{C}apek's brother, Josef, for a short story written some years earlier \cite{Etymonline2017}. One of the main discussions in the field of robotics has been about ethics and morality. This discussion was started in \v{C}apek's play, when a visiting scientist tries to destroy the robot-manufacturing business, in the hope of giving the robots a soul and making them happier. This plan goes awry when, as is the norm in fiction surrounding Artificial Intelligence (AI), the robots become sentient and start to overthrow the humans that created them. Twenty-one years later, the novelette \propernoun{Runaround} by Isaac Asimov was featured in the magazine \propernoun{Astounding Science-Fiction} \cite{Asimov1942}. It included his now-prominent Three Laws of Robotics, which were a turning point in the field of robotics and meta-ethics.
@@ -1001,7 +1000,7 @@
    
     The arm is controlled by a single large motor, and is suspended from a tall frame by a liftarm which is free to pivot at both ends. This means that the arm can move \tit{along} the Z-axis as well as about the X-axis - albeit with limited freedom. Figure \ref{fig:rdrXMoveRenders} show the incremental steps for an \move{x}: 
     
-    \begin{enumerate}[label=\alph*]
+    \begin{enumerate}[a)]
     	\item Starting position, the front of the arm is just touching the \face{f}
     	\item Maximum pull position, the Cube has rotated and is resting on the block piece from Figure \ref{fig:rdrXMoveBlock}
     	\item The Cube is pushed back into the cradle
@@ -1377,10 +1376,10 @@
 	
 	The concept of goodness is defined by a set of conditions, with OR conditionality. A cubie is good if one of its facelets is...
 	
-	\begin{enumerate}
-		\item[] on the correct (i.e. colour-matched) face
-		\item[] on the face opposite to its correct face
-		\item[] \tit{not} on the outer rim of either of the two faces mentioned above
+	\begin{enumerate}[a)]
+		\item on the correct (i.e. colour-matched) face
+		\item on the face opposite to its correct face
+		\item \tit{not} on the outer rim of either of the two faces mentioned above
 	\end{enumerate}
 
 	The result of these conditions is that if any of the moves from the set \moveset{u.u'd.d@} are used in getting the cubie to its correct position and orientation, then the cubie is bad. Kloosterman's first phase makes all of the cubies good and provides a way to start the solving process. In order to \enquote{get into} the first group, the moveset for this phase is \moveset{u'd'l'r'f'b@}. To quantify the complex concept of goodness, an algorithm was written to set each of the fifty-four facelets to a boolean state depending on their home position. To condition the Cube in this manner, the colours were set to either \lstinline|Color.DARK| (if the facelet needed to be made good) or \lstinline|Color.NONE| if it was irrelevant to this phase. This monochrome Cube was then used as the target position to generate the first part of the solve sequence.
@@ -1810,9 +1809,8 @@
 			]{Research/Memory Logs.csv}
 		\end{center}
 		
-		\vspace{1.5cm}
 		
-		\begin{table}[h!]
+		\begin{table}[H]
 			\def\arraystretch{1.25}
 			\centering
 			\caption{Data obtained from testing the cradle's motor's accuracy}
@@ -1886,19 +1884,19 @@
 		\begin{figure}[H]
 			\centering
 			\begin{subfigure}[b]{0.45\textwidth}
-				\includegraphics[width=\textwidth]{Resources/Images/appKloosterman1.jpg}
+				\includegraphics[width=\textwidth]{Resources/Images/imgKloosterman1.jpg}
 			\end{subfigure}
 			\hspace{5mm}
 			\begin{subfigure}[b]{0.45\textwidth}
-				\includegraphics[width=\textwidth]{Resources/Images/appKloosterman2.jpg}
+				\includegraphics[width=\textwidth]{Resources/Images/imgKloosterman2.jpg}
 			\end{subfigure}
 			\vskip\baselineskip
 			\begin{subfigure}[b]{0.45\textwidth}
-				\includegraphics[width=\textwidth]{Resources/Images/appKloosterman3.jpg}
+				\includegraphics[width=\textwidth]{Resources/Images/imgKloosterman3.jpg}
 			\end{subfigure}
 			\hspace{5mm}
 			\begin{subfigure}[b]{0.45\textwidth}
-				\includegraphics[width=\textwidth]{Resources/Images/appKloosterman4.jpg}
+				\includegraphics[width=\textwidth]{Resources/Images/imgKloosterman4.jpg}
 			\end{subfigure}
 			\caption{Hans Kloosterman's article in \propernoun{Cubism for Fun} \cite{Kloosterman1990}, provided by Rik van Grol}
 			\label{app:kloostermanCFF}
