@@ -390,7 +390,7 @@
     	\item Build a robot which can manipulate a Cube accurately \par This is the first of the two primary objectives for this project, and is imperative to the project's success. As such it will be the first objective to be completed. This task, despite being of a medium difficulty, is fairly straightforward by nature: the robot simply needs to manipulate a Cube in any valid move.
     	\item Implement a system which successfully generates a solve sequence for any given position. \par The second primary objective ensures that any of the forty-three quintillion positions of Rubik's Cube can be solved correctly. The time taken to generate the solve sequence and the actual length of the solve sequence will both be used when measuring an algorithm's success.
     	\item When the robot is provided with a move sequence, it should...
-    	\begin{enumerate}
+    	\begin{enumerate}[a)]
     		\item Convert it to be robot-compatible \par All of the pre-existing algorithms return a solution which a human being can follow to solve a real-world Cube. For this project the manipulation is done by the robot, which may not be able to perform all of the standard moves, so any sequences provided must be translated.
     		\item Correctly follow the sequence to achieve the intended output \par Once a robot-compatible move sequence has been generated, the robot must move the Cube in this exact sequence with no errors or move-failures. If a single move is performed incorrectly then the entire move sequence will produce an incorrect output.
     	\end{enumerate}
@@ -720,9 +720,9 @@
 	
 	Figure \ref{fig:rdrFullRobotV1} demonstrates the full assembly of the MkI, including the main EV3 control brick. This model is the final result after any modifications made during the building process. As a result of the in-depth design process and any minor modifications, the MkI was optimised as much as possible with regards to functionality, structural integrity, and efficiency to work under restrictions from piece availability.
 	
-	\begin{figure}[H]
+	\begin{figure}[h]
 		\centering
-		\includegraphics[width=0.6\textwidth]{Resources/Images/rdrFullRobotV1.png}
+		\includegraphics[width=0.9\textwidth]{Resources/Images/rdrFullRobotV1.png}
 		\caption{The full robot assembly}
 		\label{fig:rdrFullRobotV1}
 	\end{figure}
@@ -733,15 +733,15 @@
 
 	\subsection{Implementation and Testing}
 	
-	The MkI was built according to the design specifications laid out above, with little to no modification throughout. To thoroughly test the functions of the MkI (and any subsequent designs), a simple trial was designed to repeatedly test and optimise the motorised functions of the MkI.
+	The MkI was built according to the design specifications laid out above with little modification throughout. A simple trial was designed to repeatedly test and optimise the motorised functions of the MkI.
 	
-	The first part of each trial was to run the scanning process from start to end, as described by algorithms \ref{alg:scanupface} and \ref{alg:scancube}, to test the movement of all three fundamental components. Optimisations were made between each trial, such as refining the constants used for setting the stopping points for the components. Further optimisations involved modifying the MkI design to reinforce the framework, or altering the rotational velocity of the motors amongst other changes. The second part of the trial runs a thorough move sequence to check all move combinations function as expected. This covers the accuracy of the cradle for \move{d}s and \move{y}s, the accuracy and the effectiveness of the \move{x} arm's guards, and the success of the \move{x}s.
+	The first part of each trial ran the scanning process to test the fundamental movements. Small optimisations were made between each trial, with further modifications made to the MkI's design to reinforce the framework or alter the rotational velocity of the motors. The second part of the trial ran a move sequence to check all move combinations function as expected. This created a thorough robot-wide test.
 	
 	\subsubsection{Major Issues} \label{sec:mkIMajorIssues}
 	
-	The first major issue with the functionality of the MkI was actually software-based - however it is discussed here because it produced a hardware issue which affected the MkI's design. The details of the code used are discussed in section \ref{sec:robotObject}. In the test runs described above, the pass condition was a manual comparison between the virtual Cube and the real-world Cube, where the position of the Cube was checked against an on-screen printout. The colour sensor has different modes to read colours: \lstinline|COL_COLOR|, which returns an integer between zero and seven (inclusive) to represent a specific colour; \lstinline|RGB_RAW|, which returns the RGB values read by the sensor; and other modes which read light intensity rather than the colour. For this application, the \lstinline|COL_COLOR| is the most suitable mode because it will not require the RGB values to be parsed into one of the six colours.
+	The first major issue with the functionality of the MkI arose as a side effect of a solution to another problem. The colour sensor has different modes to read colours: \lstinline|COL_COLOR|, which returns an integer to represent a specific colour; \lstinline|RGB_RAW|, which returns the RGB values read by the sensor; and other modes which were not used. For this project, \lstinline|COL_COLOR| is the most suitable mode because it will not require the RGB values to be parsed into one of the six colours.
 	
-	Unfortunately, the on-screen printout was always a mix of blue, red and white rather than the expected mix of the usual six colours. To properly debug this problem, the mode was set to \lstinline|RGB_RAW| and the RGB values returned by the colour sensor were compared with values read by the camera on a OnePlus 3\footnote{A simple RGB colour picking application was used \cite{RangoApps2015}}.
+	Unfortunately, the on-screen printout produced after scanning a Cube was always a mix of blue, red and white rather than the expected mix of the usual six colours. To debug this problem, the mode was set to \lstinline|RGB_RAW| and the RGB values returned by the colour sensor were compared with values read by the camera on a OnePlus 3\footnote{A simple RGB colour picking application was used \cite{RangoApps2015}}.
 	
    	\begin{table}[H]
 		\def\arraystretch{1.25}
@@ -763,9 +763,7 @@
 		\end{tabular}
 	\end{table}
 
-	Table \ref{tab:coloursensor1} compares the values read by both devices, along with the RGB values. The \lstinline|COL_COLOR| values have been overlaid on the colours returned by the \lego sensor to show how they are interpreted by ev3dev. After many more tests, it became apparent that the issue was that the colour sensor cannot detect fluorescent colours - which is the Valk 3's colour scheme.
-	
-	The solution to this problem was to print sensor-readable colours on standard white sticky labels and apply them over the stickers which were being incorrectly read (the yellow, green and orange sides). The end result is visible in Figure \ref{fig:imgCubeStickersComparison}, next to a non-stickered Valk 3. The orange side has been replaced with brown stickers because the colour sensor reads the five other colours, and then brown - not orange. For this project however, the colour will be referred to as orange for consistency.
+	Table \ref{tab:coloursensor1} compares the values read by both devices, along with the RGB values. After further testing, it became apparent that the colour sensor cannot detect fluorescent colours - which is the Valk 3's colour scheme. The problem was solved by printing sensor-readable colours on white sticky labels and applying them over the stickers which were being incorrectly read (yellow, green and orange). The end result is visible in Figure \ref{fig:imgCubeStickersComparison}, next to a non-stickered Valk 3.
 
 	\begin{figure}[H]
 		\centering
@@ -774,7 +772,7 @@
 		\label{fig:imgCubeStickersComparison}
 	\end{figure}
 
-	Table \ref{tab:coloursensor2} shows that the new stickers greatly improved the accuracy of the colour sensor's readings. Although the colours in the final column of the table are all very dark and almost indistinguishable, the colour sensor has no difficulty in telling the colours apart. As such, the sensor's accuracy with the new stickers is sufficient for this project.
+	Table \ref{tab:coloursensor2} shows that the new stickers greatly improved the accuracy of the colour sensor's readings. Although the colours in the final column of the table are all very dark and almost indistinguishable, the colour sensor has no difficulty in telling the colours apart.
 	
    	\begin{table}[H]
 		\def\arraystretch{1.25}
@@ -805,7 +803,7 @@
 		\label{fig:imgCubeSolverV1}
 	\end{figure}
 
-	The second major issue with the MkI was caused by the newly added tilt and the design of the \move{x} arm: when the arm pushed the Cube to start an \move{x}, the Cube would often fall out of the cradle instead of pivoting. There was no obvious solution to this problem, other than making the wheel larger to spread the force across the face of the Cube. However, a larger wheel meant that the arm became unbalanced and the strength of the arm was compromised. This led to the liftarm that held the wheel falling off the MkI mid-process more than once, as shown in Figure \ref{fig:mkIArmCollapse} (three frames extracted from a video of the scanning process).
+	The second major issue with the MkI was caused by the newly added tilt and the design of the \move{x} arm: when the arm pushed the Cube to start an \move{x}, the Cube would often fall out of the cradle instead of pivoting. A larger wheel helped, but unbalanced the arm and compromised its strength. The liftarm that held the wheel fell off the MkI mid-process more than once, as shown in Figure \ref{fig:mkIArmCollapse} (three frames extracted from a video of the scanning process).
 
 	\begin{figure}[H]
 		\centering
@@ -824,7 +822,7 @@
 		\label{fig:mkIArmCollapse}
 	\end{figure}
 	
-	The final issue with the MkI, which prompted a complete rebuild, was an inherent issue with the large motor that rotated the cradle. As with all DC motors, there is a slight amount of \enquote{play} in the rotor: it has a few degrees of freedom either side of its current position. The play reduced the accuracy of the cradle, by effectively introducing a zero error for each rotation. A problem of this magnitude required a full analysis and re-design of the robot.
+	The final issue with the MkI, which prompted a complete rebuild, was an inherent issue with the large motor that rotated the cradle. As with all DC motors, there is a slight amount of \enquote{play} in the rotor: it has a few degrees of freedom either side of its current position. The play reduced the accuracy of the cradle by effectively introducing a zero error for each rotation. A problem of this magnitude required a full analysis and re-design of the robot.
 
     \section{Robot Design MkII}
 	\subsection{Improvements on MkI}
@@ -1232,17 +1230,17 @@
     
     \subsection{Implementation} \label{sec:treeSolveImplementation}
     
-    The very first step in creating a reliable solve method was to create a reliable object class, and a data structure to store the object in. The \lstinline|Position| class defines an object with four attributes: the depth of the position; the position's string representation; the move sequence used to get to that position; and the ID of that position. Richard Korf discusses the successful implementation of a search tree and an iterative deepening A* algorithm to solve a Cube in his 1997 paper \cite{Korf1997}. 
+    The very first step in creating a reliable solve method was to create a reliable object class, and a data structure to store the object in. The \lstinline|Position| class defines an object with four attributes: the depth of the position; the position's string representation; the move sequence used to get to that position; and its ID. Richard Korf discusses the successful implementation of a search tree and an iterative deepening A* algorithm to solve a Cube in his 1997 paper \cite{Korf1997}. 
     
    	\begin{aside}
-   		    It is important to note that a lot of the research into efficient solving algorithms was done between twenty and forty years ago, and is now lost to the abandonment of websites, mailing lists, and newsletters in favour of much simpler websites and blog posts with much less information and community interaction. Some of the data from the \enquote{golden age} of solving Cube's is available as large, disorganised archives  - but a lot of it was done before the days of commonplace online interaction, and the amount of data available to assist in the design and implementation of solve methods is far more limited than is desirable if one has no contacts in the world of Rubik's Cube solving. This all means that some of the development hit a premature dead end and was abandoned in favour of attempting a larger range of methods for cross-comparison.
+   		    It is important to note that a lot of the research into efficient solving algorithms was done between twenty and forty years ago, and is now lost to the abandonment of websites, mailing lists, and newsletters in favour of much simpler websites and blog posts with much less information and community interaction. Some of the data from the \enquote{golden age} of Cube solving is available as large, disorganised archives  - but a lot of it was done before the days of commonplace online interaction. The amount of data available to assist in the design and implementation of solve methods is far more limited than desirable, if one has no contacts in the world of Rubik's Cube solving. This all means that some of the development hit a premature dead end and was abandoned in favour of attempting a larger range of methods for cross-comparison.
    	\end{aside}
 
-    Having evaluated the available information about the use of search trees and spaces in solving a Cube, it seemed like it could actually be a fairly trivial task: use a moveset to manipulate a Cube until it is solved; a lot of positions can be eliminated through duplication checking and other optimisations; and the code to create a recursive search space will also be relatively simple. This assumption was soon proved very wrong.
+    Having evaluated the available information about the use of search trees in solving a Cube, it seemed like it could actually be a fairly trivial task: use a moveset to manipulate a Cube until it is solved; a lot of positions can be eliminated through duplication checking and other optimisations; and the code to create a recursive search space will also be relatively simple. 
     
     A dictionary was used for storing the search space, with the positions at each depth stored as the values and the depths as the keys. Inside a \lstinline|while not solved| loop, a nested \lstinline|for| loop iterated through the values in the dictionary at the previous depth, and a second nested \lstinline|for| loop applied each move in the defined moveset to each position. The only optimisations applied to the generations was the use of a set to hold the previously generated positions for duplication checking. This optimisation reduced the time required to solve a Cube at \depth{$n$} by an approximate factor of $0.45n$, and the number of positions by $0.58n$.
     
-    In order to observe the progress being made by the tree generator, a graphical user interface (GUI) was created to display the time elapsed, current depth, position count and move sequence, alongside a graphical representation of the Cube. To take full advantage of Python's versatility, the \propernoun{multiprocessing} package was imported to separate the generation and GUI processes on to different cores in the computer's CPU. Multiprocessing was chosen over multithreading due to the complete separation of processes - different threads still operate on the same CPU core so don't take full advantage of a computer's processing power - and inherent increase in processing speed. Although this complete separation meant the processing speed was increased, it presented a challenge in getting the positions from the generator to the GUI across completely distinct memory locations.
+    In order to observe the progress being made by the tree generator, a graphical user interface (GUI) was created to display the time elapsed, current depth, position count and move sequence, alongside a graphical representation of the Cube. To take full advantage of Python's versatility, the \propernoun{multiprocessing} package was imported to separate the generation and GUI processes on to different cores in the computer's CPU. Multiprocessing was chosen over multithreading due to the complete separation of processes and inherent increase in processing speed. Although this complete separation meant the processing speed was increased, it presented a challenge in getting the positions from the generator to the GUI across completely disparate memory locations.
     
    	\begin{figure}[H]
     	\centering
@@ -1251,11 +1249,11 @@
     	\label{fig:imgTreeSolveGUI}
     \end{figure}
     
-    A \lstinline|LifoQueue| was used to bridge the gap between the two processes. It was used as a parameter in the creation of the two processes, providing a pointer back to its memory location whenever necessary. A \tit{LIFO} queue was used rather than a \tit{FIFO} queue because positions were generated faster than the GUI could update, causing a lag in the GUI as it worked through the ever-growing queue and reducing its effectiveness. The disadvantage of the LIFO format was that positions which were skipped by the GUI were left in the queue with no further use. Although this increased total memory usage, the older positions were committed to a pagefile, reducing the impact on memory to an acceptable level.
+    A \lstinline|LifoQueue| was used to bridge the gap between the two processes. It was used as a parameter in the creation of the two processes, providing a pointer back to its memory location whenever necessary. A \tit{LIFO} queue was used rather than a \tit{FIFO} queue because positions were generated faster than the GUI could update. The disadvantage of the LIFO format was that positions which were skipped by the GUI were left in the queue with no further use. Although this increased total memory usage, the older positions were committed to a pagefile, reducing the impact on memory to an acceptable level.
     
     \subsection{Testing}
 
-	The tree solving method is run with a single argument: the position of a Cube, either returned by the robot after scanning a real Cube or entered manually. The first test for the tree solve was the position of a Cube at \depth{3} (created by \movesequence{l'd'u@}). The solve time for this depth was 0.522 \si{\second} - but it soon became clear that this was best case for \depth{3}. The solve time varied greatly depending on the move sequence used to scramble the Cube (assuming the invariance of the tree generator's moveset): the closer the moves used were to the start of the moveset, the closer the solve position was to the start of the depth in the tree.
+	The tree solving method is run with the position of a Cube as its sole argument. The first test for the tree solve was the position of a Cube at \depth{3} (created by \movesequence{l'd'u@}). The solve time for this depth was 0.522 \si{\second} - but it soon became clear that this was best case for \depth{3}. The solve time varied greatly depending on the move sequence used to scramble the Cube (assuming the invariance of the tree generator's moveset): the closer the moves used were to the start of the moveset, the closer the solve position was to the start of the depth in the tree.
     
    	\begin{figure}[H]
     	\centering
@@ -1284,9 +1282,9 @@
    		\label{fig:treeSolveGraph}
     \end{figure}
     
-    Figure \ref{fig:treeSolveGraph} is a graph of the solve depths against the time taken to solve them, and shows the best case and worst case times for each depth. The data used to create the graph is attached in Appendix \ref{tab:treeSolveTimes}, and shows the sequence used to scramble the Cube as well as the solve time and the number of positions generated to find the solution. The position numbers for the \depth{$n$} worst case and \depth{$(n+1)$} are consecutive, which proves that the positions are definitely the best and worst cases for each depth.
+    Figure \ref{fig:treeSolveGraph} is a graph of the solve depths against the time taken to solve them, and shows the best case and worst case times for each depth. The data used to create the graph is attached in Appendix \ref{tab:treeSolveTimes}, and shows the sequences used to scramble the Cube as well as the solve times and the number of positions generated to find the solutions. The position IDs for the \depth{$n$} worst case and \depth{$(n+1)$} best case are consecutive, which proves that the positions are definitely the best and worst cases for each depth.
     
-    The Y axis of the graph uses a logarithmic scale because the time taken (regardless of best or worst case) for each depth increased exponentially with an average base of 13.59. This also meant that the variance in the times increased exponentially, with a recorded maximum difference of just under four hours at \depth{6}. The average growth factor for the solve time times can be used to generate a predicted time for each depth by using the following formulae\footnote{The values used in the formulae are taken from \depth{6} to remove any inherent inaccuracies from the start of the program - this is also why the index of $13.59$ is $(d-6)$}, where $t_d$ is the time to solve \depth{$d$}:
+    The time taken, regardless of best or worst case, for each depth increased exponentially with an average base of 13.59. This also meant that the variance in the times increased exponentially, with a recorded maximum difference of just under four hours at \depth{6}. The average growth factor for the solve times can be used to generate a predicted time for each depth by using the following formulae\footnote{The values used in the formulae are taken from \depth{6} to remove any inherent inaccuracies from the start of the program - this is also why the index of $13.59$ is $(d-6)$}, where $t_d$ is the time to solve \depth{$d$}:
    	\begin{align*}
    	\text{Best Case:}\hspace{7.5mm} 	&	t_d = 1165.35 \times 13.59^{d-6} \\
 	\text{Worst Case:}\hspace{7.5mm}	&	t_d = 15053.42 \times 13.59^{d-6}
@@ -1300,9 +1298,9 @@
 	
 	\subsection{Design and Implementation}
 	
-	Having accepted the implementation of a tree-based solve method to ultimately be non-viable, the next best method was to follow the research performed decades ago when Rubik's Cube was first being efficiently solved by computers. Of the eleven major developments made in finding God's Number \cite{Rokicki2010}, the majority rely solely on group theory combined with optimisations. The main form of documentation for these developments was a mailing list that approximately three hundred people subscribed and contributed their work on Rubik's Cube to \cite{Schoenert1996}: the most complete archive of the mailing list was retrieved from a German research university \cite{Schoenert1996}, \cite{RWTHAachenUniversity} to try and extract the most useful method.
+	Having accepted the implementation of a tree-based solve method to ultimately be non-viable, the next step was to follow the research into the first computerised solutions. Of the eleven major developments made in finding God's Number \cite{Rokicki2010}, the majority rely solely on optimised group theory. The most complete archive of the Cube Lovers mailing list was retrieved from a German research university \cite{Schoenert1996}, \cite{RWTHAachenUniversity} to try and extract the most useful method.
 	
-	After tedious hours spent poring through the archived emails, Hans Kloosterman's method of solving a Cube in forty-two moves seemed the most viable for this project. Rik van Grol, a Dutch mathematician and Rubik's Cube enthusiast who ran the newsletter \propernoun{Cubism for Fun}, was kind enough to provide images of a copy of the issue containing Kloosterman's article \cite{Kloosterman1990}, which are attached in Appendix \ref{app:kloostermanCFF}.	The majority of this method is simply inferred from Kloosterman's article, rather than read as stated facts and rules, and as such may not be true to the original methodology. \propernoun{Rubik's Cube in 42 Moves} describes the use of four phases, each with a specific purpose to allow progression into the next phase. The first phase revolves around the concept of \enquote{good} and \enquote{bad} cubies. 
+	After tedious hours spent poring through the archived emails, Hans Kloosterman's method of solving a Cube in forty-two moves seemed the most viable. Rik van Grol, a Dutch mathematician who ran the newsletter \propernoun{Cubism for Fun}, was kind enough to provide images of the issue containing Kloosterman's article \cite{Kloosterman1990}, which are attached in Appendix \ref{app:kloostermanCFF}. The majority of this method is simply inferred from Kloosterman's article, rather than read as stated facts and rules, and as such may not be true to the original methodology. \propernoun{Rubik's Cube in 42 Moves} describes the use of four phases, the first of which revolves around the concept of \enquote{good} and \enquote{bad} edge cubies. 
 	
 	\subsubsection[Phase Zero]{Phase Zero\protect\footnote{The phases are zero-indexed for clarity and ease of use in \lstinline|for| loops}}
 	
@@ -1314,9 +1312,9 @@
 		\item \tit{not} on the outer rim of either of the two faces mentioned above
 	\end{enumerate}
 
-	The result of these conditions is that if any of the moves from the set \moveset{u.u'd.d@} are used in getting the cubie to its correct position and orientation, then the cubie is bad. Kloosterman's first phase makes all of the cubies good and provides a way to start the solving process. In order to \enquote{get into} the first group, the moveset for this phase is \moveset{u'd'l'r'f'b@}. To quantify the complex concept of goodness, an algorithm was written to set each of the fifty-four facelets to a boolean state depending on their home position. To condition the Cube in this manner, the colours were set to either \lstinline|Color.DARK| (if the facelet needed to be made good) or \lstinline|Color.NONE| if it was irrelevant to this phase. This monochrome Cube was then used as the target position to generate the first part of the solve sequence.
+	Kloosterman's first phase makes all of the cubies good and provides a way to start the solving process. To quantify the complex concept of goodness, an algorithm was written to set each of the facelets to a boolean state depending on their position. To condition the Cube in this manner, the colours were set to either \lstinline|Color.DARK| (if the facelet needed to be made good) or \lstinline|Color.NONE| if it was irrelevant to this phase. This monochrome Cube was then used as the target position to generate the first part of the solve sequence.
 	
-	To create this first part, the code used to generate the tree in section \ref{sec:treeSolving} was adapted to take a target position and a finite moveset as arguments, then generate a table of all reachable positions and the sequences used to generate them. The monochrome scrambled position of the Cube could then be used as the parameter of a lookup query which returns the corresponding sequence. An inversion of the retrieved sequence is then used as the first part of the final solve sequence.
+	To create this first part, the code previously used to generate the tree was adapted to take a target position and a moveset as arguments, then generate a table of all reachable positions and their respective sequences. The monochrome scrambled position of the Cube could then be used as the parameter of a lookup query which returns the corresponding sequence, an inversion of which is then used as the first part of the solve sequence.
 	
 	\begin{figure}[H]
 		\centering
@@ -1343,7 +1341,7 @@
 	
 	\subsubsection{Phase One}
 	
-	The remaining three phases use the same base algorithm to generate the lookup tables and for the search functions. The \face{U} and \face{D} are both coloured \lstinline|DARK|, and all other faces are coloured \lstinline|NONE|, as shown in Figure \ref{fig:dwgMonochrome1}. This phase moves all of the \movegroup{U} and \movegroup{D} facelets to either the \face{U} or \face{D} (the specific face is immaterial), and correctly orients the corners.
+	The remaining three phases use the same base algorithm to generate the lookup tables and for the search functions. The \face{U} and \face{D} are both coloured \lstinline|DARK|, and all other faces are coloured \lstinline|NONE|, as shown in Figure \ref{fig:dwgMonochrome1}. This phase moves all of the \movegroup{U} and \movegroup{D} facelets to either the \face{U} or \face{D}, and correctly orients the corners.
 	
 	The colour scheme used in Figure \ref{fig:dwgMonochrome0} for Phase Zero shows the locations of the good facelets at the end of Phase Zero/start of Phase One. To avoid corrupting these positions, the moveset \moveset{f.f'b.b@} must be omitted from any further sequences. Therefore the moveset for Phase One is \moveset{u'd'l'r'f2b"}.
 	
@@ -1396,25 +1394,26 @@
       |\fb \fy \fy|
       |\fb \fy \fy|
       |\fo \fy \fy|\end{lstlisting}\end{minipage}\end{figure}
-	In order to make quick and efficient comparisons against each other, a common form must be defined. For the example given above, the reduced-colour versions of the Cube's are different, until a \move{y2} is performed on one of them. This gives a good foundation for a comparison method, but may require more processing and memory at run time than other methods: it is impossible to know which Cube should have the \move{y2} applied to it - so it must be applied to both, then the results cross-compared. This will double the amount of memory required at run time, which is unacceptable.
+  
+	In order to make efficient comparisons against each other, a common form must be defined. For the example given above, the reduced-colour versions of the Cubes are different unless a \move{y2} is performed on one of them. It is impossible to know which Cube should have the \move{y2} applied to it, so it must be applied to both.
 	
-	The first optimisation Kloosterman discusses is a lot easier to implement, and will actually reduce the amount of memory and processing required. Where he suggests prohibiting the use of \enquote{sequences like \movesequence{r2l2r"}}, the rules have been made stricter yet for this project: consecutive duplicates and opposites of \tit{any} moves were prohibited, along with a look-back distance of two moves. This prevented sub-sequences such as \movesequence{l.l} ($\equiv$ \movesequence{l"}), \movesequence{l'l} ($\equiv$\movesequence{$\phi$}), and \movesequence{l'r.l} ($\equiv$\movesequence{r}).
+	The first optimisation Kloosterman discusses is a lot easier to implement, and will reduce the amount of memory and processing required. Where he suggests prohibiting the use of \enquote{sequences like \movesequence{r2l2r"}}, these rules have been made even stricter: consecutive duplicates and opposites of \tit{any} moves are prohibited, along with a look-back distance of two moves. This prevented sub-sequences such as \movesequence{l.l} ($\equiv$ \movesequence{l"}), \movesequence{l'l} ($\equiv$\movesequence{$\phi$}), and \movesequence{l'r.l} ($\equiv$\movesequence{r}).
 	
 	\subsection{Testing and Analysis}
 	
-	When generating the four tables designed above, the program ran out of memory consistently - regardless of how many applications were force-stopped in favour of generating more data. This is evaluated more in section \ref{sec:objectivesCodebase}, but signified the end of the development of the multiphase algorithm.
+	When generating the four tables designed above, the program consistently ran out of memory. This is evaluated more in section \ref{sec:objectivesCodebase}, but signified the end of the development of the multiphase algorithm.
 		
-	To avoid wasting all the time and effort put into implementing this updated version of Kloosterman's algorithm, the final table was split into two, using the movesets \moveset{u'd'l2r2f2b"} \moveset{u2d2l2r2f2b"} respectively, which brought the number of positions to a manageable level. The function to make the Cube \enquote{monochrome} for the new Phase Three simply returned the Cube's built-in reduced colour attribute, and Phase Four used the full colour Cube.
+	To avoid wasting the progress made thus far the final table was split into two, using the movesets \moveset{u'd'l2r2f2b"} and \moveset{u2d2l2r2f2b"} respectively. The \enquote{monochrome} Cubes used for the final two phases were the reduced colour Cube and the full colour Cube.
 	
-	Initially, the solution from the end of Phase Three with the reduced-colour Cube appears easy: \tit{each facelet is either on the correct face or the opposite one, so surely the only moves need are half-turns? The moveset used in Phase Four is just half-turns, so the final solve should be easy}. This hypothesis was disproved with simple tests using well-scrambled Cubes. Herbert Kociemba's \propernoun{Cube Explorer} program \cite{Kociemba} was used to find the optimal solve sequence, which contained quarter turns - the moveset needed was therefore \moveset{u'd'l2r2f2b"}. This moveset had already been found to cause runtime errors as a direct result of memory consumption, so Kloosterman's method required a fallback method for this project.
+	Initially, the solution from the end of Phase Three appeared simple: \tit{each facelet is either on the correct face or the opposite one, so the only moves needed should be half-turns. The moveset used in Phase Four only contains half-turns, so the final solve should be easy}. This hypothesis was disproved with simple tests using well-scrambled Cubes. Herbert Kociemba's \propernoun{Cube Explorer} program \cite{Kociemba} was used to find the optimal solve sequence, which contained quarter turns - the moveset needed was therefore \moveset{u'd'l2r2f2b"}. This moveset had already been found to cause runtime errors as a direct result of memory consumption, so a fallback method for this project was implemented.
 	
-	The fallback method used was actually a Python port of Kociemba's original solving algorithm by GitHub user muodov \cite{muodov2018}. In its simplest form, muodov's package \propernoun{kociemba} takes a position of a Cube as a parameter and returns a sub-optimal solve sequence. If the fallback method is used, then the sequences found from the database are ignored to reduce the length of the total solve sequence.
+	The fallback used was actually Kociemba's original solving algorithm, by GitHub user muodov \cite{muodov2018}. In its simplest form, muodov's package \propernoun{kociemba} takes a position of a Cube and returns a sub-optimal solve sequence. If the fallback method is used, then the sequences found from the database are ignored to reduce the length of the total solve sequence.
 	
 	\section{Method 3: Half-Turn Proof-of-Concept} \label{sec:halfTurnSolving}
 	
-	Following the partially unsuccessful implementation of Kloosterman's group-based method, the table of positions previously generated with the moveset \moveset{u2d2l2r2f2b"} was used to create a secondary, proof-of-concept method. As this method is only proof-of concept and not a fully-fledged solution, it has an inherent condition that the Cube can only be scrambled with half-turns. The code to generate this table was taken from the previous implementation of the same group in the multiphase method with slight modifications to remove its iterative nature, and the lookup code was also re-used. The target position for this method remained as a full coloured Cube, as there is no advantage to reducing the amount of colours.
+	The table of positions previously generated for the final phase with the moveset \moveset{u2d2l2r2f2b"} was used to create a secondary, proof-of-concept method. As this method is not a fully-fledged solution, it has an inherent caveat that the Cube can only be scrambled with half-turns. The code to generate this table was taken from the previous implementation of the same group in the multiphase method with slight modifications to remove its iterative nature, and the lookup code was also re-used. The target position for this method remained as a full coloured Cube.
 	
-	The only validation applied to the Cube for this method is to check that it has been scrambled with half-turns only (see Listing \ref{lst:halfTurnValidation}). To check this, its reduced-colour position is checked to be \enquote{solved}. Between this method and its predecessor, full function of the robot and the success of the table lookup method can be proved.	
+	The only validation applied to the Cube for this method is to check that it has been scrambled with half-turns only (see Listing \ref{lst:halfTurnValidation}). Between this method and its predecessor, full function of the robot and the success of the table lookup method can be proved.	
 	
 	\begin{lstlisting}[caption={Half-Turn method validation}, label={lst:halfTurnValidation}]
 	>>> import solvers.half_turn.table_lookup as half_turn_lookup
@@ -1457,7 +1456,7 @@
     	\item Build a robot which can manipulate a Cube accurately \label{itm:obj1}
     	\item Implement a system which successfully generates a solve sequence for any given position. \label{itm:obj2}
     	\item When the robot is provided with a move sequence... \label{itm:obj3}
-    	\begin{enumerate}
+    	\begin{enumerate}[a)]
     		\item Convert it to be robot-compatible \label{itm:obj3a}
     		\item Correctly follow the sequence to achieve the intended output \label{itm:obj3b}
     	\end{enumerate}
@@ -1468,7 +1467,7 @@
     
     \subsection{Robot}
     
-    Objective \ref{itm:obj1} was achieved with the design and implementation of the MkII. The movement of all three main components is reliable, quick and efficient, providing an all-round accurate Cube manipulation. After further full scale tests and use of the robot, the accuracy of the cradle was revealed to be compromised when it was rotated for short amounts multiple times in a row. This issue was replicable through the short Python script shown in Listing \ref{lst:cradleAccuracyTest}, with the outputted angles show in Appendix \ref{tab:cradleAccuracyTest}. The expected result of the script was that the cradle will have completed two full rotations and still be in line with the rest of the robot. However, the actual output was that the cradle rotated less than the desired amount due to a small rotation in the opposite direction. This in turn caused the \move{x} arm to fail and render the entire process moot.
+    Objective \ref{itm:obj1} was achieved with the design and implementation of the MkII. The movement of all three main components is reliable, quick and efficient, providing an all-round accurate Cube manipulation. After further full scale tests and use of the robot, the accuracy of the cradle was revealed to be compromised when it was rotated for short amounts multiple times in a row. This issue was replicable through the short Python script shown in Listing \ref{lst:cradleAccuracyTest}, with the outputted angles show in Appendix \ref{tab:cradleAccuracyTest}. The expected result of the script was that the cradle will have completed two full rotations and still be in line with the rest of the robot. However, the actual output was that the cradle rotated less than the desired amount due to a small rotation in the opposite direction. This in turn caused the \move{x} arm to fail and corrupt the entire process.
 
     \begin{lstlisting}[caption={A short script to test the cradle's accuracy}, label={lst:cradleAccuracyTest}]
     from time import sleep
@@ -1486,17 +1485,17 @@
 	    sleep(0.05)
 	    Sound.beep()\end{lstlisting}
     
-    As this was an inherent problem with ev3dev, an issue was opened on 06/04/2018 on its GitHub repository asking for advice on workarounds or fixes \cite{Worgarside2018}. Just over a week after the issue was opened, the owner of the repository, David Lechner, posted a workaround for this issue which involved changing the rotation type from \lstinline|relative| to \lstinline|absolute|. This lessened the problem, but did not remove it entirely, so a more reliable workaround was devised: after each cradle rotation, the cradle's braking method is set to \lstinline|coast| so that the cradle can be manually aligned when necessary. Although manual intervention is not desirable, this workaround functions as required.
+    As this was an inherent problem with ev3dev, an issue was opened on 06/04/2018 on its GitHub repository \cite{Worgarside2018}. Just over a week after the issue was opened, the owner of the repository posted a workaround for this issue which involved changing the rotation type from \lstinline|relative| to \lstinline|absolute|. This lessened the problem, but did not remove it entirely, so a more reliable workaround was devised: after each cradle rotation, the cradle's braking method is set to \lstinline|coast| so that the cradle can be manually aligned when necessary. Although manual intervention is not desirable, this workaround functions as required.
     
     \begin{aside}
-    	As of 23/04/2018, a fix has been released in version 2.0.0 of ev3dev. As this is a major update from the version used for this project (and the close proximity to the deadline), it has not been used for this project.
+    	As of 23/04/2018, a fix has been released in version 2.0.0 of ev3dev. As this is a major update from the version used for this project (and is close to the deadline), it has not been used for this project.
     \end{aside}
     
     \subsection{Codebase} \label{sec:objectivesCodebase}
     
     Objectives \ref{itm:obj2}, \ref{itm:obj3} and \ref{itm:obj4} have been achieved with varying degrees of success (as discussed in sections \ref{sec:treeSolving}, \ref{sec:multiphaseSolving} and \ref{sec:halfTurnSolving}). The only method to fully guarantee a solution is the multiphase solver, which includes the fallback kociemba algorithm. The tree-based method will generate a solution, but it requires an infeasible amount of time (and presumably, eventually memory) for depths greater than six. The half turn method only works for a subset of the positions, as it is not intended to be a full solution. Both of these methods could easily have the fallback method added, but they are included as proof of a hypothesis or concept so do not require it. Assuming all necessary tables have been pre-generated and if we regard the \enquote{size of the input set} as the depth of the solution, the three different algorithms have run times of $O(1)$, $O(1)$ and $O(13.59^N)$ respectively.
     
-    The multiphase method, however, does require the fallback method due to failure in generating the final table of positions. In order to better optimise the position generation, Windows Performance Monitor was used to log the amount of free memory every five seconds for the duration of the first three phases. The data created by the logger was then used to find the amount of memory in use at each point to create a more useful graph. The data points all had the value of the first point in that set subtracted from them to make all the sets start at zero so the data is more comparable. In Figure \ref{fig:memoryLoggerGraph}, the shape of the data plots is more important than the values themselves: it is more useful to have a process which keeps the memory constant than one which has troughs and peaks, because effort can be put into reducing the constant value of the former.
+    The multiphase method, however, does require the fallback method due to failure in generating the final table of positions. In order to better optimise the position generation the amount of free memory was logged every five seconds for the duration of the first three phases. The data created by the logger was then used to find the amount of memory in use at each point to create a more useful graph. The data points all had the value of the first point in that set subtracted from them to make all the sets start at zero. In Figure \ref{fig:memoryLoggerGraph}, the shape of the data plots is more important than the values themselves: it is more useful to have a process which keeps the memory constant than one which has troughs and peaks, because effort can be put into reducing the constant value of the former.
     
     Ten different optimisations\footnote{Only the more important ones have been included in Figure \ref{fig:memoryLoggerGraph} for simplicity} were made in an attempt to make the program use less memory:
     
@@ -1549,7 +1548,7 @@
     
     Optimisation 8 was the culmination of attempts to reduce the number of positions kept in the memory during runtime. Due to the separation of processes' memory blocks, passing data back to the main process (or any process) to be written to the database concurrently to the same data's generation is extremely difficult: as the data is incomplete, it cannot be returned from the worker processes. After testing memory usage and other features, it became apparent that the build up of data in memory had to be accepted as invariant through all optimisation methods.
     
-    This invariance of memory hungry processing prompted a rollback to optimisation 5. The last improvement to be added to the generation process was to manually call the garbage collector whenever large amounts of data were written to the disk. The combined results of the optimisations managed to reduce the peak amount of memory used from the original value of \num{4428} \si{\mega\byte} to \num{1490} \si{\mega\byte}: a reduction of 66.4\%. Despite this large reduction, the final table still required more memory than was available and was abandoned in favour of using half-turns and a fallback method.
+    This invariance of memory hungry processing prompted a rollback to optimisation 5. The last improvement to be added to the generation process was to manually call the garbage collector whenever large amounts of data were written to the disk. The combined results of the optimisations managed to reduce the peak amount of memory used from the original value of \num{4428} \si{\mega\byte} to \num{1490} \si{\mega\byte}: a reduction of 66.4\%. Despite this large reduction, the final table still required more memory than was available ($> 32 \si{\giga\byte}$) and was abandoned in favour of using half-turns and a fallback method.
     
     Returning to the objective check-list, Objective \ref{itm:obj5} has been completed through the implementation of three different algorithms, and Objective 6 has been fulfilled with the discussion in the sections above. Regarding the part of Objective \ref{itm:obj6} which requires comparison of human and robot compatible moves, a robot-move-only lookup table was generated to \depth{15}, after which point it generated an OutOfMemory error. This shows that both Kloosterman's final phase and the \lstinline|robot_only| table require the same optimisations.
          
@@ -1557,13 +1556,13 @@
 	
 	As stated in section \ref{sec:treeSolveImplementation}, there is very little available information surrounding the workings of successful solution algorithms. What is known, however, is that these algorithms took many months and years of research, development and collaboration to complete. The most accessible Cube solver is Herbert Kociemba's \propernoun{Cube Explorer}: it can generate a non-optimal \depth{20} solution in under five seconds, and an optimal solution within approximately forty-five minutes \cite{Kociemba}. Like many published algorithms, to generate a solution in this relatively short amount of time it makes use of established heuristics such as pruning tables. It is noteworthy that when solving a \depth{20} Cube, Cube Explorer only used 20-30\% of the available processing power so the time required could potentially be quartered.
 	
-	The vast majority of the milestone algorithms used for optimally solving a Cube are all based off their respective predecessors, with little complete originality. This project was developed with the intention of being as original as possible. Admittedly the multiphase solver is effectively an implementation of Kloosterman's 42-move algorithm, but this was to be the start of further developments into group creation and generation with robot compatible moves. The failures to complete these extended goals have been documented in this report to show that all avenues were considered in developing a reliable solution.
+	The vast majority of the milestone algorithms used for generating optimal solutions are all based off their respective predecessors, with little complete originality. This project was developed with the intention of being as original as possible. Admittedly the multiphase solver is effectively an implementation of Kloosterman's 42-move algorithm, but this was to be the start of further developments into group creation and generation with robot compatible moves. The failures to complete these extended goals have been documented in this report to show that all avenues were considered in developing a reliable solution.
 	
 	The solutions generated by the multiphase algorithm (without the fallback) have a maximum length of fifty-five moves, which is larger than the original value found for God's Number by Morwen Thistlethwaite in 1981 \cite{Singmaster1981}. Although this is a sub-optimal result in both functionality and reliability, it is a strong proof of concept and a well explored foundation for future development.
 	
 	\section{Robot Improvements}
 	
-	The core design of the robot has few flaws, if any. Extended testing shows that the \move{x} arm fails approximately one in one hundred times, and the failures are not replicable at all. These failures have been attributed to the play in the motors. The fix implemented in ev3dev 2.0.0 could hopefully reduce the effects of this play and increase the movements of the motors. If the motors were still found to be too inaccurate, stronger validation of the positions could be implemented, as shown in Listing \ref{lst:motorValidation}, although this could extend the time period for manipulating a Cube. 
+	The core design of the robot has few flaws, if any. Extended testing shows that the \move{x} arm fails approximately one in one hundred times, and the failures are not replicable at all. These failures have been attributed to the play in the motors. The fix implemented in ev3dev 2.0.0 could hopefully reduce the effects of this play and increase the motors' reliability. If the motors were still found to be too inaccurate, stronger validation of the positions could be implemented, as shown in Listing \ref{lst:motorValidation}, although this could extend the time period for manipulating a Cube. 
 	
 	\begin{lstlisting}[caption={Potential position validation method for the \lego motors}, label={lst:motorValidation}]
 	from ev3dev.ev3 import OUTPUT_A
@@ -1573,28 +1572,28 @@
 	motor.stop_action = 'hold'
 	motor.speed_sp = 510
 	
-	for i in range(16):
-		next_pos = motor.pos + 200
-		motor.run_to_rel_pos(position_sp=200)
-		motor.wait_until_not_moving()
-		while not motor.pos == next_pos:
-			# Rotate motor by 1 degree slowly until position is matched
-			if motor.pos < next_pos:
-				motor.run_to_rel_pos(position_sp=1, speed_sp=10)
-				motor.wait_until_not_moving()
-			else:
-				motor.run_to_rel_pos(position_sp=-1, speed_sp=10)
-				motor.wait_until_not_moving()\end{lstlisting}
+	angle = 200
+	next_pos = motor.pos + angle
+	motor.run_to_rel_pos(position_sp=angle)
+	motor.wait_until_not_moving()
+	while not motor.pos == next_pos:
+		# Rotate motor by 1 degree slowly until position is matched
+		if motor.pos < next_pos:
+			motor.run_to_rel_pos(position_sp=1, speed_sp=10)
+			motor.wait_until_not_moving()
+		else:
+			motor.run_to_rel_pos(position_sp=-1, speed_sp=10)
+			motor.wait_until_not_moving()\end{lstlisting}
 	
 	The final solution to the problem of motor accuracy is to replace them with precision DC motors which provide enough torque to move the components. A small amount of research shows that there are consumer-grade motors which fit this specification \cite{Portescap}. The difficulty presented by using a standard DC motor is making it interact with the EV3 control brick - a much easier solution might be to use a system-on-chip (SoC) device, such as a Raspberry Pi or Arduino, with IO pins to control the motors. The actual \lego framework has no major issues, so could still be used as the robot's chassis.
 
 	\section{Heuristics and Optimisations}
 	
-	The greatest shortcoming of any of the solvers is the weakness of the optimisations: although many have been tested and implemented, they are all based on simply making the existing algorithms better, rather than larger modifications to their cores.
+	The greatest shortcoming of any of the solvers is the weakness of the optimisations: although many have been tested and implemented, they are all based on simply making the existing algorithm versions better, rather than implementing larger updates.
 	
 	\subsection{Manhattan Cubie Distances}
 
-	In his 1997 paper, Richard Korf discusses the use of the Manhattan distance of the cubies from their correct positions as a heuristic to help improve the efficiency of the search algorithm \cite{Korf1997}. In order to implement this, he uses a table which contains the Manhattan distances of \enquote{each individual cubie from all possible positions and orientations}. At runtime, this table can be used to find the number of moves required to move a cubie to its correct position and orientation and eliminate all sequences with fewer moves (as they will definitely not be a valid solution).
+	Richard Korf discusses the use of the Manhattan distance of the cubies from their correct positions as a heuristic to help improve the efficiency of the search algorithm \cite{Korf1997}. In order to implement this, he uses a table which contains the Manhattan distances of \enquote{each individual cubie from all possible positions and orientations}. At runtime, this table can be used to find the number of moves required to move a cubie to its correct position and orientation and eliminate all sequences with fewer moves.
 	
 	This would be a simple yet effective optimisation to add to either of the solvers (not including the half-turn solver) to reduce the number of positions generated/checked. Further analysis could be performed to compare the effectiveness of Manhattan distances versus Euclidean distances.
 
@@ -1606,7 +1605,7 @@
 	
 	\section{Language Choice}
 	
-	Whilst Python's strengths have been demonstrated throughout this project, its weaknesses have also been highlighted: for rapid iterations, it has a much slower iterative rate than compiled languages. Python was a good choice for the less intensive parts of the software, as its flexibility and high abstraction allowed for a reliable program to be written to fit the needs of the projects. The rapid iterations could be written as a C++ extension for the program through the use of Boost.Python, a library which allows interoperability between Python and C++ \cite{Abrahams2015}. This would take advantage of the efficiency of compiled languages combined with the flexibility of interpreted - the perfect combination for this project.
+	Whilst Python's strengths have been demonstrated throughout this project, its weaknesses have also been highlighted: for rapid iterations, it has a much slower iterative rate than compiled languages. Python was a good choice for the less intensive parts of the software, as its flexibility and high abstraction allowed for a reliable program to be written to fit the needs of the projects. The rapid iterations could be written as a C++ extension for the program through the use of \propernoun{Boost.Python}, a library which allows interoperability between Python and C++ \cite{Abrahams2015}. This would take advantage of the efficiency of compiled languages combined with the flexibility of interpreted - the perfect combination for this project.
 	
 	The database management system (DBMS) used for this project was SQLite3, chosen primarily for its simplicity and ease of use. When tasked with inserting a large amount of rows consecutively, the write speed rarely went above 1 \si{\mega\byte\per\second}, which is less than 0.02\% of the disk's maximum write speed \cite{Samsung2016}. This is a wholly unnecessary delay in generating tables of data, caused by the general restriction of concurrent read/write operations on an SQLite3 database. The DBMS used in future versions of this project would need to allow concurrent transactions and have a large write speed capacity.
 	
@@ -1620,7 +1619,7 @@
     
     This project began with research into the history of Ern\"{o} Rubik's \propernoun{Magic Cube}, whilst considering the development of the infamous \propernoun{God's Algorithm} and the milestone algorithms used to develop it over the past thirty-seven years. In this research period, lots of fragmented terminology, methodology and enigmatology was found to be scattered across all sorts of media and pieced together bit by bit to form the larger picture: quantifying and solving a Cube is no mean feat and evaded mathematicians and enigmatologists alike for decades. Research was also undertaken into robotics and its use in education and puzzle solving, demonstrating the field's growth in recent years and its strengths and weaknesses. The literature review concluded with a choice of language to be used in this project, with a confirmed faith in the ability of \lego Mindstorms to fulfil the project's goal.
     
-    Following the conclusion of the research, the requirements of the project could be outlined alongside the main objectives. These objectives were later repeated and used in Chapter \ref{chp:resultsDiscussion} to measure the success of the project against its original specification. Following the objective declarations, the choices of software were analysed with reasoning for their use presented and discussed. The feasibility of the project was evaluated, with each algorithm type considered in turn. This was a small taste of how difficult and complex the project would actually become in the coming months, especially because of the gargantuan size of the search space.
+    Following the conclusion of the research, the requirements of the project were outlined alongside the main objectives. These objectives were later repeated and used in Chapter \ref{chp:resultsDiscussion} to measure the success of the project against its original specification. Following the objective declarations, the choices of software were analysed with reasoning for their use presented and discussed. The feasibility of the project was evaluated, with each algorithm type considered in turn. This was a small taste of how difficult and complex the project would actually become in the coming months, especially because of the gargantuan size of the search space.
     
     The progress of the project was predicted by the Gantt chart shown in section \ref{sec:evalTechniques}, and for the majority of it, it did actually follow the chart. There were a few setbacks caused by the failure of the database generation, but these were overcome with workarounds and alternate methods to still create a functioning solution. Retrospective in-depth evaluation was completed in the previous chapter to \enquote{round off} the core work of the project.
     
@@ -1628,7 +1627,7 @@
     
     The design of the codebase started almost naturally thanks to the foresight used in designing the robot. However, this soon unravelled in the testing stage because ultimately \lego is just a toy: it is not designed to move to exact angles with minute accuracy. Plentiful workarounds and fixes were implemented and tested, some more successful than others - but all successful enough to allow progression to coding the solver algorithms. Similarly to the feasibility study, the attempted implementation of the algorithms showed how severely the scope of the project had been underestimated: the code which generates the tables and trees is relatively simple at its core, but in hindsight it might be this simplicity that causes its downfall. A much more complex solution is required to efficiently generate tables of positions, with corresponding pruning tables and object classes.
     
-   Overall it is felt that this project has succeeded in the \enquote{analysis} part of its goal, and made a strong attempt at the \enquote{solution} part. Any setbacks were accounted for and documented, with alternatives being explored where possible until the next step in solving Rubik's Cube with a \lego Mindstorms robot was taken. Each research topic clearly manifested into part of the hardware and software produced. Whilst the topic of Rubik's Cube has been thoroughly explored and tapped into over the past four decades, there is a clear direction for further improvements for this project with the use of original ideas and combinations of existing algorithms to find the most efficient way of mapping \num{43252003274489856000} positions into a manageable structure for reducing them all back to the original Magic Cube.
+   Overall it is felt that this project has succeeded in the \enquote{analysis} part of its goal, and made a strong attempt at the \enquote{solution} part. Any setbacks were accounted for and documented, with alternatives being explored where possible until the next step in solving Rubik's Cube with a \lego Mindstorms robot was taken. Each research topic clearly manifested into part of the hardware and software produced. Whilst the topic of Rubik's Cube has been thoroughly explored and tapped into over the past four decades, there is a clear direction for further improvements for this project. Original ideas and combinations of existing algorithms can be used to find the most efficient way of mapping \num{43252003274489856000} positions into a manageable structure, for reducing them all back to the original Magic Cube.
     
     % ============================================================================= Appendices ============================================================================= %
     
