@@ -11,3 +11,4 @@ del /S Sheena.bib
 del /S *.run.xml
 del /S Dissertation-blx.bib
 del /S *.out
+del /S *.lol
