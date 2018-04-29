@@ -31,7 +31,7 @@
 \usepackage{pgfplotstable} 		% Generates table from .csv
 \usepackage{textcomp}			% text symbols
 \usepackage{etoolbox}			% allows custom environment pre/suffixes (listings -> minipage)
-\usepackage[backend=bibtex,style=numeric-comp,sorting=none,sortcites=true,block=none,indexing=false,citereset=none,isbn=true,url=true,doi=true,natbib=true]{biblatex}
+\usepackage[backend=bibtex,style=numeric-comp,sorting=none,sortcites=true,block=none,indexing=false,citereset=none,isbn=true,url=true,doi=true,natbib=true,block=ragged]{biblatex}
 \usepackage{setspace}			% Line spacing
 \usepackage{numprint}			% long number formatting
 \usepackage[hidelinks]{hyperref}% linking throughout pdf
@@ -198,7 +198,7 @@
 			Slice				&	A central layer between two faces. Usually referenced by the faces it spans. \\
 			Quarter Turn		&	A clockwise rotation of a face or slice by \ang{90}. \\
 			Half Turn			&	A clockwise rotation of a face or slice by \ang{180}. \\
-			Quarter Turn Metric	&	When counting moves, a Quarter Turn is counted as a single move and a half is two moves. \\
+			Quarter Turn Metric	&	When counting moves, a quarter turn is counted as a single move and a half is two moves. \\
 			Half Turn Metric	&	Quarter turns and half turns are both counted as single moves. This is the metric used throughout this document. \\
 			Cubie				&	One of the twenty-six smaller cubes that make up a Cube. \\
 			Facelet				&	One of the fifty-four coloured squares on the faces of the Cube. \\
@@ -273,7 +273,7 @@
 	One of the leaders of modern edutainment is the \lego Mindstorms kit. It has undergone two major revisions since the launch of the first generation in 1998 (the RCX): in July 2006, the NXT was released, updating the sensors and adding Bluetooth amongst other improvements; then in September 2013, \lego released the EV3 Home and Education sets. This release cemented \lego's position at the forefront of edutainment \cite{Becker}.
     
     \section{\lego Mindstorms}
-    A study at the University of Calabria in 2009 looked at how \lego Mindstorms worked as a learning tool when used in team-building type tasks \cite{Bilotta2009}. Twenty-eight students were divided into six groups, each given a \lego robot and preliminary training which covered the Mindstorms and programming environment. The groups were all given the same task, and their progress wasstudied throughout the sessions. When studying the building and programming as two distinct sub-tasks, three main categories of work subdivision were found, which closely follow real-world teamwork mechanics and scenarios. The use of robots was found to stimulate the students into exploring and sharing critical knowledge within the group. The study's conclusion was that \lego Mindstorms - and inherently other variable morphology robots - stimulate further process analysis, information selection, and experimentation and observations \cite{Bilotta2009}.
+    A study at the University of Calabria in 2009 looked at how \lego Mindstorms worked as a learning tool when used in team-building type tasks \cite{Bilotta2009}. Twenty-eight students were divided into six groups, each given a \lego robot and preliminary training which covered the Mindstorms and programming environment. The groups were all given the same task, and their progress wasstudied throughout the sessions. When studying the building and programming as two distinct sub-tasks, three main categories of work subdivision were found, which closely follow real-world teamwork mechanics and scenarios. The use of robots was found to stimulate the students into exploring and sharing critical knowledge within the group. The conclusion of the study was that \lego Mindstorms - and inherently other variable morphology robots - stimulate further process analysis, information selection, and experimentation and observations \cite{Bilotta2009}.
     
     The \lego Mindstorms' native programming environment makes use of drag-and-drop code blocks to form software which can run natively on the main \enquote{control brick}, as shown in \ref{fig:ev3software}. This provides a simplistic user experience and allows novice programmers to create complex pieces of software with relative ease. Drag-and-drop programming can drastically reduce the amount of syntax errors in a program, allowing programmers to better focus on functionality \cite{Kelleher2002}.
 
@@ -285,7 +285,7 @@
 	\end{figure}
     
     \section{Solving Puzzles with Algorithms}
-    When it comes to playing games and solving puzzles, Google's \propernoun{AlphaGo Zero} is the clear winner. Whilst Google's first Go-playing program did defeat the world champion at Go, it took months of supervised learning from experts and reinforcement learning from self-play. The new version started \tit{tabula rasa} and was completely self-taught - it had no interaction with any humans, and used no historical data. Through reinforced learning alone by simulating games against itself, it took three days to reach the level of AlphaGo and in forty days had surpassed any Go player's performance - human or artificial \cite{Silver2017, Cellan-Jones2017}.
+    When it comes to playing games and solving puzzles, Google's \propernoun{AlphaGo Zero} is the clear winner. Whilst Google's first Go-playing program did defeat the world champion at Go, it took months of supervised learning from experts and reinforcement learning from self-play. The new version started \tit{tabula rasa} and was completely self-taught - it had no interaction with any humans, and used no historical data. Through reinforced learning alone by simulating games against itself, it took three days to reach the level of AlphaGo and in forty days had surpassed the performance of any Go player's - human or artificial \cite{Silver2017, Cellan-Jones2017}.
     
     When a computer solves a Cube (or any other similar puzzle), it does so by following set algorithms and rules until the solved state is achieved. Computers cannot use humanlike instincts, so heuristics are often provided to make the task simpler. These heuristics can be pre-computed data tables to reduce the amount of processing at run time, or a reduction in the original data set by eliminating certain elements according to a set of rules.
     
@@ -376,7 +376,7 @@
     \section{Conclusion}
     \lego Mindstorms is a strong choice for the construction of the robot: its variable morphology allows adaptation to a range of tasks; the uniformity between pieces means that the main EV3 kit can be supplemented with other kits to extend its ability; and previous studies have shown that it is ideal for stimulating analysis and observations. Instead of using a single algorithm to solve the Cube, a range will be implemented in order to find the strongest method for finding a solve sequence. This will allow cross-comparison between, and analysis of, individual algorithms with the intention of finding the algorithm best suited to this project. Tree and group based algorithms alike will be implemented.
     
-    Python's wide compatibility, clear high-level syntax, and extendibility to compiled code for more complex calculations, makes it the ideal language for this project, especially as MATLAB is incompatible with the \lego EV3.
+    Python's wide compatibility, clear high-level syntax, and extendibility to compiled code for more complex calculations makes it the ideal language for this project, especially as MATLAB is incompatible with the \lego EV3.
    
     \newpage
     \chapter{Requirements and Analysis}
@@ -391,7 +391,7 @@
     The main objectives for this project are defined below, and are summarised in Appendix \ref{app:objectives} for easy referencing.
     
     \begin{enumerate}
-    	\item Build a robot which can manipulate a Cube accurately. \par This is the first of the two primary objectives for this project, and is imperative to the project's success. As such it will be the first objective to be completed. This task, despite being of a medium difficulty, is fairly straightforward by nature: the robot simply needs to manipulate a Cube in any valid move.
+    	\item Build a robot which can manipulate a Cube accurately. \par This is the first of the two primary objectives for this project, and is imperative to the success of the project. As such it will be the first objective to be completed. This task, despite being of a medium difficulty, is fairly straightforward by nature: the robot simply needs to manipulate a Cube in any valid move.
     	\item Implement a system which successfully generates a solve sequence for any given position. \par The second primary objective ensures that any of the forty-three quintillion positions of Rubik's Cube can be solved correctly. The time taken to generate the solve sequence and the actual length of the solve sequence will both be used when measuring an algorithm's success.
     	\item When the robot is provided with a move sequence, it should...
     	\begin{enumerate}[a)]
@@ -400,7 +400,7 @@
     	\end{enumerate}
     	\item Ensure the runtime of the system is an acceptable length \par Previous algorithms have had a run-time in the order of weeks: the desired run-time of the generation by this project will be in the order of minutes. This will require careful analysis of the trade off between generator efficiency and solve sequence length.
     	\item Implement software which uses a range of algorithms to generate a solve sequence \par In order to effectively compare the performance of several algorithms, there must be a method of running them under the same conditions and with the same overheads (e.g. transmission time to the robot). For this reason, there will be one main program with an option for the algorithm to use.
-    	\item Compare the performance of different algorithms, especially the difference between human and robot compatible move sequences \par The performance of each algorithm will be tracked and compared fairly to show each one's merits and faults. This will allow the choice of one algorithm to be improved to create the most efficient method - or the potential combination of algorithms to form a stronger one.
+    	\item Compare the performance of different algorithms, especially the difference between human and robot compatible move sequences \par The performance of each algorithm will be tracked and compared fairly to show each one's merits and faults. This will allow the choice of one algorithm which can be improved to create the most efficient method - or the potential combination of algorithms to form a stronger one.
     \end{enumerate}
     
     \section{Analysis}
@@ -949,7 +949,7 @@
     
    	\begin{figure}[H]
     	\centering
-   		\includegraphics[width=0.9\textwidth]{Resources/Images/rdrMkIIFull.png}
+   		\includegraphics[width=0.8\textwidth]{Resources/Images/rdrMkIIFull.png}
    		\caption{The full MkII robot assembly}
    		\label{fig:rdrMkIIFull}
     \end{figure}
@@ -1182,7 +1182,7 @@
     
     \section{Method 1: Tree Solving} \label{sec:treeSolving}
     
-    During the development of this project, three main methods of solving the Cube were implemented. Each had it's own advantages and disadvantages and are discussed in this section and the following two.
+    During the development of this project, three main methods of solving the Cube were implemented. Each had its own advantages and disadvantages and are discussed in this section and the following two.
     
     \subsection{Implementation} \label{sec:treeSolveImplementation}
     
