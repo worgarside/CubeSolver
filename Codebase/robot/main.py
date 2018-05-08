@@ -13,7 +13,8 @@ from robot_class import Robot
 IP_DICT = {
     'WILLS-SURFACE @ ONEPLUS 3': '192.168.43.188',
     'WILLS-DESKTOP @ HOME': '192.168.0.21',
-    'WILLS-SURFACE @ EDGE LANE': '192.168.1.84'
+    'WILLS-SURFACE @ EDGE LANE': '192.168.1.84',
+    'WILLS-SURFACE @ LG V500': '192.168.56.1'
 }
 
 # the IP currently in use by the host computer
