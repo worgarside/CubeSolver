@@ -18,7 +18,7 @@ IP_DICT = {
 }
 
 # the IP currently in use by the host computer
-CURRENT_IP = IP_DICT['WILLS-DESKTOP @ HOME']
+CURRENT_IP = IP_DICT['WILLS-SURFACE @ ONEPLUS 3']
 
 
 def create_socket():

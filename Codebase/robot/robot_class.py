@@ -5,7 +5,7 @@ from time import sleep
 
 from ev3dev.auto import OUTPUT_A, OUTPUT_B, OUTPUT_C
 from ev3dev.ev3 import Sound, Leds, TouchSensor, ColorSensor
-from ev3dev.helper import LargeMotor, MediumMotor, ColorSensor
+from ev3dev.helper import LargeMotor, MediumMotor, ColorSensor, MotorStall
 
 # Modify the path to allow access to sibling package
 path.append(dirname(path[0]))
@@ -415,14 +415,36 @@ class Robot:
             print('r_move failed: \'' + move + '\' | ' + str(e))
             exit()
 
-    def run_move_sequence(self, move_sequence):
+    def run_move_sequence(self, received_sequence):
         """
         Allows valid lists of moves to be passed in and iterated through
-        :param move_sequence: The sequence which is to be performed
+        :param received_sequence: The sequence which is to be performed
         """
-        for move in move_sequence:
-            self.run_move_method(move)
-            print(move, end=', ')
+        total_sequence = received_sequence
+        move_count = len(total_sequence)
+
+        for i in range(move_count):
+            try:
+                self.run_move_method(total_sequence[0])
+            except MotorStall:
+                Sound.speak('Motor has stalled')
+                self.set_motor_brakes(self.cradle, 'coast')
+                self.set_motor_brakes(self.grabber, 'coast')
+                self.set_motor_brakes(self.cs_arm, 'coast')
+                wait_count = 0
+                amber = True
+                while self.touch_sensor.value() != 1:
+                    wait_count += 1
+                    if wait_count % 50 == 0:
+                        if amber:
+                            Leds.set_color(Leds.LEFT, Leds.AMBER)
+                            Leds.set_color(Leds.RIGHT, Leds.AMBER)
+                        else:
+                            Leds.set_color(Leds.LEFT, Leds.GREEN)
+                            Leds.set_color(Leds.RIGHT, Leds.GREEN)
+                        amber = not amber
+                self.run_move_method(total_sequence[0])
+        del (total_sequence[0])
 
     @staticmethod
     def set_motor_brakes(motor, brake_method):
@@ -439,7 +461,7 @@ class Robot:
         """
         Play a tune and spin the Cube once it has been solved as a way to end the program
         """
-        self.grabber.run_to_abs_pos(position_sp=GBR_NO_GUARD_POS, speed_sp=GRABBER_SPEED/4)
+        self.grabber.run_to_abs_pos(position_sp=GBR_NO_GUARD_POS, speed_sp=GRABBER_SPEED / 4)
         self.grabber.wait_until_not_moving()
         self.cradle.run_to_rel_pos(position_sp=800, speed_sp=255)
 
