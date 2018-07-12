@@ -41,7 +41,7 @@ def init_db(prints=True):
     :return: Database Cursor object
     """
     print('Initialising DB.', end='') if prints else None
-    db = DatabaseManager('Codebase/database/db.sqlite')
+    db = DatabaseManager('/Users/will/Projects/Archive/CubeSolver/Codebase/database/db.sqlite')
     db.query("PRAGMA synchronous = off")  # Allows asynchronous writing for better multiprocessing write speed
     print('.', end='')
     db.query("BEGIN TRANSACTION")
@@ -186,9 +186,9 @@ def tree_solve(position):
 
     try:
         # Retrieve the solve sequence and delete the file
-        with open('Codebase/solvers/tree/solution.pickle', 'rb') as solution_file:
+        with open('/Users/will/Projects/Archive/CubeSolver/Codebase/solvers/tree/solution.pickle', 'rb') as solution_file:
             pickled_sequence = pickle.load(solution_file)
-        os.remove('Codebase/solvers/tree/solution.pickle')
+        os.remove('/Users/will/Projects/Archive/CubeSolver/Codebase/solvers/tree/solution.pickle')
 
         solve_sequence = []
         print('\n- Solve Sequence: ', end='')

@@ -43,7 +43,7 @@ def generate_tree(cube, moveset, queue):
                         be the best way of returning the variable, but the processes do not share memory so this is
                         the workaround for now
                         """
-                        with open('Codebase/solvers/tree/solution.pickle', 'wb') as solution:
+                        with open('/Users/will/Projects/Archive/CubeSolver/Codebase/solvers/tree/solution.pickle', 'wb') as solution:
                             pickle.dump(new_pos.move_sequence, solution, protocol=pickle.HIGHEST_PROTOCOL)
                         break
             if solved:

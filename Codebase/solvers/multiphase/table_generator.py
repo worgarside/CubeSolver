@@ -1,6 +1,6 @@
 """
 A lot of the code in this file is similar to 'half_turn/table_generator.py', and some is duplicated.
-To avoid repeated code and inefficiencies, it would make sens to move the code into a commonly accessible file.
+To avoid repeated code and inefficiencies, it would make sense to move the code into a commonly accessible file.
 However, the files have been kept separate because there are some intricate changes between the files which
 may cause confusion, and also to allow for further changes if necessary
 """
@@ -134,7 +134,7 @@ def generate_next_depth(db, depth, phase, verbose):
     total = (end_time - start_time) / 1000
     if verbose:
         print('.   Time: %10.3fs' % total, end='  |  ')
-        print('DB Size: %7.2fMB' % (os.path.getsize('Codebase/database/db.sqlite') / 1000000), end='  |  ')
+        print('DB Size: %7.2fMB' % (os.path.getsize('/Users/will/Projects/Archive/CubeSolver/Codebase/database/db.sqlite') / 1000000), end='  |  ')
         print('Rows Added: %10i' % insert_count, end='  |  ')
         print('Duplications: %8i' % duplication_count)
     # need to include duplication count in case of resume with full depth
