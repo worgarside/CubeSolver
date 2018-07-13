@@ -41,7 +41,7 @@ def init_db(prints=True):
     :return: Database Cursor object
     """
     print('Initialising DB.', end='') if prints else None
-    db = DatabaseManager('/Users/will/Projects/Archive/CubeSolver/Codebase/database/db.sqlite')
+    db = DatabaseManager('%s/database/db.sqlite' % os.getcwd())
     db.query("PRAGMA synchronous = off")  # Allows asynchronous writing for better multiprocessing write speed
     print('.', end='')
     db.query("BEGIN TRANSACTION")
@@ -321,7 +321,7 @@ def main():
         if confirm == 'Y':
             print('Deleting Database.', end='')
             try:
-                os.remove('%s/Codebase/database/db.sqlite' % os.getcwd())
+                os.remove('%s/database/db.sqlite' % os.getcwd())
                 print('.', end='')
                 db = init_db(False)  # Re-make db file to avoid errors
                 print('!')

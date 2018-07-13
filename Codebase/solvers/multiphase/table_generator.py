@@ -134,7 +134,7 @@ def generate_next_depth(db, depth, phase, verbose):
     total = (end_time - start_time) / 1000
     if verbose:
         print('.   Time: %10.3fs' % total, end='  |  ')
-        print('DB Size: %7.2fMB' % (os.path.getsize('/Users/will/Projects/Archive/CubeSolver/Codebase/database/db.sqlite') / 1000000), end='  |  ')
+        print('DB Size: %7.2fMB' % (os.path.getsize('%s/database/db.sqlite' % os.getcwd()) / 1000000), end='  |  ')
         print('Rows Added: %10i' % insert_count, end='  |  ')
         print('Duplications: %8i' % duplication_count)
     # need to include duplication count in case of resume with full depth
